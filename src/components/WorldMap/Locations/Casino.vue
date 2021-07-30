@@ -92,6 +92,14 @@
                 Stop wheel!
               </button>
             </div>
+            <div class="w-full" v-else>
+              <p>The wheel is spinning! When the timer ends stop it!</p>
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 h-12 mb-4 mt-4 mx-1"
+                      @click="spinWheel()">
+                Spinning...
+              </button>
+            </div>
           </div>
         </div>
 
