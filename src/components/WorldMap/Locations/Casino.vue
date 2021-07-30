@@ -920,7 +920,7 @@ export default {
         roundNumber: roundNumber,
         timeLeftFromContract: timeLeftFromContract,
         startedAt: startedAt,
-        timeLeft: (parseInt(startedAt) + (parseInt(data[6]) + 5)) - Math.floor(Date.now() / 1000)
+        timeLeft: (parseInt(startedAt) + parseInt(data[6])) - Math.floor(Date.now() / 1000)
       }
     },
 
