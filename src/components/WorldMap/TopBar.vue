@@ -3,17 +3,17 @@
        style="background: url('/images/ui/top-bar.png') repeat-x; background-size: contain">
     <div class="my-auto text-center w-1/4" v-if="walletConnected">
       <p class="text-xl">
-        Amount in wallet: {{ loadingBalances ? 'fetching...' : `${userBalance} XYA` }}
+        In wallet: {{ loadingBalances ? 'fetching...' : `${userBalance} XYA` }}
       </p>
     </div>
     <div class="my-auto text-center w-1/4" v-if="walletConnected">
       <p class="text-xl">
-        Amount staked: {{ loadingBalances ? 'fetching...' : `${stakingBalance} XYA` }}
+        In staking: {{ loadingBalances ? 'fetching...' : `${stakingBalance} XYA` }}
       </p>
     </div>
     <div class="my-auto text-center w-1/4" v-if="walletConnected">
       <p class="text-xl">
-        Rewards unclaimed: {{ loadingBalances ? 'fetching...' : `${rewardBalance} XYA` }}
+        Unclaimed: {{ loadingBalances ? 'fetching...' : `${rewardBalance} XYA` }}
       </p>
     </div>
     <div class="my-auto ml-auto text-center flex w-1/4">

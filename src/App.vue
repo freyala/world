@@ -1,8 +1,18 @@
 <template>
   <div id="app">
-    <transition name="fade" mode="out-in">
-      <router-view/>
-    </transition>
+    <div class="hidden lg:block">
+      <transition name="fade" mode="out-in">
+        <router-view/>
+      </transition>
+    </div>
+    <div class="block lg:hidden">
+      <div class="flex w-screen h-screen">
+        <p class="m-auto text-center">
+          MOBILE NOT SUPPORT YET <br>
+          ETA LATE AUGUST
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 

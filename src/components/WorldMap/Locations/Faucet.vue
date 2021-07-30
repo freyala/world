@@ -1,8 +1,8 @@
 <template>
   <transition name="slide">
       <div class="slide-in shadow-xl" v-if="openWindow === 'faucet' || openWindow === 'faucet-large'"
-           :style="openWindow === 'casino-large' ? 'max-width: 100%;' : 'max-width: 30vw;'"
-           style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; background-size: contain; overflow-y: scroll;">
+           :style="openWindow === 'casino-large' ? 'width: 100%;' : 'width: 30vw;'"
+           style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
         <div class="flex relative">
           <img class="mx-auto" src="/images/ui/window-banner.png" alt="Banner">
           <div class="absolute text-center w-full" style="top: 75px">
