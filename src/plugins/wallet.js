@@ -1,0 +1,54 @@
+import {mapGetters, mapActions} from 'vuex'
+import {ethers} from 'ethers'
+
+export default {
+    computed: {
+        ...mapGetters(['loggedIn', 'metaMaskAccount', 'walletConnected'])
+    },
+    methods: {
+        ...mapActions(['setMetaMaskAccount', 'setUserLoggedIn', 'setMetaMaskWallet', 'setWalletConnectionStatus']),
+
+        async connectWallet() {
+            if (this.metaMaskAccount === true) {
+                await this.disconnectWallet()
+                return
+            }
+
+            if (typeof window.ethereum !== undefined) {
+                const provider = new ethers.providers.Web3Provider(window.ethereum)
+                await provider.send("eth_requestAccounts", [])
+                const signer = await provider.getSigner()
+                const network = await provider.getNetwork()
+
+                const accounts = await signer.getAddress()
+                this.setMetaMaskAccount(accounts)
+
+                if (network.chainId !== 1666600000) {
+                    this.wrongChain = true
+                    return
+                }
+
+                this.setMetaMaskWallet({signer})
+                this.setUserLoggedIn(true)
+
+                if (this.loggedIn === true) {
+                    this.setWalletConnectionStatus(!this.walletConnected)
+                }
+            }
+
+        },
+
+        async disconnectWallet() {
+            await this.setDefaultWallet()
+            console.log('boop')
+            this.setUserLoggedIn(false)
+            this.setWalletConnectionStatus(!this.walletConnected)
+        },
+
+        async setDefaultWallet() {
+            if (!this.loggedIn) {
+                this.setMetaMaskAccount(["0x0000000000000000000000000000000000000003"])
+            }
+        }
+    }
+}

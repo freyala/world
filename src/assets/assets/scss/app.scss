@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "transitions";
+
+#app {
+  @apply bg-black;
+
+  p {
+    @apply text-white;
+  }
+}
