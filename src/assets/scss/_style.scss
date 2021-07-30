@@ -13,3 +13,23 @@ html, body {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
+.bg-black {
+  background: black;
+}
+.bg-red {
+  background: #853435;
+}
+.bg-green {
+  background: #58804D;
+}
+
+.text-black {
+  background: black;
+}
+.text-red {
+  color: #853435;
+}
+.text-green {
+  color: #58804D;
+}
