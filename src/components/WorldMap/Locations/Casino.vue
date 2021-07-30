@@ -84,7 +84,7 @@
           <div class="flex flex-wrap">
             <img class="w-5/6 mx-auto" src="/images/ui/roulette.png" alt="Roulette table">
 
-            <div class="w-full">
+            <div class="w-full" v-if="rouletteFetchedData.timeLeft < '0'">
               <p>Time's up? Feel powerful! Be the one to stop the wheel!</p>
               <button type="button"
                       class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 h-12 mb-4 mt-4 mx-1"
