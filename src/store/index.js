@@ -113,13 +113,13 @@ export default new Vuex.Store({
 
     actions: {
         setFavourites({commit}) {
-            let favourites = []
-
             if (localStorage.favourites) {
-                favourites = localStorage.favourites
+                const favourites = localStorage.favourites
+                commit('SET_FAVOURITE_ITEMS', JSON.parse(favourites))
+            } else {
+                const favourites = []
+                commit('SET_FAVOURITE_ITEMS', favourites)
             }
-
-            commit('SET_FAVOURITE_ITEMS', JSON.parse(favourites))
         },
         setFavourite({commit, state}, value) {
             let favourites = []

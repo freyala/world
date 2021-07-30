@@ -141,14 +141,22 @@
 
           <!--      Game lobby-->
           <div class="mt-8">
-            <h3 class="text-4xl text-center">
-              {{ defaultView === 'default' ? 'Lobby' : defaultView === 'yourGames' ? 'Your games' : 'Custom search' }}
-            </h3>
+            <div class="flex">
+              <div class="w-1/3"></div>
+              <div class="w-1/3">
+                <h3 class="text-4xl text-center">
+                  {{ defaultView === 'default' ? 'Lobby' : defaultView === 'yourGames' ? 'Your games' : 'Custom search' }}
+                </h3>
+              </div>
+              <div class="w-1/3 text-right my-auto">
+                <span @click="showEndedGames = !showEndedGames" class="cursor-pointer">
+                  {{ showEndedGames ? 'Hide' : 'Show' }} finished games
+                </span>
+              </div>
+            </div>
 
             <div class="mt-4">
-              <div class="pb-8" v-for="game in shownGames">
-                <!--              <div class="pb-8" v-if="game.betAmount > 0" v-for="game in shownGames">-->
-                <!--              <div class="pb-8" v-if="!game.ended && game.betAmount > 0" v-for="game in shownGames">-->
+              <div class="pb-8" v-if="!game.ended && game.betAmount > 0" v-for="game in shownGames">
                 <div style="border: 1px solid #b8a984" class="flex p-4 relative">
                   <div class="w-3/5">
                     <p>
@@ -168,14 +176,7 @@
                     </p>
                   </div>
                   <div class="w-2/5 pl-6">
-                    <div v-if="game.ended">
-                      Status: <br>
-                      Ended
-                      <br><br>
-                      Winner: <br>
-                      <span style="line-break: anywhere">{{ game.winner }}</span>
-                    </div>
-                    <div v-else>
+                    <div>
                       Status: <br>
                       {{
                         (game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount) ? 'Searching for opponent' : 'In progress'
@@ -208,11 +209,20 @@
                           </button>
                         </div>
                         <div
+                            class="flex"
                             v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && game.flipper === metaMaskAccount">
                           <button type="button"
+                                  @click="startGame(game.id, passwords[game.id], 1)"
+                                  class="w-2/5 rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 h-12">
+                            Heads!
+                          </button>
+                          <div class="w-1/5 my-auto text-center">
+                            <i v-if="loading.flipping === game.id" class="fas fa-cog fa-spin"></i>
+                          </div>
+                          <button type="button"
                                   @click="startGame(game.id, passwords[game.id], 2)"
-                                  class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 h-12 mb-4">
-                            Flip the coin! <i v-if="loading.flipping === game.id" class="fas fa-cog fa-spin"></i>
+                                  class="w-2/5 ml-auto rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 h-12">
+                            Tails!
                           </button>
                         </div>
                         <div
@@ -229,6 +239,36 @@
 
                   <div v-if="game.p1 === metaMaskAccount || game.p2 === metaMaskAccount" class="w-auto absolute top-0 right-0 p-4">
                     <i @click="cancelGame(game.id)" class="fas fa-times cursor-pointer"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="pb-8" v-if="showEndedGames && game.ended && game.betAmount > 0" v-for="game in shownGames">
+                <div style="border: 1px solid #b8a984" class="flex p-4 relative">
+                  <div class="w-3/5">
+                    <p>
+                      Game ID: {{ game.id }}
+                    </p>
+                    <p>
+                      Name: {{ game.name }}
+                    </p>
+                    <p>
+                      Player 1: {{ game.p1 }}
+                    </p>
+                    <p>
+                      Player 2: {{ game.p2 }}
+                    </p>
+                    <p>
+                      Amount: {{ game.betAmount }} XYA
+                    </p>
+                  </div>
+                  <div class="w-2/5 pl-6">
+                    <div>
+                      Status: <br>
+                      Ended
+                      <br><br>
+                      Winner: <br>
+                      <span style="line-break: anywhere">{{ game.winner }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -272,11 +312,11 @@
                 </button>
               </div>
 
-              <div v-if="fetchedData.playerByPlayerIdAndGameId && fetchedData.playerByPlayerIdAndGameId !== ''"
+              <div v-if="fetchedCoinFlipData.playerByPlayerIdAndGameId && fetchedCoinFlipData.playerByPlayerIdAndGameId !== ''"
                    class="mt-8">
                 <p>
                   Player address: <br>
-                  {{ fetchedData.playerByPlayerIdAndGameId }}
+                  {{ fetchedCoinFlipData.playerByPlayerIdAndGameId }}
                 </p>
               </div>
             </div>
@@ -303,11 +343,11 @@
                 </button>
               </div>
 
-              <div v-if="fetchedData.playerByPlayerIdAndGameId && fetchedData.playerByPlayerIdAndGameId !== ''"
+              <div v-if="fetchedCoinFlipData.playerByPlayerIdAndGameId && fetchedCoinFlipData.playerByPlayerIdAndGameId !== ''"
                    class="mt-8">
                 <p>
                   Player address: <br>
-                  {{ fetchedData.playerByPlayerIdAndGameId }}
+                  {{ fetchedCoinFlipData.playerByPlayerIdAndGameId }}
                 </p>
               </div>
             </div>
@@ -330,10 +370,10 @@
               </div>
             </div>
 
-            <div v-if="fetchedData.betsByGameId && fetchedData.betsByGameId !== ''" class="mt-8">
+            <div v-if="fetchedCoinFlipData.betsByGameId && fetchedCoinFlipData.betsByGameId !== ''" class="mt-8">
               <p>
                 Bet amount: <br>
-                {{ fetchedData.betsByGameId }} XYA
+                {{ fetchedCoinFlipData.betsByGameId }} XYA
               </p>
             </div>
           </div>
@@ -400,10 +440,10 @@
               </div>
             </div>
 
-            <div v-if="fetchedData.coinFlipperByGameId && fetchedData.coinFlipperByGameId !== ''" class="mt-8">
+            <div v-if="fetchedCoinFlipData.coinFlipperByGameId && fetchedCoinFlipData.coinFlipperByGameId !== ''" class="mt-8">
               <p>
                 Flipper of coin: <br>
-                {{ fetchedData.coinFlipperByGameId }}
+                {{ fetchedCoinFlipData.coinFlipperByGameId }}
               </p>
             </div>
           </div>
@@ -507,6 +547,7 @@ export default {
   },
   data() {
     return {
+      showEndedGames: false,
       defaultView: 'default',
       shownGames: [],
       passwords: [],
@@ -514,7 +555,7 @@ export default {
       mainContract: {},
       coinFlipContract: {},
       amountToApprove: 0,
-      fetchedData: {},
+      fetchedCoinFlipData: {},
       manuallyFetchedRecentGames: [],
       selectedButton: 'createGame',
       error: '',
@@ -548,7 +589,7 @@ export default {
   },
   mounted() {
     setInterval(() => {
-      this.fetchData()
+      this.fetchCoinFlipData()
     }, 1000)
   },
   watch: {
@@ -561,16 +602,16 @@ export default {
     ...mapActions([
       'setFavourite'
     ]),
-    async fetchData() {
-      const fetchedData = await Promise.all([
+    async fetchCoinFlipData() {
+      const fetchedCoinFlipData = await Promise.all([
         this.coinFlipContract.lastGameId(),
         this.coinFlipContract.recentGames(100)
       ])
 
-      let lastGameId = fetchedData[0]._isBigNumber ? ethers.BigNumber.from(fetchedData[0]).toString() : fetchedData[0]
+      let lastGameId = fetchedCoinFlipData[0]._isBigNumber ? ethers.BigNumber.from(fetchedCoinFlipData[0]).toString() : fetchedCoinFlipData[0]
       let recentGames = []
 
-      for (const game of fetchedData[1]) {
+      for (const game of fetchedCoinFlipData[1]) {
         let gameWithInfo = {}
 
         gameWithInfo.id = game[6]._isBigNumber ? ethers.BigNumber.from(game[6]).toString() : game[6]
@@ -586,8 +627,8 @@ export default {
         recentGames.push(gameWithInfo)
       }
 
-      this.fetchedData.lastGameId = lastGameId
-      this.fetchedData.recentGames = recentGames
+      this.fetchedCoinFlipData.lastGameId = lastGameId
+      this.fetchedCoinFlipData.recentGames = recentGames
 
       if (this.defaultView === 'default') {
         this.shownGames = recentGames
@@ -597,24 +638,24 @@ export default {
     // CALL DATA
     async playerByPlayerIdAndGameId(player, id) {
       this.loading.playerByPlayerIdAndGameId = true
-      this.fetchedData.playerByPlayerIdAndGameId = await this.coinFlipContract.playerByPlayerIdAndGameId(player, id)
+      this.fetchedCoinFlipData.playerByPlayerIdAndGameId = await this.coinFlipContract.playerByPlayerIdAndGameId(player, id)
       this.loading.playerByPlayerIdAndGameId = false
     },
     async betsByGameId(id) {
       this.loading.betsByGameId = true
       const betAmount = await this.coinFlipContract.betsByGameId(id)
-      this.fetchedData.betsByGameId = ethers.utils.formatEther(betAmount._isBigNumber ? ethers.BigNumber.from(betAmount).toString() : betAmount)
+      this.fetchedCoinFlipData.betsByGameId = ethers.utils.formatEther(betAmount._isBigNumber ? ethers.BigNumber.from(betAmount).toString() : betAmount)
       this.loading.betsByGameId = false
     },
     async recentGames(amount) {
       this.defaultView = 'custom'
       this.loading.recentGames = true
-      const fetchedData = await this.coinFlipContract.recentGames(amount)
+      const fetchedCoinFlipData = await this.coinFlipContract.recentGames(amount)
 
       this.manuallyFetchedRecentGames = []
       this.shownGames = []
 
-      for (const game of fetchedData) {
+      for (const game of fetchedCoinFlipData) {
         let gameWithInfo = {}
 
         gameWithInfo.id = game[6]._isBigNumber ? ethers.BigNumber.from(game[6]).toString() : game[6]
@@ -636,12 +677,12 @@ export default {
     async recentGamesByUser(address, amount) {
       this.defaultView = 'custom'
       this.loading.recentGamesByUser = true
-      const fetchedData = await this.coinFlipContract.recentGamesByUser(address, amount)
+      const fetchedCoinFlipData = await this.coinFlipContract.recentGamesByUser(address, amount)
 
       this.manuallyFetchedRecentGames = []
       this.shownGames = []
 
-      for (const game of fetchedData) {
+      for (const game of fetchedCoinFlipData) {
         let gameWithInfo = {}
 
         gameWithInfo.id = game[6]._isBigNumber ? ethers.BigNumber.from(game[6]).toString() : game[6]
@@ -666,7 +707,7 @@ export default {
     },
     async coinFlipperByGameId(id) {
       this.loading.coinFlipperByGameId = true
-      this.fetchedData.coinFlipperByGameId = await this.coinFlipContract.coinFlipperByGameId(id)
+      this.fetchedCoinFlipData.coinFlipperByGameId = await this.coinFlipContract.coinFlipperByGameId(id)
       this.loading.coinFlipperByGameId = false
     },
     async gameById(id) {
@@ -687,7 +728,7 @@ export default {
       gameWithInfo.ended = game[8]
       gameWithInfo.passwordProtected = game[7] !== '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
 
-      this.fetchedData.gameById = gameWithInfo
+      this.fetchedCoinFlipData.gameById = gameWithInfo
       this.shownGames.push(gameWithInfo)
 
       this.loading.gameById = false
@@ -710,7 +751,7 @@ export default {
       gameWithInfo.ended = game[8]
       gameWithInfo.passwordProtected = game[7] !== '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
 
-      this.fetchedData.gameByName = gameWithInfo
+      this.fetchedCoinFlipData.gameByName = gameWithInfo
       this.shownGames.push(gameWithInfo)
 
       this.loading.gameByName = false
@@ -765,8 +806,6 @@ export default {
     async joinGame(id, password, amount, flipper) {
       this.loading.joiningGame = id
 
-      console.log(id, password, ethers.utils.parseEther(amount), flipper)
-
       try {
         const tx = await this.coinFlipContract.joinGame(id, password ? password : '', ethers.utils.parseEther(amount), flipper)
 
@@ -784,8 +823,6 @@ export default {
     },
     async startGame(id, password, side) {
       this.loading.flipping = id
-
-      console.log(id, password, side)
 
       try {
         const tx = await this.coinFlipContract.startGame(id, password ? password : '', side)

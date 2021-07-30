@@ -1,5 +1,5 @@
 {
-  "address": "0x6BfE52b8749FF26Cce331F6e49A96Ea6429F36CE",
+  "address": "0xA52df572c3d81e2D9993BAf702DE070c1422A91E",
   "abi": [
     {
       "inputs": [
@@ -78,22 +78,6 @@
     {
       "inputs": [
         {
-          "internalType": "contract IERC20",
-          "name": "_XYA",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_numberOfSpaces",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "uint256",
           "name": "_timeLimit",
           "type": "uint256"
@@ -118,6 +102,22 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "_XYA",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_numberOfSpaces",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
     },
     {
       "inputs": [],
@@ -307,7 +307,33 @@
     },
     {
       "inputs": [],
+      "name": "startedAt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "timeLeft",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "timeLimit",
       "outputs": [
         {
           "internalType": "uint256",

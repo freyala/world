@@ -6,11 +6,17 @@
           <img src="/images/map/worldmap.jpg" alt="Freyala worldmap" style="width: 100vw">
 
           <div v-if="walletConnected" @click="$store.dispatch('setOpenWindow', 'casino')"
-               style="position: absolute; top: 50%; left: 30%; width: 50px; height: 50px; background-color: black; cursor: pointer"></div>
+               style="position: absolute; top: 50%; left: 30%; padding: 5px; background-color: black; color: white; cursor: pointer">
+            Casino
+          </div>
           <div v-if="walletConnected" @click="$store.dispatch('setOpenWindow', 'staking')"
-               style="position: absolute; top: 10%; left: 50%; width: 50px; height: 50px; background-color: black; cursor: pointer"></div>
+               style="position: absolute; top: 10%; left: 50%; padding: 5px; background-color: black; color: white; cursor: pointer">
+            Staking
+          </div>
           <div v-if="walletConnected" @click="$store.dispatch('setOpenWindow', 'faucet')"
-               style="position: absolute; top: 80%; left: 80%; width: 50px; height: 50px; background-color: black; cursor: pointer"></div>
+               style="position: absolute; top: 80%; left: 80%; padding: 5px; background-color: black; color: white; cursor: pointer">
+            Faucet
+          </div>
         </div>
       </world>
 
