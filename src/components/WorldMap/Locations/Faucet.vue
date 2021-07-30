@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide">
+  <transition name="slide" v-if="walletConnected">
       <div class="slide-in shadow-xl" v-if="openWindow === 'faucet' || openWindow === 'faucet-large'"
            :style="openWindow === 'casino-large' ? 'width: 100%;' : 'width: 30vw;'"
            style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
@@ -38,7 +38,7 @@ import {mapGetters} from "vuex";
 export default {
   name: 'Faucet',
   computed: {
-    ...mapGetters(['loggedIn', 'openWindow'])
+    ...mapGetters(['walletConnected', 'loggedIn', 'openWindow'])
   }
 }
 </script>

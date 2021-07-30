@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide">
+  <transition name="slide" v-if="walletConnected">
     <div class="slide-in shadow-xl relative" v-if="openWindow === 'staking' || openWindow === 'staking-large'"
          :style="openWindow === 'casino-large' ? 'width: 100%;' : 'width: 30vw;'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">

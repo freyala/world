@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <main style="height: 100vh; position: relative">
-      <world @init="onInit" :options="{zoomSpeed: 0.75, minZoom: 2, maxZoom: 5, boundsPadding: 0.25}">
+      <world @init="onInit" :options="{zoomSpeed: 0.75, minZoom: 1, maxZoom: 5, boundsPadding: 0.25}">
         <div style="position: relative; cursor: grab;">
           <img src="/images/map/worldmap.png" alt="Freyala worldmap" style="width: 100vw">
 

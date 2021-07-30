@@ -37,6 +37,7 @@ export default {
     this.setFavourites()
 
     window.ethereum.on('accountsChanged', (accounts) => {
+      this.connectWallet()
       this.setMetaMaskAccount(accounts[0])
     })
   },
@@ -70,7 +71,7 @@ export default {
       const balances = await Promise.all([
         mainContract.balanceOf(this.metaMaskAccount),
         stakingContract.stakes(this.metaMaskAccount),
-        stakingContract.stakeRewards(this.metaMaskAccount),
+        stakingContract.stakeRewards(this.metaMaskAccount)
       ])
 
       await this.setAllowances(allowances)

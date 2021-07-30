@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {ethers} from "ethers";
 
 Vue.use(Vuex)
 
@@ -146,18 +147,18 @@ export default new Vuex.Store({
             localStorage.favourites = JSON.stringify(favourites);
         },
         setBalances({commit}, values) {
-            commit('SET_USER_BALANCE', (values[0] / Math.pow(10, 18)).toFixed(4))
-            commit('SET_STAKING_BALANCE', (values[1] / Math.pow(10, 18)).toFixed(4))
-            commit('SET_REWARD_BALANCE', (values[2] / Math.pow(10, 18)).toFixed(4))
+            commit('SET_USER_BALANCE', (values[0] / Math.pow(10, 18)).toFixed(3))
+            commit('SET_STAKING_BALANCE', (values[1] / Math.pow(10, 18)).toFixed(3))
+            commit('SET_REWARD_BALANCE', (values[2] / Math.pow(10, 18)).toFixed(3))
 
             commit('SET_LOADING_BALANCES_STATUS', false)
         },
         setAllowances({commit}, values) {
             const allowances = {
-                staking: (values[0] / Math.pow(10, 18)).toFixed(4),
-                roulette: (values[1] / Math.pow(10, 18)).toFixed(4),
-                topple: (values[2] / Math.pow(10, 18)).toFixed(4),
-                coinflip: (values[3] / Math.pow(10, 18)).toFixed(4)
+                staking: (values[0] / Math.pow(10, 18)).toFixed(3),
+                roulette: (values[1] / Math.pow(10, 18)).toFixed(3),
+                topple: (values[2] / Math.pow(10, 18)).toFixed(3),
+                coinflip: (values[3] / Math.pow(10, 18)).toFixed(3)
             }
 
             commit('SET_ALLOWANCE', allowances)
