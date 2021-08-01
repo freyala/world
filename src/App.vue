@@ -8,7 +8,7 @@
     <div class="block lg:hidden">
       <div class="flex w-screen h-screen">
         <p class="m-auto text-center">
-          MOBILE NOT SUPPORT YET <br>
+          MOBILE NOT SUPPORTED YET <br>
           ETA LATE AUGUST
         </p>
       </div>
