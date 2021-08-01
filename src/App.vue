@@ -71,7 +71,7 @@ export default {
       const balances = await Promise.all([
         mainContract.balanceOf(this.metaMaskAccount),
         stakingContract.stakes(this.metaMaskAccount),
-        stakingContract.stakeRewards(this.metaMaskAccount)
+        stakingContract.calculateEarnings(this.metaMaskAccount)
       ])
 
       await this.setAllowances(allowances)
