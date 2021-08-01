@@ -6,7 +6,7 @@
           <img src="/images/map/worldmap.png" alt="Freyala worldmap" style="width: 2560px">
 
           <!--          ICONS-->
-          <div class="absolute w-full h-full" style="top: -1.5vw; left: -1.5vw;">
+          <div class="absolute w-full h-full" style="top: -1.5vw; left: -1.75vw;">
             <div class="relative w-full h-full">
               <img class="opacity-60 hover:opacity-100 absolute" style="left: 76.5547%; top: 42.84722222222222%; width: 2.5vw;" src="/images/map/Generic_Camp.png" alt="Generic_Camp">
               <img class="opacity-60 hover:opacity-100 absolute" style="left: 65.546875%; top: 23.0806%; width: 2.5vw;" src="/images/map/Generic_Camp.png" alt="Generic_Camp">
