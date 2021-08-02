@@ -2,7 +2,7 @@
   <div v-if="chainStatus === 'correct'">
     <div v-if="rouletteMounted" class="flex flex-wrap">
       <div class="w-full flex">
-        <div class="w-2/3 2xl:w-1/2 px-8 mx-auto">
+        <div class="w-2/3 px-8 mx-auto">
           <!--      setAllowance-->
           <div class="flex flex-wrap">
             <small class="w-full text-center">
@@ -25,7 +25,7 @@
 
             <div class="w-1/3 px-2">
               <button type="button"
-                      class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
                       @click="addRouletteAllowance(999999999999.9999)">
                 <span v-if="rouletteLoading.maxAllowance">Approving... </span>
                 <span v-else>Approve max amount </span>
@@ -210,7 +210,7 @@
             <div class="w-1/2 flex flex-wrap">
               <div @click="rouletteSelectedItem = 'odds'" class="w-full p-1">
                 <div class="h-full flex cursor-pointer"
-                     :class="`text-${rouletteSelectedItem === 'odds' ? 'black' : 'yellow'} bg-${rouletteSelectedItem === 'odds' ? 'white' : 'black'}`">
+                     :class="`text-${rouletteSelectedItem === 'odds' ? 'black' : 'yellow'} bg-${rouletteSelectedItem === 'odds' ? 'white' : 'dark-gray'}`">
                   <p class="m-auto">
                     Odds
                   </p>
@@ -218,7 +218,7 @@
               </div>
               <div @click="rouletteSelectedItem = 'evens'" class="w-full p-1">
                 <div class="h-full flex cursor-pointer"
-                     :class="`text-${rouletteSelectedItem === 'evens' ? 'black' : 'yellow'} bg-${rouletteSelectedItem === 'evens' ? 'white' : 'black'}`">
+                     :class="`text-${rouletteSelectedItem === 'evens' ? 'black' : 'yellow'} bg-${rouletteSelectedItem === 'evens' ? 'white' : 'dark-gray'}`">
                   <p class="m-auto">
                     Evens
                   </p>

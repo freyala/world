@@ -2,7 +2,7 @@
   <div v-if="chainStatus === 'correct'">
     <div v-if="coinFlipMounted" class="flex flex-wrap">
       <div class="w-full flex">
-        <div class="w-2/3 2xl:w-1/2 px-8 mx-auto">
+        <div class="w-2/3 px-8 mx-auto">
           <!--      setAllowance-->
           <div class="flex flex-wrap">
             <small class="w-full text-center">
@@ -23,7 +23,7 @@
 
             <div class="w-1/3 px-2">
               <button type="button"
-                      class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
                       @click="addCoinFlipAllowance(999999999999.9999)">
                 Approve max amount <i v-if="coinFlipLoading.maxAllowance" class="fas fa-cog fa-spin"></i>
               </button>

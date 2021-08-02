@@ -8,6 +8,59 @@
           <!--          ICONS-->
           <div class="absolute w-full h-full" style="top: -1.5vw; left: -1.75vw;">
             <div class="relative w-full h-full">
+              <img class="cursor-pointer absolute" style="left: 58.1063%; top: 8.9681%; width: 17vw" src="/images/map/WallTop.png" alt="WallTop">
+              <img class="cursor-pointer absolute" style="left: 49.8312%; top: 62.0653%; width: 8vw;" src="/images/map/WallBottom.png" alt="WallBottom">
+
+              <img class="cursor-pointer absolute" style="left: 41.8906%; top: 43.1389%; width: 6vw;" src="/images/map/Palace.png" alt="Palace">
+
+              <img class="cursor-pointer absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;" src="/images/map/WallMid.png" alt="WallMid">
+              <!--              <div @click="$store.dispatch('setOpenWindow', 'casino')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;">-->
+              <!--                <img class="w-full" src="/images/map/WallMid_MO.png" alt="WallMid">-->
+              <!--                <p class="text-center font-bold text-xl text-yellow outline-brown">-->
+              <!--                  Luderion-->
+              <!--                </p>-->
+              <!--              </div>-->
+
+              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 30.6719%;top: 36.139%; width: 4vw;" src="/images/map/Beacon.png" alt="Beacon">
+              <div @click="$store.dispatch('setOpenWindow', 'delegate')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 30.6719%;top: 36.139%; width: 4vw;">
+                <img class="w-full" src="/images/map/Beacon_MO.png" alt="Beacon">
+                <p class="text-center font-bold text-yellow outline-brown z-20">
+                  Beacon of Light
+                </p>
+              </div>
+
+              <img class="cursor-pointer absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;" src="/images/map/FreyalaTree.png" alt="FreyalaTree">
+              <!--              <div @click="$store.dispatch('setOpenWindow', 'staking')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;">-->
+              <!--                <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">-->
+              <!--                <p class="text-center font-bold text-xl text-yellow outline-brown">-->
+              <!--                  Staking-->
+              <!--                </p>-->
+              <!--              </div>-->
+
+              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 42.3555%; top: 51.1806%; width: 5vw;" src="/images/map/Soup.png" alt="Soup">
+              <div @click="$store.dispatch('setOpenWindow', 'faucet')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 42.3555%; top: 51.1806%; width: 5vw;">
+                <img class="w-full" src="/images/map/Soup_MO.png" alt="FreyalaTree">
+                <p class="text-center font-bold text-yellow outline-brown z-20">
+                  Soup Kitchen
+                </p>
+              </div>
+
+              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 71.0156%; top: 47.6111%; width: 4.54vw;" src="/images/map/Drill.png" alt="Drill">
+              <div @click="$store.dispatch('setOpenWindow', 'staking')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 71.0156%; top: 47.6111%; width: 4.54vw;">
+                <img class="w-full" src="/images/map/Drill_MO.png" alt="FreyalaTree">
+                <p class="text-center font-bold text-yellow outline-brown z-20">
+                  Extraction Site
+                </p>
+              </div>
+
+              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 38.3555%; top: 44.9792%; width: 5vw;" src="/images/map/Casino.png" alt="Casino">
+              <div @click="$store.dispatch('setOpenWindow', 'casino')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 38.3555%; top: 44.9792%; width: 5vw;">
+                <img class="w-full" src="/images/map/Casino_MO.png" alt="FreyalaTree">
+                <p class="block text-center font-bold text-yellow outline-brown z-20">
+                  Luderion
+                </p>
+              </div>
+
               <img class="cursor-pointer opacity-60 hover:opacity-100 absolute z-10" style="left: 76.5547%; top: 42.84722222222222%; width: 2.5vw;" src="/images/map/Generic_Camp.png" alt="Generic_Camp">
               <img class="cursor-pointer opacity-60 hover:opacity-100 absolute z-10" style="left: 65.646875%; top: 23.0806%; width: 2.5vw;" src="/images/map/Generic_Camp.png" alt="Generic_Camp">
               <img class="cursor-pointer opacity-60 hover:opacity-100 absolute z-10" style="left: 49.6406%; top: 66.75%; width: 2.5vw;" src="/images/map/Generic_Camp.png" alt="Generic_Camp">
@@ -37,60 +90,6 @@
               <img class="cursor-pointer opacity-60 hover:opacity-100 absolute z-10" style="left: 42.4609%; top: 65.1667%; width: 3.5vw;" src="/images/map/Generic_Town_Small.png" alt="Generic_Town_Small">
               <img class="cursor-pointer opacity-60 hover:opacity-100 absolute z-10" style="left: 33.5016%; top: 37.3889%;; width: 3.5vw;" src="/images/map/Generic_Town_Small.png" alt="Generic_Town_Small">
               <img class="cursor-pointer opacity-60 hover:opacity-100 absolute z-10" style="left: 24.4453125%; top: 83.47222222222223%; width: 3.5vw;" src="/images/map/Generic_Town_Small.png" alt="Generic_Town_Small">
-
-              <img class="cursor-pointer absolute" style="left: 58.1063%; top: 8.9681%; width: 17vw" src="/images/map/WallTop.png" alt="WallTop">
-              <img class="cursor-pointer absolute" style="left: 49.8312%; top: 62.0653%; width: 8vw;" src="/images/map/WallBottom.png" alt="WallBottom">
-
-              <img class="cursor-pointer absolute" style="left: 41.8906%; top: 43.1389%; width: 6vw;" src="/images/map/Palace.png" alt="Palace">
-
-              <img class="cursor-pointer absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;" src="/images/map/WallMid.png" alt="WallMid">
-<!--              <div @click="$store.dispatch('setOpenWindow', 'casino')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;">-->
-<!--                <img class="w-full" src="/images/map/WallMid_MO.png" alt="WallMid">-->
-<!--                <p class="text-center font-bold text-xl text-yellow outline-brown">-->
-<!--                  Luderion-->
-<!--                </p>-->
-<!--              </div>-->
-
-              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 30.6719%;top: 36.139%; width: 4vw;" src="/images/map/Beacon.png" alt="Beacon">
-              <div @click="$store.dispatch('setOpenWindow', 'delegate')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 30.6719%;top: 36.139%; width: 4vw;">
-                <img class="w-full" src="/images/map/Beacon_MO.png" alt="Beacon">
-                <p class="text-center font-bold text-xl text-yellow outline-brown">
-                  Delegation Beacon
-                </p>
-              </div>
-
-              <img class="cursor-pointer absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;" src="/images/map/FreyalaTree.png" alt="FreyalaTree">
-<!--              <div @click="$store.dispatch('setOpenWindow', 'staking')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;">-->
-<!--                <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">-->
-<!--                <p class="text-center font-bold text-xl text-yellow outline-brown">-->
-<!--                  Staking-->
-<!--                </p>-->
-<!--              </div>-->
-
-              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 38.3555%; top: 44.9792%; width: 5vw;" src="/images/map/Casino.png" alt="Casino">
-              <div @click="$store.dispatch('setOpenWindow', 'casino')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 38.3555%; top: 44.9792%; width: 5vw;">
-                <img class="w-full" src="/images/map/Casino_MO.png" alt="FreyalaTree">
-                <p class="text-center font-bold text-xl text-yellow outline-brown">
-                  Luderion
-                </p>
-              </div>
-
-              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 71.0156%; top: 47.6111%; width: 4.54vw;" src="/images/map/Drill.png" alt="Drill">
-              <div @click="$store.dispatch('setOpenWindow', 'staking')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 71.0156%; top: 47.6111%; width: 4.54vw;">
-                <img class="w-full" src="/images/map/Drill_MO.png" alt="FreyalaTree">
-                <p class="text-center font-bold text-xl text-yellow outline-brown">
-                  Extraction Site
-                </p>
-              </div>
-
-              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute" style="left: 42.3555%; top: 51.1806%; width: 5vw;" src="/images/map/Soup.png" alt="Soup">
-              <div @click="$store.dispatch('setOpenWindow', 'faucet')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 42.3555%; top: 51.1806%; width: 5vw;">
-                <img class="w-full" src="/images/map/Soup_MO.png" alt="FreyalaTree">
-                <p class="text-center font-bold text-xl text-yellow outline-brown">
-                  Soup Kitchen
-                </p>
-              </div>
-
             </div>
           </div>
         </div>
