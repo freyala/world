@@ -4,7 +4,8 @@
          :style="openWindow === 'casino-large' ? 'width: 100%;' : 'width: 30vw;'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
       <div class="flex relative cursor-pointer" @click="setFavourite('faucet')">
-        <img class="mx-auto" src="/images/ui/window-banner.png" alt="Banner">
+        <img v-if="favourites.includes('faucet')" class="mx-auto" src="/images/ui/window-banner-favourite.png" alt="Banner">
+        <img v-else class="mx-auto" src="/images/ui/window-banner-unfavourite.png" alt="Banner">
         <div class="absolute text-center w-full" style="top: 75px">
           <p class="text-2xl">Soup kitchen</p>
         </div>
@@ -75,6 +76,7 @@ export default {
       'metaMaskAccount',
       'metaMaskWallet',
       'openWindow',
+      'favourites'
     ])
   },
   data() {

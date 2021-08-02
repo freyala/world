@@ -4,7 +4,8 @@
          :style="openWindow === 'delegate-large' ? 'width: 100%;' : 'width: 30vw;'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
       <div class="flex relative cursor-pointer" @click="setFavourite('delegate')">
-        <img class="mx-auto" src="/images/ui/window-banner.png" alt="Banner">
+        <img v-if="favourites.includes('delegate')" class="mx-auto" src="/images/ui/window-banner-favourite.png" alt="Banner">
+        <img v-else class="mx-auto" src="/images/ui/window-banner-unfavourite.png" alt="Banner">
         <div class="absolute text-center w-full" style="top: 75px">
           <p class="text-2xl">Beacon of Light</p>
         </div>
@@ -46,7 +47,8 @@ export default {
   mixins: [wallet],
   computed: {
     ...mapGetters([
-      'openWindow'
+      'openWindow',
+      'favourites'
     ])
   },
   methods: {
