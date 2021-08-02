@@ -39,6 +39,17 @@ export default {
     window.ethereum.on('accountsChanged', (accounts) => {
       this.connectWallet()
       this.setMetaMaskAccount(accounts[0])
+
+    })
+
+    window.ethereum.on('chainChanged', (chainId) => {
+      if (chainId === '0x63564c40') {
+        this.setChainStatus('correct')
+        this.setChainId(1666600000)
+      } else {
+        this.setChainStatus('wrong')
+        this.setChainId(chainId)
+      }
     })
   },
   computed: {
@@ -51,6 +62,8 @@ export default {
   },
   methods: {
     ...mapActions([
+      'setChainStatus',
+      'setChainId',
       'setWalletConnectionStatus',
       'setMetaMaskAccount',
       'setAllowances',
@@ -58,24 +71,26 @@ export default {
       'setFavourites'
     ]),
     async fetchData() {
-      const mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-      const stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
+      if (document.hasFocus()) {
+        const mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+        const stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
 
-      const allowances = await Promise.all([
-        mainContract.allowance(this.metaMaskAccount, Staking.address),
-        mainContract.allowance(this.metaMaskAccount, Roulette.address),
-        mainContract.allowance(this.metaMaskAccount, Topple.address),
-        mainContract.allowance(this.metaMaskAccount, CoinFlip.address)
-      ])
+        const allowances = await Promise.all([
+          mainContract.allowance(this.metaMaskAccount, Staking.address),
+          mainContract.allowance(this.metaMaskAccount, Roulette.address),
+          mainContract.allowance(this.metaMaskAccount, Topple.address),
+          mainContract.allowance(this.metaMaskAccount, CoinFlip.address)
+        ])
 
-      const balances = await Promise.all([
-        mainContract.balanceOf(this.metaMaskAccount),
-        stakingContract.stakes(this.metaMaskAccount),
-        stakingContract.calculateEarnings(this.metaMaskAccount)
-      ])
+        const balances = await Promise.all([
+          mainContract.balanceOf(this.metaMaskAccount),
+          stakingContract.stakes(this.metaMaskAccount),
+          stakingContract.calculateEarnings(this.metaMaskAccount)
+        ])
 
-      await this.setAllowances(allowances)
-      await this.setBalances(balances)
+        await this.setAllowances(allowances)
+        await this.setBalances(balances)
+      }
     }
   }
 }

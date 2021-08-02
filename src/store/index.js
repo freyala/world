@@ -8,6 +8,8 @@ export default new Vuex.Store({
     namespaced: true,
 
     state: {
+        CHAIN_STATUS: '',
+        CHAIN_ID: 0,
         FAVOURITES: [],
         LOADING_BALANCES: true,
         LOADING_ALLOWANCES: true,
@@ -29,6 +31,12 @@ export default new Vuex.Store({
     },
 
     getters: {
+        chainStatus(state) {
+           return state.CHAIN_STATUS
+        },
+        chainID(state) {
+           return state.CHAIN_ID
+        },
         favourites(state) {
             return state.FAVOURITES
         },
@@ -71,6 +79,12 @@ export default new Vuex.Store({
     },
 
     mutations: {
+        SET_CHAIN_STATUS(state, value) {
+            state.CHAIN_STATUS = value
+        },
+        SET_CHAIN_ID(state, value) {
+            state.CHAIN_ID = value
+        },
         SET_FAVOURITE_ITEMS(state, value) {
             state.FAVOURITES = value
         },
@@ -113,6 +127,12 @@ export default new Vuex.Store({
     },
 
     actions: {
+        setChainStatus({commit}, value) {
+            commit('SET_CHAIN_STATUS', value)
+        },
+        setChainId({commit}, value) {
+            commit('SET_CHAIN_ID', value)
+        },
         setFavourites({commit}) {
             if (localStorage.favourites) {
                 const favourites = localStorage.favourites

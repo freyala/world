@@ -6,7 +6,7 @@ export default {
         ...mapGetters(['loggedIn', 'metaMaskAccount', 'walletConnected'])
     },
     methods: {
-        ...mapActions(['setMetaMaskAccount', 'setUserLoggedIn', 'setMetaMaskWallet', 'setWalletConnectionStatus']),
+        ...mapActions(['setChainStatus', 'setChainId', 'setMetaMaskAccount', 'setUserLoggedIn', 'setMetaMaskWallet', 'setWalletConnectionStatus']),
 
         async connectWallet() {
             if (this.metaMaskAccount === true) {
@@ -22,10 +22,13 @@ export default {
 
                 const accounts = await signer.getAddress()
                 this.setMetaMaskAccount(accounts)
+                this.setChainId(network.chainId)
 
                 if (network.chainId !== 1666600000) {
-                    this.wrongChain = true
+                    this.setChainStatus('wrong')
                     return
+                } else {
+                    this.setChainStatus('correct')
                 }
 
                 this.setMetaMaskWallet({signer})

@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide" v-if="walletConnected">
+  <transition name="slide" v-if="chainStatus === 'correct' && walletConnected && stakingMounted">
     <div class="slide-in shadow-xl relative" v-if="openWindow === 'staking' || openWindow === 'staking-large'"
          :style="openWindow === 'casino-large' ? 'width: 100%;' : 'width: 30vw;'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
@@ -37,13 +37,13 @@
         <div class="w-1/2 pl-2">
           <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
                   @click="addAllowance()">
-            Set allowance <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
+            Approve amount <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
           </button>
         </div>
 
         <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12 mt-4"
                 @click="addAllowance(999999999999.9999)">
-          Set max allowance <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
+          Approve max amount <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
         </button>
       </div>
 
@@ -136,6 +136,8 @@ export default {
   mixins: [wallet],
   computed: {
     ...mapGetters([
+      'chainID',
+      'chainStatus',
       'loadingBalances',
       'userBalance',
       'stakingBalance',
@@ -150,6 +152,7 @@ export default {
   },
   data() {
     return {
+      stakingMounted: false,
       preApprove: false,
       mainContract: {},
       stakingContract: {},
@@ -173,6 +176,9 @@ export default {
       this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
       this.stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
     }
+  },
+  mounted() {
+    this.stakingMounted = true
   },
   methods: {
     ...mapActions([
