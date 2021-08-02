@@ -6,7 +6,8 @@
       <div class="flex relative cursor-pointer" @click="setFavourite('casino')">
         <img v-if="favourites.includes('casino')" class="mx-auto" src="/images/ui/window-banner-favourite.png" alt="Banner">
         <img v-else class="mx-auto" src="/images/ui/window-banner-unfavourite.png" alt="Banner">
-        <div class="absolute text-center w-full" style="top: 75px">
+        <div class="absolute text-center w-full" style="top: 80px; line-height: 0.25">
+          <small>Click to favourite</small>
           <p class="text-2xl">The Luderion Alleyway</p>
         </div>
       </div>
@@ -65,7 +66,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import wallet from "../../../../plugins/wallet";
 
 import CoinFlip from "./Coinflip"
@@ -88,6 +89,11 @@ export default {
       'metaMaskWallet',
       'openWindow',
       'favourites'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setFavourite'
     ])
   }
 }

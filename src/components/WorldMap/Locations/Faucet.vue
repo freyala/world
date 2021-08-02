@@ -6,7 +6,8 @@
       <div class="flex relative cursor-pointer" @click="setFavourite('faucet')">
         <img v-if="favourites.includes('faucet')" class="mx-auto" src="/images/ui/window-banner-favourite.png" alt="Banner">
         <img v-else class="mx-auto" src="/images/ui/window-banner-unfavourite.png" alt="Banner">
-        <div class="absolute text-center w-full" style="top: 75px">
+        <div class="absolute text-center w-full" style="top: 80px; line-height: 0.25">
+          <small>Click to favourite</small>
           <p class="text-2xl">Soup kitchen</p>
         </div>
       </div>

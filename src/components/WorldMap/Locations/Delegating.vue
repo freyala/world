@@ -6,7 +6,8 @@
       <div class="flex relative cursor-pointer" @click="setFavourite('delegate')">
         <img v-if="favourites.includes('delegate')" class="mx-auto" src="/images/ui/window-banner-favourite.png" alt="Banner">
         <img v-else class="mx-auto" src="/images/ui/window-banner-unfavourite.png" alt="Banner">
-        <div class="absolute text-center w-full" style="top: 75px">
+        <div class="absolute text-center w-full" style="top: 80px; line-height: 0.25">
+          <small>Click to favourite</small>
           <p class="text-2xl">Beacon of Light</p>
         </div>
       </div>

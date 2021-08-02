@@ -149,15 +149,13 @@ export default new Vuex.Store({
                 favourites = [...state.FAVOURITES]
             }
 
-            if (favourites.length === 4) {
-                return 'Already four favourite items selected.'
-            }
-
             if (favourites.includes(value)) {
                 let index = favourites.indexOf(value);
                 if (index !== -1) {
                     favourites.splice(index, 1);
                 }
+            } else if (favourites.length === 4) {
+                return 'Already four favourite items selected.'
             } else {
                 favourites.push(value)
             }
