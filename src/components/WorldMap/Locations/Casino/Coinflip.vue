@@ -509,7 +509,7 @@
           ID: {{ game.id }} <br>
           Bet: {{ game.betAmount }} XYA <br>
           Winner: {{
-            game.winner === metaMaskAccount ? 'YOU!' : game.winner === '0x0000000000000000000000000000000000000000' ? 'Ongoing' : 'Opponent'
+            game.winner === metaMaskAccount ? 'YOU!' : game.betAmount === '0.0' ? 'Cancelled match' : game.winner === '0x0000000000000000000000000000000000000000' ? 'Ongoing' : 'Opponent'
           }}
           <hr>
         </div>

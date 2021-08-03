@@ -45,7 +45,7 @@
         <button type="button"
                 :class="rouletteDefaultView === 'low' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                 class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4">
-          New kids table ( Disabled )
+          New kids table ( Coming soon... )
         </button>
 
         <!--      mediumTable-->
@@ -53,14 +53,14 @@
                 :class="rouletteDefaultView === 'medium' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                 class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
                 @click="rouletteDefaultView = 'medium'">
-          Regular table ( 100 - 1000 )
+          Regular table ( 50 - 1000 )
         </button>
 
         <!--      highTable-->
         <button type="button"
                 :class="rouletteDefaultView === 'high' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                 class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4">
-          High stakes table ( Disabled )
+          High stakes table ( Coming soon... )
         </button>
 
         <br>
@@ -74,7 +74,7 @@
                     class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1"
                     @click="spinWheel()">
               <span v-if="rouletteLoading.spinWheel">Stopping wheel... </span>
-              <span v-else>Stop wheel! </span>
+              <span v-else>Stop wheel after placing bet! </span>
               <i v-if="rouletteLoading.spinWheel" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
@@ -92,10 +92,10 @@
           <div class="w-full 2xl:w-3/4 flex mt-8">
             <div class="w-1/5">
               <button type="button"
-                      :class="rouletteBetAmount === 100 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                      :class="rouletteBetAmount === 50 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="rouletteBetAmount = 100">
-                100 XYA
+                      @click="rouletteBetAmount = 50">
+                50 XYA
               </button>
             </div>
             <div class="w-1/5">
@@ -312,7 +312,7 @@ export default {
       rouletteMounted: false,
       rouletteInterval: undefined,
 
-      rouletteBetAmount: 100,
+      rouletteBetAmount: 50,
       rouletteSelectedItem: 0,
       rouletteDefaultView: 'medium',
       rouletteAmountToApprove: 0,
@@ -363,6 +363,7 @@ export default {
           this.rouletteContract.lastSpace(),
           this.rouletteContract.returnWheel(),
           this.rouletteContract.rN()
+          // this.rouletteContract.currentBetsByAddress(this.metaMaskAccount),
         ])
 
         const wheel = []
@@ -381,11 +382,18 @@ export default {
 
         const roundNumber = data[3]._isBigNumber ? ethers.BigNumber.from(data[3]).toString() : data[3]
 
+        // let haveYouBet = false
+
+        // console.log(data[4][0][0][1])
+        // console.log(data[4][0][0][1]._isBigNumber ? ethers.BigNumber.from(data[4][0][0][1]).toString() : data[4][0][0][1])
+        // console.log(data[4][0][0][2]._isBigNumber ? ethers.BigNumber.from(data[4][0][0][2]).toString() : data[4][0][0][2])
+
         this.rouletteFetchedData = {
           currentBets: data[0],
           lastSpace: lastSpace,
           returnWheel: wheel,
           roundNumber: roundNumber
+          // haveYouBet: haveYouBet
         }
       }
     },
@@ -433,7 +441,7 @@ export default {
         const tx = await this.rouletteContract.makeOutsideBet(number, amount.toString())
         await tx.wait(1)
 
-        this.amountToBet = 100
+        this.amountToBet = 50
         this.rouletteSelectedItem = false
 
       } catch (err) {
@@ -457,7 +465,7 @@ export default {
         const tx = await this.rouletteContract.makeStraightBet(number, amount.toString())
         await tx.wait(1)
 
-        this.amountToBet = 100
+        this.amountToBet = 50
         this.rouletteSelectedItem = false
       } catch (err) {
         if (err.code !== 4001) {
