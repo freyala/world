@@ -8,6 +8,7 @@ export default new Vuex.Store({
     namespaced: true,
 
     state: {
+        FIRST_TIME: true,
         CHAIN_STATUS: '',
         CHAIN_ID: 0,
         FAVOURITES: [],
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     },
 
     getters: {
+        firstTime(state) {
+           return state.FIRST_TIME
+        },
         chainStatus(state) {
            return state.CHAIN_STATUS
         },
@@ -79,6 +83,9 @@ export default new Vuex.Store({
     },
 
     mutations: {
+        SET_FIRST_TIME(state, value) {
+            state.FIRST_TIME = value
+        },
         SET_CHAIN_STATUS(state, value) {
             state.CHAIN_STATUS = value
         },
@@ -140,6 +147,14 @@ export default new Vuex.Store({
             } else {
                 const favourites = []
                 commit('SET_FAVOURITE_ITEMS', favourites)
+            }
+        },
+        setFirstTime({commit}) {
+            if (localStorage.firstTime) {
+                const firstTime = localStorage.firstTime
+                commit('SET_FIRST_TIME', firstTime)
+            } else {
+                commit('SET_FIRST_TIME', true)
             }
         },
         setFavourite({commit, state}, value) {

@@ -45,6 +45,8 @@ export default {
     }
   },
   mounted() {
+    this.setFirstTime()
+
     setTimeout(() => {
       this.loading = false
     }, 3000)
@@ -58,7 +60,6 @@ export default {
     window.ethereum.on('accountsChanged', (accounts) => {
       this.connectWallet()
       this.setMetaMaskAccount(accounts[0])
-
     })
 
     window.ethereum.on('chainChanged', (chainId) => {
@@ -76,7 +77,8 @@ export default {
       'loggedIn',
       'walletConnected',
       'metaMaskAccount',
-      'metaMaskWallet'
+      'metaMaskWallet',
+      'firstTime'
     ])
   },
   methods: {
@@ -87,7 +89,8 @@ export default {
       'setMetaMaskAccount',
       'setAllowances',
       'setBalances',
-      'setFavourites'
+      'setFavourites',
+      'setFirstTime'
     ]),
     async fetchData() {
       if (document.hasFocus()) {

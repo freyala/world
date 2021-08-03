@@ -26,18 +26,28 @@
 
       <br>
 
+      <p class="text-2xl text-center">
+        Currently staking:
+      </p>
+      <p class="text-xl text-center">{{ stakingBalance }} XYA</p>
+
+      <br>
+      <br>
+
       <div class="flex flex-wrap">
-        <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
+        <button v-if="rewardBalance === '0.000'" class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12">
+          No rewards to claim
+        </button>
+        <button v-else class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
                 @click="withdrawEarnings(false)">
-          Claim rewards <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
+          Claim {{ rewardBalance }} XYA <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
         </button>
       </div>
 
       <br>
-      <br>
 
       <div class="flex flex-wrap">
-        <small class="w-full">{{ allowance.staking }} XYA</small>
+        <small class="w-full">Currently approved: {{ allowance.staking }} XYA</small>
 
         <div class="w-1/2 pr-2">
           <input class="w-full border border-yellow bg-transparent px-4 h-12" v-model="amountToApprove" type="number">
@@ -58,7 +68,7 @@
       <br>
 
       <div class="flex flex-wrap">
-        <small class="w-full">{{ userBalance }} XYA</small>
+        <small class="w-full">Max: {{ userBalance }} XYA</small>
 
         <div class="w-1/2 pr-2">
           <input class="w-full border border-yellow bg-transparent px-4 h-12" v-model="amountToStake" type="number">
@@ -78,7 +88,7 @@
       <br>
 
       <div class="flex flex-wrap">
-        <small class="w-full">{{ stakingBalance }} XYA</small>
+        <small class="w-full">Max: {{ stakingBalance }} XYA</small>
 
         <div class="w-1/2 pr-2">
           <input class="w-full border border-yellow bg-transparent px-4 py-2 h-12" v-model="amountToUnstake"

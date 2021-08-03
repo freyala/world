@@ -373,8 +373,8 @@ export default {
           this.rouletteContract.currentBets(),
           this.rouletteContract.lastSpace(),
           this.rouletteContract.returnWheel(),
-          this.rouletteContract.rN()
-          // this.rouletteContract.currentBetsByAddress(this.metaMaskAccount),
+          this.rouletteContract.rN(),
+          this.rouletteContract.currentBetsByAddress(this.metaMaskAccount),
         ])
 
         const wheel = []
@@ -443,8 +443,8 @@ export default {
       this.rouletteLoading.makeOutsideBet = true
 
       let number = 0
-      if (value === 'odd') number = '1'
-      if (value === 'even') number = '2'
+      if (value === 'odds') number = '1'
+      if (value === 'evens') number = '2'
       if (value === 'red') number = '3'
       if (value === 'black') number = '4'
 
