@@ -380,10 +380,10 @@
                     Name: {{ game.name }}
                   </p>
                   <p>
-                    Player 1: {{ game.p1 }}
+                    Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
                   </p>
                   <p>
-                    Player 2: {{ game.p2 }}
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 }}
                   </p>
                   <p>
                     Amount: {{ game.betAmount }} XYA
@@ -472,10 +472,10 @@
                     Name: {{ game.name }}
                   </p>
                   <p>
-                    Player 1: {{ game.p1 }}
+                    Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
                   </p>
                   <p>
-                    Player 2: {{ game.p2 }}
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 }}
                   </p>
                   <p>
                     Amount: {{ game.betAmount }} XYA
@@ -487,7 +487,7 @@
                     Ended
                     <br><br>
                     Winner: <br>
-                    <span style="line-break: anywhere">{{ game.winner }}</span>
+                    <span style="line-break: anywhere">{{ game.winner === metaMaskAccount ? 'YOU!' : 'Opponent' }}</span>
                   </div>
                 </div>
               </div>
@@ -497,6 +497,25 @@
 
       </div>
       <div class="hidden 2xl:block w-1/4 mt-20">
+        <button @click="showLastGames = !showLastGames"
+                type="button"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
+          {{ showLastGames ? 'Hide last 5 games' : 'Show last 5 games' }}
+        </button>
+
+
+        <div v-if="showLastGames" v-for="game in coinFlipLastGames">
+          <br>
+          ID: {{ game.id }} <br>
+          Bet: {{ game.betAmount }} XYA <br>
+          Winner: {{
+            game.winner === metaMaskAccount ? 'YOU!' : game.winner === '0x0000000000000000000000000000000000000000' ? 'Ongoing' : 'Opponent'
+          }}
+          <hr>
+        </div>
+        <br>
+        <br>
+
         <h3 class="text-4xl mb-2">
           {{ coinFlipSelectedButton === 'createGame' ? 'Create' : 'Look up' }}
         </h3>
@@ -737,7 +756,9 @@
           <i @click="$modal.hide('error')" class="fas fa-times cursor-pointer text-xl"></i>
         </div>
         <p class="w-full mt-4">
-          {{ error === 'execution reverted: ERC20: transfer amount exceeds allowance' ? 'Transfer amount exceeds allowance, please approve an appropriate amount.' : error }}
+          {{
+            error === 'execution reverted: ERC20: transfer amount exceeds allowance' ? 'Transfer amount exceeds allowance, please approve an appropriate amount.' : error
+          }}
         </p>
       </div>
     </window>
@@ -789,12 +810,14 @@ export default {
     return {
       error: '',
       success: '',
+      showLastGames: false,
 
       mainContract: {},
       coinFlipContract: {},
       coinFlipMounted: false,
       coinFlipInterval: undefined,
 
+      coinFlipLastGames: [],
       coinFlipShowEndedGames: false,
       coinFlipDefaultView: 'default',
       coinFlipShownGames: [],
@@ -863,11 +886,13 @@ export default {
       if (document.hasFocus()) {
         const coinFlipFetchedData = await Promise.all([
           this.coinFlipContract.lastGameId(),
-          this.coinFlipContract.recentGames(100)
+          this.coinFlipContract.recentGames(100),
+          this.coinFlipContract.recentGamesByUser(this.metaMaskAccount, 5)
         ])
 
         let lastGameId = coinFlipFetchedData[0]._isBigNumber ? ethers.BigNumber.from(coinFlipFetchedData[0]).toString() : coinFlipFetchedData[0]
         let recentGames = []
+        let yourRecentGames = []
 
         for (const game of coinFlipFetchedData[1]) {
           let gameWithInfo = {}
@@ -884,9 +909,25 @@ export default {
 
           recentGames.push(gameWithInfo)
         }
+        for (const game of coinFlipFetchedData[2]) {
+          let gameWithInfo = {}
+
+          gameWithInfo.id = game[6]._isBigNumber ? ethers.BigNumber.from(game[6]).toString() : game[6]
+          gameWithInfo.name = game[0]
+          gameWithInfo.p1 = game[1]
+          gameWithInfo.p2 = game[2]
+          gameWithInfo.flipper = game[3]
+          gameWithInfo.winner = game[4]
+          gameWithInfo.betAmount = ethers.utils.formatEther(game[5]._isBigNumber ? ethers.BigNumber.from(game[5]).toString() : game[5])
+          gameWithInfo.ended = game[8]
+          gameWithInfo.passwordProtected = game[7] !== '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+
+          yourRecentGames.push(gameWithInfo)
+        }
 
         this.coinFlipFetchedData.lastGameId = lastGameId
         this.coinFlipFetchedData.recentGames = recentGames
+        this.coinFlipLastGames = yourRecentGames
 
         if (this.coinFlipDefaultView === 'default') {
           this.coinFlipShownGames = recentGames
