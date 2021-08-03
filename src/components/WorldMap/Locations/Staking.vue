@@ -3,6 +3,11 @@
     <div class="slide-in shadow-xl relative" v-if="openWindow === 'staking' || openWindow === 'staking-large'"
          :style="openWindow === 'casino-large' ? 'width: 100%;' : 'width: 30vw;'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
+
+      <div class="absolute top-0 left-0 py-4 px-6">
+        <i @click="$store.dispatch('setOpenWindow', '')" class="fas fa-times cursor-pointer text-xl"></i>
+      </div>
+
       <div class="flex relative cursor-pointer" @click="setFavourite('staking')">
         <img v-if="favourites.includes('staking')" class="mx-auto" src="/images/ui/window-banner-favourite.png"
              alt="Banner">
