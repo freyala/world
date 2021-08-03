@@ -410,21 +410,7 @@
         </window>
       </div>
 
-      <div v-if="firstTime" id="tutorial">
-        <window name="tutorial">
-          <div class="flex flex-wrap py-2 px-3">
-            <div class="w-4/5">
-              <div class="text-2xl">Welcome!</div>
-            </div>
-            <div class="w-1/5 text-right">
-              <i @click="hideWindow('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
-            </div>
-            <p class="w-full mt-4">
-              Welcome to Freyala!
-            </p>
-          </div>
-        </window>
-      </div>
+
     </main>
   </div>
 </template>
