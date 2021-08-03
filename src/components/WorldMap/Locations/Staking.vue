@@ -4,7 +4,8 @@
          :style="openWindow === 'casino-large' ? 'width: 100%;' : 'width: 30vw;'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
       <div class="flex relative cursor-pointer" @click="setFavourite('staking')">
-        <img v-if="favourites.includes('staking')" class="mx-auto" src="/images/ui/window-banner-favourite.png" alt="Banner">
+        <img v-if="favourites.includes('staking')" class="mx-auto" src="/images/ui/window-banner-favourite.png"
+             alt="Banner">
         <img v-else class="mx-auto" src="/images/ui/window-banner-unfavourite.png" alt="Banner">
         <div class="absolute text-center w-full" style="top: 80px; line-height: 0.25">
           <small>Click to favourite</small>
@@ -93,31 +94,22 @@
       <hr>
       <br>
       <p class="text-xl pb-24">
-        The vast cave system beneath the kingdom of Freyala had been untouched for centuries. There had always
-        been
-        rumors that these caves was where the world had been drawing magic from, with creatures naturally
-        being
-        drawn to the entrances. A group of miners led by Payne, a man known for his talent in acquiring the
-        rarest
-        of jewels, had discovered a mystical ore unlike anything seen before.
+        The vast cave system beneath the kingdom of Freyala had been untouched for centuries. There had always been
+        rumors that these caves was where the world had been drawing magic from, with creatures naturally being drawn to
+        the entrances. A group of miners led by Payne, a man known for his talent in acquiring the rarest of jewels, had
+        discovered a mystical ore unlike anything seen before.
         <br>
         <br>
-        Payne immediately sought out the village elder, Zarius. Once the regent learned of this ore’s
-        existence, he
-        named it ‘XYA’ after his deceased daughter and quickly became obsessed with studying this ore, in
-        hopes of
-        finding the key to immortality. Apart from the most loyal servants of Regent Carroway, not a single
-        person
-        was allowed to step foot into the mines. Regent Carroway seemed to be immensely thankful, promising
-        power
-        and riches to Payne’s crew.
+        Payne immediately sought out the village elder, Zarius. Once the regent learned of this ore’s existence, he
+        named it ‘XYA’ after his deceased daughter and quickly became obsessed with studying this ore, in hopes of
+        finding the key to immortality. Apart from the most loyal servants of Regent Carroway, not a single person was
+        allowed to step foot into the mines. Regent Carroway seemed to be immensely thankful, promising power and riches
+        to Payne’s crew.
         <br>
         <br>
-        Extraction sites were shortly constructed to excavate the cave and increase the monarch’s possession
-        of XYA.
-        Anyone that neared these caves, Freyfolk or not, were ordered to be killed on sight. There have been
-        no
-        traces of Payne’s crew since.
+        Extraction sites were shortly constructed to excavate the cave and increase the monarch’s possession of XYA.
+        Anyone that neared these caves, Freyfolk or not, were ordered to be killed on sight. There have been no traces
+        of Payne’s crew since.
       </p>
     </div>
   </transition>
@@ -185,7 +177,7 @@ export default {
   },
   methods: {
     ...mapActions([
-       'setFavourite'
+      'setFavourite'
     ]),
     async updateStakes() {
       const stake = await this.stakingContract.stakes(this.metaMaskAccount)
