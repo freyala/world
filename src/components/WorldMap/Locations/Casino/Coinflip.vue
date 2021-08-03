@@ -487,7 +487,7 @@
                     Ended
                     <br><br>
                     Winner: <br>
-                    <span style="line-break: anywhere">{{ game.winner === metaMaskAccount ? 'YOU!' : 'Opponent' }}</span>
+                    <span style="line-break: anywhere">{{ game.winner === metaMaskAccount ? 'YOU!' : game.winner }}</span>
                   </div>
                 </div>
               </div>
