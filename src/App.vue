@@ -1,8 +1,18 @@
 <template>
   <div id="app">
     <div class="hidden lg:block">
+      <div style="width: 0; height: 0">
+        <div class="load-in-bg1"></div>
+        <div class="load-in-bg2"></div>
+        <div class="load-in-bg3"></div>
+      </div>
       <transition name="fade" mode="out-in">
-        <router-view/>
+        <div v-if="loading" class="flex h-screen w-full">
+          <div class="loading m-auto">
+            Loading...
+          </div>
+        </div>
+        <router-view v-show="loading === false"/>
       </transition>
     </div>
     <div class="block lg:hidden">
@@ -29,7 +39,16 @@ import wallet from "./plugins/wallet";
 export default {
   name: 'Freyala',
   mixins: [wallet],
+  data() {
+    return {
+      loading: true
+    }
+  },
   mounted() {
+    setTimeout(() => {
+      this.loading = false
+    }, 3000)
+
     setInterval(() => {
       this.fetchData()
     }, 1500)

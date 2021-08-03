@@ -787,6 +787,9 @@ export default {
   },
   data() {
     return {
+      error: '',
+      success: '',
+
       mainContract: {},
       coinFlipContract: {},
       coinFlipMounted: false,
@@ -1025,9 +1028,13 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
+          this.error = err.data.message
+          this.$modal.show('error')
         }
 
         console.error(err)
+        this.error = err.data.message
+        this.$modal.show('error')
       }
 
       this.coinFlipLoading.cancellingGame = false
@@ -1050,12 +1057,18 @@ export default {
         } catch (err) {
           if (err.code !== 4001) {
             this.coinFlipError = err
+            this.error = err.data.message
+            this.$modal.show('error')
           }
 
           console.error(err)
+          this.error = err.data.message
+          this.$modal.show('error')
         }
       } else {
         this.coinFlipError = 'Passwords are not the same'
+        this.error = 'Passwords are not the same'
+        this.$modal.show('error')
       }
 
       this.coinFlipLoading.creatingGame = false
@@ -1070,9 +1083,13 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
+          this.error = err.data.message
+          this.$modal.show('error')
         }
 
         console.error(err)
+        this.error = err.data.message
+        this.$modal.show('error')
       }
 
       this.coinFlipLoading.joiningGame = false
@@ -1087,9 +1104,13 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
+          this.error = err.data.message
+          this.$modal.show('error')
         }
 
         console.error(err)
+        this.error = err.data.message
+        this.$modal.show('error')
       }
 
       this.coinFlipLoading.joiningGame = false
