@@ -500,7 +500,7 @@
         <button @click="showLastGames = !showLastGames"
                 type="button"
                 class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
-          {{ showLastGames ? 'Hide last 5 games' : 'Show last 5 games' }}
+          {{ showLastGames ? 'Hide your last 5 games' : 'Show your last 5 games' }}
         </button>
 
 
