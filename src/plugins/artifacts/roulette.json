@@ -1,5 +1,5 @@
 {
-  "address": "0xA52df572c3d81e2D9993BAf702DE070c1422A91E",
+  "address": "0x28D85ec05371639818c5D7132A0f1A7F1ED99FF3",
   "abi": [
     {
       "inputs": [
@@ -77,11 +77,6 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_timeLimit",
-          "type": "uint256"
-        },
         {
           "internalType": "uint256",
           "name": "_minBet",
@@ -295,32 +290,6 @@
     {
       "inputs": [],
       "name": "rN",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "startedAt",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "timeLeft",
       "outputs": [
         {
           "internalType": "uint256",

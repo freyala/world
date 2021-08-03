@@ -68,21 +68,14 @@
         <div class="flex flex-wrap">
           <img class="w-5/6 mx-auto" src="/images/ui/roulette.png" alt="Roulette table">
 
-          <div class="w-full" v-if="rouletteFetchedData.timeLeft < 0 && rouletteFetchedData.timeLeftFromContract === '0'">
-            <p>Time's up? Feel powerful! Be the one to stop the wheel!</p>
+          <div class="w-full">
+            <p>Feel powerful! Be the one to stop the wheel!</p>
             <button type="button"
                     class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1"
                     @click="spinWheel()">
               <span v-if="rouletteLoading.spinWheel">Stopping wheel... </span>
               <span v-else>Stop wheel! </span>
               <i v-if="rouletteLoading.spinWheel" class="fas fa-cog fa-spin"></i>
-            </button>
-          </div>
-          <div class="w-full" v-else>
-            <p>The wheel is spinning! When the timer ends stop it!</p>
-            <button type="button"
-                    class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
-              Wheel is spinning...
             </button>
           </div>
         </div>
@@ -142,16 +135,13 @@
 
         <div class="flex flex-wrap">
           <div class="w-full flex text-xl mt-7 mb-4">
-            <div class="w-1/4">
+            <div class="w-1/3">
               Round number: {{ rouletteFetchedData.roundNumber }}
             </div>
-            <div class="w-1/4">
-              Time left in round: {{ rouletteFetchedData.timeLeft < '0' ? '0' : rouletteFetchedData.timeLeft }}
-            </div>
-            <div class="w-1/4">
+            <div class="w-1/3">
               Last colour: {{ rouletteFetchedData.lastSpace.colour }}
             </div>
-            <div class="w-1/4">
+            <div class="w-1/3">
               Last number: {{ rouletteFetchedData.lastSpace.number }}
             </div>
           </div>
@@ -266,6 +256,17 @@ import {ethers} from "ethers";
 import wallet from "../../../../plugins/wallet";
 import Freyala from "../../../../plugins/artifacts/freyala.json";
 import Roulette from "../../../../plugins/artifacts/roulette.json";
+import {initWeb3} from "../../../../plugins/initWeb3"
+const { Harmony } = require('@harmony-js/core');
+const {
+  ChainID,
+  ChainType,
+  hexToNumber,
+  numberToHex,
+  fromWei,
+  Units,
+  Unit,
+} = require('@harmony-js/utils');
 
 export default {
   name: 'Roulette',
@@ -286,6 +287,7 @@ export default {
   },
   data() {
     return {
+      currentBlockNumber: 0,
       mainContract: {},
       rouletteContract: {},
       rouletteMounted: false,
@@ -299,10 +301,7 @@ export default {
         currentBets: undefined,
         lastSpace: undefined,
         returnWheel: undefined,
-        roundNumber: undefined,
-        timeLeftFromContract: undefined,
-        startedAt: undefined,
-        timeLeft: undefined
+        roundNumber: undefined
       },
       rouletteLoading: {
         spinWheel: false,
@@ -344,10 +343,7 @@ export default {
           this.rouletteContract.currentBets(),
           this.rouletteContract.lastSpace(),
           this.rouletteContract.returnWheel(),
-          this.rouletteContract.rN(),
-          this.rouletteContract.timeLeft(),
-          this.rouletteContract.startedAt(),
-          this.rouletteContract.timeLimit()
+          this.rouletteContract.rN()
         ])
 
         const wheel = []
@@ -365,17 +361,12 @@ export default {
         }
 
         const roundNumber = data[3]._isBigNumber ? ethers.BigNumber.from(data[3]).toString() : data[3]
-        const timeLeftFromContract = data[4]._isBigNumber ? ethers.BigNumber.from(data[4]).toString() : data[4]
-        const startedAt = data[5]._isBigNumber ? ethers.BigNumber.from(data[5]).toString() : data[5]
 
         this.rouletteFetchedData = {
           currentBets: data[0],
           lastSpace: lastSpace,
           returnWheel: wheel,
-          roundNumber: roundNumber,
-          timeLeftFromContract: timeLeftFromContract,
-          startedAt: startedAt,
-          timeLeft: (parseInt(startedAt) + (parseInt(data[6]) + 20)) - Math.floor(Date.now() / 1000)
+          roundNumber: roundNumber
         }
       }
     },
@@ -406,11 +397,6 @@ export default {
       this.rouletteLoading.roundNumber = true
       this.rouletteFetchedData.roundNumber = await this.rouletteContract.rN()
       this.rouletteLoading.roundNumber = false
-    },
-    async timeLeft() {
-      this.rouletteLoading.timeLeft = true
-      this.rouletteFetchedData.timeLeft = await this.rouletteContract.timeLeft()
-      this.rouletteLoading.timeLeft = false
     },
 
     // SEND DATA
