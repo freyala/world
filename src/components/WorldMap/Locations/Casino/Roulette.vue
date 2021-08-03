@@ -270,7 +270,7 @@
       </div>
     </div>
 
-    <div v-else class="flex w-full h-full py-24">
+    <div v-if="!rouletteMounted" class="flex w-full h-full py-24">
       <p class="m-auto text-center">
         Loading...
       </p>
