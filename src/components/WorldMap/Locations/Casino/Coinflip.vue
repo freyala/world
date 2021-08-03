@@ -727,6 +727,33 @@
         Loading...
       </p>
     </div>
+
+    <window name="error">
+      <div class="flex flex-wrap py-2 px-3">
+        <div class="w-4/5">
+          <div class="text-2xl">Error</div>
+        </div>
+        <div class="w-1/5 text-right">
+          <i @click="$modal.hide('error')" class="fas fa-times cursor-pointer text-xl"></i>
+        </div>
+        <p class="w-full mt-4">
+          {{ error === 'execution reverted: ERC20: transfer amount exceeds allowance' ? 'Transfer amount exceeds allowance, please approve an appropriate amount.' : error }}
+        </p>
+      </div>
+    </window>
+    <window name="success">
+      <div class="flex flex-wrap py-2 px-3">
+        <div class="w-4/5">
+          <div class="text-2xl">Success</div>
+        </div>
+        <div class="w-1/5 text-right">
+          <i @click="$modal.hide('success')" class="fas fa-times cursor-pointer text-xl"></i>
+        </div>
+        <p class="w-full mt-4">
+          {{ success }}
+        </p>
+      </div>
+    </window>
   </div>
 </template>
 
@@ -1092,11 +1119,15 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
+          this.error = err.data.message
+          this.$modal.show('error')
         }
 
         this.coinFlipLoading.maxAllowance = false
         this.coinFlipLoading.allowance = false
         console.error(err);
+        this.error = err.data.message
+        this.$modal.show('error')
       }
 
       this.coinFlipAmountToApprove = 0;

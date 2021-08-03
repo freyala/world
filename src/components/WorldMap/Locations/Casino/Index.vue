@@ -56,7 +56,7 @@
 
       <p class="text-xl pb-24">
         After the monarch’s defenses grew stronger, thieves and outcasts retreated to the outskirts of the Freyala
-        kingdom. Roaming in a secluded alleyway, deadly games of chance were hosted for those that were adventures. To
+        kingdom. Roaming in a secluded alleyway, deadly games of chance were hosted for those that were adventurous. To
         give these risky wagers more recognition, a covert organization called ‘Luderion’ was established, of which no
         one knew the founder. Word of this underground activity quickly spread amongst the Freyfolk.
         <br>

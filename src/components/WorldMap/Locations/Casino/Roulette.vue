@@ -254,7 +254,7 @@
           <i @click="$modal.hide('error')" class="fas fa-times cursor-pointer text-xl"></i>
         </div>
         <p class="w-full mt-4">
-          {{ error }}
+          {{ error === 'execution reverted: ERC20: transfer amount exceeds allowance' ? 'Transfer amount exceeds allowance, please approve an appropriate amount.' : error }}
         </p>
       </div>
     </window>
