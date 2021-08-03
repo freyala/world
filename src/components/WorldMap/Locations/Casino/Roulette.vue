@@ -90,43 +90,51 @@
           </div>
 
           <div class="w-full 2xl:w-3/4 flex mt-8">
-            <div class="w-1/5">
+            <div class="w-1/6">
               <button type="button"
-                      :class="rouletteBetAmount === 50 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                      :class="rouletteBetAmount === 50000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="rouletteBetAmount = 50">
+                      @click="rouletteBetAmount = 50000000000000000000">
                 50 XYA
               </button>
             </div>
-            <div class="w-1/5">
+            <div class="w-1/6">
               <button type="button"
-                      :class="rouletteBetAmount === 200 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                      :class="rouletteBetAmount === 100000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                      class="rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="rouletteBetAmount = 100000000000000000000">
+                100 XYA
+              </button>
+            </div>
+            <div class="w-1/6">
+              <button type="button"
+                      :class="rouletteBetAmount === 200000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="rouletteBetAmount = 200">
+                      @click="rouletteBetAmount = 200000000000000000000">
                 200 XYA
               </button>
             </div>
-            <div class="w-1/5">
+            <div class="w-1/6">
               <button type="button"
-                      :class="rouletteBetAmount === 500 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                      :class="rouletteBetAmount === 500000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="rouletteBetAmount = 500">
+                      @click="rouletteBetAmount = 500000000000000000000">
                 500 XYA
               </button>
             </div>
-            <div class="w-1/5">
+            <div class="w-1/6">
               <button type="button"
-                      :class="rouletteBetAmount === 750 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                      :class="rouletteBetAmount === 750000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="rouletteBetAmount = 750">
+                      @click="rouletteBetAmount = 750000000000000000000">
                 750 XYA
               </button>
             </div>
             <div class="w-1/5">
               <button type="button"
-                      :class="rouletteBetAmount === 1000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                      :class="rouletteBetAmount === 1000000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="rouletteBetAmount = 1000">
+                      @click="rouletteBetAmount = 1000000000000000000000">
                 1000 XYA
               </button>
             </div>
@@ -312,7 +320,7 @@ export default {
       rouletteMounted: false,
       rouletteInterval: undefined,
 
-      rouletteBetAmount: 50,
+      rouletteBetAmount: 50000000000000000000,
       rouletteSelectedItem: 0,
       rouletteDefaultView: 'medium',
       rouletteAmountToApprove: 0,
@@ -441,7 +449,7 @@ export default {
         const tx = await this.rouletteContract.makeOutsideBet(number, amount.toString())
         await tx.wait(1)
 
-        this.amountToBet = 50
+        this.amountToBet = 50000000000000000000
         this.rouletteSelectedItem = false
 
       } catch (err) {
@@ -465,7 +473,7 @@ export default {
         const tx = await this.rouletteContract.makeStraightBet(number, amount.toString())
         await tx.wait(1)
 
-        this.amountToBet = 50
+        this.amountToBet = 50000000000000000000
         this.rouletteSelectedItem = false
       } catch (err) {
         if (err.code !== 4001) {
