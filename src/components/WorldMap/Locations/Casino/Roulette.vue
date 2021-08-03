@@ -143,13 +143,16 @@
 
         <div class="flex flex-wrap">
           <div class="w-full flex text-xl mt-7 mb-4">
-            <div class="w-1/3">
+            <div class="w-1/4">
+              XYA Balance: {{ userBalance }}
+            </div>
+            <div class="w-1/4">
               Round number: {{ rouletteFetchedData.roundNumber }}
             </div>
-            <div class="w-1/3">
+            <div class="w-1/4">
               Last colour: {{ rouletteFetchedData.lastSpace.colour }}
             </div>
-            <div class="w-1/3">
+            <div class="w-1/4">
               Last number: {{ rouletteFetchedData.lastSpace.number }}
             </div>
           </div>
