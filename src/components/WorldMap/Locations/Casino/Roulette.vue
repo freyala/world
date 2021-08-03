@@ -244,6 +244,33 @@
         Loading...
       </p>
     </div>
+
+    <window name="error">
+      <div class="flex flex-wrap py-2 px-3">
+        <div class="w-4/5">
+          <div class="text-2xl">Error</div>
+        </div>
+        <div class="w-1/5 text-right">
+          <i @click="$modal.hide('error')" class="fas fa-times cursor-pointer text-xl"></i>
+        </div>
+        <p class="w-full mt-4">
+          {{ error }}
+        </p>
+      </div>
+    </window>
+    <window name="success">
+      <div class="flex flex-wrap py-2 px-3">
+        <div class="w-4/5">
+          <div class="text-2xl">Success</div>
+        </div>
+        <div class="w-1/5 text-right">
+          <i @click="$modal.hide('success')" class="fas fa-times cursor-pointer text-xl"></i>
+        </div>
+        <p class="w-full mt-4">
+          {{ success }}
+        </p>
+      </div>
+    </window>
   </div>
 </template>
 
@@ -257,16 +284,6 @@ import wallet from "../../../../plugins/wallet";
 import Freyala from "../../../../plugins/artifacts/freyala.json";
 import Roulette from "../../../../plugins/artifacts/roulette.json";
 import {initWeb3} from "../../../../plugins/initWeb3"
-const { Harmony } = require('@harmony-js/core');
-const {
-  ChainID,
-  ChainType,
-  hexToNumber,
-  numberToHex,
-  fromWei,
-  Units,
-  Unit,
-} = require('@harmony-js/utils');
 
 export default {
   name: 'Roulette',
@@ -287,6 +304,8 @@ export default {
   },
   data() {
     return {
+      error: '',
+      success: '',
       currentBlockNumber: 0,
       mainContract: {},
       rouletteContract: {},
@@ -419,10 +438,13 @@ export default {
 
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          this.error = err.data.message
+          this.$modal.show('error')
         }
 
         console.error(err);
+        this.error = err.data.message
+        this.$modal.show('error')
       }
 
       this.rouletteLoading.makeOutsideBet = false
@@ -439,9 +461,12 @@ export default {
         this.rouletteSelectedItem = false
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          this.error = err.data.message
+          this.$modal.show('error')
         }
         console.error(err);
+        this.error = err.data.message
+        this.$modal.show('error')
       }
 
       this.rouletteLoading.makeStraightBet = false
@@ -451,15 +476,26 @@ export default {
       this.rouletteLoading.spinWheel = true
 
       try {
-        const tx = await this.rouletteContract.spinWheel()
-        await tx.wait(1)
+        let web3 = await initWeb3()
+        const gasPrice = await web3.eth.getGasPrice();
+
+        const rouletteContract = await new web3.eth.Contract(Roulette.abi, Roulette.address);
+        await rouletteContract.methods.spinWheel().send({
+          from: this.metaMaskAccount,
+          gasPrice: gasPrice,
+          gasLimit: 250000,
+          gas: parseFloat((gasPrice * 250000) / Math.pow(10, 9))
+        })
 
       } catch (err) {
         if (err.code !== 4001) {
           this.error = err
+          this.$modal.show('error')
         }
 
         console.error(err);
+        this.error = err
+        this.$modal.show('error')
       }
 
       this.rouletteLoading.spinWheel = false
@@ -486,10 +522,13 @@ export default {
 
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          this.error = err.data.message
+          this.$modal.show('error')
         }
 
         console.error(err);
+        this.error = err.data.message
+        this.$modal.show('error')
       }
 
       this.rouletteLoading.maxAllowance = false
