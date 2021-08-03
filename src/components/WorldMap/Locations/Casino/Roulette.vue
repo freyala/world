@@ -78,6 +78,12 @@
               <i v-if="rouletteLoading.spinWheel" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
+          <div v-else class="w-full">
+            <button type="button"
+                    class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
+              <span>No bets placed..</span>
+            </button>
+          </div>
         </div>
       </div>
 
