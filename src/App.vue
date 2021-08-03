@@ -12,7 +12,7 @@
             Loading...
           </div>
         </div>
-        <router-view v-show="loading === false"/>
+        <router-view v-else/>
       </transition>
     </div>
     <div class="block lg:hidden">

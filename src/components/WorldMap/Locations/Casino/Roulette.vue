@@ -68,7 +68,7 @@
         <div class="flex flex-wrap">
           <img class="w-5/6 mx-auto" src="/images/ui/roulette.png" alt="Roulette table">
 
-          <div class="w-full">
+          <div v-if="rouletteFetchedData.recentBets.length > 0" class="w-full">
             <p>Feel powerful! Be the one to stop the wheel!</p>
             <button type="button"
                     class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1"
@@ -249,6 +249,20 @@
         </div>
       </div>
     </div>
+    <div v-if="rouletteMounted && rouletteFetchedData.recentBets.length > 0" class="flex flex-wrap">
+      <div class="w-full 2xl:w-3/4 ml-auto pl-8">
+        Current straight bets: <br>
+        <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.recentBets">
+          {{ bet.player }} has bet {{ parseInt(bet.betSize) }} XYA on number {{ bet.spaceNumber }}
+        </div>
+        <br>
+        <br>
+        Current outside bets: <br>
+        <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.recentBets">
+          {{ bet.player }} has bet {{ parseInt(bet.betSize) }} XYA on {{ bet.betType }}
+        </div>
+      </div>
+    </div>
 
     <div v-else class="flex w-full h-full py-24">
       <p class="m-auto text-center">
@@ -265,7 +279,9 @@
           <i @click="$modal.hide('error')" class="fas fa-times cursor-pointer text-xl"></i>
         </div>
         <p class="w-full mt-4">
-          {{ error === 'execution reverted: ERC20: transfer amount exceeds allowance' ? 'Transfer amount exceeds allowance, please approve an appropriate amount.' : error }}
+          {{
+            error === 'execution reverted: ERC20: transfer amount exceeds allowance' ? 'Transfer amount exceeds allowance, please approve an appropriate amount.' : error
+          }}
         </p>
       </div>
     </window>
@@ -393,6 +409,40 @@ export default {
 
         const roundNumber = data[3]._isBigNumber ? ethers.BigNumber.from(data[3]).toString() : data[3]
 
+        let recentBets = []
+
+        if (data[4].straightBets) {
+          for (const straightBet of data[4].straightBets) {
+            let straightBetInfo = {
+              type: 'straight'
+            }
+
+            straightBetInfo.betSize = ethers.utils.formatEther(ethers.BigNumber.from(straightBet.betSize).toString())
+            straightBetInfo.spaceNumber = ethers.BigNumber.from(straightBet.spaceNumber).toString()
+            straightBetInfo.player = straightBet.player
+
+            recentBets.push(straightBetInfo)
+          }
+        }
+
+        if (data[4].outsideBets) {
+          for (const outsideBet of data[4].outsideBets) {
+            let outsideBetInfo = {
+              type: 'outside'
+            }
+
+            outsideBetInfo.betSize = ethers.utils.formatEther(ethers.BigNumber.from(outsideBet.betSize).toString())
+            outsideBetInfo.player = outsideBet.player
+            if (outsideBet.betType === 1) outsideBetInfo.betType = 'odds'
+            if (outsideBet.betType === 2) outsideBetInfo.betType = 'evens'
+            if (outsideBet.betType === 3) outsideBetInfo.betType = 'red'
+            if (outsideBet.betType === 4) outsideBetInfo.betType = 'black'
+
+            recentBets.push(outsideBetInfo)
+          }
+        }
+
+
         // let haveYouBet = false
 
         // console.log(data[4][0][0][1])
@@ -403,8 +453,8 @@ export default {
           currentBets: data[0],
           lastSpace: lastSpace,
           returnWheel: wheel,
-          roundNumber: roundNumber
-          // haveYouBet: haveYouBet
+          roundNumber: roundNumber,
+          recentBets: recentBets
         }
       }
     },

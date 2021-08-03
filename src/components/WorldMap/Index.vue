@@ -410,7 +410,11 @@
         </window>
       </div>
 
-
+      <div id="logo" class="absolute" style="top: 15px; left: 15px; z-index: 99999999">
+        <a href="https://www.freyala.com/" target="_blank">
+          <img class="w-8" src="/images/XYA.png" alt="XYA logo">
+        </a>
+      </div>
     </main>
   </div>
 </template>
