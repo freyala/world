@@ -579,10 +579,10 @@ export default {
       if (value === 'black') number = '4'
 
       try {
-        const tx = await this.rouletteContract.makeOutsideBet(number, amount)
+        const tx = await this.rouletteContract.makeOutsideBet(number, amount.toString())
         await tx.wait(1)
 
-        this.amountToBet = 50000000000000000000
+        this.rouletteBetAmount = 50000000000000000000
         this.rouletteSelectedItem = false
 
       } catch (err) {
@@ -603,10 +603,10 @@ export default {
       this.rouletteLoading.makeStraightBet = true
 
       try {
-        const tx = await this.rouletteContract.makeStraightBet(number, amount)
+        const tx = await this.rouletteContract.makeStraightBet(number, amount.toString())
         await tx.wait(1)
 
-        this.amountToBet = 50000000000000000000
+        this.rouletteBetAmount = 50000000000000000000
         this.rouletteSelectedItem = false
       } catch (err) {
         if (err.code !== 4001) {
