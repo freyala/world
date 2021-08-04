@@ -152,7 +152,6 @@ import {ethers} from "ethers"
 import wallet from "../../../plugins/wallet"
 import Freyala from "../../../plugins/artifacts/freyala.json"
 import Staking from "../../../plugins/artifacts/staking.json"
-import Roulette from "../../../plugins/artifacts/roulette.json";
 
 export default {
   name: 'Staking',
@@ -177,7 +176,7 @@ export default {
   data() {
     return {
       stakingInterval: undefined,
-      totalStaked: 0,
+      // totalStaked: 0,
       stakingMounted: false,
       preApprove: false,
       mainContract: {},
@@ -206,24 +205,24 @@ export default {
       this.stakingMounted = true
     }, 1000)
 
-    this.stakingInterval = setInterval(() => {
-      this.getRewardPool()
-    }, 1000)
+    // this.stakingInterval = setInterval(() => {
+    //   this.getRewardPool()
+    // }, 1000)
   },
   methods: {
     ...mapActions([
       'setFavourite'
     ]),
-    async getRewardPool() {
-      if (document.hasFocus()) {
-        const totalStaked = await this.stakingContract.totalStaked()
-
-        console.log(totalStaked)
-
-        this.totalStaked = ethers.utils.formatEther(totalStaked._isBigNumber ? ethers.BigNumber.from(totalStaked).toString() : totalStaked)
-        return totalStaked
-      }
-    },
+    // async getRewardPool() {
+    //   if (document.hasFocus()) {
+    //     const totalStaked = await this.stakingContract.totalStaked()
+    //
+    //     console.log(totalStaked)
+    //
+    //     this.totalStaked = ethers.utils.formatEther(totalStaked._isBigNumber ? ethers.BigNumber.from(totalStaked).toString() : totalStaked)
+    //     return totalStaked
+    //   }
+    // },
     async updateStakes() {
       const stake = await this.stakingContract.stakes(this.metaMaskAccount)
       this.stakes = stake
