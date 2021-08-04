@@ -1,6 +1,27 @@
 {
-  "address": "0xDB4731275533F546b66372766847aC863638Fd1f",
+    "address": "0x038eB501ceF9D37e1a418BA28f66BD535123A6E7",
   "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "_XYA",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_numberOfSpaces",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_withdrawAddr",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
     {
       "inputs": [
         {
@@ -17,153 +38,6 @@
       "name": "addFeeWallet",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "enum Roulette.BETTYPES",
-          "name": "_betType",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "makeOutsideBet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_space",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "makeStraightBet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_index",
-          "type": "uint256"
-        }
-      ],
-      "name": "removeFeeWallet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "spinWheel",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_minBet",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_maxBet",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_maxBetCount",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateParams",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract IERC20",
-          "name": "_XYA",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_numberOfSpaces",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [],
-      "name": "currentBets",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "player",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "spaceNumber",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "betSize",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct Roulette._StraightBet[][]",
-          "name": "straightBets",
-          "type": "tuple[][]"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "player",
-              "type": "address"
-            },
-            {
-              "internalType": "enum Roulette.BETTYPES",
-              "name": "betType",
-              "type": "uint8"
-            },
-            {
-              "internalType": "uint256",
-              "name": "betSize",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct Roulette._OutsideBet[][]",
-          "name": "outsideBets",
-          "type": "tuple[][]"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -226,6 +100,348 @@
     },
     {
       "inputs": [],
+      "name": "getCurrentRound",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "currentRound",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "player",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "spaceNumber",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "betSize",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Roulette._StraightBet[][]",
+          "name": "straightBets",
+          "type": "tuple[][]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "player",
+              "type": "address"
+            },
+            {
+              "internalType": "enum Roulette.BETTYPES",
+              "name": "betType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "betSize",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Roulette._OutsideBet[][]",
+          "name": "outsideBets",
+          "type": "tuple[][]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPreviousRoundResult",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "previousRound",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "winningSpace",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum Roulette.COLOURS",
+              "name": "winningColour",
+              "type": "uint8"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "winnings",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._Winner[]",
+              "name": "winners",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "spaceNumber",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "betSize",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._StraightBet[]",
+              "name": "winningStraightBets",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "enum Roulette.BETTYPES",
+                  "name": "betType",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "betSize",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._OutsideBet[]",
+              "name": "winningOutsideBets",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct Roulette._RoundResult",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_howmany",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPreviousRoundResults",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "previousRound",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "winningSpace",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum Roulette.COLOURS",
+              "name": "winningColour",
+              "type": "uint8"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "winnings",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._Winner[]",
+              "name": "winners",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "spaceNumber",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "betSize",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._StraightBet[]",
+              "name": "winningStraightBets",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "enum Roulette.BETTYPES",
+                  "name": "betType",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "betSize",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._OutsideBet[]",
+              "name": "winningOutsideBets",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct Roulette._RoundResult[]",
+          "name": "roundResults",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_Id",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoundResultById",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "previousRound",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "winningSpace",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum Roulette.COLOURS",
+              "name": "winningColour",
+              "type": "uint8"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "winnings",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._Winner[]",
+              "name": "winners",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "spaceNumber",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "betSize",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._StraightBet[]",
+              "name": "winningStraightBets",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "enum Roulette.BETTYPES",
+                  "name": "betType",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "betSize",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct Roulette._OutsideBet[]",
+              "name": "winningOutsideBets",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct Roulette._RoundResult",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "lastSpace",
       "outputs": [
         {
@@ -263,6 +479,68 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "enum Roulette.BETTYPES",
+          "name": "_betType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "makeOutsideBet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_space",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "makeStraightBet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rN",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "removeFeeWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "returnWheel",
       "outputs": [
@@ -289,7 +567,27 @@
     },
     {
       "inputs": [],
-      "name": "rN",
+      "name": "roundStartedAt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "spinWheel",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "timeLeft",
       "outputs": [
         {
           "internalType": "uint256",
@@ -311,6 +609,41 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_minBet",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxBet",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxBetCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timeLimit",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateParams",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ]

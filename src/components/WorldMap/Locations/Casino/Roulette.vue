@@ -68,9 +68,13 @@
         <div class="flex flex-wrap">
           <img class="w-5/6 mx-auto" src="/images/ui/roulette.png" alt="Roulette table">
 
-          <div v-if="rouletteFetchedData.recentBets.length > 0" class="w-full">
+          <div class="w-full" v-if="rouletteFetchedData.timeLeft !== 'Finished'">
             <p>Feel powerful! Be the one to stop the wheel!</p>
-            <button type="button"
+            <button v-if="rouletteFetchedData.timeLeft > 0" type="button"
+                    class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
+              <span>Wait for the timer to end... {{ rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}` }}</span>
+            </button>
+            <button v-else type="button"
                     class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1"
                     @click="spinWheel()">
               <span v-if="rouletteLoading.spinWheel">Stopping wheel... </span>
@@ -78,13 +82,55 @@
               <i v-if="rouletteLoading.spinWheel" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
-          <div v-else class="w-full">
-            <button type="button"
-                    class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
-              <span>No bets placed..</span>
-            </button>
+        </div>
+
+
+        <div v-if="rouletteMounted && rouletteFetchedData.currentRound.length > 0" class="flex flex-wrap mt-4">
+          <div class="w-full">
+            <span class="text-xl" v-if="rouletteFetchedData.currentRound.length > 0">Current round bets: </span><br>
+            <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.currentRound">
+              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}
+            </div>
+            <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.currentRound">
+              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on {{ bet.betType }}
+            </div>
           </div>
         </div>
+        <br>
+        <hr v-if="rouletteMounted">
+        <br>
+        <div v-if="rouletteMounted && rouletteFetchedData.lastWinners.length > 0" class="flex flex-wrap">
+          <div class="w-full mt-4">
+            <span class="text-xl">
+              Last rounds winners: <br>
+            </span>
+            <div v-for="bet in rouletteFetchedData.lastWinners">
+              {{ bet.player }} has won {{ bet.winnings }} XYA
+            </div>
+          </div>
+        </div>
+        <div v-if="rouletteMounted && rouletteFetchedData.lastWinners.length === 0" class="flex flex-wrap">
+          <div class="w-full mt-4">
+            <span class="text-xl">
+              Last rounds winners: <br>
+            </span>
+            No winners last round.
+          </div>
+        </div>
+<!--        <br>-->
+<!--        <hr>-->
+<!--        <br>-->
+<!--        <div v-if="rouletteMounted && rouletteFetchedData.previousRound.length > 0" class="flex flex-wrap">-->
+<!--          <div class="w-full">-->
+<!--            <span class="text-xl" v-if="rouletteFetchedData.previousRound.length > 0">Previous round bets: </span><br>-->
+<!--            <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.previousRound">-->
+<!--              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}-->
+<!--            </div>-->
+<!--            <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.previousRound">-->
+<!--              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on {{ bet.betType }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
 
       <div class="w-3/4 mt-8 px-8">
@@ -95,7 +141,7 @@
             </h3>
           </div>
 
-          <div class="w-full 2xl:w-3/4 flex mt-8">
+          <div class="w-full 2xl:w-3/4 flex mt-8 p-1">
             <div class="w-1/6">
               <button type="button"
                       :class="rouletteBetAmount === 50000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
@@ -153,18 +199,18 @@
               XYA Balance: {{ userBalance }}
             </div>
             <div class="w-1/4">
-              Round number: {{ rouletteFetchedData.roundNumber }}
+              Round number: {{ rouletteFetchedData.currentRoundNumber }}
             </div>
             <div class="w-1/4">
-              Last colour: {{ rouletteFetchedData.lastSpace.colour }}
+              {{ rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `Time left: ${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}` }}
             </div>
             <div class="w-1/4">
-              Last number: {{ rouletteFetchedData.lastSpace.number }}
+              Last game: {{ rouletteFetchedData.lastSpace.colour }} {{ rouletteFetchedData.lastSpace.number }}
             </div>
           </div>
           <div class="w-1/12 flex flex-wrap">
             <div @click="rouletteSelectedItem = space.number"
-                 v-for="space in rouletteFetchedData.returnWheel.slice(0, 1)"
+                 v-for="space in rouletteFetchedData.wheel.slice(0, 1)"
                  class="w-full p-1">
               <div class="h-full flex cursor-pointer"
                    :class="`text-${rouletteSelectedItem === space.number ? 'brown' : 'yellow'} bg-${rouletteSelectedItem === space.number ? 'white' : space.colour}`">
@@ -177,20 +223,12 @@
 
           <div class="w-8/12 pr-4 flex flex-wrap">
             <div @click="rouletteSelectedItem = space.number"
-                 v-for="space in rouletteFetchedData.returnWheel.slice(1, 15)"
-                 class="w-1/5 p-1">
+                 v-for="space in rouletteFetchedData.wheel.slice(1, 37)"
+                 class="w-1/6 p-1">
               <div class="h-24 flex cursor-pointer"
                    :class="`text-${rouletteSelectedItem === space.number ? 'brown' : 'yellow'} bg-${rouletteSelectedItem === space.number ? 'white' : space.colour}`">
                 <p class="m-auto">
                   {{ space.number }}
-                </p>
-              </div>
-            </div>
-            <div @click="rouletteSelectedItem = (Math.floor(Math.random() * 15)).toString()" class="w-1/5 p-1">
-              <div class="h-24 flex cursor-pointer"
-                   :class="`text-${rouletteSelectedItem === 'random' ? 'brown' : 'yellow'} bg-${rouletteSelectedItem === 'random' ? 'white' : 'yellow'}`">
-                <p class="m-auto text-black px-4 text-center">
-                  Choose for me!
                 </p>
               </div>
             </div>
@@ -232,6 +270,14 @@
                 </div>
               </div>
             </div>
+            <div @click="rouletteSelectedItem = (Math.floor(Math.random() * 37)).toString()" class="w-full p-1">
+              <div class="h-full flex cursor-pointer"
+                   :class="`text-${rouletteSelectedItem === 'random' ? 'brown' : 'yellow'} bg-${rouletteSelectedItem === 'random' ? 'white' : 'yellow'}`">
+                <p class="m-auto text-black px-4 text-center">
+                  Choose for me!
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -252,20 +298,6 @@
             <span v-else>Place your bet! </span>
             <i v-if="rouletteLoading.makeStraightBet" class="fas fa-cog fa-spin"></i>
           </button>
-        </div>
-      </div>
-    </div>
-    <div v-if="rouletteMounted && rouletteFetchedData.recentBets.length > 0" class="flex flex-wrap">
-      <div class="w-full 2xl:w-3/4 ml-auto pl-8">
-        Current straight bets: <br>
-        <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.recentBets">
-          {{ bet.player }} has bet {{ parseInt(bet.betSize) }} XYA on number {{ bet.spaceNumber }}
-        </div>
-        <br>
-        <br>
-        Current outside bets: <br>
-        <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.recentBets">
-          {{ bet.player }} has bet {{ parseInt(bet.betSize) }} XYA on {{ bet.betType }}
         </div>
       </div>
     </div>
@@ -391,76 +423,118 @@ export default {
     ]),
     async fetchRouletteData() {
       if (document.hasFocus()) {
-        const data = await Promise.all([
-          this.rouletteContract.currentBets(),
+        const [currentRoundData, previousResultData, lastSpaceData, returnWheelData, roundStartedAtData] = await Promise.all([
+          this.rouletteContract.getCurrentRound(),
+          this.rouletteContract.getPreviousRoundResult(),
           this.rouletteContract.lastSpace(),
           this.rouletteContract.returnWheel(),
-          this.rouletteContract.rN(),
-          this.rouletteContract.currentBetsByAddress(this.metaMaskAccount),
+          this.rouletteContract.roundStartedAt()
         ])
 
-        const wheel = []
+        let currentRound = []
+        if (currentRoundData.straightBets.length > 0) {
+          currentRoundData.straightBets.map((straightBet) => {
+            for (const bet of straightBet) {
+              let straightBetInfo = {
+                type: 'straight'
+              }
 
-        for (const space of data[2]) {
-          wheel.push({
-            number: space[0]._isBigNumber ? ethers.BigNumber.from(space[0]).toString() : space[0],
-            colour: space[1] === 0 ? 'green' : space[1] === 1 ? 'red' : 'black'
+              straightBetInfo.betSize = ethers.utils.formatEther(ethers.BigNumber.from(bet.betSize).toString())
+              straightBetInfo.spaceNumber = ethers.BigNumber.from(bet.spaceNumber).toString()
+              straightBetInfo.player = bet.player
+
+              currentRound.push(straightBetInfo)
+            }
+          })
+        }
+        if (currentRoundData.outsideBets.length > 0) {
+          currentRoundData.outsideBets.map((outsideBet) => {
+            for (const bet of outsideBet) {
+              let outsideBetInfo = {
+                type: 'outside'
+              }
+
+              outsideBetInfo.betSize = ethers.utils.formatEther(ethers.BigNumber.from(bet.betSize).toString())
+              outsideBetInfo.player = bet.player
+
+              if (bet.betType === 1) outsideBetInfo.betType = 'odds'
+              if (bet.betType === 2) outsideBetInfo.betType = 'evens'
+              if (bet.betType === 3) outsideBetInfo.betType = 'red'
+              if (bet.betType === 4) outsideBetInfo.betType = 'black'
+
+              currentRound.push(outsideBetInfo)
+            }
           })
         }
 
-        const lastSpace = {
-          number: data[1][0]._isBigNumber ? ethers.BigNumber.from(data[1][0]).toString() : data[1][0],
-          colour: data[1][1] === 0 ? 'green' : data[1][1] === 1 ? 'red' : 'black'
+        let lastWinners = []
+        let previousRound = []
+        if (previousResultData.winners.length > 0) {
+          previousResultData.winners.map((winner) => {
+            const winnerInfo = {}
+
+            winnerInfo.winnings = ethers.utils.formatEther(winner.winnings._isBigNumber ? ethers.BigNumber.from(winner.winnings).toString() : winner.winnings)
+            winnerInfo.player = winner.player
+
+            lastWinners.push(winnerInfo)
+          })
         }
-
-        const roundNumber = data[3]._isBigNumber ? ethers.BigNumber.from(data[3]).toString() : data[3]
-
-        let recentBets = []
-
-        if (data[4].straightBets) {
-          for (const straightBet of data[4].straightBets) {
+        if (previousResultData.winningStraightBets.length > 0) {
+          previousResultData.winningStraightBets.map((straightBet) => {
             let straightBetInfo = {
               type: 'straight'
             }
 
-            straightBetInfo.betSize = ethers.utils.formatEther(ethers.BigNumber.from(straightBet.betSize).toString())
+            straightBetInfo.betSize = ethers.utils.formatEther(straightBet.betSize._isBigNumber ? ethers.BigNumber.from(straightBet.betSize).toString() : straightBet.betSize)
             straightBetInfo.spaceNumber = ethers.BigNumber.from(straightBet.spaceNumber).toString()
             straightBetInfo.player = straightBet.player
 
-            recentBets.push(straightBetInfo)
-          }
+            previousRound.push(straightBetInfo)
+          })
         }
-
-        if (data[4].outsideBets) {
-          for (const outsideBet of data[4].outsideBets) {
+        if (previousResultData.winningOutsideBets.length > 0) {
+          previousResultData.winningOutsideBets.map((outsideBet) => {
             let outsideBetInfo = {
               type: 'outside'
             }
 
-            outsideBetInfo.betSize = ethers.utils.formatEther(ethers.BigNumber.from(outsideBet.betSize).toString())
+            outsideBetInfo.betSize = ethers.utils.formatEther(outsideBet.betSize._isBigNumber ? ethers.BigNumber.from(outsideBet.betSize).toString() : outsideBet.betSize)
             outsideBetInfo.player = outsideBet.player
+
             if (outsideBet.betType === 1) outsideBetInfo.betType = 'odds'
             if (outsideBet.betType === 2) outsideBetInfo.betType = 'evens'
             if (outsideBet.betType === 3) outsideBetInfo.betType = 'red'
             if (outsideBet.betType === 4) outsideBetInfo.betType = 'black'
 
-            recentBets.push(outsideBetInfo)
-          }
+            previousRound.push(outsideBetInfo)
+          })
         }
 
+        const lastSpace = {
+          number: lastSpaceData[0]._isBigNumber ? ethers.BigNumber.from(lastSpaceData[0]).toString() : lastSpaceData[0],
+          colour: parseInt(lastSpaceData[1]) === 0 ? 'green' : parseInt(lastSpaceData[1]) === 1 ? 'red' : 'black'
+        }
 
-        // let haveYouBet = false
+        const wheel = []
+        for (const space of returnWheelData) {
+          wheel.push({
+            number: space[0]._isBigNumber ? ethers.BigNumber.from(space[0]).toString() : space[0],
+            colour: parseInt(space[1]) === 0 ? 'green' : parseInt(space[1]) === 1 ? 'red' : 'black'
+          })
+        }
 
-        // console.log(data[4][0][0][1])
-        // console.log(data[4][0][0][1]._isBigNumber ? ethers.BigNumber.from(data[4][0][0][1]).toString() : data[4][0][0][1])
-        // console.log(data[4][0][0][2]._isBigNumber ? ethers.BigNumber.from(data[4][0][0][2]).toString() : data[4][0][0][2])
+        const startedAt = roundStartedAtData._isBigNumber ? ethers.BigNumber.from(roundStartedAtData).toString() : roundStartedAtData
+
 
         this.rouletteFetchedData = {
-          currentBets: data[0],
-          lastSpace: lastSpace,
-          returnWheel: wheel,
-          roundNumber: roundNumber,
-          recentBets: recentBets
+          currentRoundNumber: ethers.BigNumber.from(currentRoundData.currentRound).toString(),
+          currentRound,
+          lastWinners,
+          previousRound,
+          lastSpace,
+          wheel,
+          startedAt,
+          timeLeft: startedAt === '0' ? 'Finished' : (parseInt(startedAt) + 35) - Math.floor(Date.now() / 1000)
         }
       }
     },
@@ -505,7 +579,7 @@ export default {
       if (value === 'black') number = '4'
 
       try {
-        const tx = await this.rouletteContract.makeOutsideBet(number, amount.toString())
+        const tx = await this.rouletteContract.makeOutsideBet(number, amount)
         await tx.wait(1)
 
         this.amountToBet = 50000000000000000000
@@ -529,7 +603,7 @@ export default {
       this.rouletteLoading.makeStraightBet = true
 
       try {
-        const tx = await this.rouletteContract.makeStraightBet(number, amount.toString())
+        const tx = await this.rouletteContract.makeStraightBet(number, amount)
         await tx.wait(1)
 
         this.amountToBet = 50000000000000000000
@@ -564,12 +638,12 @@ export default {
 
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          this.error = 'Transaction reverted. There have been no bets placed for this round, someone has either already stopped the wheel or you have not placed a bet yet.'
           this.$modal.show('error')
         }
 
         console.error(err);
-        this.error = err
+        this.error = 'Transaction reverted. There have been no bets placed for this round, someone has either already stopped the wheel or you have not placed a bet yet.'
         this.$modal.show('error')
       }
 
