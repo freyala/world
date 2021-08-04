@@ -410,6 +410,126 @@
         </window>
       </div>
 
+      <div id="tutorial">
+        <window name="tutorial" height="auto">
+          <div v-if="tutorialWindow === 1" class="flex flex-wrap py-2 px-3">
+            <div class="w-4/5">
+              <div class="text-2xl">WELCOME TO FREYALA!</div>
+            </div>
+            <div class="w-1/5 text-right">
+              <i @click="hideWindow('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
+            </div>
+            <p class="w-full mt-4">
+              This app showcases the world of Freyala, allowing easy access to different decentralized applications and
+              features in our ecosystem. Explore what Freyala has to offer with ease and uncover hidden lore.
+            </p>
+            <div class="flex w-full mt-8 mb-2">
+              <div class="w-1/2 pr-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="skipOrEnd()">
+                  Skip
+                </button>
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 2">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="tutorialWindow === 2" class="flex flex-wrap py-2 px-3">
+            <div class="w-4/5">
+              <div class="text-2xl">WALLET BALANCE</div>
+            </div>
+            <div class="w-1/5 text-right">
+              <i @click="hideWindow('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
+            </div>
+            <p class="w-full mt-4">
+              On the top bar of the screen is information about your wallet. You can view your XYA balance, your amount
+              of XYA tokens staked and your unclaimed staking rewards. This is based on the wallet connected to the app,
+              not the device you are using.
+            </p>
+            <div class="flex w-full mt-8 mb-2">
+              <div class="w-1/2 pr-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 1">
+                  Previous
+                </button>
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 3">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="tutorialWindow === 3" class="flex flex-wrap py-2 px-3">
+            <div class="w-4/5">
+              <div class="text-2xl">MAIN LOCATIONS</div>
+            </div>
+            <div class="w-1/5 text-right">
+              <i @click="hideWindow('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
+            </div>
+            <p class="w-full mt-4">
+              Hovering over any main location will automatically highlight it. Each location has lore and a function,
+              like staking in the Extraction Site or using our faucet in the Soup Kitchen. You can also favorite up to
+              four different locations, which will be located in the bottom left of your screen for easy access.
+            </p>
+            <div class="flex w-full mt-8 mb-2">
+              <div class="w-1/2 pr-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 2">
+                  Previous
+                </button>
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 4">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="tutorialWindow === 4" class="flex flex-wrap py-2 px-3">
+            <div class="w-4/5">
+              <div class="text-2xl">MINOR LOCATIONS</div>
+            </div>
+            <div class="w-1/5 text-right">
+              <i @click="hideWindow('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
+            </div>
+            <p class="w-full mt-4">
+              Small building icons, also known as minor locations, can be found all over the map. While these minor
+              locations are not decentralized apps, they each provide small pieces of lore when clicked that help bring
+              together the story of Freyala.
+            </p>
+            <div class="flex w-full mt-8 mb-2">
+              <div class="w-1/2 pr-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 3">
+                  Previous
+                </button>
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="skipOrEnd()">
+                  Finish
+                </button>
+              </div>
+            </div>
+          </div>
+        </window>
+      </div>
+
       <div id="logo" class="absolute" style="top: 15px; left: 15px; z-index: 99999999">
         <a href="https://www.freyala.com/" target="_blank">
           <img class="w-8" src="/images/XYA.png" alt="XYA logo">
@@ -435,7 +555,8 @@ export default {
   mixins: [wallet],
   data() {
     return {
-      window: undefined
+      window: undefined,
+      tutorialWindow: 1
     }
   },
   components: {
@@ -458,11 +579,17 @@ export default {
   mounted() {
     this.connectWallet();
 
-    if (this.firstTime) {
+    console.log(this.firstTime)
+
+    if (this.firstTime === true) {
       this.$modal.show('tutorial')
     }
   },
   methods: {
+    skipOrEnd() {
+      this.$modal.hide('tutorial')
+      localStorage.firstTime = false;
+      },
     hideWindow(window) {
       this.window = undefined
       this.$modal.hide(window)

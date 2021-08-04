@@ -150,9 +150,8 @@ export default new Vuex.Store({
             }
         },
         setFirstTime({commit}) {
-            if (localStorage.firstTime) {
-                const firstTime = localStorage.firstTime
-                commit('SET_FIRST_TIME', firstTime)
+            if (localStorage.firstTime === false || localStorage.firstTime === 'false') {
+                commit('SET_FIRST_TIME', false)
             } else {
                 commit('SET_FIRST_TIME', true)
             }

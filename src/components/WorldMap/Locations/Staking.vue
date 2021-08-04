@@ -20,91 +20,103 @@
 
       <br>
 
-      <p>
-        {{ error }}
-      </p>
+      <div v-if="stakingMounted">
+        <p>
+          {{ error }}
+        </p>
 
-      <br>
+        <br>
 
-      <p class="text-2xl text-center">
-        Currently staking:
-      </p>
-      <p class="text-xl text-center">{{ stakingBalance }} XYA</p>
+        <p class="text-2xl text-center">
+          Currently staking:
+        </p>
+        <p class="text-xl text-center">{{ stakingBalance }} XYA</p>
 
-      <br>
-      <br>
+        <br>
+        <br>
 
-      <div class="flex flex-wrap">
-        <button v-if="rewardBalance === '0.000'" class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12">
-          No rewards to claim
-        </button>
-        <button v-else class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
-                @click="withdrawEarnings(false)">
-          Claim {{ rewardBalance }} XYA <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
-        </button>
-      </div>
-
-      <br>
-
-      <div class="flex flex-wrap">
-        <small class="w-full">Currently approved: {{ allowance.staking }} XYA</small>
-
-        <div class="w-1/2 pr-2">
-          <input class="w-full border border-yellow bg-transparent px-4 h-12" v-model="amountToApprove" type="number">
-        </div>
-        <div class="w-1/2 pl-2">
-          <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
-                  @click="addAllowance()">
-            Approve amount <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
+        <div class="flex flex-wrap">
+          <button v-if="rewardBalance === '0.000'"
+                  class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12">
+            No rewards to claim
+          </button>
+          <button v-else class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
+                  @click="withdrawEarnings(false)">
+            Claim {{ rewardBalance }} XYA <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
           </button>
         </div>
 
-        <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12 mt-4"
-                @click="addAllowance(999999999999.9999)">
-          Approve max amount <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
-        </button>
-      </div>
+        <br>
 
-      <br>
+        <div class="flex flex-wrap">
+          <small class="w-full">Currently approved: {{ allowance.staking }} XYA</small>
 
-      <div class="flex flex-wrap">
-        <small class="w-full">Max: {{ userBalance }} XYA</small>
+          <div class="w-1/2 pr-2">
+            <input class="w-full border border-yellow bg-transparent px-4 h-12" v-model="amountToApprove" type="number">
+          </div>
+          <div class="w-1/2 pl-2">
+            <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
+                    @click="addAllowance()">
+              Approve amount <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
+            </button>
+          </div>
 
-        <div class="w-1/2 pr-2">
-          <input class="w-full border border-yellow bg-transparent px-4 h-12" v-model="amountToStake" type="number">
-        </div>
-        <div class="w-1/2 pl-2">
-          <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12" @click="stake(false)">
-            Stake <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
+          <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12 mt-4"
+                  @click="addAllowance(999999999999.9999)">
+            Approve max amount <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
           </button>
         </div>
 
-        <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12 mt-4"
-                @click="stake(true)">
-          Stake all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
-        </button>
-      </div>
+        <br>
 
-      <br>
+        <div class="flex flex-wrap">
+          <small class="w-full">Max: {{ userBalance }} XYA</small>
 
-      <div class="flex flex-wrap">
-        <small class="w-full">Max: {{ stakingBalance }} XYA</small>
+          <div class="w-1/2 pr-2">
+            <input class="w-full border border-yellow bg-transparent px-4 h-12" v-model="amountToStake" type="number">
+          </div>
+          <div class="w-1/2 pl-2">
+            <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
+                    @click="stake(false)">
+              Stake <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
+            </button>
+          </div>
 
-        <div class="w-1/2 pr-2">
-          <input class="w-full border border-yellow bg-transparent px-4 py-2 h-12" v-model="amountToUnstake"
-                 type="number">
-        </div>
-        <div class="w-1/2 pl-2">
-          <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
-                  @click="unstake(false)">
-            Unstake <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
+          <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12 mt-4"
+                  @click="stake(true)">
+            Stake all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
           </button>
         </div>
 
-        <button class="w-full rounded-none border border-yellow bg-transparent px-4  h-12 mt-4" @click="unstake(true)">
-          Unstake all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
-        </button>
+        <br>
+
+        <div class="flex flex-wrap">
+          <small class="w-full">Max: {{ stakingBalance }} XYA</small>
+
+          <div class="w-1/2 pr-2">
+            <input class="w-full border border-yellow bg-transparent px-4 py-2 h-12" v-model="amountToUnstake"
+                   type="number">
+          </div>
+          <div class="w-1/2 pl-2">
+            <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 h-12"
+                    @click="unstake(false)">
+              Unstake <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
+            </button>
+          </div>
+
+          <button class="w-full rounded-none border border-yellow bg-transparent px-4  h-12 mt-4"
+                  @click="unstake(true)">
+            Unstake all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
+          </button>
+        </div>
       </div>
+
+      <div v-if="!stakingMounted" class="flex w-full h-full py-24">
+        <p class="m-auto text-center">
+          Loading...
+        </p>
+      </div>
+
       <br>
       <hr>
       <br>
@@ -127,6 +139,7 @@
         of Payne’s crew since.
       </p>
     </div>
+
   </transition>
 </template>
 
@@ -139,6 +152,7 @@ import {ethers} from "ethers"
 import wallet from "../../../plugins/wallet"
 import Freyala from "../../../plugins/artifacts/freyala.json"
 import Staking from "../../../plugins/artifacts/staking.json"
+import Roulette from "../../../plugins/artifacts/roulette.json";
 
 export default {
   name: 'Staking',
@@ -162,6 +176,8 @@ export default {
   },
   data() {
     return {
+      stakingInterval: undefined,
+      totalStaked: 0,
       stakingMounted: false,
       preApprove: false,
       mainContract: {},
@@ -181,28 +197,37 @@ export default {
       }
     }
   },
-  watch: {
-    async metaMaskWallet() {
-      this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-      this.stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
-    }
+  created() {
+    this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+    this.stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
   },
   mounted() {
-    this.stakingMounted = true
+    setTimeout(() => {
+      this.stakingMounted = true
+    }, 1000)
+
+    this.stakingInterval = setInterval(() => {
+      this.getRewardPool()
+    }, 1000)
   },
   methods: {
     ...mapActions([
       'setFavourite'
     ]),
+    async getRewardPool() {
+      if (document.hasFocus()) {
+        const totalStaked = await this.stakingContract.totalStaked()
+
+        console.log(totalStaked)
+
+        this.totalStaked = ethers.utils.formatEther(totalStaked._isBigNumber ? ethers.BigNumber.from(totalStaked).toString() : totalStaked)
+        return totalStaked
+      }
+    },
     async updateStakes() {
       const stake = await this.stakingContract.stakes(this.metaMaskAccount)
       this.stakes = stake
       return stake
-    },
-    async updateTotalStaked() {
-      if (this.stakingContract) {
-        return await this.stakingContract.totalStaked()
-      }
     },
     async stakeRewards() {
       if (this.stakingContract) {
@@ -237,7 +262,11 @@ export default {
         this.loading.allowance = false
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+            this.error = 'Error: You have not approved the contract to stake your tokens yet. First approve a certain amount.'
+          } else {
+            this.error = err.data.message
+          }
         }
 
         this.loading.maxAllowance = false
@@ -287,7 +316,11 @@ export default {
 
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+            this.error = 'Error: You have not approved the contract to stake your tokens yet. First approve a certain amount.'
+          } else {
+            this.error = err.data.message
+          }
         }
 
         this.loading.staking = false
@@ -327,7 +360,11 @@ export default {
         this.amountToUnstake = 0
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+            this.error = 'Error: You have not approved the contract to stake your tokens yet. First approve a certain amount.'
+          } else {
+            this.error = err.data.message
+          }
         }
 
         this.loading.unstaking = false
@@ -353,7 +390,11 @@ export default {
         this.loading.withdrawing = false
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+            this.error = 'Error: You have not approved the contract to stake your tokens yet. First approve a certain amount.'
+          } else {
+            this.error = err.data.message
+          }
         }
         this.loading.withdrawing = false
         console.error(err)
