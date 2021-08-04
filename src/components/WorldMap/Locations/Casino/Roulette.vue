@@ -53,7 +53,7 @@
                 :class="rouletteDefaultView === 'medium' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                 class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
                 @click="rouletteDefaultView = 'medium'">
-          Regular table ( 50 - 1000 )
+          Regular table ( 50 - 750 )
         </button>
 
         <!--      highTable-->
@@ -142,7 +142,7 @@
           </div>
 
           <div class="w-full 2xl:w-3/4 flex mt-8 p-1">
-            <div class="w-1/6">
+            <div class="w-1/5">
               <button type="button"
                       :class="rouletteBetAmount === 50000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
@@ -150,7 +150,7 @@
                 50 XYA
               </button>
             </div>
-            <div class="w-1/6">
+            <div class="w-1/5">
               <button type="button"
                       :class="rouletteBetAmount === 100000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
@@ -158,7 +158,7 @@
                 100 XYA
               </button>
             </div>
-            <div class="w-1/6">
+            <div class="w-1/5">
               <button type="button"
                       :class="rouletteBetAmount === 200000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
@@ -166,7 +166,7 @@
                 200 XYA
               </button>
             </div>
-            <div class="w-1/6">
+            <div class="w-1/5">
               <button type="button"
                       :class="rouletteBetAmount === 500000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
@@ -174,7 +174,7 @@
                 500 XYA
               </button>
             </div>
-            <div class="w-1/6">
+            <div class="w-1/5">
               <button type="button"
                       :class="rouletteBetAmount === 750000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
@@ -182,14 +182,14 @@
                 750 XYA
               </button>
             </div>
-            <div class="w-1/6">
-              <button type="button"
-                      :class="rouletteBetAmount === 1000000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
-                      class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="rouletteBetAmount = 1000000000000000000000">
-                1000 XYA
-              </button>
-            </div>
+<!--            <div class="w-1/6">-->
+<!--              <button type="button"-->
+<!--                      :class="rouletteBetAmount === 1000000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
+<!--                      class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
+<!--                      @click="rouletteBetAmount = 1000000000000000000000">-->
+<!--                1000 XYA-->
+<!--              </button>-->
+<!--            </div>-->
           </div>
         </div>
 
