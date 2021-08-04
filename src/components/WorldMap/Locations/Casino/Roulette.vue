@@ -182,7 +182,7 @@
                 750 XYA
               </button>
             </div>
-            <div class="w-1/5">
+            <div class="w-1/6">
               <button type="button"
                       :class="rouletteBetAmount === 1000000000000000000000 ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
                       class="rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
@@ -202,7 +202,7 @@
               Round number: {{ rouletteFetchedData.currentRoundNumber }}
             </div>
             <div class="w-1/4">
-              {{ rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `Time left: ${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}` }}
+              {{ rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `Wheel stoppable in: ${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}` }}
             </div>
             <div class="w-1/4">
               Last game: {{ rouletteFetchedData.lastSpace.colour }} {{ rouletteFetchedData.lastSpace.number }}
