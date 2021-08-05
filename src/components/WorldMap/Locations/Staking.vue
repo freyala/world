@@ -26,10 +26,48 @@
 
       <br>
 
-      <p class="text-2xl text-center">
-        Currently staking:
-      </p>
-      <p class="text-xl text-center">{{ stakingBalance }} XYA</p>
+      <div class="flex flex-wrap">
+        <div class="w-full">
+          <p class="text-xl text-center">
+            Staking contract info:
+          </p>
+        </div>
+        <div class="w-1/2">
+          <p class="text-center">
+            Rewards left:
+          </p>
+          <p class="text-center">{{ parseFloat(rewardPool).toFixed(4) }} XYA</p>
+        </div>
+        <div class="w-1/2">
+          <p class="text-center">
+            Total staked:
+          </p>
+          <p class="text-center">{{ parseFloat(totalStaked).toFixed(4) }} XYA</p>
+        </div>
+
+        <div class="w-full">
+          <br>
+          <hr>
+          <br>
+        </div>
+
+        <div class="w-full">
+          <p class="text-xl text-center">
+            User staking info:
+          </p>
+        </div>
+        <div class="w-1/2">
+          <p class="text-center">
+            In wallet:
+          </p>
+          <p class="text-center">{{ userBalance }} XYA</p>
+        </div>
+        <div class="w-1/2">
+          <p class="text-center">
+            In staking:
+          <p class="text-center">{{ stakingBalance }} XYA</p>
+        </div>
+      </div>
 
       <br>
       <br>
@@ -162,6 +200,8 @@ export default {
   },
   data() {
     return {
+      rewardPool: 0,
+      totalStaked: 0,
       stakingMounted: false,
       preApprove: false,
       mainContract: {},
@@ -185,6 +225,12 @@ export default {
     async metaMaskWallet() {
       this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
       this.stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
+
+      const staked = await this.stakingContract.totalStaked()
+      this.totalStaked = ethers.utils.formatEther(staked._isBigNumber ? ethers.BigNumber.from(staked).toString() : staked)
+
+      const reward = await this.stakingContract.rewardPool()
+      this.rewardPool = ethers.utils.formatEther(reward._isBigNumber ? ethers.BigNumber.from(reward).toString() : reward)
     }
   },
   mounted() {

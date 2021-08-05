@@ -383,7 +383,7 @@
                     Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
                   </p>
                   <p>
-                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 }}
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}
                   </p>
                   <p>
                     Amount: {{ game.betAmount }} XYA
@@ -391,12 +391,14 @@
                 </div>
                 <div class="w-2/5 pl-6">
                   <div>
-                    Status: <br>
-                    {{
-                      (game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount) ? 'Searching for opponent' : 'In progress'
-                    }} <span v-if="game.passwordProtected && game.p1 !== metaMaskAccount">(Locked game <i
-                      class="fas fa-lock"></i>)</span>
-                    <br><br>
+                    <div v-if="game.p2 !== '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || (game.p1 !== metaMaskAccount && game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8')">
+                      Status: <br>
+                      {{
+                        (game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount) ? 'Searching for opponent' : 'In progress'
+                      }} <span v-if="game.passwordProtected && game.p1 !== metaMaskAccount">(Locked game <i
+                        class="fas fa-lock"></i>)</span>
+                      <br><br>
+                    </div>
 
                     <div v-if="game.passwordProtected && game.p1 !== metaMaskAccount" class="mb-2">
                       <input
@@ -408,7 +410,7 @@
                     </div>
 
                     <div
-                        v-if="game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 !== metaMaskAccount">
+                        v-if="(game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || game.p2 === '0x0000000000000000000000000000000000000000') && game.p1 !== metaMaskAccount">
                       <button type="button"
                               @click="joinGame(game.id, coinFlipPasswords[game.id], game.betAmount, 2)"
                               class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4">
@@ -426,8 +428,11 @@
                         </button>
                       </div>
                       <div
-                          class="flex"
+                          class="flex flex-wrap"
                           v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && game.flipper === metaMaskAccount">
+                        <div v-if="game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8'" class="w-full mb-4 pr-8">
+                          <small>Play against the house or wait for a player to join your game.</small>
+                        </div>
                         <button type="button"
                                 @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
                                 class="w-2/5 rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
@@ -475,7 +480,7 @@
                     Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
                   </p>
                   <p>
-                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 }}
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}
                   </p>
                   <p>
                     Amount: {{ game.betAmount }} XYA
@@ -787,7 +792,6 @@ import {ethers} from "ethers";
 import wallet from "../../../../plugins/wallet";
 import Freyala from "../../../../plugins/artifacts/freyala.json";
 import CoinFlip from "../../../../plugins/artifacts/coinflip.json";
-import Roulette from "../../../../plugins/artifacts/roulette.json";
 
 export default {
   name: 'CoinFlip',
