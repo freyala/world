@@ -69,13 +69,13 @@
               <div class="w-full">
                 <small>Amount to bet with</small>
                 <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
-                       v-model="coinFlipCreateGame.amount"
-                       type="number">
+                       v-model="amount"
+                       type="number" maxlength="25000">
               </div>
               <div class="w-full mt-4">
                 <button type="button"
                         class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                        @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, coinFlipCreateGame.amount)">
+                        @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">
                   <span v-if="coinFlipLoading.creatingGame">Creating game... </span>
                   <span v-else>Create game! </span>
                   <i v-if="coinFlipLoading.creatingGame" class="fas fa-cog fa-spin"></i>
@@ -548,13 +548,13 @@
             <div class="w-full">
               <small>Amount to bet with</small>
               <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
-                     v-model="coinFlipCreateGame.amount"
-                     type="number">
+                     v-model="amount"
+                     type="number" maxlength="25000">
             </div>
             <div class="w-full mt-4">
               <button type="button"
                       class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                      @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, coinFlipCreateGame.amount)">
+                      @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">
                 <span v-if="coinFlipLoading.creatingGame">Creating game... </span>
                 <span v-else>Create game! </span>
                 <i v-if="coinFlipLoading.creatingGame" class="fas fa-cog fa-spin"></i>
@@ -821,6 +821,7 @@ export default {
       coinFlipMounted: false,
       coinFlipInterval: undefined,
 
+      amount: 0,
       coinFlipLastGames: [],
       coinFlipShowEndedGames: false,
       coinFlipDefaultView: 'default',
@@ -880,6 +881,11 @@ export default {
     async metaMaskWallet() {
       this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
       this.coinFlipContract = new ethers.Contract(CoinFlip.address, CoinFlip.abi, this.metaMaskWallet.signer)
+    },
+    amount() {
+      if (this.amount > 25000) {
+        this.amount = 25000
+      }
     }
   },
   methods: {
