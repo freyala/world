@@ -13,7 +13,7 @@
     </div>
     <div class="my-auto text-center w-1/4" v-if="walletConnected && chainStatus === 'correct'">
       <p class="text-xl">
-        Unclaimed: {{ loadingBalances ? 'fetching...' : `${rewardBalance} XYA` }}
+        Staking rewards: {{ loadingBalances ? 'fetching...' : `${rewardBalance} XYA` }}
       </p>
     </div>
     <div class="my-auto ml-auto text-center flex" :class="chainStatus === 'wrong' ? 'w-1/2' : 'w-1/4'">

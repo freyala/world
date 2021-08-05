@@ -823,7 +823,7 @@ export default {
 
       amount: 0,
       coinFlipLastGames: [],
-      coinFlipShowEndedGames: false,
+      coinFlipShowEndedGames: true,
       coinFlipDefaultView: 'default',
       coinFlipShownGames: [],
       coinFlipPasswords: [],
