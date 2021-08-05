@@ -32,724 +32,718 @@
         </div>
       </div>
 
-      <div class="w-full mt-8 mb-6">
-        <p class="text-3xl text-center">
-          Under construction
-        </p>
+      <div class="w-1/4 mt-8 mb-6">
+        <h3 class="hidden 2xl:block text-4xl mb-8">
+          Menu
+        </h3>
+
+        <div class="block -mt-12 mb-6 2xl:mb-0 2xl:mt-0 2xl:hidden">
+          <br>
+          <br>
+
+          <h3 class="text-4xl mb-2">
+            {{ coinFlipSelectedButton === 'createGame' ? 'Create' : 'Look up' }}
+          </h3>
+
+          <!--      coinFlipCreateGame-->
+          <div v-if="coinFlipSelectedButton === 'createGame'">
+            <div class="flex flex-wrap">
+              <div class="w-full">
+                <small>Name of room</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                       v-model="coinFlipCreateGame.name"
+                       type="text">
+              </div>
+              <div class="w-full">
+                <small>Room password</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                       v-model="coinFlipCreateGame.password"
+                       type="password">
+              </div>
+              <div class="w-full">
+                <small>Confirm room password</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                       v-model="coinFlipCreateGame.confirmPassword"
+                       type="password">
+              </div>
+              <div class="w-full">
+                <small>Amount to bet with</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                       v-model="amount"
+                       type="number" maxlength="25000">
+              </div>
+              <div class="w-full mt-4">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">
+                  <span v-if="coinFlipLoading.creatingGame">Creating game... </span>
+                  <span v-else>Create game! </span>
+                  <i v-if="coinFlipLoading.creatingGame" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+
+              <div
+                  v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"
+                  class="mt-8">
+                <p>
+                  Player address: <br>
+                  {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!--      playerByPlayerIdAndGameId-->
+          <div v-if="coinFlipSelectedButton === 'playerByPlayerIdAndGameId'">
+            <div class="flex flex-wrap">
+              <div class="w-1/2 pr-2">
+                <small>Player 1 or 2</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.playerId"
+                       type="number">
+              </div>
+              <div class="w-1/2 pl-2">
+                <small>Game ID</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                       type="number">
+              </div>
+              <div class="w-full mt-4">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="playerByPlayerIdAndGameId(coinFlipInput.playerId, coinFlipInput.gameId)">
+                  Fetch player <i v-if="coinFlipLoading.playerByPlayerIdAndGameId" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+
+              <div
+                  v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"
+                  class="mt-8">
+                <p>
+                  Player address: <br>
+                  {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!--      betsByGameId-->
+          <div v-if="coinFlipSelectedButton === 'betsByGameId'">
+            <small>Game ID</small>
+            <div class="flex flex-wrap">
+              <div class="w-1/2 pr-2">
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                       type="number">
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="betsByGameId(coinFlipInput.gameId)">
+                  Fetch bets <i v-if="coinFlipLoading.betsByGameId" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+            </div>
+
+            <div v-if="coinFlipFetchedData.betsByGameId && coinFlipFetchedData.betsByGameId !== ''" class="mt-8">
+              <p>
+                Bet amount: <br>
+                {{ coinFlipFetchedData.betsByGameId }} XYA
+              </p>
+            </div>
+          </div>
+
+          <!--      recentGames-->
+          <div v-if="coinFlipSelectedButton === 'recentGames'">
+            <small>Number of games</small>
+            <div class="flex flex-wrap">
+              <div class="w-1/2 pr-2">
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                       v-model="coinFlipInput.numberOfGames"
+                       type="number">
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="recentGames(coinFlipInput.numberOfGames)">
+                  Fetch games <i v-if="coinFlipLoading.recentGames" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+            </div>
+            <br>
+            <br>
+          </div>
+
+          <!--      recentGamesByUser-->
+          <div v-if="coinFlipSelectedButton === 'recentGamesByUser'">
+            <div class="flex flex-wrap">
+              <div class="w-1/2 pr-2">
+                <small>User address</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                       v-model="coinFlipInput.userAddress"
+                       type="text">
+              </div>
+              <div class="w-1/2 pl-2">
+                <small>Number of games</small>
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                       v-model="coinFlipInput.numberOfGames"
+                       type="number">
+              </div>
+              <div class="w-full mt-4">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="recentGamesByUser(coinFlipInput.userAddress, coinFlipInput.numberOfGames)">
+                  Fetch games <i v-if="coinFlipLoading.recentGamesByUser" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+            </div>
+            <br>
+            <br>
+          </div>
+
+          <!--      coinFlipperByGameId-->
+          <div v-if="coinFlipSelectedButton === 'coinFlipperByGameId'">
+            <small>Game ID</small>
+            <div class="flex flex-wrap">
+              <div class="w-1/2 pr-2">
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                       type="number">
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="coinFlipperByGameId(coinFlipInput.gameId)">
+                  Fetch flipper <i v-if="coinFlipLoading.coinFlipperByGameId" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+            </div>
+
+            <div v-if="coinFlipFetchedData.coinFlipperByGameId && coinFlipFetchedData.coinFlipperByGameId !== ''"
+                 class="mt-8">
+              <p>
+                Flipper of coin: <br>
+                {{ coinFlipFetchedData.coinFlipperByGameId }}
+              </p>
+            </div>
+          </div>
+
+          <!--      gameById-->
+          <div v-if="coinFlipSelectedButton === 'gameById'">
+            <small>Game ID</small>
+            <div class="flex flex-wrap">
+              <div class="w-1/2 pr-2">
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                       type="number">
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="gameById(coinFlipInput.gameId)">
+                  Fetch game <i v-if="coinFlipLoading.gameById" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+            </div>
+            <br>
+            <br>
+          </div>
+
+          <!--      gameByName-->
+          <div v-if="coinFlipSelectedButton === 'gameByName'">
+            <small>Game name</small>
+            <div class="flex flex-wrap">
+              <div class="w-1/2 pr-2">
+                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameName"
+                       type="text">
+              </div>
+              <div class="w-1/2 pl-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="gameByName(coinFlipInput.gameName)">
+                  Fetch game <i v-if="coinFlipLoading.gameName" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+            </div>
+            <br>
+            <br>
+          </div>
+        </div>
+
+        <!--      lobby-->
+        <button type="button"
+                :class="coinFlipDefaultView === 'default' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipDefaultView = 'default'">
+          Lobby
+        </button>
+
+        <!--      yourGames-->
+        <button type="button"
+                :class="coinFlipDefaultView === 'yourGames' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="recentGamesByUser(metaMaskAccount, 25)">
+          Your games
+        </button>
+
+        <br>
+        <br>
+        <br>
+
+        <!--      coinFlipCreateGame-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'createGame' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'createGame'">
+          Create new game
+        </button>
+
+        <!--      gameById-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'gameById' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'gameById'">
+          Look up game by ID
+        </button>
+
+        <!--      gameByName-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'gameByName' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'gameByName'">
+          Look up game by name
+        </button>
+
+        <!--      recentGames-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'recentGames' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'recentGames'">
+          Look up recent games
+        </button>
+
+        <!--      recentGamesByUser-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'recentGamesByUser' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'recentGamesByUser'">
+          Look up recent games by user
+        </button>
+
+        <!--      playerByPlayerIdAndGameId-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'playerByPlayerIdAndGameId' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'playerByPlayerIdAndGameId'">
+          Look up player by game
+        </button>
+
+        <!--      betsByGameId-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'betsByGameId' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'betsByGameId'">
+          Look up bet by game ID
+        </button>
+
+        <!--      coinFlipperByGameId-->
+        <button type="button"
+                :class="coinFlipSelectedButton === 'coinFlipperByGameId' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"
+                @click="coinFlipSelectedButton = 'coinFlipperByGameId'">
+          Look up coin flipper
+        </button>
       </div>
 
-<!--      <div class="w-1/4 mt-8 mb-6">-->
-<!--        <h3 class="hidden 2xl:block text-4xl mb-8">-->
-<!--          Menu-->
-<!--        </h3>-->
+      <div class="w-3/4 2xl:w-1/2 px-8">
+        <!--      Game lobby-->
+        <div class="mt-8">
+          <div class="flex">
+            <div class="w-1/3"></div>
+            <div class="w-1/3">
+              <h3 class="text-4xl text-center">
+                {{
+                  coinFlipDefaultView === 'default' ? 'Lobby' : coinFlipDefaultView === 'yourGames' ? 'Your games' : 'Custom search'
+                }}
+              </h3>
+            </div>
+            <div class="w-1/3 text-right my-auto">
+                <span @click="coinFlipShowEndedGames = !coinFlipShowEndedGames" class="cursor-pointer">
+                  {{ coinFlipShowEndedGames ? 'Hide' : 'Show' }} finished games
+                </span>
+            </div>
+          </div>
 
-<!--        <div class="block -mt-12 mb-6 2xl:mb-0 2xl:mt-0 2xl:hidden">-->
-<!--          <br>-->
-<!--          <br>-->
+          <div class="mt-4">
+            <div class="pb-8" v-if="!game.ended && game.betAmount > 0" v-for="game in coinFlipShownGames">
+              <div style="border: 1px solid #b8a984" class="flex p-4 relative">
+                <div class="w-3/5">
+                  <p>
+                    Game ID: {{ game.id }}
+                  </p>
+                  <p>
+                    Name: {{ game.name }}
+                  </p>
+                  <p>
+                    Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
+                  </p>
+                  <p>
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}
+                  </p>
+                  <p>
+                    Amount: {{ game.betAmount }} XYA
+                  </p>
+                </div>
+                <div class="w-2/5 pl-6">
+                  <div>
+                    <div v-if="game.p2 !== '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || (game.p1 !== metaMaskAccount && game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8')">
+                      Status: <br>
+                      {{
+                        (game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount) ? 'Searching for opponent' : 'In progress'
+                      }} <span v-if="game.passwordProtected && game.p1 !== metaMaskAccount">(Locked game <i
+                        class="fas fa-lock"></i>)</span>
+                      <br><br>
+                    </div>
 
-<!--          <h3 class="text-4xl mb-2">-->
-<!--            {{ coinFlipSelectedButton === 'createGame' ? 'Create' : 'Look up' }}-->
-<!--          </h3>-->
+                    <div v-if="game.passwordProtected && game.p1 !== metaMaskAccount" class="mb-2">
+                      <input
+                          class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                          v-model="coinFlipPasswords[game.id]"
+                          placeholder="password"
+                          type="password"
+                      >
+                    </div>
 
-<!--          &lt;!&ndash;      coinFlipCreateGame&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'createGame'">-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-full">-->
-<!--                <small>Name of room</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                       v-model="coinFlipCreateGame.name"-->
-<!--                       type="text">-->
-<!--              </div>-->
-<!--              <div class="w-full">-->
-<!--                <small>Room password</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                       v-model="coinFlipCreateGame.password"-->
-<!--                       type="password">-->
-<!--              </div>-->
-<!--              <div class="w-full">-->
-<!--                <small>Confirm room password</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                       v-model="coinFlipCreateGame.confirmPassword"-->
-<!--                       type="password">-->
-<!--              </div>-->
-<!--              <div class="w-full">-->
-<!--                <small>Amount to bet with</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                       v-model="amount"-->
-<!--                       type="number" maxlength="25000">-->
-<!--              </div>-->
-<!--              <div class="w-full mt-4">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">-->
-<!--                  <span v-if="coinFlipLoading.creatingGame">Creating game... </span>-->
-<!--                  <span v-else>Create game! </span>-->
-<!--                  <i v-if="coinFlipLoading.creatingGame" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
+                    <div
+                        v-if="(game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || game.p2 === '0x0000000000000000000000000000000000000000') && game.p1 !== metaMaskAccount">
+                      <button type="button"
+                              @click="joinGame(game.id, coinFlipPasswords[game.id], game.betAmount, 2)"
+                              class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4">
+                        <span v-if="coinFlipLoading.joiningGame">Challenging... </span>
+                        <span v-else>Challenge </span>
+                        <i v-if="coinFlipLoading.joiningGame === game.id" class="fas fa-cog fa-spin"></i>
+                      </button>
+                    </div>
+                    <div v-else>
+                      <div
+                          v-if="game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount">
+                        <button type="button"
+                                class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12 mb-4">
+                          Waiting for challenger
+                        </button>
+                      </div>
+                      <div
+                          class="flex flex-wrap"
+                          v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && game.flipper === metaMaskAccount">
+                        <div v-if="game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8'" class="w-full mb-4 pr-8">
+                          <small>Play against the house or wait for a player to join your game.</small>
+                        </div>
+                        <button type="button"
+                                @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
+                                class="w-2/5 rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
+                          Heads!
+                        </button>
+                        <div class="w-1/5 my-auto text-center">
+                          <i v-if="coinFlipLoading.flipping === game.id" class="fas fa-cog fa-spin"></i>
+                        </div>
+                        <button type="button"
+                                @click="startGame(game.id, coinFlipPasswords[game.id], 2)"
+                                class="w-2/5 ml-auto rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
+                          Tails!
+                        </button>
+                      </div>
+                      <div
+                          v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && ((game.p1 === metaMaskAccount || game.p2 === metaMaskAccount) && game.flipper !== metaMaskAccount)">
+                        <button type="button"
+                                disabled
+                                class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12 mb-4">
+                          Waiting for flipper
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-<!--              <div-->
-<!--                  v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"-->
-<!--                  class="mt-8">-->
-<!--                <p>-->
-<!--                  Player address: <br>-->
-<!--                  {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}-->
-<!--                </p>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
+                <div v-if="game.p1 === metaMaskAccount || game.p2 === metaMaskAccount"
+                     class="w-auto absolute top-0 right-0 p-4">
+                  <i v-if="coinFlipLoading.cancellingGame" class="fas fa-cog fa-spin"></i>
+                  <i v-else @click="cancelGame(game.id)" class="fas fa-times cursor-pointer"></i>
+                </div>
+              </div>
+            </div>
+            <div class="pb-8" v-if="coinFlipShowEndedGames && game.ended && game.betAmount > 0"
+                 v-for="game in coinFlipShownGames">
+              <div style="border: 1px solid #b8a984" class="flex p-4 relative">
+                <div class="w-3/5">
+                  <p>
+                    Game ID: {{ game.id }}
+                  </p>
+                  <p>
+                    Name: {{ game.name }}
+                  </p>
+                  <p>
+                    Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
+                  </p>
+                  <p>
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}
+                  </p>
+                  <p>
+                    Amount: {{ game.betAmount }} XYA
+                  </p>
+                </div>
+                <div class="w-2/5 pl-6">
+                  <div>
+                    Status: <br>
+                    Ended
+                    <br><br>
+                    Winner: <br>
+                    <span style="line-break: anywhere">{{ game.winner === metaMaskAccount ? 'YOU!' : game.winner === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.winner }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<!--          &lt;!&ndash;      playerByPlayerIdAndGameId&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'playerByPlayerIdAndGameId'">-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-1/2 pr-2">-->
-<!--                <small>Player 1 or 2</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.playerId"-->
-<!--                       type="number">-->
-<!--              </div>-->
-<!--              <div class="w-1/2 pl-2">-->
-<!--                <small>Game ID</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                       type="number">-->
-<!--              </div>-->
-<!--              <div class="w-full mt-4">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="playerByPlayerIdAndGameId(coinFlipInput.playerId, coinFlipInput.gameId)">-->
-<!--                  Fetch player <i v-if="coinFlipLoading.playerByPlayerIdAndGameId" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
-
-<!--              <div-->
-<!--                  v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"-->
-<!--                  class="mt-8">-->
-<!--                <p>-->
-<!--                  Player address: <br>-->
-<!--                  {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}-->
-<!--                </p>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash;      betsByGameId&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'betsByGameId'">-->
-<!--            <small>Game ID</small>-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-1/2 pr-2">-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                       type="number">-->
-<!--              </div>-->
-<!--              <div class="w-1/2 pl-2">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="betsByGameId(coinFlipInput.gameId)">-->
-<!--                  Fetch bets <i v-if="coinFlipLoading.betsByGameId" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-
-<!--            <div v-if="coinFlipFetchedData.betsByGameId && coinFlipFetchedData.betsByGameId !== ''" class="mt-8">-->
-<!--              <p>-->
-<!--                Bet amount: <br>-->
-<!--                {{ coinFlipFetchedData.betsByGameId }} XYA-->
-<!--              </p>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash;      recentGames&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'recentGames'">-->
-<!--            <small>Number of games</small>-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-1/2 pr-2">-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                       v-model="coinFlipInput.numberOfGames"-->
-<!--                       type="number">-->
-<!--              </div>-->
-<!--              <div class="w-1/2 pl-2">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="recentGames(coinFlipInput.numberOfGames)">-->
-<!--                  Fetch games <i v-if="coinFlipLoading.recentGames" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <br>-->
-<!--            <br>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash;      recentGamesByUser&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'recentGamesByUser'">-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-1/2 pr-2">-->
-<!--                <small>User address</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                       v-model="coinFlipInput.userAddress"-->
-<!--                       type="text">-->
-<!--              </div>-->
-<!--              <div class="w-1/2 pl-2">-->
-<!--                <small>Number of games</small>-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                       v-model="coinFlipInput.numberOfGames"-->
-<!--                       type="number">-->
-<!--              </div>-->
-<!--              <div class="w-full mt-4">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="recentGamesByUser(coinFlipInput.userAddress, coinFlipInput.numberOfGames)">-->
-<!--                  Fetch games <i v-if="coinFlipLoading.recentGamesByUser" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <br>-->
-<!--            <br>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash;      coinFlipperByGameId&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'coinFlipperByGameId'">-->
-<!--            <small>Game ID</small>-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-1/2 pr-2">-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                       type="number">-->
-<!--              </div>-->
-<!--              <div class="w-1/2 pl-2">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="coinFlipperByGameId(coinFlipInput.gameId)">-->
-<!--                  Fetch flipper <i v-if="coinFlipLoading.coinFlipperByGameId" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-
-<!--            <div v-if="coinFlipFetchedData.coinFlipperByGameId && coinFlipFetchedData.coinFlipperByGameId !== ''"-->
-<!--                 class="mt-8">-->
-<!--              <p>-->
-<!--                Flipper of coin: <br>-->
-<!--                {{ coinFlipFetchedData.coinFlipperByGameId }}-->
-<!--              </p>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash;      gameById&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'gameById'">-->
-<!--            <small>Game ID</small>-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-1/2 pr-2">-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                       type="number">-->
-<!--              </div>-->
-<!--              <div class="w-1/2 pl-2">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="gameById(coinFlipInput.gameId)">-->
-<!--                  Fetch game <i v-if="coinFlipLoading.gameById" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <br>-->
-<!--            <br>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash;      gameByName&ndash;&gt;-->
-<!--          <div v-if="coinFlipSelectedButton === 'gameByName'">-->
-<!--            <small>Game name</small>-->
-<!--            <div class="flex flex-wrap">-->
-<!--              <div class="w-1/2 pr-2">-->
-<!--                <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameName"-->
-<!--                       type="text">-->
-<!--              </div>-->
-<!--              <div class="w-1/2 pl-2">-->
-<!--                <button type="button"-->
-<!--                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                        @click="gameByName(coinFlipInput.gameName)">-->
-<!--                  Fetch game <i v-if="coinFlipLoading.gameName" class="fas fa-cog fa-spin"></i>-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <br>-->
-<!--            <br>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash;      lobby&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipDefaultView === 'default' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipDefaultView = 'default'">-->
-<!--          Lobby-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      yourGames&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipDefaultView === 'yourGames' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="recentGamesByUser(metaMaskAccount, 25)">-->
-<!--          Your games-->
-<!--        </button>-->
-
-<!--        <br>-->
-<!--        <br>-->
-<!--        <br>-->
-
-<!--        &lt;!&ndash;      coinFlipCreateGame&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'createGame' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'createGame'">-->
-<!--          Create new game-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      gameById&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'gameById' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'gameById'">-->
-<!--          Look up game by ID-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      gameByName&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'gameByName' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'gameByName'">-->
-<!--          Look up game by name-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      recentGames&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'recentGames' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'recentGames'">-->
-<!--          Look up recent games-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      recentGamesByUser&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'recentGamesByUser' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'recentGamesByUser'">-->
-<!--          Look up recent games by user-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      playerByPlayerIdAndGameId&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'playerByPlayerIdAndGameId' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'playerByPlayerIdAndGameId'">-->
-<!--          Look up player by game-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      betsByGameId&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'betsByGameId' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'betsByGameId'">-->
-<!--          Look up bet by game ID-->
-<!--        </button>-->
-
-<!--        &lt;!&ndash;      coinFlipperByGameId&ndash;&gt;-->
-<!--        <button type="button"-->
-<!--                :class="coinFlipSelectedButton === 'coinFlipperByGameId' ? 'bg-yellow text-brown' : 'bg-transparent text-yellow'"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4"-->
-<!--                @click="coinFlipSelectedButton = 'coinFlipperByGameId'">-->
-<!--          Look up coin flipper-->
-<!--        </button>-->
-<!--      </div>-->
-
-<!--      <div class="w-3/4 2xl:w-1/2 px-8">-->
-<!--        &lt;!&ndash;      Game lobby&ndash;&gt;-->
-<!--        <div class="mt-8">-->
-<!--          <div class="flex">-->
-<!--            <div class="w-1/3"></div>-->
-<!--            <div class="w-1/3">-->
-<!--              <h3 class="text-4xl text-center">-->
-<!--                {{-->
-<!--                  coinFlipDefaultView === 'default' ? 'Lobby' : coinFlipDefaultView === 'yourGames' ? 'Your games' : 'Custom search'-->
-<!--                }}-->
-<!--              </h3>-->
-<!--            </div>-->
-<!--            <div class="w-1/3 text-right my-auto">-->
-<!--                <span @click="coinFlipShowEndedGames = !coinFlipShowEndedGames" class="cursor-pointer">-->
-<!--                  {{ coinFlipShowEndedGames ? 'Hide' : 'Show' }} finished games-->
-<!--                </span>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <div class="mt-4">-->
-<!--            <div class="pb-8" v-if="!game.ended && game.betAmount > 0" v-for="game in coinFlipShownGames">-->
-<!--              <div style="border: 1px solid #b8a984" class="flex p-4 relative">-->
-<!--                <div class="w-3/5">-->
-<!--                  <p>-->
-<!--                    Game ID: {{ game.id }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Name: {{ game.name }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Amount: {{ game.betAmount }} XYA-->
-<!--                  </p>-->
-<!--                </div>-->
-<!--                <div class="w-2/5 pl-6">-->
-<!--                  <div>-->
-<!--                    <div v-if="game.p2 !== '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || (game.p1 !== metaMaskAccount && game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8')">-->
-<!--                      Status: <br>-->
-<!--                      {{-->
-<!--                        (game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount) ? 'Searching for opponent' : 'In progress'-->
-<!--                      }} <span v-if="game.passwordProtected && game.p1 !== metaMaskAccount">(Locked game <i-->
-<!--                        class="fas fa-lock"></i>)</span>-->
-<!--                      <br><br>-->
-<!--                    </div>-->
-
-<!--                    <div v-if="game.passwordProtected && game.p1 !== metaMaskAccount" class="mb-2">-->
-<!--                      <input-->
-<!--                          class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                          v-model="coinFlipPasswords[game.id]"-->
-<!--                          placeholder="password"-->
-<!--                          type="password"-->
-<!--                      >-->
-<!--                    </div>-->
-
-<!--                    <div-->
-<!--                        v-if="(game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || game.p2 === '0x0000000000000000000000000000000000000000') && game.p1 !== metaMaskAccount">-->
-<!--                      <button type="button"-->
-<!--                              @click="joinGame(game.id, coinFlipPasswords[game.id], game.betAmount, 2)"-->
-<!--                              class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4">-->
-<!--                        <span v-if="coinFlipLoading.joiningGame">Challenging... </span>-->
-<!--                        <span v-else>Challenge </span>-->
-<!--                        <i v-if="coinFlipLoading.joiningGame === game.id" class="fas fa-cog fa-spin"></i>-->
-<!--                      </button>-->
-<!--                    </div>-->
-<!--                    <div v-else>-->
-<!--                      <div-->
-<!--                          v-if="game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount">-->
-<!--                        <button type="button"-->
-<!--                                class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12 mb-4">-->
-<!--                          Waiting for challenger-->
-<!--                        </button>-->
-<!--                      </div>-->
-<!--                      <div-->
-<!--                          class="flex flex-wrap"-->
-<!--                          v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && game.flipper === metaMaskAccount">-->
-<!--                        <div v-if="game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8'" class="w-full mb-4 pr-8">-->
-<!--                          <small>Play against the house or wait for a player to join your game.</small>-->
-<!--                        </div>-->
-<!--                        <button type="button"-->
-<!--                                @click="startGame(game.id, coinFlipPasswords[game.id], 1)"-->
-<!--                                class="w-2/5 rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">-->
-<!--                          Heads!-->
-<!--                        </button>-->
-<!--                        <div class="w-1/5 my-auto text-center">-->
-<!--                          <i v-if="coinFlipLoading.flipping === game.id" class="fas fa-cog fa-spin"></i>-->
-<!--                        </div>-->
-<!--                        <button type="button"-->
-<!--                                @click="startGame(game.id, coinFlipPasswords[game.id], 2)"-->
-<!--                                class="w-2/5 ml-auto rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">-->
-<!--                          Tails!-->
-<!--                        </button>-->
-<!--                      </div>-->
-<!--                      <div-->
-<!--                          v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && ((game.p1 === metaMaskAccount || game.p2 === metaMaskAccount) && game.flipper !== metaMaskAccount)">-->
-<!--                        <button type="button"-->
-<!--                                disabled-->
-<!--                                class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12 mb-4">-->
-<!--                          Waiting for flipper-->
-<!--                        </button>-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-
-<!--                <div v-if="game.p1 === metaMaskAccount || game.p2 === metaMaskAccount"-->
-<!--                     class="w-auto absolute top-0 right-0 p-4">-->
-<!--                  <i v-if="coinFlipLoading.cancellingGame" class="fas fa-cog fa-spin"></i>-->
-<!--                  <i v-else @click="cancelGame(game.id)" class="fas fa-times cursor-pointer"></i>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="pb-8" v-if="coinFlipShowEndedGames && game.ended && game.betAmount > 0"-->
-<!--                 v-for="game in coinFlipShownGames">-->
-<!--              <div style="border: 1px solid #b8a984" class="flex p-4 relative">-->
-<!--                <div class="w-3/5">-->
-<!--                  <p>-->
-<!--                    Game ID: {{ game.id }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Name: {{ game.name }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}-->
-<!--                  </p>-->
-<!--                  <p>-->
-<!--                    Amount: {{ game.betAmount }} XYA-->
-<!--                  </p>-->
-<!--                </div>-->
-<!--                <div class="w-2/5 pl-6">-->
-<!--                  <div>-->
-<!--                    Status: <br>-->
-<!--                    Ended-->
-<!--                    <br><br>-->
-<!--                    Winner: <br>-->
-<!--                    <span style="line-break: anywhere">{{ game.winner === metaMaskAccount ? 'YOU!' : game.winner === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.winner }}</span>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--      </div>-->
-<!--      <div class="hidden 2xl:block w-1/4 mt-20">-->
-<!--        <button @click="showLastGames = !showLastGames"-->
-<!--                type="button"-->
-<!--                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">-->
-<!--          {{ showLastGames ? 'Hide your last 5 games' : 'Show your last 5 games' }}-->
-<!--        </button>-->
+      </div>
+      <div class="hidden 2xl:block w-1/4 mt-20">
+        <button @click="showLastGames = !showLastGames"
+                type="button"
+                class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
+          {{ showLastGames ? 'Hide your last 5 games' : 'Show your last 5 games' }}
+        </button>
 
 
-<!--        <div v-if="showLastGames" v-for="game in coinFlipLastGames">-->
-<!--          <br>-->
-<!--          ID: {{ game.id }} <br>-->
-<!--          Bet: {{ game.betAmount }} XYA <br>-->
-<!--          Winner: {{-->
-<!--            game.winner === metaMaskAccount ? 'YOU!' : game.betAmount === '0.0' ? 'Cancelled match' : game.winner === '0x0000000000000000000000000000000000000000' ? 'Ongoing' : 'Opponent'-->
-<!--          }}-->
-<!--          <hr>-->
-<!--        </div>-->
-<!--        <br>-->
-<!--        <br>-->
+        <div v-if="showLastGames" v-for="game in coinFlipLastGames">
+          <br>
+          ID: {{ game.id }} <br>
+          Bet: {{ game.betAmount }} XYA <br>
+          Winner: {{
+            game.winner === metaMaskAccount ? 'YOU!' : game.betAmount === '0.0' ? 'Cancelled match' : game.winner === '0x0000000000000000000000000000000000000000' ? 'Ongoing' : 'Opponent'
+          }}
+          <hr>
+        </div>
+        <br>
+        <br>
 
-<!--        <h3 class="text-4xl mb-2">-->
-<!--          {{ coinFlipSelectedButton === 'createGame' ? 'Create' : 'Look up' }}-->
-<!--        </h3>-->
+        <h3 class="text-4xl mb-2">
+          {{ coinFlipSelectedButton === 'createGame' ? 'Create' : 'Look up' }}
+        </h3>
 
-<!--        &lt;!&ndash;      coinFlipCreateGame&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'createGame'">-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-full">-->
-<!--              <small>Name of room</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipCreateGame.name"-->
-<!--                     type="text">-->
-<!--            </div>-->
-<!--            <div class="w-full">-->
-<!--              <small>Room password</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                     v-model="coinFlipCreateGame.password"-->
-<!--                     type="password">-->
-<!--            </div>-->
-<!--            <div class="w-full">-->
-<!--              <small>Confirm room password</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                     v-model="coinFlipCreateGame.confirmPassword"-->
-<!--                     type="password">-->
-<!--            </div>-->
-<!--            <div class="w-full">-->
-<!--              <small>Amount to bet with</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                     v-model="amount"-->
-<!--                     type="number" maxlength="25000">-->
-<!--            </div>-->
-<!--            <div class="w-full mt-4">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">-->
-<!--                <span v-if="coinFlipLoading.creatingGame">Creating game... </span>-->
-<!--                <span v-else>Create game! </span>-->
-<!--                <i v-if="coinFlipLoading.creatingGame" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
+        <!--      coinFlipCreateGame-->
+        <div v-if="coinFlipSelectedButton === 'createGame'">
+          <div class="flex flex-wrap">
+            <div class="w-full">
+              <small>Name of room</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipCreateGame.name"
+                     type="text">
+            </div>
+            <div class="w-full">
+              <small>Room password</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                     v-model="coinFlipCreateGame.password"
+                     type="password">
+            </div>
+            <div class="w-full">
+              <small>Confirm room password</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                     v-model="coinFlipCreateGame.confirmPassword"
+                     type="password">
+            </div>
+            <div class="w-full">
+              <small>Amount to bet with</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                     v-model="amount"
+                     type="number" maxlength="25000">
+            </div>
+            <div class="w-full mt-4">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">
+                <span v-if="coinFlipLoading.creatingGame">Creating game... </span>
+                <span v-else>Create game! </span>
+                <i v-if="coinFlipLoading.creatingGame" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
 
-<!--            <div-->
-<!--                v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"-->
-<!--                class="mt-8">-->
-<!--              <p>-->
-<!--                Player address: <br>-->
-<!--                {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}-->
-<!--              </p>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+            <div
+                v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"
+                class="mt-8">
+              <p>
+                Player address: <br>
+                {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}
+              </p>
+            </div>
+          </div>
+        </div>
 
-<!--        &lt;!&ndash;      playerByPlayerIdAndGameId&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'playerByPlayerIdAndGameId'">-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-1/2 pr-2">-->
-<!--              <small>Player 1 or 2</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.playerId"-->
-<!--                     type="number">-->
-<!--            </div>-->
-<!--            <div class="w-1/2 pl-2">-->
-<!--              <small>Game ID</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                     type="number">-->
-<!--            </div>-->
-<!--            <div class="w-full mt-4">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="playerByPlayerIdAndGameId(coinFlipInput.playerId, coinFlipInput.gameId)">-->
-<!--                Fetch player <i v-if="coinFlipLoading.playerByPlayerIdAndGameId" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
+        <!--      playerByPlayerIdAndGameId-->
+        <div v-if="coinFlipSelectedButton === 'playerByPlayerIdAndGameId'">
+          <div class="flex flex-wrap">
+            <div class="w-1/2 pr-2">
+              <small>Player 1 or 2</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.playerId"
+                     type="number">
+            </div>
+            <div class="w-1/2 pl-2">
+              <small>Game ID</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                     type="number">
+            </div>
+            <div class="w-full mt-4">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="playerByPlayerIdAndGameId(coinFlipInput.playerId, coinFlipInput.gameId)">
+                Fetch player <i v-if="coinFlipLoading.playerByPlayerIdAndGameId" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
 
-<!--            <div-->
-<!--                v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"-->
-<!--                class="mt-8">-->
-<!--              <p>-->
-<!--                Player address: <br>-->
-<!--                {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}-->
-<!--              </p>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+            <div
+                v-if="coinFlipFetchedData.playerByPlayerIdAndGameId && coinFlipFetchedData.playerByPlayerIdAndGameId !== ''"
+                class="mt-8">
+              <p>
+                Player address: <br>
+                {{ coinFlipFetchedData.playerByPlayerIdAndGameId }}
+              </p>
+            </div>
+          </div>
+        </div>
 
-<!--        &lt;!&ndash;      betsByGameId&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'betsByGameId'">-->
-<!--          <small>Game ID</small>-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-1/2 pr-2">-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                     type="number">-->
-<!--            </div>-->
-<!--            <div class="w-1/2 pl-2">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="betsByGameId(coinFlipInput.gameId)">-->
-<!--                Fetch bets <i v-if="coinFlipLoading.betsByGameId" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
+        <!--      betsByGameId-->
+        <div v-if="coinFlipSelectedButton === 'betsByGameId'">
+          <small>Game ID</small>
+          <div class="flex flex-wrap">
+            <div class="w-1/2 pr-2">
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                     type="number">
+            </div>
+            <div class="w-1/2 pl-2">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="betsByGameId(coinFlipInput.gameId)">
+                Fetch bets <i v-if="coinFlipLoading.betsByGameId" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
+          </div>
 
-<!--          <div v-if="coinFlipFetchedData.betsByGameId && coinFlipFetchedData.betsByGameId !== ''" class="mt-8">-->
-<!--            <p>-->
-<!--              Bet amount: <br>-->
-<!--              {{ coinFlipFetchedData.betsByGameId }} XYA-->
-<!--            </p>-->
-<!--          </div>-->
-<!--        </div>-->
+          <div v-if="coinFlipFetchedData.betsByGameId && coinFlipFetchedData.betsByGameId !== ''" class="mt-8">
+            <p>
+              Bet amount: <br>
+              {{ coinFlipFetchedData.betsByGameId }} XYA
+            </p>
+          </div>
+        </div>
 
-<!--        &lt;!&ndash;      recentGames&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'recentGames'">-->
-<!--          <small>Number of games</small>-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-1/2 pr-2">-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                     v-model="coinFlipInput.numberOfGames"-->
-<!--                     type="number">-->
-<!--            </div>-->
-<!--            <div class="w-1/2 pl-2">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="recentGames(coinFlipInput.numberOfGames)">-->
-<!--                Fetch games <i v-if="coinFlipLoading.recentGames" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <br>-->
-<!--          <br>-->
-<!--        </div>-->
+        <!--      recentGames-->
+        <div v-if="coinFlipSelectedButton === 'recentGames'">
+          <small>Number of games</small>
+          <div class="flex flex-wrap">
+            <div class="w-1/2 pr-2">
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                     v-model="coinFlipInput.numberOfGames"
+                     type="number">
+            </div>
+            <div class="w-1/2 pl-2">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="recentGames(coinFlipInput.numberOfGames)">
+                Fetch games <i v-if="coinFlipLoading.recentGames" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
+          </div>
+          <br>
+          <br>
+        </div>
 
-<!--        &lt;!&ndash;      recentGamesByUser&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'recentGamesByUser'">-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-1/2 pr-2">-->
-<!--              <small>User address</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                     v-model="coinFlipInput.userAddress"-->
-<!--                     type="text">-->
-<!--            </div>-->
-<!--            <div class="w-1/2 pl-2">-->
-<!--              <small>Number of games</small>-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"-->
-<!--                     v-model="coinFlipInput.numberOfGames"-->
-<!--                     type="number">-->
-<!--            </div>-->
-<!--            <div class="w-full mt-4">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="recentGamesByUser(coinFlipInput.userAddress, coinFlipInput.numberOfGames)">-->
-<!--                Fetch games <i v-if="coinFlipLoading.recentGamesByUser" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <br>-->
-<!--          <br>-->
-<!--        </div>-->
+        <!--      recentGamesByUser-->
+        <div v-if="coinFlipSelectedButton === 'recentGamesByUser'">
+          <div class="flex flex-wrap">
+            <div class="w-1/2 pr-2">
+              <small>User address</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                     v-model="coinFlipInput.userAddress"
+                     type="text">
+            </div>
+            <div class="w-1/2 pl-2">
+              <small>Number of games</small>
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                     v-model="coinFlipInput.numberOfGames"
+                     type="number">
+            </div>
+            <div class="w-full mt-4">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="recentGamesByUser(coinFlipInput.userAddress, coinFlipInput.numberOfGames)">
+                Fetch games <i v-if="coinFlipLoading.recentGamesByUser" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
+          </div>
+          <br>
+          <br>
+        </div>
 
-<!--        &lt;!&ndash;      coinFlipperByGameId&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'coinFlipperByGameId'">-->
-<!--          <small>Game ID</small>-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-1/2 pr-2">-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                     type="number">-->
-<!--            </div>-->
-<!--            <div class="w-1/2 pl-2">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="coinFlipperByGameId(coinFlipInput.gameId)">-->
-<!--                Fetch flipper <i v-if="coinFlipLoading.coinFlipperByGameId" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
+        <!--      coinFlipperByGameId-->
+        <div v-if="coinFlipSelectedButton === 'coinFlipperByGameId'">
+          <small>Game ID</small>
+          <div class="flex flex-wrap">
+            <div class="w-1/2 pr-2">
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                     type="number">
+            </div>
+            <div class="w-1/2 pl-2">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="coinFlipperByGameId(coinFlipInput.gameId)">
+                Fetch flipper <i v-if="coinFlipLoading.coinFlipperByGameId" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
+          </div>
 
-<!--          <div v-if="coinFlipFetchedData.coinFlipperByGameId && coinFlipFetchedData.coinFlipperByGameId !== ''"-->
-<!--               class="mt-8">-->
-<!--            <p>-->
-<!--              Flipper of coin: <br>-->
-<!--              {{ coinFlipFetchedData.coinFlipperByGameId }}-->
-<!--            </p>-->
-<!--          </div>-->
-<!--        </div>-->
+          <div v-if="coinFlipFetchedData.coinFlipperByGameId && coinFlipFetchedData.coinFlipperByGameId !== ''"
+               class="mt-8">
+            <p>
+              Flipper of coin: <br>
+              {{ coinFlipFetchedData.coinFlipperByGameId }}
+            </p>
+          </div>
+        </div>
 
-<!--        &lt;!&ndash;      gameById&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'gameById'">-->
-<!--          <small>Game ID</small>-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-1/2 pr-2">-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"-->
-<!--                     type="number">-->
-<!--            </div>-->
-<!--            <div class="w-1/2 pl-2">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="gameById(coinFlipInput.gameId)">-->
-<!--                Fetch game <i v-if="coinFlipLoading.gameById" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <br>-->
-<!--          <br>-->
-<!--        </div>-->
+        <!--      gameById-->
+        <div v-if="coinFlipSelectedButton === 'gameById'">
+          <small>Game ID</small>
+          <div class="flex flex-wrap">
+            <div class="w-1/2 pr-2">
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameId"
+                     type="number">
+            </div>
+            <div class="w-1/2 pl-2">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="gameById(coinFlipInput.gameId)">
+                Fetch game <i v-if="coinFlipLoading.gameById" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
+          </div>
+          <br>
+          <br>
+        </div>
 
-<!--        &lt;!&ndash;      gameByName&ndash;&gt;-->
-<!--        <div v-if="coinFlipSelectedButton === 'gameByName'">-->
-<!--          <small>Game name</small>-->
-<!--          <div class="flex flex-wrap">-->
-<!--            <div class="w-1/2 pr-2">-->
-<!--              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameName"-->
-<!--                     type="text">-->
-<!--            </div>-->
-<!--            <div class="w-1/2 pl-2">-->
-<!--              <button type="button"-->
-<!--                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--                      @click="gameByName(coinFlipInput.gameName)">-->
-<!--                Fetch game <i v-if="coinFlipLoading.gameName" class="fas fa-cog fa-spin"></i>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <br>-->
-<!--          <br>-->
-<!--        </div>-->
+        <!--      gameByName-->
+        <div v-if="coinFlipSelectedButton === 'gameByName'">
+          <small>Game name</small>
+          <div class="flex flex-wrap">
+            <div class="w-1/2 pr-2">
+              <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="coinFlipInput.gameName"
+                     type="text">
+            </div>
+            <div class="w-1/2 pl-2">
+              <button type="button"
+                      class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                      @click="gameByName(coinFlipInput.gameName)">
+                Fetch game <i v-if="coinFlipLoading.gameName" class="fas fa-cog fa-spin"></i>
+              </button>
+            </div>
+          </div>
+          <br>
+          <br>
+        </div>
 
-<!--      </div>-->
+      </div>
     </div>
 
     <div v-else class="flex w-full h-full py-24">
@@ -829,7 +823,7 @@ export default {
 
       amount: 0,
       coinFlipLastGames: [],
-      coinFlipShowEndedGames: false,
+      coinFlipShowEndedGames: true,
       coinFlipDefaultView: 'default',
       coinFlipShownGames: [],
       coinFlipPasswords: [],
