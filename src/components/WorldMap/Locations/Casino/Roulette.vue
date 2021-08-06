@@ -122,7 +122,7 @@
         <br>
         <div v-if="rouletteMounted && rouletteFetchedData.previousRound.length > 0" class="flex flex-wrap">
           <div class="w-full">
-            <span class="text-xl" v-if="rouletteFetchedData.previousRound.length > 0">Previous round bets: </span><br>
+            <span class="text-xl" v-if="rouletteFetchedData.previousRound.length > 0">Last round winners bets: </span><br>
             <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.previousRound">
               {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}
             </div>

@@ -19,6 +19,13 @@
 
       <br>
 
+<!--      <button type="button"-->
+<!--              class="rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
+<!--              @click="claim()">-->
+<!--        <span>Claim</span>-->
+<!--        <i v-if="jennyMineloading.claiming" class="fas fa-cog fa-spin"></i>-->
+<!--      </button>-->
+
       <p class="text-center text-xl">
         Coming soon...
       </p>
@@ -67,9 +74,14 @@ export default {
   },
   data() {
     return {
+      error: '',
+
       jennyMineContract: {},
       jennyMineInterval: undefined,
-      jennyMineFetchedData: {}
+      jennyMineFetchedData: {},
+      jennyMineloading: {
+        claiming: false
+      }
     }
   },
   created() {
@@ -119,18 +131,18 @@ export default {
     async claim() {
       this.error = ''
 
-      this.loading.claiming = true
+      this.jennyMineloading.claiming = true
       try {
         const tx = await this.jennyMineFetchedData.claim(this.metaMaskAccount)
 
         await tx.wait(1)
 
-        this.loading.claiming = false
+        this.jennyMineloading.claiming = false
       } catch (err) {
         if (err.code !== 4001) {
           this.error = err
         }
-        this.loading.claiming = false
+        this.jennyMineloading.claiming = false
         console.error(err)
       }
     }
