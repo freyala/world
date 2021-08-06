@@ -34,6 +34,8 @@ import Staking from "./plugins/artifacts/staking.json";
 import Roulette from "./plugins/artifacts/roulette.json";
 import Topple from "./plugins/artifacts/topple.json";
 import CoinFlip from "./plugins/artifacts/coinflip.json";
+import JennyMine from "./plugins/artifacts/jennymines.json";
+import DexAggregator from "./plugins/artifacts/dexaggregator.json";
 import wallet from "./plugins/wallet";
 
 export default {
@@ -96,18 +98,22 @@ export default {
       if (document.hasFocus()) {
         const mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
         const stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
+        const jennyMineContract = new ethers.Contract(JennyMine.address, JennyMine.abi, this.metaMaskWallet.signer)
 
         const allowances = await Promise.all([
           mainContract.allowance(this.metaMaskAccount, Staking.address),
           mainContract.allowance(this.metaMaskAccount, Roulette.address),
           mainContract.allowance(this.metaMaskAccount, Topple.address),
-          mainContract.allowance(this.metaMaskAccount, CoinFlip.address)
+          mainContract.allowance(this.metaMaskAccount, CoinFlip.address),
+          mainContract.allowance(this.metaMaskAccount, JennyMine.address),
+          mainContract.allowance(this.metaMaskAccount, DexAggregator.address)
         ])
 
         const balances = await Promise.all([
           mainContract.balanceOf(this.metaMaskAccount),
           stakingContract.stakes(this.metaMaskAccount),
-          stakingContract.calculateEarnings(this.metaMaskAccount)
+          stakingContract.calculateEarnings(this.metaMaskAccount),
+          jennyMineContract.returnValuesOfMiner()
         ])
 
         await this.setAllowances(allowances)

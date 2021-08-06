@@ -4,7 +4,7 @@
          style="background: url('/images/ui/icon-bg.png') no-repeat; background-size: contain">
       <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'staking'" src="/images/map/Drill.png" alt="Drill">
       <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'faucet'" src="/images/map/Soup.png" alt="Soup">
-      <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'delegate'" src="/images/map/Beacon.png" alt="Beacon">
+      <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'jennymines'" src="/images/map/Beacon.png" alt="Beacon">
       <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'casino'" src="/images/map/Casino.png" alt="Casino">
     </div>
   </div>

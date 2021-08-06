@@ -27,7 +27,7 @@
 
               <img class="cursor-pointer opacity-100 hover:opacity-0 absolute"
                    style="left: 30.6719%;top: 36.139%; width: 4vw;" src="/images/map/Beacon.png" alt="Beacon">
-              <div @click="$store.dispatch('setOpenWindow', 'delegate')"
+              <div @click="$store.dispatch('setOpenWindow', 'jennymines')"
                    class="cursor-pointer opacity-0 hover:opacity-100 absolute"
                    style="left: 30.6719%;top: 36.139%; width: 4vw;">
                 <img class="w-full" src="/images/map/Beacon_MO.png" alt="Beacon">
@@ -164,7 +164,8 @@
       <casino></casino>
       <faucet></faucet>
       <staking></staking>
-      <delegate></delegate>
+      <jenny-mines></jenny-mines>
+      <dex-aggregator></dex-aggregator>
 
       <div id="modals">
         <window name="1">
@@ -545,10 +546,11 @@ import favourites from './Favourites';
 import casino from './Locations/Casino/Index';
 import faucet from './Locations/Faucet';
 import staking from './Locations/Staking';
-import delegate from './Locations/Delegating';
+import jennyMines from './Locations/JennyMines';
+import dexAggregator from './Locations/DexAggregator';
 
 import wallet from '../../plugins/wallet';
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: 'WorldMap',
@@ -565,7 +567,8 @@ export default {
     casino,
     faucet,
     staking,
-    delegate
+    jennyMines,
+    dexAggregator
   },
   computed: {
     ...mapGetters([
@@ -579,13 +582,16 @@ export default {
   mounted() {
     this.connectWallet();
 
-    console.log(this.firstTime)
+    this.setOpenWindow('dexaggregator');
 
     if (this.firstTime === true) {
       this.$modal.show('tutorial')
     }
   },
   methods: {
+    ...mapActions([
+      'setOpenWindow'
+    ]),
     skipOrEnd() {
       this.$modal.hide('tutorial')
       localStorage.firstTime = false;

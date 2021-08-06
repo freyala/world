@@ -17,6 +17,7 @@ export default new Vuex.Store({
         USER_BALANCE: 0,
         STAKING_BALANCE: 0,
         REWARD_BALANCE: 0,
+        MINING_BALANCE: 0,
         ALLOWANCE: {
             roulette: 0,
             staking: 0,
@@ -58,6 +59,9 @@ export default new Vuex.Store({
         },
         rewardBalance(state) {
             return state.REWARD_BALANCE
+        },
+        miningBalance(state) {
+            return state.MINING_BALANCE
         },
         allowance(state) {
             return state.ALLOWANCE
@@ -109,6 +113,9 @@ export default new Vuex.Store({
         },
         SET_REWARD_BALANCE(state, value) {
             state.REWARD_BALANCE = value
+        },
+        SET_MINING_BALANCE(state, value) {
+            state.MINING_BALANCE = value
         },
         SET_ALLOWANCE(state, value) {
             state.ALLOWANCE = value
@@ -182,6 +189,7 @@ export default new Vuex.Store({
             commit('SET_USER_BALANCE', (values[0] / Math.pow(10, 18)).toFixed(3))
             commit('SET_STAKING_BALANCE', (values[1] / Math.pow(10, 18)).toFixed(3))
             commit('SET_REWARD_BALANCE', (values[2] / Math.pow(10, 18)).toFixed(3))
+            commit('SET_MINING_BALANCE', (values[3][2] / Math.pow(10, 18)).toFixed(3))
 
             commit('SET_LOADING_BALANCES_STATUS', false)
         },
@@ -190,7 +198,9 @@ export default new Vuex.Store({
                 staking: (values[0] / Math.pow(10, 18)).toFixed(3),
                 roulette: (values[1] / Math.pow(10, 18)).toFixed(3),
                 topple: (values[2] / Math.pow(10, 18)).toFixed(3),
-                coinflip: (values[3] / Math.pow(10, 18)).toFixed(3)
+                coinflip: (values[3] / Math.pow(10, 18)).toFixed(3),
+                jennyMine: (values[4] / Math.pow(10, 18)).toFixed(3),
+                dexAggregator: (values[5] / Math.pow(10, 18)).toFixed(3)
             }
 
             commit('SET_ALLOWANCE', allowances)
