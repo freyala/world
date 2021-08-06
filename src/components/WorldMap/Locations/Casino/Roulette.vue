@@ -118,7 +118,7 @@
           </div>
         </div>
         <br>
-        <hr>
+        <hr v-if="rouletteMounted && rouletteFetchedData.lastWinners.length === 0">
         <br>
         <div v-if="rouletteMounted && rouletteFetchedData.previousRound.length > 0" class="flex flex-wrap">
           <div class="w-full">
