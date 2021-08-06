@@ -433,6 +433,14 @@
                         <div v-if="game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992'" class="w-full mb-4 pr-8">
                           <small>Play against the house or wait for a player to join your game.</small>
                         </div>
+                        <div v-if="game.passwordProtected && game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992'" class="mb-2">
+                          <input
+                              class="w-full border border-yellow bg-transparent px-4 min-h-12"
+                              v-model="coinFlipPasswords[game.id]"
+                              placeholder="password"
+                              type="password"
+                          >
+                        </div>
                         <button type="button"
                                 @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
                                 class="w-2/5 rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
