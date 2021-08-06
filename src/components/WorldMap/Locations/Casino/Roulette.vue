@@ -117,20 +117,20 @@
             No winners last round.
           </div>
         </div>
-<!--        <br>-->
-<!--        <hr>-->
-<!--        <br>-->
-<!--        <div v-if="rouletteMounted && rouletteFetchedData.previousRound.length > 0" class="flex flex-wrap">-->
-<!--          <div class="w-full">-->
-<!--            <span class="text-xl" v-if="rouletteFetchedData.previousRound.length > 0">Previous round bets: </span><br>-->
-<!--            <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.previousRound">-->
-<!--              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}-->
-<!--            </div>-->
-<!--            <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.previousRound">-->
-<!--              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on {{ bet.betType }}-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+        <br>
+        <hr>
+        <br>
+        <div v-if="rouletteMounted && rouletteFetchedData.previousRound.length > 0" class="flex flex-wrap">
+          <div class="w-full">
+            <span class="text-xl" v-if="rouletteFetchedData.previousRound.length > 0">Previous round bets: </span><br>
+            <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.previousRound">
+              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}
+            </div>
+            <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.previousRound">
+              {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on {{ bet.betType }}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="w-3/4 mt-8 px-8">

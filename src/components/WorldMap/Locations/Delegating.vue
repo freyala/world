@@ -46,6 +46,8 @@
 <script>
 import wallet from "../../../plugins/wallet"
 import {mapActions, mapGetters} from "vuex";
+import {ethers} from "ethers";
+import jennyMineContract from "../../../plugins/artifacts/jennymines.json";
 
 
 export default {
@@ -53,14 +55,85 @@ export default {
   mixins: [wallet],
   computed: {
     ...mapGetters([
+      'chainID',
+      'chainStatus',
+      'loggedIn',
+      'walletConnected',
+      'metaMaskAccount',
+      'metaMaskWallet',
       'openWindow',
       'favourites'
     ])
   },
+  data() {
+    return {
+      jennyMineContract: {},
+      jennyMineInterval: undefined,
+      jennyMineFetchedData: {}
+    }
+  },
+  created() {
+    if (this.metaMaskWallet) {
+      this.jennyMineContract = new ethers.Contract(jennyMineContract.address, jennyMineContract.abi, this.metaMaskWallet.signer)
+      this.fetchJennyMineData()
+    }
+  },
+  watch: {
+    async metaMaskWallet() {
+      this.jennyMineContract = new ethers.Contract(jennyMineContract.address, jennyMineContract.abi, this.metaMaskWallet.signer)
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.jennyMineMounted = true
+    }, 1000)
+
+    this.jennyMineInterval = setInterval(() => {
+      this.fetchJennyMineData()
+    }, 1000)
+  },
   methods: {
     ...mapActions([
       'setFavourite'
-    ])
+    ]),
+    // CALL
+    async fetchJennyMineData() {
+      if (document.hasFocus()) {
+        const [valuesOfGem] = await Promise.all([
+          this.jennyMineContract.returnValuesOfGem(),
+        ])
+
+        this.jennyMineFetchedData.mineInfo = {
+          address: valuesOfGem[0],
+          decimals: valuesOfGem[1]._isBigNumber ? ethers.BigNumber.from(valuesOfGem[1]).toString() : valuesOfGem[1],
+          name: valuesOfGem[2],
+          ticker: valuesOfGem[3],
+          logoUrl: valuesOfGem[4],
+          pairAddress: valuesOfGem[5],
+          pairTicker: valuesOfGem[6]
+        }
+      }
+    },
+
+    // SEND
+    async claim() {
+      this.error = ''
+
+      this.loading.claiming = true
+      try {
+        const tx = await this.jennyMineFetchedData.claim(this.metaMaskAccount)
+
+        await tx.wait(1)
+
+        this.loading.claiming = false
+      } catch (err) {
+        if (err.code !== 4001) {
+          this.error = err
+        }
+        this.loading.claiming = false
+        console.error(err)
+      }
+    }
   }
 }
 </script>
