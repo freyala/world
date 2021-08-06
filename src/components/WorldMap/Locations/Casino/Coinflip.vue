@@ -383,7 +383,7 @@
                     Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
                   </p>
                   <p>
-                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' ? 'House' : game.p2 }}
                   </p>
                   <p>
                     Amount: {{ game.betAmount }} XYA
@@ -391,7 +391,7 @@
                 </div>
                 <div class="w-2/5 pl-6">
                   <div>
-                    <div v-if="game.p2 !== '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || (game.p1 !== metaMaskAccount && game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8')">
+                    <div v-if="game.p2 !== '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' || (game.p1 !== metaMaskAccount && game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992')">
                       Status: <br>
                       {{
                         (game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount) ? 'Searching for opponent' : 'In progress'
@@ -410,7 +410,7 @@
                     </div>
 
                     <div
-                        v-if="(game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' || game.p2 === '0x0000000000000000000000000000000000000000') && game.p1 !== metaMaskAccount">
+                        v-if="(game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' || game.p2 === '0x0000000000000000000000000000000000000000') && game.p1 !== metaMaskAccount">
                       <button type="button"
                               @click="joinGame(game.id, coinFlipPasswords[game.id], game.betAmount, 2)"
                               class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12 mb-4">
@@ -430,7 +430,7 @@
                       <div
                           class="flex flex-wrap"
                           v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && game.flipper === metaMaskAccount">
-                        <div v-if="game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8'" class="w-full mb-4 pr-8">
+                        <div v-if="game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992'" class="w-full mb-4 pr-8">
                           <small>Play against the house or wait for a player to join your game.</small>
                         </div>
                         <button type="button"
@@ -480,7 +480,7 @@
                     Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
                   </p>
                   <p>
-                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.p2 }}
+                    Player 2: {{ game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' ? 'House' : game.p2 }}
                   </p>
                   <p>
                     Amount: {{ game.betAmount }} XYA
@@ -492,7 +492,7 @@
                     Ended
                     <br><br>
                     Winner: <br>
-                    <span style="line-break: anywhere">{{ game.winner === metaMaskAccount ? 'YOU!' : game.winner === '0x4BE68f081dCedF75F30e652D5203e0CA48dC4Bb8' ? 'House' : game.winner }}</span>
+                    <span style="line-break: anywhere">{{ game.winner === metaMaskAccount ? 'YOU!' : game.winner === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' ? 'House' : game.winner }}</span>
                   </div>
                 </div>
               </div>

@@ -17,14 +17,6 @@
         </div>
       </div>
 
-      <br>
-
-<!--      <button type="button"-->
-<!--              class="rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"-->
-<!--              @click="claim()">-->
-<!--        <span>Claim</span>-->
-<!--        <i v-if="jennyMineloading.claiming" class="fas fa-cog fa-spin"></i>-->
-<!--      </button>-->
 
       <p class="text-center text-xl">
         Coming soon...
@@ -133,7 +125,7 @@ export default {
 
       this.jennyMineloading.claiming = true
       try {
-        const tx = await this.jennyMineFetchedData.claim(this.metaMaskAccount)
+        const tx = await this.jennyMineContract.claim(this.metaMaskAccount)
 
         await tx.wait(1)
 
