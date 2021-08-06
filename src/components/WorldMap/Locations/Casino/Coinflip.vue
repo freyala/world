@@ -441,19 +441,21 @@
                               type="password"
                           >
                         </div>
-                        <button type="button"
-                                @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
-                                class="w-2/5 rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
-                          Heads!
-                        </button>
-                        <div class="w-1/5 my-auto text-center">
-                          <i v-if="coinFlipLoading.flipping === game.id" class="fas fa-cog fa-spin"></i>
+                        <div class="w-full flex pr-8">
+                          <button type="button"
+                                  @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
+                                  class="w-2/5 rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
+                            Heads!
+                          </button>
+                          <div class="w-1/5 my-auto text-center">
+                            <i v-if="coinFlipLoading.flipping === game.id" class="fas fa-cog fa-spin"></i>
+                          </div>
+                          <button type="button"
+                                  @click="startGame(game.id, coinFlipPasswords[game.id], 2)"
+                                  class="w-2/5 ml-auto rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
+                            Tails!
+                          </button>
                         </div>
-                        <button type="button"
-                                @click="startGame(game.id, coinFlipPasswords[game.id], 2)"
-                                class="w-2/5 ml-auto rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
-                          Tails!
-                        </button>
                       </div>
                       <div
                           v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && ((game.p1 === metaMaskAccount || game.p2 === metaMaskAccount) && game.flipper !== metaMaskAccount)">
