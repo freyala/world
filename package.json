@@ -17,6 +17,7 @@
     "tslib": "^2.3.0",
     "v-show-slide": "^1.8.3",
     "vue": "^2.6.11",
+    "vue-3d-model": "^1.4.0",
     "vue-clipboard2": "^0.3.1",
     "vue-js-modal": "^2.0.1",
     "vue-panzoom": "1.1.3",
