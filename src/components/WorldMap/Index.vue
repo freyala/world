@@ -38,12 +38,12 @@
 
               <img class="cursor-pointer absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;"
                    src="/images/map/FreyalaTree.png" alt="FreyalaTree">
-              <!--              <div @click="$store.dispatch('setOpenWindow', 'staking')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;">-->
-              <!--                <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">-->
-              <!--                <p class="text-center font-bold text-xl text-yellow outline-brown">-->
-              <!--                  Staking-->
-              <!--                </p>-->
-              <!--              </div>-->
+              <div @click="$store.dispatch('setOpenWindow', 'harmons')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;">
+                <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">
+                <p class="text-center font-bold text-yellow outline-brown">
+                  Harmons sneak peek
+                </p>
+              </div>
 
               <img class="cursor-pointer opacity-100 hover:opacity-0 absolute"
                    style="left: 42.3555%; top: 51.1806%; width: 5vw;" src="/images/map/Soup.png" alt="Soup">
@@ -177,6 +177,8 @@
       <staking></staking>
       <delegate></delegate>
       <jenny-mines></jenny-mines>
+
+      <harmons></harmons>
 
       <div id="modals">
         <window name="1">
@@ -559,6 +561,7 @@ import faucet from './Locations/Faucet';
 import staking from './Locations/Staking';
 import delegate from './Locations/Delegating';
 import jennyMines from './Locations/JennyMines';
+import harmons from './Harmons/Index';
 
 import wallet from '../../plugins/wallet';
 import {mapGetters} from "vuex";
@@ -579,7 +582,8 @@ export default {
     faucet,
     staking,
     delegate,
-    jennyMines
+    jennyMines,
+    harmons
   },
   computed: {
     ...mapGetters([
