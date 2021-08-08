@@ -3,17 +3,17 @@
        style="background: url('/images/ui/top-bar.png') repeat-x; background-size: contain">
     <div class="my-auto text-center w-1/4" v-if="walletConnected && chainStatus === 'correct'">
       <p class="text-xl">
-        In wallet: {{ loadingBalances ? 'fetching...' : `${userBalance} XYA` }}
-      </p>
-    </div>
-    <div class="my-auto text-center w-1/4" v-if="walletConnected && chainStatus === 'correct'">
-      <p class="text-xl">
-        In staking: {{ loadingBalances ? 'fetching...' : `${stakingBalance} XYA` }}
+        Balance: {{ loadingBalances ? 'fetching...' : `${userBalance} XYA` }}
       </p>
     </div>
     <div class="my-auto text-center w-1/4" v-if="walletConnected && chainStatus === 'correct'">
       <p class="text-xl">
         Staking rewards: {{ loadingBalances ? 'fetching...' : `${rewardBalance} XYA` }}
+      </p>
+    </div>
+    <div class="my-auto text-center w-1/4" v-if="walletConnected && chainStatus === 'correct'">
+      <p class="text-xl">
+        Mining rewards: {{ loadingBalances ? 'fetching...' : `${miningBalance} XYA` }}
       </p>
     </div>
     <div class="my-auto ml-auto text-center flex" :class="chainStatus === 'wrong' ? 'w-1/2' : 'w-1/4'">
@@ -41,6 +41,7 @@ export default {
       'userBalance',
       'stakingBalance',
       'rewardBalance',
+      'miningBalance',
       'loggedIn',
       'walletConnected',
       'metaMaskAccount',
