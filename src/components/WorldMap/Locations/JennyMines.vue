@@ -72,11 +72,15 @@
       </div>
 
       <div v-if="!jennyMineFetchedData.minerInfo.registered" class="w-full text-center">
-        <button type="button"
+        <button v-if="parseInt(jennyMineFetchedData.lpBalance) >= 300" type="button"
                 class="w-full rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
                 @click="enterMines()">
           <span>Enter the mines </span>
           <i v-if="jennyMineLoading.entering" class="fas fa-cog fa-spin"></i>
+        </button>
+        <button v-else type="button"
+                class="w-full rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
+          <span>Need 300 {{ jennyMineFetchedData.feeInfo.feeTicker }} to enter mines.</span>
         </button>
       </div>
       <div v-else class="w-full text-center">
