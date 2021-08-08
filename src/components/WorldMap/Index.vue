@@ -72,9 +72,20 @@
               <div @click="$store.dispatch('setOpenWindow', 'casino')"
                    class="cursor-pointer opacity-0 hover:opacity-100 absolute"
                    style="left: 38.3555%; top: 44.9792%; width: 5vw;">
-                <img class="w-full" src="/images/map/Casino_MO.png" alt="FreyalaTree">
+                <img class="w-full" src="/images/map/Casino_MO.png" alt="Casino">
                 <p class="block text-center font-bold text-yellow outline-brown z-20">
                   Luderion
+                </p>
+              </div>
+
+              <img class="cursor-pointer opacity-100 hover:opacity-0 absolute"
+                   style="left: 81.8281%; top: 29.8611%; width: 3vw;" src="/images/map/Mine.png" alt="Mine">
+              <div @click="$store.dispatch('setOpenWindow', 'jennymines')"
+                   class="cursor-pointer opacity-0 hover:opacity-100 absolute"
+                   style="left: 81.8281%; top: 29.8611%; width: 3vw;">
+                <img class="w-full" src="/images/map/Mine_MO.png" alt="Mine">
+                <p class="block text-center font-bold text-yellow outline-brown z-20">
+                  Jenny's mine
                 </p>
               </div>
 
@@ -165,6 +176,7 @@
       <faucet></faucet>
       <staking></staking>
       <delegate></delegate>
+      <jenny-mines></jenny-mines>
 
       <div id="modals">
         <window name="1">
@@ -546,6 +558,7 @@ import casino from './Locations/Casino/Index';
 import faucet from './Locations/Faucet';
 import staking from './Locations/Staking';
 import delegate from './Locations/Delegating';
+import jennyMines from './Locations/JennyMines';
 
 import wallet from '../../plugins/wallet';
 import {mapGetters} from "vuex";
@@ -565,7 +578,8 @@ export default {
     casino,
     faucet,
     staking,
-    delegate
+    delegate,
+    jennyMines
   },
   computed: {
     ...mapGetters([

@@ -6,6 +6,7 @@
       <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'faucet'" src="/images/map/Soup.png" alt="Soup">
       <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'delegate'" src="/images/map/Beacon.png" alt="Beacon">
       <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'casino'" src="/images/map/Casino.png" alt="Casino">
+      <img class="m-auto max-h-20 max-w-20" v-if="favourite === 'jennymines'" src="/images/map/Mine.png" alt="Casino">
     </div>
   </div>
 </template>
