@@ -59,3 +59,12 @@ html, body {
 .load-in-bg3 {
   background-image: url('/images/ui/screen-bg.png');
 }
+
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

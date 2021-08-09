@@ -13,9 +13,6 @@
               <img class="cursor-pointer absolute" style="left: 49.8312%; top: 62.0653%; width: 8vw;"
                    src="/images/map/WallBottom.png" alt="WallBottom">
 
-              <img class="cursor-pointer absolute" style="left: 41.8906%; top: 43.1389%; width: 6vw;"
-                   src="/images/map/Palace.png" alt="Palace">
-
               <img class="cursor-pointer absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;"
                    src="/images/map/WallMid.png" alt="WallMid">
               <!--              <div @click="$store.dispatch('setOpenWindow', 'casino')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;">-->
@@ -30,19 +27,29 @@
               <div @click="$store.dispatch('setOpenWindow', 'delegate')"
                    class="cursor-pointer opacity-0 hover:opacity-100 absolute"
                    style="left: 30.6719%;top: 36.139%; width: 4vw;">
-                <img class="w-full" src="/images/map/Beacon_MO.png" alt="Beacon">
-                <p class="text-center font-bold text-yellow outline-brown z-20">
-                  Beacon of Light
-                </p>
+                <div class="relative">
+                  <img class="w-full" src="/images/map/Beacon_MO.png" alt="Beacon">
+
+                  <p class="text-center font-bold text-yellow outline-brown absolute"
+                     style="pointer-events: none; top: 6.5vw; left: -0.2vw;">
+                    Beacon of Light
+                  </p>
+                </div>
               </div>
 
               <img class="cursor-pointer absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;"
                    src="/images/map/FreyalaTree.png" alt="FreyalaTree">
-              <div @click="$store.dispatch('setOpenWindow', 'harmons')" class="cursor-pointer opacity-0 hover:opacity-100 absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;">
-                <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">
-                <p class="text-center font-bold text-yellow outline-brown">
-                  Harmons sneak peek
-                </p>
+              <div @click="$store.dispatch('setOpenWindow', 'harmons')"
+                   class="cursor-pointer opacity-0 hover:opacity-100 absolute"
+                   style="left: 80.6172%; top: 37.6319%; width: 7vw;">
+                <div class="relative">
+                  <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">
+
+                  <p class="text-center font-bold text-yellow outline-brown absolute"
+                     style="pointer-events: none; top: 8vw; left: 1vw;">
+                    Sneak Peek
+                  </p>
+                </div>
               </div>
 
               <img class="cursor-pointer opacity-100 hover:opacity-0 absolute"
@@ -50,10 +57,14 @@
               <div @click="$store.dispatch('setOpenWindow', 'faucet')"
                    class="cursor-pointer opacity-0 hover:opacity-100 absolute"
                    style="left: 42.3555%; top: 51.1806%; width: 5vw;">
-                <img class="w-full" src="/images/map/Soup_MO.png" alt="FreyalaTree">
-                <p class="text-center font-bold text-yellow outline-brown z-20">
-                  Soup Kitchen
-                </p>
+                <div class="relative">
+                  <img class="w-full" src="/images/map/Soup_MO.png" alt="FreyalaTree">
+
+                  <p class="text-center font-bold text-yellow outline-brown absolute"
+                     style="pointer-events: none; top: 3.5vw; left: 0;">
+                    Soup Kitchen
+                  </p>
+                </div>
               </div>
 
               <img class="cursor-pointer opacity-100 hover:opacity-0 absolute"
@@ -61,10 +72,14 @@
               <div @click="$store.dispatch('setOpenWindow', 'staking')"
                    class="cursor-pointer opacity-0 hover:opacity-100 absolute"
                    style="left: 71.0156%; top: 47.6111%; width: 4.54vw;">
-                <img class="w-full" src="/images/map/Drill_MO.png" alt="FreyalaTree">
-                <p class="text-center font-bold text-yellow outline-brown z-20">
-                  Extraction Site
-                </p>
+                <div class="relative">
+                  <img class="w-full" src="/images/map/Drill_MO.png" alt="FreyalaTree">
+
+                  <p class="text-center font-bold text-yellow outline-brown absolute"
+                     style="pointer-events: none; top: 4vw; left: -0.5vw;">
+                    Extraction Site
+                  </p>
+                </div>
               </div>
 
               <img class="cursor-pointer opacity-100 hover:opacity-0 absolute"
@@ -72,10 +87,29 @@
               <div @click="$store.dispatch('setOpenWindow', 'casino')"
                    class="cursor-pointer opacity-0 hover:opacity-100 absolute"
                    style="left: 38.3555%; top: 44.9792%; width: 5vw;">
-                <img class="w-full" src="/images/map/Casino_MO.png" alt="Casino">
-                <p class="block text-center font-bold text-yellow outline-brown z-20">
-                  Luderion
-                </p>
+                <div class="relative">
+                  <img class="w-full" src="/images/map/Casino_MO.png" alt="Casino">
+
+                  <p class="text-center font-bold text-yellow outline-brown absolute"
+                     style="pointer-events: none; top: 5vw; left: 0.3vw;">
+                    Luderion
+                  </p>
+                </div>
+              </div>
+
+              <img class="cursor-pointer absolute" style="left: 41.8906%; top: 43.1389%; width: 6vw;"
+                   src="/images/map/Palace.png" alt="Palace">
+              <div @click="$store.dispatch('setOpenWindow', 'governance')"
+                   class="cursor-pointer opacity-0 hover:opacity-100 absolute"
+                   style="left: 41.8906%; top: 43.1389%; width: 6vw;">
+                <div class="relative">
+                  <img class="w-full" src="/images/map/Palace_MO.png" alt="Palace">
+
+                  <p class="text-center font-bold text-yellow outline-brown absolute"
+                     style="pointer-events: none; top: 5vw; left: -0.6vw;">
+                    Everglen Castle
+                  </p>
+                </div>
               </div>
 
               <img class="cursor-pointer opacity-100 hover:opacity-0 absolute"
@@ -83,10 +117,14 @@
               <div @click="$store.dispatch('setOpenWindow', 'jennymines')"
                    class="cursor-pointer opacity-0 hover:opacity-100 absolute"
                    style="left: 81.8281%; top: 29.8611%; width: 3vw;">
-                <img class="w-full" src="/images/map/Mine_MO.png" alt="Mine">
-                <p class="block text-center font-bold text-yellow outline-brown z-20">
-                  Jenny's mine
-                </p>
+                <div class="relative">
+                  <img class="w-full" src="/images/map/Mine_MO.png" alt="Mine">
+
+                  <p class="text-center font-bold text-yellow outline-brown absolute"
+                     style="pointer-events: none; top: 75px; left: 0;">
+                    Jenny's Mine
+                  </p>
+                </div>
               </div>
 
               <img @click="showWindow('11')" class="cursor-pointer opacity-60 hover:opacity-100 absolute z-10"
@@ -176,6 +214,7 @@
       <faucet></faucet>
       <staking></staking>
       <delegate></delegate>
+      <governance></governance>
       <jenny-mines></jenny-mines>
 
       <harmons></harmons>
@@ -560,6 +599,7 @@ import casino from './Locations/Casino/Index';
 import faucet from './Locations/Faucet';
 import staking from './Locations/Staking';
 import delegate from './Locations/Delegating';
+import governance from './Locations/Governance';
 import jennyMines from './Locations/JennyMines';
 import harmons from './Harmons/Index';
 
@@ -583,6 +623,7 @@ export default {
     staking,
     delegate,
     jennyMines,
+    governance,
     harmons
   },
   computed: {
@@ -607,7 +648,7 @@ export default {
     skipOrEnd() {
       this.$modal.hide('tutorial')
       localStorage.firstTime = false;
-      },
+    },
     hideWindow(window) {
       this.window = undefined
       this.$modal.hide(window)

@@ -137,7 +137,7 @@ import Freyala from "../../../plugins/artifacts/freyala.json";
 
 
 export default {
-  name: 'Delegating',
+  name: 'JennyMines',
   mixins: [wallet],
   computed: {
     ...mapGetters([
