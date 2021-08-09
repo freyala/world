@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide">
+  <transition name="slide" v-if="walletConnected && chainStatus === 'correct'">
     <div class="slide-in shadow-xl" v-if="openWindow === 'governance' || openWindow === 'governance-large'"
          :style="openWindow === 'governance-large' ? 'width: 100%;' : 'width: 30vw;'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
