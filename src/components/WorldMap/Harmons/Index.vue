@@ -3,7 +3,7 @@
     <div class="slide-in shadow-xl relative" v-if="openWindow === 'harmons'"
          style="background: url('/images/ui/screen-bg.png') repeat-y; width: 100%; top: 64px; min-width: 500px; background-size: contain; overflow-y: scroll;">
 
-      <div class="flex flex-wrap">
+      <div class="flex flex-wrap pb-24">
         <div class="w-full text-center mb-4">
           <p class="text-2xl">
             Sneak peek
@@ -27,12 +27,12 @@
           <img class="m-auto" src="/harmons/harmon2.gif" alt="Harmon">
         </div>
 
-        <hr class="w-full mt-4">
+        <hr class="w-full my-4">
 
-        <div class="w-full md:w-1/2 md:px-4">
+        <div class="w-full md:w-1/2 md:px-4 mb-2">
           <div class="small text-center">Drag me!</div>
         </div>
-        <div class="w-full md:w-1/2 md:px-4">
+        <div class="w-full md:w-1/2 md:px-4 mb-2">
           <div class="small text-center">Drag me!</div>
         </div>
 
