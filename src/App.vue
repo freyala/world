@@ -31,7 +31,9 @@ import {ethers} from "ethers";
 import {mapGetters, mapActions} from "vuex";
 import Freyala from "./plugins/artifacts/freyala.json";
 import Staking from "./plugins/artifacts/staking.json";
-import Roulette from "./plugins/artifacts/roulette.json";
+import RouletteLow from "./plugins/artifacts/roulettelow.json";
+import RouletteMedium from "./plugins/artifacts/roulettemedium.json";
+import RouletteHigh from "./plugins/artifacts/roulettehigh.json";
 import Topple from "./plugins/artifacts/topple.json";
 import CoinFlip from "./plugins/artifacts/coinflip.json";
 import JennyMine from "./plugins/artifacts/jennymines.json";
@@ -101,9 +103,11 @@ export default {
 
         const allowances = await Promise.all([
           mainContract.allowance(this.metaMaskAccount, Staking.address),
-          mainContract.allowance(this.metaMaskAccount, Roulette.address),
+          mainContract.allowance(this.metaMaskAccount, RouletteMedium.address),
           mainContract.allowance(this.metaMaskAccount, Topple.address),
-          mainContract.allowance(this.metaMaskAccount, CoinFlip.address)
+          mainContract.allowance(this.metaMaskAccount, CoinFlip.address),
+          mainContract.allowance(this.metaMaskAccount, RouletteHigh.address),
+          mainContract.allowance(this.metaMaskAccount, RouletteLow.address)
         ])
 
         const balances = await Promise.all([

@@ -196,7 +196,9 @@ export default new Vuex.Store({
         setAllowances({commit}, values) {
             const allowances = {
                 staking: (values[0] / Math.pow(10, 18)).toFixed(3),
-                roulette: (values[1] / Math.pow(10, 18)).toFixed(3),
+                rouletteLow: (values[5] / Math.pow(10, 18)).toFixed(3),
+                rouletteMedium: (values[1] / Math.pow(10, 18)).toFixed(3),
+                rouletteHigh: (values[4] / Math.pow(10, 18)).toFixed(3),
                 topple: (values[2] / Math.pow(10, 18)).toFixed(3),
                 coinflip: (values[3] / Math.pow(10, 18)).toFixed(3)
             }

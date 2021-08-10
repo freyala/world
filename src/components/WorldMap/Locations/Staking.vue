@@ -333,7 +333,11 @@ export default {
 
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+            this.error = "ERROR: You have not approved the contract to stake your tokens yet, please approve the appropriate amount."
+          } else {
+            this.error = err.data ? err.data.message : err
+          }
         }
 
         this.loading.staking = false
@@ -373,7 +377,7 @@ export default {
         this.amountToUnstake = 0
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          this.error = err.data ? err.data.message : err
         }
 
         this.loading.unstaking = false
@@ -399,7 +403,7 @@ export default {
         this.loading.withdrawing = false
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err
+          this.error = err.data ? err.data.message : err
         }
         this.loading.withdrawing = false
         console.error(err)

@@ -267,10 +267,10 @@ export default {
         await tx.wait(1)
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err.data.message
+          this.error = err.data ? err.data.message : err
           this.$modal.show('error')
         }
-        this.error = err.data.message
+        this.error = err.data ? err.data.message : err
         this.$modal.show('error')
       }
 

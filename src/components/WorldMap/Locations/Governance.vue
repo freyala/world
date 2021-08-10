@@ -270,7 +270,7 @@ export default {
         this.governanceLoading.voting = false
       } catch (err) {
         if (err.code !== 4001) {
-          this.error = err.data.message
+          this.error = err.data ? err.data.message : err
         }
         this.governanceLoading.voting = false
         console.error(err)

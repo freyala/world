@@ -1089,12 +1089,12 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
-          this.error = err.data.message
+          this.error = err.data ? err.data.message : err
           this.$modal.show('error')
         }
 
         console.error(err)
-        this.error = err.data.message
+        this.error = err.data ? err.data.message : err
         this.$modal.show('error')
       }
 
@@ -1118,12 +1118,18 @@ export default {
         } catch (err) {
           if (err.code !== 4001) {
             this.coinFlipError = err
-            this.error = err.data.message
+
+            if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+              this.error = "ERROR: You have not approved the contract to stake your tokens yet, please approve the appropriate amount."
+            } else {
+              this.error = err.data ? err.data.message : err
+            }
+
             this.$modal.show('error')
           }
 
           console.error(err)
-          this.error = err.data.message
+          this.error = err.data ? err.data.message : err
           this.$modal.show('error')
         }
       } else {
@@ -1144,12 +1150,18 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
-          this.error = err.data.message
+          this.error = err.data ? err.data.message : err
           this.$modal.show('error')
         }
 
         console.error(err)
-        this.error = err.data.message
+
+        if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+          this.error = "ERROR: You have not approved the contract to stake your tokens yet, please approve the appropriate amount."
+        } else {
+          this.error = err.data ? err.data.message : err
+        }
+
         this.$modal.show('error')
       }
 
@@ -1165,12 +1177,18 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
-          this.error = err.data.message
+
+          if (err.data.message === 'execution reverted: ERC20: transfer amount exceeds allowance') {
+            this.error = "ERROR: You have not approved the contract to stake your tokens yet, please approve the appropriate amount."
+          } else {
+            this.error = err.data ? err.data.message : err
+          }
+
           this.$modal.show('error')
         }
 
         console.error(err)
-        this.error = err.data.message
+        this.error = err.data ? err.data.message : err
         this.$modal.show('error')
       }
 
@@ -1201,14 +1219,14 @@ export default {
       } catch (err) {
         if (err.code !== 4001) {
           this.coinFlipError = err
-          this.error = err.data.message
+          this.error = err.data ? err.data.message : err
           this.$modal.show('error')
         }
 
         this.coinFlipLoading.maxAllowance = false
         this.coinFlipLoading.allowance = false
         console.error(err);
-        this.error = err.data.message
+        this.error = err.data ? err.data.message : err
         this.$modal.show('error')
       }
 
