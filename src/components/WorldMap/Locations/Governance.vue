@@ -275,6 +275,8 @@ export default {
         this.governanceLoading.voting = false
         console.error(err)
       }
+
+      this.$store.dispatch('setOpenWindow', '');
     }
   }
 }
