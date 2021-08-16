@@ -10,6 +10,7 @@
   "dependencies": {
     "@harmony-js/core": "^0.1.57",
     "@harmony-js/utils": "^0.1.56",
+    "@panzoom/panzoom": "^4.4.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "ethers": "^5.4.1",

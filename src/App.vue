@@ -1,28 +1,18 @@
 <template>
   <div id="app">
-    <div class="hidden lg:block">
-      <div style="width: 0; height: 0">
-        <div class="load-in-bg1"></div>
-        <div class="load-in-bg2"></div>
-        <div class="load-in-bg3"></div>
-      </div>
-      <transition name="fade" mode="out-in">
-        <div v-if="loading" class="flex h-screen w-full">
-          <div class="loading m-auto">
-            Loading...
-          </div>
+    <div style="width: 0; height: 0">
+      <div class="load-in-bg1"></div>
+      <div class="load-in-bg2"></div>
+      <div class="load-in-bg3"></div>
+    </div>
+    <transition name="fade" mode="out-in">
+      <div v-if="loading" class="flex h-screen w-full">
+        <div class="loading m-auto">
+          Loading...
         </div>
-        <router-view v-else/>
-      </transition>
-    </div>
-    <div class="block lg:hidden">
-      <div class="flex w-screen h-screen">
-        <p class="m-auto text-center">
-          MOBILE NOT SUPPORTED YET <br>
-          ETA LATE AUGUST
-        </p>
       </div>
-    </div>
+      <router-view v-else/>
+    </transition>
   </div>
 </template>
 

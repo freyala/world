@@ -43,9 +43,22 @@ html, body {
   color: white;
 }
 
+.text-stroke-yellow {
+  -webkit-text-stroke: 0.3px #b8a984;
+}
+
+.text-stroke-brown {
+  -webkit-text-stroke: 0.2px #211c17;
+}
+
 .min-h-12 {
   min-height: 3rem;
 }
+
+.max-h-12 {
+  max-width: 3rem;
+}
+
 .max-w-20 {
   max-width: 5rem;
 }
