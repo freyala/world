@@ -646,12 +646,15 @@ export default {
       startScale: 1.25,
       contain: 'outside'
     })
-    elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
+    elem.parentElement.addEventListener('wheel', (e) => {
+      // This only zooms with wheel if the target is not the mentioned div or one of the div's children
+      if (!e.target.closest('#world-map').length) {
+        panzoom.zoomWithWheel(e)
+      }
+    })
 
 
     this.connectWallet();
-
-    console.log(this.firstTime)
 
     if (this.firstTime === true) {
       this.$modal.show('tutorial')

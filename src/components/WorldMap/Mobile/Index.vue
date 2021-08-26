@@ -28,10 +28,10 @@
                 <div class="relative">
                   <img class="w-full" src="/images/map/Beacon.png" alt="Beacon">
 
-<!--                  <p class="text-center font-bold text-yellow absolute"-->
-<!--                     style="pointer-events: none; top: 6.5vw; left: -0.2vw; font-size: 4px">-->
-<!--                    Beacon-->
-<!--                  </p>-->
+                  <!--                  <p class="text-center font-bold text-yellow absolute"-->
+                  <!--                     style="pointer-events: none; top: 6.5vw; left: -0.2vw; font-size: 4px">-->
+                  <!--                    Beacon-->
+                  <!--                  </p>-->
                 </div>
               </div>
 
@@ -41,10 +41,10 @@
                 <div class="relative">
                   <img class="w-full" src="/images/map/FreyalaTree.png" alt="FreyalaTree">
 
-<!--                  <p class="text-center font-bold text-yellow absolute"-->
-<!--                     style="pointer-events: none; top: 8vw; left: 0; font-size: 4px;">-->
-<!--                    Sneak Peek-->
-<!--                  </p>-->
+                  <!--                  <p class="text-center font-bold text-yellow absolute"-->
+                  <!--                     style="pointer-events: none; top: 8vw; left: 0; font-size: 4px;">-->
+                  <!--                    Sneak Peek-->
+                  <!--                  </p>-->
                 </div>
               </div>
 
@@ -54,10 +54,10 @@
                 <div class="relative">
                   <img class="w-full" src="/images/map/Soup.png" alt="Soup Kitchen">
 
-<!--                  <p class="text-center font-bold text-yellow absolute"-->
-<!--                     style="pointer-events: none; top: 3vw; left: 0; font-size: 4px">-->
-<!--                    Kitchen-->
-<!--                  </p>-->
+                  <!--                  <p class="text-center font-bold text-yellow absolute"-->
+                  <!--                     style="pointer-events: none; top: 3vw; left: 0; font-size: 4px">-->
+                  <!--                    Kitchen-->
+                  <!--                  </p>-->
                 </div>
               </div>
 
@@ -67,10 +67,10 @@
                 <div class="relative">
                   <img class="w-full" src="/images/map/Drill.png" alt="Drill">
 
-<!--                  <p class="text-center font-bold text-yellow absolute"-->
-<!--                     style="pointer-events: none; top: 4vw; left: -1.5vw; font-size: 4px">-->
-<!--                    Extraction Site-->
-<!--                  </p>-->
+                  <!--                  <p class="text-center font-bold text-yellow absolute"-->
+                  <!--                     style="pointer-events: none; top: 4vw; left: -1.5vw; font-size: 4px">-->
+                  <!--                    Extraction Site-->
+                  <!--                  </p>-->
                 </div>
               </div>
 
@@ -80,10 +80,10 @@
                 <div class="relative">
                   <img class="w-full" src="/images/map/Casino.png" alt="Casino">
 
-<!--                  <p class="text-center font-bold text-yellow absolute"-->
-<!--                     style="pointer-events: none; top: 4vw; left: -2vw; font-size: 4px;">-->
-<!--                    Luderion-->
-<!--                  </p>-->
+                  <!--                  <p class="text-center font-bold text-yellow absolute"-->
+                  <!--                     style="pointer-events: none; top: 4vw; left: -2vw; font-size: 4px;">-->
+                  <!--                    Luderion-->
+                  <!--                  </p>-->
                 </div>
               </div>
 
@@ -93,10 +93,10 @@
                 <div class="relative">
                   <img class="w-full" src="/images/map/Palace.png" alt="Palace">
 
-<!--                  <p class="text-center font-bold text-yellow absolute"-->
-<!--                     style="pointer-events: none; top: 4vw; left: 0.5vw; font-size: 4px;">-->
-<!--                    Palace-->
-<!--                  </p>-->
+                  <!--                  <p class="text-center font-bold text-yellow absolute"-->
+                  <!--                     style="pointer-events: none; top: 4vw; left: 0.5vw; font-size: 4px;">-->
+                  <!--                    Palace-->
+                  <!--                  </p>-->
                 </div>
               </div>
 
@@ -106,10 +106,10 @@
                 <div class="relative">
                   <img class="w-full" src="/images/map/Mine.png" alt="Mine">
 
-<!--                  <p class="text-center font-bold text-yellow absolute"-->
-<!--                     style="pointer-events: none; top: -3vw; left: -0.5vw; font-size: 4px;">-->
-<!--                    Jenny's Mine-->
-<!--                  </p>-->
+                  <!--                  <p class="text-center font-bold text-yellow absolute"-->
+                  <!--                     style="pointer-events: none; top: -3vw; left: -0.5vw; font-size: 4px;">-->
+                  <!--                    Jenny's Mine-->
+                  <!--                  </p>-->
                 </div>
               </div>
 
@@ -450,7 +450,7 @@
       </div>
 
       <div id="tutorial">
-        <window name="tutorial" height="auto">
+        <window name="tutorial" width="90%" height="auto">
           <div v-if="tutorialWindow === 1" class="flex flex-wrap py-2 px-3">
             <div class="w-4/5">
               <div class="text-xl">WELCOME TO FREYALA!</div>
@@ -462,19 +462,19 @@
               This app showcases the world of Freyala, allowing easy access to different decentralized applications and
               features in our ecosystem. Explore what Freyala has to offer with ease and uncover hidden lore.
             </p>
-            <div class="flex w-full mt-8 mb-2">
-              <div class="w-1/2 pr-2">
-                <button type="button"
-                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                        @click="skipOrEnd()">
-                  Skip
-                </button>
-              </div>
-              <div class="w-1/2 pl-2">
+            <div class="flex flex-wrap w-full mt-8 mb-2">
+              <div class="w-full">
                 <button type="button"
                         class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
                         @click="tutorialWindow = 2">
                   Next
+                </button>
+              </div>
+              <div class="w-full mt-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="skipOrEnd()">
+                  Skip
                 </button>
               </div>
             </div>
@@ -491,19 +491,19 @@
               of XYA tokens staked and your unclaimed staking rewards. This is based on the wallet connected to the app,
               not the device you are using.
             </p>
-            <div class="flex w-full mt-8 mb-2">
-              <div class="w-1/2 pr-2">
-                <button type="button"
-                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                        @click="tutorialWindow = 1">
-                  Previous
-                </button>
-              </div>
-              <div class="w-1/2 pl-2">
+            <div class="flex flex-wrap w-full mt-8 mb-2">
+              <div class="w-full">
                 <button type="button"
                         class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
                         @click="tutorialWindow = 3">
                   Next
+                </button>
+              </div>
+              <div class="w-full mt-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 1">
+                  Previous
                 </button>
               </div>
             </div>
@@ -520,19 +520,19 @@
               like staking in the Extraction Site or using our faucet in the Soup Kitchen. You can also favorite up to
               four different locations, which will be located in the bottom left of your screen for easy access.
             </p>
-            <div class="flex w-full mt-8 mb-2">
-              <div class="w-1/2 pr-2">
-                <button type="button"
-                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                        @click="tutorialWindow = 2">
-                  Previous
-                </button>
-              </div>
-              <div class="w-1/2 pl-2">
+            <div class="flex flex-wrap w-full mt-8 mb-2">
+              <div class="w-full">
                 <button type="button"
                         class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
                         @click="tutorialWindow = 4">
                   Next
+                </button>
+              </div>
+              <div class="w-full mt-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 2">
+                  Previous
                 </button>
               </div>
             </div>
@@ -549,19 +549,19 @@
               locations are not decentralized apps, they each provide small pieces of lore when clicked that help bring
               together the story of Freyala.
             </p>
-            <div class="flex w-full mt-8 mb-2">
-              <div class="w-1/2 pr-2">
-                <button type="button"
-                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                        @click="tutorialWindow = 3">
-                  Previous
-                </button>
-              </div>
-              <div class="w-1/2 pl-2">
+            <div class="flex flex-wrap w-full mt-8 mb-2">
+              <div class="w-full">
                 <button type="button"
                         class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
                         @click="skipOrEnd()">
                   Finish
+                </button>
+              </div>
+              <div class="w-full mt-2">
+                <button type="button"
+                        class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
+                        @click="tutorialWindow = 3">
+                  Previous
                 </button>
               </div>
             </div>
@@ -614,7 +614,8 @@
               <br>
               <br>
 
-              <a href="https://docs.harmony.one/home/network/wallets/browser-extensions-wallets/metamask-wallet" style="word-break: break-all" target="_blank">
+              <a href="https://docs.harmony.one/home/network/wallets/browser-extensions-wallets/metamask-wallet"
+                 style="word-break: break-all" target="_blank">
                 https://docs.harmony.one/home/network/wallets/browser-extensions-wallets/metamask-wallet
               </a>
             </p>
@@ -686,8 +687,7 @@ export default {
         this.$modal.show('walletConnected')
       }
 
-      if (this.walletConnected === true)
-      {
+      if (this.walletConnected === true) {
         this.$modal.hide('walletConnected')
       }
     }
@@ -697,6 +697,7 @@ export default {
     const panzoom = Panzoom(elem, {
       maxScale: 10,
       minScale: 2,
+      step: 1,
       startScale: 5,
       contain: 'outside'
     })
