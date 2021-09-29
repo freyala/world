@@ -124,6 +124,7 @@
                     </div>
                   </div>
                   <p :class="hovering === 'governance' ? 'md:opacity-90' : 'md:opacity-50'"
+                     style="pointer-events: none;left: 41.5906%;top: 40.1389%;"
                      class="text-center everglen bubble-top text-white absolute">
                     Everglen Castle
                   </p>

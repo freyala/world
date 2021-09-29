@@ -96,27 +96,10 @@ html, body {
 }
 
 .bubble-top, .bubble {
-  position: relative;
-  color: white;
-  opacity: 0.75;
-  font-weight: 900;
-  font-size: 0.6vw;
-  text-align: center;
-}
-
-.everglen {
-  pointer-events: none;
-  left: 41.5906%;
-  top: 50.1389%;
+  display: none;
 }
 
 @screen md {
-  .everglen {
-    pointer-events: none;
-    left: 41.5906%;
-    top: 40.1389%;
-  }
-
   .bubble {
     position: relative;
     background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
