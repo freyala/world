@@ -101,6 +101,7 @@ html, body {
 
 @screen md {
   .bubble {
+    display: block;
     position: relative;
     background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
     color: #FFFFFF;
@@ -128,6 +129,7 @@ html, body {
   }
 
   .bubble-top {
+    display: block;
     position: relative;
     background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
     color: #FFFFFF;
