@@ -11,7 +11,7 @@ module.exports = {
         'primary-alt': '#54b67a',
         'secondary': '#27a2ac',
         'gray': '#0d5651',
-        'yellow': '#b8a984',
+        'yellow': '#54b67a',
         'brown': '#211c17'
       },
       width: {

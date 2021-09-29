@@ -86,10 +86,10 @@
 
             <div class="flex flex-wrap">
               <button v-if="rewardBalance === '0.000'"
-                      class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 h-12">
+                      class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12">
                 No rewards to claim
               </button>
-              <button v-else class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 h-12"
+              <button v-else class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                       @click="withdrawEarnings(false)">
                 Claim {{ rewardBalance }} XYA <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
               </button>
@@ -101,17 +101,17 @@
               <small class="w-full">Currently approved: {{ allowance.staking }} XYA</small>
 
               <div class="w-1/2 pr-2">
-                <input class="w-full border border-primary-alt bg-transparent px-4 h-12" v-model="amountToApprove"
+                <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 h-12" v-model="amountToApprove"
                        type="number">
               </div>
               <div class="w-1/2 pl-2">
-                <button class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 h-12"
+                <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                         @click="addAllowance()">
                   Approve amount <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
                 </button>
               </div>
 
-              <button class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 h-12 mt-4"
+              <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
                       @click="addAllowance(999999999999.9999)">
                 Approve max amount <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
               </button>
@@ -123,17 +123,17 @@
               <small class="w-full">Max: {{ userBalance }} XYA</small>
 
               <div class="w-1/2 pr-2">
-                <input class="w-full border border-primary-alt bg-transparent px-4 h-12" v-model="amountToStake"
+                <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 h-12" v-model="amountToStake"
                        type="number">
               </div>
               <div class="w-1/2 pl-2">
-                <button class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 h-12"
+                <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                         @click="stake(false)">
                   Stake <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
                 </button>
               </div>
 
-              <button class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 h-12 mt-4"
+              <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
                       @click="stake(true)">
                 Stake all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
               </button>
@@ -145,17 +145,17 @@
               <small class="w-full">Max: {{ stakingBalance }} XYA</small>
 
               <div class="w-1/2 pr-2">
-                <input class="w-full border border-primary-alt bg-transparent px-4 py-2 h-12" v-model="amountToUnstake"
+                <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12" v-model="amountToUnstake"
                        type="number">
               </div>
               <div class="w-1/2 pl-2">
-                <button class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 h-12"
+                <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                         @click="unstake(false)">
                   Unstake <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
                 </button>
               </div>
 
-              <button class="w-full rounded-none border border-primary-alt bg-transparent px-4  h-12 mt-4"
+              <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4  h-12 mt-4"
                       @click="unstake(true)">
                 Unstake all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
               </button>
@@ -275,10 +275,10 @@
 
         <div class="flex flex-wrap">
           <button v-if="rewardBalance === '0.000'"
-                  class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12">
+                  class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12">
             No rewards to claim
           </button>
-          <button v-else class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12"
+          <button v-else class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12"
                   @click="withdrawEarnings(false)">
             Claim {{ rewardBalance }} XYA <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
           </button>
@@ -290,17 +290,17 @@
           <small class="w-full">Currently approved: {{ allowance.staking }} XYA</small>
 
           <div class="w-full mt-2">
-            <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="amountToApprove"
+            <input class="w-full border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12" v-model="amountToApprove"
                    type="number">
           </div>
           <div class="w-full mt-2">
-            <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12"
+            <button class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12"
                     @click="addAllowance()">
               Approve amount <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
 
-          <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12 mt-4"
+          <button class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12 mt-4"
                   @click="addAllowance(999999999999.9999)">
             Approve max amount <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
           </button>
@@ -312,17 +312,17 @@
           <small class="w-full">Max: {{ userBalance }} XYA</small>
 
           <div class="w-full mt-2">
-            <input class="w-full border border-yellow bg-transparent px-4 min-h-12" v-model="amountToStake"
+            <input class="w-full border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12" v-model="amountToStake"
                    type="number">
           </div>
           <div class="w-full mt-2">
-            <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12"
+            <button class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12"
                     @click="stake(false)">
               Stake <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
 
-          <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 mt-4"
+          <button class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 mt-4"
                   @click="stake(true)">
             Stake all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
           </button>
@@ -334,17 +334,17 @@
           <small class="w-full">Max: {{ stakingBalance }} XYA</small>
 
           <div class="w-full mt-2">
-            <input class="w-full border border-yellow bg-transparent px-4 py-2 min-h-12" v-model="amountToUnstake"
+            <input class="w-full border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12" v-model="amountToUnstake"
                    type="number">
           </div>
           <div class="w-full mt-2">
-            <button class="w-full rounded-none border border-yellow bg-transparent px-4 py-2 min-h-12"
+            <button class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12"
                     @click="unstake(false)">
               Unstake <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
 
-          <button class="w-full rounded-none border border-yellow bg-transparent px-4  min-h-12 mt-4"
+          <button class="w-full rounded-none border border-yellow bg-transparent hover:bg-yellow hover:text-white px-4  min-h-12 mt-4"
                   @click="unstake(true)">
             Unstake all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
           </button>

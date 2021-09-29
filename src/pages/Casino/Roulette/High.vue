@@ -28,14 +28,14 @@
                 Current allowance: {{ allowance.rouletteHigh }} XYA
               </small>
               <div class="w-1/3 px-2">
-                <input class="w-full border border-primary-alt bg-transparent px-4 min-h-12"
+                <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
                        v-model="rouletteAmountToApprove"
                        type="number">
               </div>
 
               <div class="w-1/3 px-2">
                 <button type="button"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="addRouletteAllowance()">
                   <span v-if="rouletteLoading.allowance">Approving... </span>
                   <span v-else>Approve amount </span>
@@ -45,7 +45,7 @@
 
               <div class="w-1/3 px-2">
                 <button type="button"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="addRouletteAllowance(999999999999.9999)">
                   <span v-if="rouletteLoading.maxAllowance">Approving... </span>
                   <span v-else>Approve max amount </span>
@@ -90,7 +90,7 @@
             <div class="w-full" v-if="rouletteFetchedData.timeLeft !== 'Finished'">
               <p>Feel powerful! Be the one to stop the wheel!</p>
               <button v-if="rouletteFetchedData.timeLeft > 0" type="button"
-                      class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
+                      class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
               <span>Wait for the timer to end... {{
                   rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}`
                 }}</span>
@@ -389,13 +389,13 @@
                 Current allowance: {{ allowance.rouletteHigh }} XYA
               </small>
               <div class="w-full mt-2">
-                <input class="w-full border border-primary-alt bg-transparent px-4 min-h-12" v-model="rouletteAmountToApprove"
+                <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12" v-model="rouletteAmountToApprove"
                        type="number">
               </div>
 
               <div class="w-full mt-2">
                 <button type="button"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="addRouletteAllowance()">
                   <span v-if="rouletteLoading.allowance">Approving... </span>
                   <span v-else>Approve amount </span>
@@ -405,7 +405,7 @@
 
               <div class="w-full mt-2">
                 <button type="button"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="addRouletteAllowance(999999999999.9999)">
                   <span v-if="rouletteLoading.maxAllowance">Approving... </span>
                   <span v-else>Approve max amount </span>
@@ -450,7 +450,7 @@
             <div class="w-full" v-if="rouletteFetchedData.timeLeft !== 'Finished'">
               <p>Feel powerful! Be the one to stop the wheel!</p>
               <button v-if="rouletteFetchedData.timeLeft > 0" type="button"
-                      class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
+                      class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
               <span>Wait for the timer to end... {{
                   rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}`
                 }}</span>
@@ -543,7 +543,7 @@
               <div class="w-1/3 mb-2 m-auto px-1">
                 <button type="button"
                         :class="rouletteBetAmount === '5000000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="rouletteBetAmount = '5000000000000000000000'">
                   5000
                 </button>
@@ -551,7 +551,7 @@
               <div class="w-1/3 mb-2 m-auto px-1">
                 <button type="button"
                         :class="rouletteBetAmount === '10000000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="rouletteBetAmount = '10000000000000000000000'">
                   10000
                 </button>
@@ -559,7 +559,7 @@
               <div class="w-1/3 mb-2 m-auto px-1">
                 <button type="button"
                         :class="rouletteBetAmount === '12500000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="rouletteBetAmount = '12500000000000000000000'">
                   12500
                 </button>
@@ -567,7 +567,7 @@
               <div class="w-1/3 mb-2 m-auto px-1">
                 <button type="button"
                         :class="rouletteBetAmount === '15000000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
                         @click="rouletteBetAmount = '15000000000000000000000'">
                   15000
                 </button>

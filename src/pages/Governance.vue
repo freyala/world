@@ -96,7 +96,7 @@
                   <br>
                   <button
                       v-if="parseInt(governanceFetchedData.currentBallot.timeLeft) > 0" type="button"
-                      class="w-full rounded-none border border-primary-alt bg-transparent px-4 py-2 min-h-12">
+                      class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12">
                     Already voted on this ballot
                   </button>
 

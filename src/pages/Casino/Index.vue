@@ -32,7 +32,7 @@
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'roulette-medium' }">
                   <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
                     Roulette lobby
                   </button>
                 </router-link>
@@ -40,7 +40,7 @@
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'coinflip' }">
                   <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
                     Coinflip lobby
                   </button>
                 </router-link>
@@ -48,7 +48,7 @@
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'slots' }">
                   <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
                     Slots lobby
                   </button>
                 </router-link>
@@ -56,7 +56,7 @@
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'blackjack' }">
                   <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
                     Blackjack lobby
                   </button>
                 </router-link>
