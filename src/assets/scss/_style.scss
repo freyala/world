@@ -99,6 +99,7 @@ html, body {
   position: relative;
   background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
   color: #FFFFFF;
+  font-size: 2px;
   font-size: 0.6vw;
   box-shadow: 5px 5px 15px 0 #000000;
   text-align: center;
@@ -107,6 +108,7 @@ html, body {
   line-height: 1.4;
 
   @screen md {
+    font-size: 0.6vw;
     padding: 5px;
   }
 }
@@ -130,7 +132,7 @@ html, body {
   position: relative;
   background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
   color: #FFFFFF;
-  font-size: 0.6vw;
+  font-size: 2px;
   box-shadow: 5px 5px 15px 0 #000000;
   text-align: center;
   border-radius: 6px;
@@ -139,6 +141,7 @@ html, body {
 
   @screen md {
     padding: 5px;
+    font-size: 0.6vw;
   }
 }
 
