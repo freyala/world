@@ -14,36 +14,38 @@ export default {
                 return
             }
 
-            if (typeof window.ethereum !== undefined) {
-                const provider = new ethers.providers.Web3Provider(window.ethereum)
-                await provider.send("eth_requestAccounts", [])
-                const signer = await provider.getSigner()
-                const network = await provider.getNetwork()
+            if (window.ethereum !== undefined) {
+                try {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum)
+                    await provider.send("eth_requestAccounts", [])
+                    const signer = await provider.getSigner()
+                    const network = await provider.getNetwork()
 
-                const accounts = await signer.getAddress()
-                this.setMetaMaskAccount(accounts)
-                this.setChainId(network.chainId)
+                    const accounts = await signer.getAddress()
+                    this.setMetaMaskAccount(accounts)
+                    this.setChainId(network.chainId)
 
-                if (network.chainId !== 1666600000) {
-                    this.setChainStatus('wrong')
-                    return
-                } else {
-                    this.setChainStatus('correct')
-                }
+                    if (network.chainId !== 1666600000) {
+                        this.setChainStatus('wrong')
+                        return
+                    } else {
+                        this.setChainStatus('correct')
+                    }
 
-                this.setMetaMaskWallet({signer})
-                this.setUserLoggedIn(true)
+                    this.setMetaMaskWallet({signer})
+                    this.setUserLoggedIn(true)
 
-                if (this.loggedIn === true) {
-                    this.setWalletConnectionStatus(!this.walletConnected)
+                    if (this.loggedIn === true) {
+                        this.setWalletConnectionStatus(!this.walletConnected)
+                    }
+                } catch {
+                    return false
                 }
             }
-
         },
 
         async disconnectWallet() {
             await this.setDefaultWallet()
-            console.log('boop')
             this.setUserLoggedIn(false)
             this.setWalletConnectionStatus(!this.walletConnected)
         },

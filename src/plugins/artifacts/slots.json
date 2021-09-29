@@ -1,0 +1,224 @@
+{
+  "address": "0x28BE2A6519d3ad42eb7EeD5289Cedf9C22be9d42",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "changeOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "insertXYA",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Slots.BONUSROUND",
+          "name": "_option",
+          "type": "uint8"
+        }
+      ],
+      "name": "playBonusRound",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "won",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pullCrank",
+      "outputs": [
+        {
+          "internalType": "enum Slots.FRUITS[3][3]",
+          "name": "",
+          "type": "uint8[3][3]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "payout",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_payout",
+          "type": "uint256"
+        }
+      ],
+      "name": "setBonusPayout",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Slots.FRUITS",
+          "name": "_fruit",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "payout",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPayoutFor",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Slots.FRUITS[][3]",
+          "name": "_reels",
+          "type": "uint8[][3]"
+        }
+      ],
+      "name": "setReels",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdrawBank",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "_XYA",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_withdrawAddr",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "creditPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getMySession",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "enum Slots.FRUITS[3][3]",
+              "name": "window",
+              "type": "uint8[3][3]"
+            },
+            {
+              "internalType": "bool",
+              "name": "inBonusRound",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "creditBalance",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "bankBalance",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "netWinnings",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "netPlayed",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Slots._PlayerSession",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "reels",
+      "outputs": [
+        {
+          "internalType": "enum Slots.FRUITS",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}
