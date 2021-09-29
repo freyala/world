@@ -34,7 +34,7 @@
     <div class="w-full mt-2 md:mt-0">
       <div class="flex md:ml-20" v-if="walletConnected && chainStatus === 'correct'">
         <div :key="favourite" v-for="favourite in favourites" @click="$store.dispatch('setOpenWindow', favourite)" class="md:opacity-75 hover:opacity-100 w-12 h-12 cursor-pointer flex fav-bg mr-2 bgshadow">
-          <router-link class="m-auto max-h-9 max-w-9" :to="{ name: favourite }">
+          <router-link class="m-auto max-h-9 max-w-9" :to="{ name: favourite === 'delegate' ? 'delegating' : favourite }">
             <img style="max-height: 50px;" class="pl-1 -mt-1" v-if="favourite === 'staking'" src="/images/map/Drill.png" alt="Drill">
             <img style="max-height: 50px;" class="p-1 -mt-1" v-if="favourite === 'faucet'" src="/images/map/Soup.png" alt="Soup">
             <img style="max-height: 50px;" class="p-1 -mt-1" v-if="favourite === 'delegate'" src="/images/map/Beacon.png" alt="Beacon">
