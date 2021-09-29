@@ -30,7 +30,7 @@ export default new Router({
       component: WorldMap
     },
     {
-      path: '/#/login',
+      path: '#/login',
       name: 'login',
       component: Login
     },

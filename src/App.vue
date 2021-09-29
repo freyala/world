@@ -79,7 +79,7 @@ export default {
 
     window.ethereum.on('accountsChanged', (accounts) => {
       if (this.$route.name !== 'login') {
-        window.location.href = '/#/login'
+        window.location.href = '#/login'
 
         this.connectWallet()
         this.setMetaMaskAccount(accounts[0])
@@ -91,7 +91,7 @@ export default {
 
     window.ethereum.on('chainChanged', (chainId) => {
       if (this.$route.name !== 'login') {
-        window.location.href = '/#/login'
+        window.location.href = '#/login'
 
         if (chainId === '0x63564c40') {
           this.setChainStatus('correct')
