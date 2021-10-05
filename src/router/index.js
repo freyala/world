@@ -18,6 +18,7 @@ import Faucet from "../pages/Faucet";
 import Governance from "../pages/Governance";
 import JennyMines from "../pages/JennyMines";
 import Staking from "../pages/Staking";
+import Plots from "../pages/Plots";
 
 Vue.use(Router)
 
@@ -98,6 +99,11 @@ export default new Router({
       path: '/staking',
       name: 'staking',
       component: Staking
+    },
+    {
+      path: '/plots/:neighbourhood',
+      name: 'plots',
+      component: Plots
     },
     {
       path: '*',

@@ -16,6 +16,26 @@
               <img class="cursor-pointer absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;"
                    src="/images/map/WallMid.png" alt="WallMid">
 
+              <div @mouseenter="hovering = 'plots'" @mouseleave="hovering = ''">
+                <router-link :to="{ name: 'plots' }">
+                  <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
+                       @click="$store.dispatch('setOpenWindow', 'plots')"
+                       style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;" src="/images/map/FreyalaPlots.png" alt="FreyalaPlots">
+                  <div @click="$store.dispatch('setOpenWindow', 'plots')"
+                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                       style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;">
+                    <div class="relative">
+                      <img class="w-full" src="/images/map/FreyalaPlots_MO.png" alt="FreyalaPlots">
+                    </div>
+                  </div>
+                  <p :class="hovering === 'plots' ? 'md:opacity-90' : 'md:opacity-50'"
+                     class="text-center bubble-top text-white absolute"
+                     style="pointer-events: none; left: 37.5171875%; top: 35.78472222222222%;">
+                    Plots of Land
+                  </p>
+                </router-link>
+              </div>
+
               <div @mouseenter="hovering = 'delegate'" @mouseleave="hovering = ''">
                 <router-link :to="{ name: 'delegating' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
@@ -236,7 +256,7 @@
       <top-bar></top-bar>
 
       <div id="modals">
-        <window name="1" max-width="500px" width="80%">
+        <window name="1" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Projar Camp</div>
@@ -251,7 +271,7 @@
             </p>
           </div>
         </window>
-        <window name="2" max-width="500px" width="80%">
+        <window name="2" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Everglen</div>
@@ -266,7 +286,7 @@
             </p>
           </div>
         </window>
-        <window name="3" max-width="500px" width="80%">
+        <window name="3" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Everglen Outpost</div>
@@ -281,7 +301,7 @@
             </p>
           </div>
         </window>
-        <window name="4" max-width="500px" width="80%">
+        <window name="4" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Xyara Keep</div>
@@ -296,7 +316,7 @@
             </p>
           </div>
         </window>
-        <window name="5" max-width="500px" width="80%">
+        <window name="5" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Yang Lair</div>
@@ -311,7 +331,7 @@
             </p>
           </div>
         </window>
-        <window name="6" max-width="500px" width="80%">
+        <window name="6" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Everglen Castle</div>
@@ -327,7 +347,7 @@
             </p>
           </div>
         </window>
-        <window name="7" max-width="500px" width="80%">
+        <window name="7" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Ardenia</div>
@@ -342,7 +362,7 @@
             </p>
           </div>
         </window>
-        <window name="8" max-width="500px" width="80%">
+        <window name="8" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Lightside Barracks</div>
@@ -357,7 +377,7 @@
             </p>
           </div>
         </window>
-        <window name="9" max-width="500px" width="80%">
+        <window name="9" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Temple of Litha</div>
@@ -372,7 +392,7 @@
             </p>
           </div>
         </window>
-        <window name="10" max-width="500px" width="80%">
+        <window name="10" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Payne's Shack</div>
@@ -387,7 +407,7 @@
             </p>
           </div>
         </window>
-        <window name="11" max-width="500px" width="80%">
+        <window name="11" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Rowe's Camp</div>
@@ -402,7 +422,7 @@
             </p>
           </div>
         </window>
-        <window name="12" max-width="500px" width="80%">
+        <window name="12" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Muraspire</div>
@@ -417,7 +437,7 @@
             </p>
           </div>
         </window>
-        <window name="13" max-width="500px" width="80%">
+        <window name="13" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Ranspire Pavilion</div>
@@ -432,7 +452,7 @@
             </p>
           </div>
         </window>
-        <window name="14" max-width="500px" width="80%">
+        <window name="14" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Luderia Refuge</div>
@@ -447,7 +467,7 @@
             </p>
           </div>
         </window>
-        <window name="15" max-width="500px" width="80%">
+        <window name="15" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Crimson Dungeon</div>
@@ -461,7 +481,7 @@
             </p>
           </div>
         </window>
-        <window name="16" max-width="500px" width="80%">
+        <window name="16" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
               <div class="text-2xl">Yin Lair</div>
@@ -480,7 +500,7 @@
       </div>
 
       <div id="tutorial">
-        <window name="tutorial" height="auto" max-width="500px" width="80%">
+        <window name="tutorial" height="auto" width="80%">
           <div v-if="tutorialWindow === 1" class="flex flex-wrap py-2 px-3">
             <div class="w-4/5">
               <div class="text-2xl">WELCOME TO FREYALA!</div>
