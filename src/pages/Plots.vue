@@ -68,74 +68,131 @@
           </div>
         </div>
 
-        <div v-if="loading === false" class="plots my-12 w-full cursor-pointer">
-          <div class="flex flex-wrap">
-            <div v-for="(plot, index) in plots" class="w-1/2 md:w-1/4 lg:w-1/6 2xl:w-1/12 relative">
-              <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''" class="w-full h-full"
+        <div class="flex flex-wrap w-full mt-12">
+
+          <div class="w-full mx-auto text-center">
+            F: Fertility - L: Level - C: Crime rate
+          </div>
+          <div class="w-full md:w-1/6 mt-4 flex flex-wrap">
+            <div class="w-full 2xl:w-1/2 relative" v-for="plot in ownedPlotsData">
+              <img class="w-full h-full"
                    src="/images/plots/base/0.png" alt="Base land">
-              <div v-if="plot.bought === true"
-                   class="absolute top-0 left-0 w-full h-full">
-                <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                     class="absolute top-0 left-0 w-full h-full"
-                     :src="`/images/plots/soil_type/${plot.soil_type}.png`" alt="Soil Type">
-                <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                     class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
+              <div class="absolute top-0 left-0 w-full h-full">
+                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/soil_type/${plot.soil_type}.png`"
+                     alt="Soil Type">
+                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
                      alt="Level">
-                <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                     class="absolute top-0 left-0 w-full h-full"
-                     :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
-                <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                     class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
+                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/fertility/${plot.fertility}.png`"
+                     alt="Fertility">
+                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
                      alt="Crime">
+                <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
+                     style="line-height: 0.75">
 
-                <div
-                    class="opacity-0 hover:opacity-75 absolute top-0 left-0 text-white p-3 cursor-pointer w-full h-full"
-                    style="line-height: 0.75">
-
-                  <!--                  <div class="absolute top-0 left-0 w-full h-full flex">-->
-                  <!--                    <button-->
-                  <!--                        @click="$modal.show('coming-soon')"-->
-                  <!--                        class="opacity-75 hover:opacity-100 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">-->
-                  <!--                      Enter plot!-->
-                  <!--                    </button>-->
-                  <!--                  </div>-->
-
-                  <small v-if="ownedPlots.includes(plot.token_id)">
-                    This is yours!
+                  <small>
+                    {{ allNeighbourhoods[plot.neighbourhood] }}
+                  </small>
+                  <br>
+                  <br>
+                  <div class="absolute bottom-0 pb-2">
+                    <small>
+                      Soil: {{ soilTypes[plot.soil_type] }}
+                    </small>
                     <br>
-                  </small>
-                  <small>
-                    Soil type: {{ soilTypes[plot.soil_type] }}
-                  </small>
-                  <br>
-                  <small>
-                    Fertility: {{ plot.level }}
-                  </small>
-                  <br>
-                  <small>
-                    Level: {{ plot.fertility }}
-                  </small>
-                  <br>
-                  <small>
-                    Crime: {{ plot.crime_rate }}
-                  </small>
+                    <small>
+                      F: {{ plot.level }}
+                    </small>
+                    |
+                    <small>
+                      L: {{ plot.fertility }}
+                    </small>
+                    |
+                    <small>
+                      C: {{ plot.crime_rate }}
+                    </small>
+                  </div>
                 </div>
-              </div>
-              <div v-else class="absolute top-0 left-0 w-full h-full flex">
-                <button
-                    @click="mintPlot(plot.plot_number)"
-                    class="opacity-25 hover:opacity-75 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">
-                  Buy!
-                </button>
               </div>
             </div>
           </div>
+          <div v-show="loading === false" style="max-height: 750px;" class="ml-auto plots mt-4 mb-12 w-full md:w-9/12 cursor-pointer flex flex-wrap">
+            <div id="plots" class="flex flex-wrap">
+              <div v-for="plot in plots" class="w-1/2 md:w-1/4 lg:w-1/6 2xl:w-1/12 relative">
+                <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''" class="w-full h-full"
+                     src="/images/plots/base/0.png" alt="Base land">
+                <div v-if="plot.bought === true"
+                     class="absolute top-0 left-0 w-full h-full">
+                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                       class="absolute top-0 left-0 w-full h-full"
+                       :src="`/images/plots/soil_type/${plot.soil_type}.png`" alt="Soil Type">
+                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                       class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
+                       alt="Level">
+                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                       class="absolute top-0 left-0 w-full h-full"
+                       :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
+                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                       class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
+                       alt="Crime">
+
+                  <div
+                      class="opacity-0 hover:opacity-75 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
+                      style="line-height: 0.75">
+
+                    <!--                  <div class="absolute top-0 left-0 w-full h-full flex">-->
+                    <!--                    <button-->
+                    <!--                        @click="$modal.show('coming-soon')"-->
+                    <!--                        class="opacity-75 hover:opacity-100 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">-->
+                    <!--                      Enter plot!-->
+                    <!--                    </button>-->
+                    <!--                  </div>-->
+
+
+                    <small>
+                      Plot: {{ plot.plot_number }}
+                    </small>
+                    <br>
+                    <small>
+                      ID: {{ plot.token_id }}
+                    </small>
+                    <br>
+                    <br>
+                    <div class="absolute bottom-0 pb-2">
+                      <small>
+                        Soil: {{ soilTypes[plot.soil_type] }}
+                      </small>
+                      <br>
+                      <small>
+                        F: {{ plot.level }}
+                      </small>
+
+                      <small>
+                        L: {{ plot.fertility }}
+                      </small>
+
+                      <small>
+                        C: {{ plot.crime_rate }}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="absolute top-0 left-0 w-full h-full flex">
+                  <button
+                      @click="mintPlot(plot.plot_number)"
+                      class="opacity-25 hover:opacity-75 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">
+                    Buy!
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-show="loading === true" class="my-12 flex w-full md:w-5/6 h-full">
+            <p class="m-auto text-xl text-center">
+              Loading plots...
+            </p>
+          </div>
         </div>
-        <div v-else class="my-12 flex w-full h-full">
-          <p class="m-auto text-xl text-center">
-            Loading plots...
-          </p>
-        </div>
+
 
         <window name="coming-soon" width="80%">
           <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
@@ -200,6 +257,7 @@ import fromExponential from "from-exponential";
 import freyalaSnapshot from '../plugins/snapshots/freyalaPlots.json'
 import yangSnapshot from '../plugins/snapshots/yangPlots.json'
 import yinSnapshot from '../plugins/snapshots/yinPlots.json'
+import Panzoom from "@panzoom/panzoom";
 
 export default {
   name: 'Plots',
@@ -239,6 +297,7 @@ export default {
       ],
       neighbourhood: 0,
       ownedPlots: [],
+      ownedPlotsData: [],
       soilTypes: [
         'Clay',
         'Loam',
@@ -281,6 +340,8 @@ export default {
     } else {
       this.neighbourhood = parseInt(this.$route.params.neighbourhood)
     }
+
+    window.addEventListener("resize", this.editPanZoom);
   },
   async mounted() {
     const xya = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
@@ -295,6 +356,57 @@ export default {
     const yangAllowance = await yang.allowance(this.metaMaskAccount, PlotsYang.address)
     this.yangAllowance = (yangAllowance / Math.pow(10, 18))
 
+    this.plotFreyalaContract = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer)
+    this.plotYinContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
+    this.plotYangContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
+
+    const xyaPlots = await this.plotFreyalaContract.tokensOfOwner(this.metaMaskAccount)
+    const yinPlots = await this.plotYinContract.tokensOfOwner(this.metaMaskAccount)
+    const yangPlots = await this.plotYangContract.tokensOfOwner(this.metaMaskAccount)
+
+    xyaPlots.map(async (plot) => {
+      this.ownedPlots.push(plot.toNumber())
+
+      const ownedPlot = await this.plotFreyalaContract.plots(plot.toNumber())
+      this.ownedPlotsData.push({
+        neighbourhood: ownedPlot._neighbourhood.toNumber(),
+        token_id: ownedPlot._tokenId.toNumber(),
+        plot_number: ownedPlot._plotNumber.toNumber(),
+        soil_type: ownedPlot._soilType.toNumber(),
+        fertility: ownedPlot._fertility.toNumber(),
+        level: ownedPlot._level.toNumber(),
+        crime_rate: ownedPlot._crimeRate.toNumber(),
+      })
+    })
+    yinPlots.map(async (plot) => {
+      this.ownedPlots.push(plot.toNumber())
+
+      const ownedPlot = await this.plotYinContract.plots(plot.toNumber())
+      this.ownedPlotsData.push({
+        neighbourhood: ownedPlot._neighbourhood.toNumber(),
+        token_id: ownedPlot._tokenId.toNumber(),
+        plot_number: ownedPlot._plotNumber.toNumber(),
+        soil_type: ownedPlot._soilType.toNumber(),
+        fertility: ownedPlot._fertility.toNumber(),
+        level: ownedPlot._level.toNumber(),
+        crime_rate: ownedPlot._crimeRate.toNumber(),
+      })
+    })
+    yangPlots.map(async (plot) => {
+      this.ownedPlots.push(plot.toNumber())
+
+      const ownedPlot = await this.plotYangContract.plots(plot.toNumber())
+      this.ownedPlotsData.push({
+        neighbourhood: ownedPlot._neighbourhood.toNumber(),
+        token_id: ownedPlot._tokenId.toNumber(),
+        plot_number: ownedPlot._plotNumber.toNumber(),
+        soil_type: ownedPlot._soilType.toNumber(),
+        fertility: ownedPlot._fertility.toNumber(),
+        level: ownedPlot._level.toNumber(),
+        crime_rate: ownedPlot._crimeRate.toNumber(),
+      })
+    })
+
     if (this.neighbourhood === 18 || this.neighbourhood === 19) {
       await this.reGrabPlots('yin')
     } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
@@ -302,6 +414,16 @@ export default {
     } else {
       await this.reGrabPlots('freyala')
     }
+
+    const element = document.getElementById('plots')
+
+    const panzoom = Panzoom(element, {
+      maxScale: 10,
+      minScale: 1,
+      contain: 'outside'
+    })
+
+    element.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
 
     this.mounted = true
   },
@@ -320,10 +442,24 @@ export default {
       'favourites'
     ])
   },
+  destroyed() {
+    window.removeEventListener("resize", this.editPanZoom);
+  },
   methods: {
     ...mapActions([
       'setFavourite'
     ]),
+    editPanZoom() {
+      const element = document.getElementById('plots')
+
+      const panzoom = Panzoom(element, {
+        maxScale: 10,
+        minScale: 1,
+        contain: 'outside'
+      })
+
+      element.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
+    },
     async addAllowance(type) {
       let actual = 0
 
@@ -435,7 +571,8 @@ export default {
         const totalSupply = await this.plotFreyalaContract.totalSupply()
 
         const ownedPlots = await this.plotFreyalaContract.tokensOfOwner(this.metaMaskAccount)
-        ownedPlots.map((plot) => {
+
+        ownedPlots.map(async (plot) => {
           this.ownedPlots.push(plot.toNumber())
         })
 
