@@ -194,11 +194,16 @@ import Yang from "../plugins/artifacts/yang.json";
 import {ethers} from "ethers";
 import fromExponential from "from-exponential";
 
+import freyalaSnapshot from '../plugins/snapshots/freyalaPlots.json'
+import yangSnapshot from '../plugins/snapshots/yangPlots.json'
+import yinSnapshot from '../plugins/snapshots/yinPlots.json'
+
 export default {
   name: 'Plots',
   mixins: [wallet],
   data() {
     return {
+      snapshot: [],
       xyaAllowance: 0,
       yinAllowance: 0,
       yangAllowance: 0,
@@ -445,7 +450,32 @@ export default {
           })
         }
 
-        for (let i = 0; i < totalSupply.toNumber(); i++) {
+        console.log(totalSupply.toNumber())
+
+        // Array.from(Array(totalSupply.toNumber()).keys()).map((i) => {
+        //   console.log(i)
+        // })
+
+        freyalaSnapshot.plots.map((plot) => {
+          if (plot[0] !== '0x0000000000000000000000000000000000000000') {
+            this.plots.map((p, index) => {
+              if (p.plot_number === plot.plot_number && this.neighbourhood === plot.neighbourhood) {
+                this.plots[index] = {
+                  neighbourhood: plot.neighbourhood,
+                  token_id: plot.token_id,
+                  plot_number: plot.plot_number,
+                  soil_type: plot.soil_type,
+                  fertility: plot.fertility,
+                  level: plot.level,
+                  crime_rate: plot.crime_rate,
+                  bought: true
+                }
+              }
+            })
+          }
+        })
+
+        for (let i = 1669; i < totalSupply.toNumber(); i++) {
           const plot = await this.plotFreyalaContract.plots(i)
 
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
@@ -480,8 +510,6 @@ export default {
         this.mainContact = new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer)
         this.plotYangContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
 
-        const totalSupply = await this.plotYangContract.totalSupply()
-
         const ownedPlots = await this.plotYangContract.tokensOfOwner(this.metaMaskAccount)
         ownedPlots.map((plot) => {
           this.ownedPlots.push(plot.toNumber())
@@ -501,26 +529,24 @@ export default {
           })
         }
 
-        for (let i = 0; i < totalSupply.toNumber(); i++) {
-          const plot = await this.plotYangContract.plots(i)
-
+        yangSnapshot.plots.map((plot) => {
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
             this.plots.map((p, index) => {
-              if (p.plot_number === plot._plotNumber.toNumber() && this.neighbourhood === plot._neighbourhood.toNumber()) {
+              if (p.plot_number === plot.plot_number && this.neighbourhood === plot.neighbourhood) {
                 this.plots[index] = {
-                  neighbourhood: plot._neighbourhood.toNumber(),
-                  token_id: plot._tokenId.toNumber(),
-                  plot_number: plot._plotNumber.toNumber(),
-                  soil_type: plot._soilType.toNumber(),
-                  fertility: plot._fertility.toNumber(),
-                  level: plot._level.toNumber(),
-                  crime_rate: plot._crimeRate.toNumber(),
+                  neighbourhood: plot.neighbourhood,
+                  token_id: plot.token_id,
+                  plot_number: plot.plot_number,
+                  soil_type: plot.soil_type,
+                  fertility: plot.fertility,
+                  level: plot.level,
+                  crime_rate: plot.crime_rate,
                   bought: true
                 }
               }
             })
           }
-        }
+        })
 
         this.plots = this.plots.sort((a, b) => {
           return a.plot_number - b.plot_number;
@@ -557,26 +583,24 @@ export default {
           })
         }
 
-        for (let i = 0; i < totalSupply.toNumber(); i++) {
-          const plot = await this.plotYinContract.plots(i)
-
+        yinSnapshot.plots.map((plot) => {
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
             this.plots.map((p, index) => {
-              if (p.plot_number === plot._plotNumber.toNumber() && this.neighbourhood === plot._neighbourhood.toNumber()) {
+              if (p.plot_number === plot.plot_number && this.neighbourhood === plot.neighbourhood) {
                 this.plots[index] = {
-                  neighbourhood: plot._neighbourhood.toNumber(),
-                  token_id: plot._tokenId.toNumber(),
-                  plot_number: plot._plotNumber.toNumber(),
-                  soil_type: plot._soilType.toNumber(),
-                  fertility: plot._fertility.toNumber(),
-                  level: plot._level.toNumber(),
-                  crime_rate: plot._crimeRate.toNumber(),
+                  neighbourhood: plot.neighbourhood,
+                  token_id: plot.token_id,
+                  plot_number: plot.plot_number,
+                  soil_type: plot.soil_type,
+                  fertility: plot.fertility,
+                  level: plot.level,
+                  crime_rate: plot.crime_rate,
                   bought: true
                 }
               }
             })
           }
-        }
+        })
 
         this.plots = this.plots.sort((a, b) => {
           return a.plot_number - b.plot_number;
