@@ -8,13 +8,13 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Plots of Land
           </h1>
-<!--          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('plots')">-->
-<!--            <i v-if="favourites.includes('plots')" class="fas fa-star"></i>-->
-<!--            <i v-else class="far fa-star"></i>-->
+          <!--          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('plots')">-->
+          <!--            <i v-if="favourites.includes('plots')" class="fas fa-star"></i>-->
+          <!--            <i v-else class="far fa-star"></i>-->
 
-<!--            <span v-if="favourites.includes('plots')">Favourite</span>-->
-<!--            <span v-else>Favourite</span>-->
-<!--          </p>-->
+          <!--            <span v-if="favourites.includes('plots')">Favourite</span>-->
+          <!--            <span v-else>Favourite</span>-->
+          <!--          </p>-->
         </div>
       </section>
 
@@ -40,28 +40,31 @@
           <div class="w-full flex flex-wrap mx-auto">
             <div v-if="xyaAllowance < 500 || yinAllowance < 500 || yangAllowance < 500" class="w-full text-center mb-2">
               <p>
-                Before buying a plot, you will have to approve the contract to move the tokens in your name. Approve the appropriate token:
+                Before buying a plot, you will have to approve the contract to move the tokens in your name. Approve the
+                appropriate token:
               </p>
             </div>
             <div v-if="xyaAllowance < 500" class="w-full lg:w-auto mx-auto text-center lg:ml-auto mb-2">
               <button
                   @click="addAllowance('freyala')"
                   class="m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-2 px-4 rounded-md text-white text-sm md:text-xl font-semibold"
-                  >{{ loadingxyaapprove ? 'loading...' : 'Approve XYA'}}
+              >{{ loadingxyaapprove ? 'loading...' : 'Approve XYA' }}
               </button>
             </div>
             <div v-if="yinAllowance < 500" class="w-full lg:w-auto mx-auto text-center mb-2">
               <button
                   @click="addAllowance('yin')"
                   class="m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-2 px-4 rounded-md text-white text-sm md:text-xl font-semibold"
-                  >{{ loadingyinapprove ? 'loading...' : 'Approve YIN'}}
-              </button></div>
+              >{{ loadingyinapprove ? 'loading...' : 'Approve YIN' }}
+              </button>
+            </div>
             <div v-if="yangAllowance < 500" class="w-full lg:w-auto mx-auto text-center lg:mr-auto mb-2">
               <button
                   @click="addAllowance('yang')"
                   class="m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-2 px-4 rounded-md text-white text-sm md:text-xl font-semibold"
-                  >{{ loadingyangapprove ? 'loading...' : 'Approve YANG'}}
-              </button></div>
+              >{{ loadingyangapprove ? 'loading...' : 'Approve YANG' }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -450,12 +453,6 @@ export default {
           })
         }
 
-        console.log(totalSupply.toNumber())
-
-        // Array.from(Array(totalSupply.toNumber()).keys()).map((i) => {
-        //   console.log(i)
-        // })
-
         freyalaSnapshot.plots.map((plot) => {
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
             this.plots.map((p, index) => {
@@ -475,7 +472,10 @@ export default {
           }
         })
 
-        for (let i = 1669; i < totalSupply.toNumber(); i++) {
+        const freyalaArray = Array.from(Array(totalSupply.toNumber()).keys())
+        const slicedArray = freyalaArray.slice(1669, totalSupply.toNumber())
+
+        const promises = slicedArray.map(async (i) => {
           const plot = await this.plotFreyalaContract.plots(i)
 
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
@@ -494,13 +494,15 @@ export default {
               }
             })
           }
-        }
-
-        this.plots = this.plots.sort((a, b) => {
-          return a.plot_number - b.plot_number;
         })
 
-        this.loading = false
+        await Promise.all(promises).then(() => {
+          this.plots = this.plots.sort((a, b) => {
+            return a.plot_number - b.plot_number;
+          })
+
+          this.loading = false
+        })
       } else if (type === 'yang') {
         this.plotMin = (250 / 2) * ((this.neighbourhood - 16) + 1) - (250 / 2)
         this.plotMax = (250 / 2) * ((this.neighbourhood - 16) + 1)
@@ -561,8 +563,6 @@ export default {
 
         this.mainContact = new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer)
         this.plotYinContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
-
-        const totalSupply = await this.plotYinContract.totalSupply()
 
         const ownedPlots = await this.plotYinContract.tokensOfOwner(this.metaMaskAccount)
         ownedPlots.map((plot) => {
