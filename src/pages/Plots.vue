@@ -119,11 +119,11 @@
                       </small>
                       <br>
                       <small>
-                        F: {{ plot.level }}
+                        F: {{ plot.fertility }}
                       </small>
                       |
                       <small>
-                        L: {{ plot.fertility }}
+                        L: {{ plot.level }}
                       </small>
                       |
                       <small>
@@ -173,11 +173,11 @@
                       </small>
                       <br>
                       <small>
-                        F: {{ plot.level }}
+                        F: {{ plot.fertility }}
                       </small>
                       |
                       <small>
-                        L: {{ plot.fertility }}
+                        L: {{ plot.level }}
                       </small>
                       |
                       <small>
@@ -242,11 +242,11 @@
                         </small>
                         <br>
                         <small>
-                          F: {{ plot.level }}
+                          F: {{ plot.fertility }}
                         </small>
 
                         <small>
-                          L: {{ plot.fertility }}
+                          L: {{ plot.level }}
                         </small>
 
                         <small>
