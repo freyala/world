@@ -4,7 +4,7 @@
     <div style="z-index: 9999; overflow-y: auto;" class="screen bg-white rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
+        <div class="container mx-auto text-center pt-12 pb-8">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Plots of Land
           </h1>
@@ -26,16 +26,19 @@
         </div>
 
         <div class="mt-8 neighbourhoods flex flex-wrap">
-          <div class="w-full text-center">
-            <p class="text-xl mb-2">
-              Select neighbourhood:
-            </p>
-          </div>
-          <div class="w-full mx-auto flex flex-wrap">
-            <select class="mx-auto my-2 cursor-pointer" name="neighbourhood" id="neighbourhood-select"
-                    v-model="neighbourhood">
-              <option v-for="(n, index) in allNeighbourhoods" :value="index">{{ n }}</option>
-            </select>
+          <div class="w-full md:w-3/5 mx-auto flex flex-wrap">
+            <div class="w-full text-center md:text-right my-auto md:w-1/2 text-center">
+              <p class="text-xl mb-2">
+                Select neighbourhood:
+              </p>
+            </div>
+            <div class="w-full text-left md:w-1/2 pb-1 flex flex-wrap">
+              <select class="md:ml-4 my-auto border border-yellow mx-auto cursor-pointer" name="neighbourhood"
+                      id="neighbourhood-select"
+                      v-model="neighbourhood">
+                <option v-for="(n, index) in allNeighbourhoods" :value="index">{{ n }}</option>
+              </select>
+            </div>
           </div>
           <div class="w-full flex flex-wrap mx-auto">
             <div v-if="xyaAllowance < 500 || yinAllowance < 500 || yangAllowance < 500" class="w-full text-center mb-2">
@@ -68,92 +71,45 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap w-full mt-12">
+        <div class="flex flex-wrap w-full mt-4">
 
-          <div class="w-full mx-auto text-center">
-            F: Fertility - L: Level - C: Crime rate
-          </div>
-          <div class="w-full md:w-1/6 mt-4 flex flex-wrap">
-            <div class="w-full 2xl:w-1/2 relative" v-for="plot in ownedPlotsData">
-              <img class="w-full h-full"
-                   src="/images/plots/base/0.png" alt="Base land">
-              <div class="absolute top-0 left-0 w-full h-full">
-                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/soil_type/${plot.soil_type}.png`"
-                     alt="Soil Type">
-                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
-                     alt="Level">
-                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/fertility/${plot.fertility}.png`"
-                     alt="Fertility">
-                <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
-                     alt="Crime">
-                <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
-                     style="line-height: 0.75">
-
-                  <small>
-                    {{ allNeighbourhoods[plot.neighbourhood] }}
-                  </small>
-                  <br>
-                  <br>
-                  <div class="absolute bottom-0 pb-2">
-                    <small>
-                      Soil: {{ soilTypes[plot.soil_type] }}
-                    </small>
-                    <br>
-                    <small>
-                      F: {{ plot.level }}
-                    </small>
-                    |
-                    <small>
-                      L: {{ plot.fertility }}
-                    </small>
-                    |
-                    <small>
-                      C: {{ plot.crime_rate }}
-                    </small>
-                  </div>
-                </div>
-              </div>
+          <div class="w-full md:w-3/5 mx-auto text-center flex flex-wrap">
+            <div class="w-full">
+              F: Fertility - L: Level - C: Crime rate
+            </div>
+            <div class="w-full">
+              <button v-if="neighbourhoodSales === false"
+                      class="mb-2 border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
+                      @click="myPlots = !myPlots">{{ myPlots ? 'Show all plots' : 'Show my plots in region' }}
+              </button>
+              <button v-if="myPlots === false"
+                      class="mb-2 border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
+                      @click="neighbourhoodSales = !neighbourhoodSales">
+                {{ neighbourhoodSales ? 'Show all plots' : 'Show only neighbourhood sales' }}
+              </button>
             </div>
           </div>
-          <div v-show="loading === false" style="max-height: 750px;" class="ml-auto plots mt-4 mb-12 w-full md:w-9/12 cursor-pointer flex flex-wrap">
-            <div id="plots" class="flex flex-wrap">
-              <div v-for="plot in plots" class="w-1/2 md:w-1/4 lg:w-1/6 2xl:w-1/12 relative">
-                <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''" class="w-full h-full"
+          <div v-show="myPlots === true" class="w-full flex">
+            <div class="w-full mt-4 flex flex-wrap">
+              <div class="w-1/2 md:w-1/4 lg:w-1/6 2xl:w-1/12 relative" v-for="plot in ownedPlotsData">
+                <img class="w-full h-full"
                      src="/images/plots/base/0.png" alt="Base land">
-                <div v-if="plot.bought === true"
-                     class="absolute top-0 left-0 w-full h-full">
-                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                       class="absolute top-0 left-0 w-full h-full"
-                       :src="`/images/plots/soil_type/${plot.soil_type}.png`" alt="Soil Type">
-                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                       class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
+                <div class="absolute top-0 left-0 w-full h-full">
+                  <img class="absolute top-0 left-0 w-full h-full"
+                       :src="`/images/plots/soil_type/${plot.soil_type}.png`"
+                       alt="Soil Type">
+                  <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
                        alt="Level">
-                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                       class="absolute top-0 left-0 w-full h-full"
-                       :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
-                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
-                       class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
+                  <img class="absolute top-0 left-0 w-full h-full"
+                       :src="`/images/plots/fertility/${plot.fertility}.png`"
+                       alt="Fertility">
+                  <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
                        alt="Crime">
-
-                  <div
-                      class="opacity-0 hover:opacity-75 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
-                      style="line-height: 0.75">
-
-                    <!--                  <div class="absolute top-0 left-0 w-full h-full flex">-->
-                    <!--                    <button-->
-                    <!--                        @click="$modal.show('coming-soon')"-->
-                    <!--                        class="opacity-75 hover:opacity-100 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">-->
-                    <!--                      Enter plot!-->
-                    <!--                    </button>-->
-                    <!--                  </div>-->
-
+                  <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
+                       style="line-height: 0.75">
 
                     <small>
-                      Plot: {{ plot.plot_number }}
-                    </small>
-                    <br>
-                    <small>
-                      ID: {{ plot.token_id }}
+                      {{ allNeighbourhoods[plot.neighbourhood] }}
                     </small>
                     <br>
                     <br>
@@ -165,46 +121,224 @@
                       <small>
                         F: {{ plot.level }}
                       </small>
-
+                      |
                       <small>
                         L: {{ plot.fertility }}
                       </small>
-
+                      |
                       <small>
                         C: {{ plot.crime_rate }}
                       </small>
                     </div>
                   </div>
-                </div>
-                <div v-else class="absolute top-0 left-0 w-full h-full flex">
-                  <button
-                      @click="mintPlot(plot.plot_number)"
-                      class="opacity-25 hover:opacity-75 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">
-                    Buy!
-                  </button>
+
+
+                  <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full flex">
+                    <div @click="visitPlot(plot)" class="m-auto" v-if="ownedPlots.includes(plot.token_id)">VISIT</div>
+                    <div @click="buyPlot(plot)" class="m-auto" v-else-if="plot.sales && plot.sales.forSale">FOR SALE
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div v-show="loading === true" class="my-12 flex w-full md:w-5/6 h-full">
-            <p class="m-auto text-xl text-center">
-              Loading plots...
-            </p>
+          <div v-show="neighbourhoodSales === true" class="w-full flex">
+            <div class="w-full mt-4 flex flex-wrap">
+              <div class="w-1/2 md:w-1/4 lg:w-1/6 2xl:w-1/12 relative" v-if="plot.sales && plot.sales.forSale === true"
+                   v-for="plot in plots">
+                <img class="w-full h-full"
+                     src="/images/plots/base/0.png" alt="Base land">
+                <div class="absolute top-0 left-0 w-full h-full">
+                  <img class="absolute top-0 left-0 w-full h-full"
+                       :src="`/images/plots/soil_type/${plot.soil_type}.png`"
+                       alt="Soil Type">
+                  <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
+                       alt="Level">
+                  <img class="absolute top-0 left-0 w-full h-full"
+                       :src="`/images/plots/fertility/${plot.fertility}.png`"
+                       alt="Fertility">
+                  <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
+                       alt="Crime">
+                  <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
+                       style="line-height: 0.75">
+
+                    <small>
+                      {{ allNeighbourhoods[plot.neighbourhood] }}
+                    </small>
+                    <br>
+                    <br>
+                    <div class="absolute bottom-0 pb-2">
+                      <small>
+                        Soil: {{ soilTypes[plot.soil_type] }}
+                      </small>
+                      <br>
+                      <small>
+                        F: {{ plot.level }}
+                      </small>
+                      |
+                      <small>
+                        L: {{ plot.fertility }}
+                      </small>
+                      |
+                      <small>
+                        C: {{ plot.crime_rate }}
+                      </small>
+                    </div>
+                  </div>
+
+
+                  <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full flex">
+                    <div @click="visitPlot(plot)" class="m-auto" v-if="ownedPlots.includes(plot.token_id)">VISIT</div>
+                    <div @click="buyPlot(plot)" class="m-auto" v-else-if="plot.sales && plot.sales.forSale">FOR SALE
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-show="neighbourhoodSales === false && myPlots === false" class="w-full flex">
+            <div v-show="loading === false" style="max-height: 750px;"
+                 class="plots mt-4 mb-12 w-full cursor-pointer flex flex-wrap">
+              <div id="plots" class="flex flex-wrap">
+                <div v-for="plot in plots" class="w-1/2 md:w-1/4 lg:w-1/6 2xl:w-1/12 relative">
+                  <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''" class="w-full h-full"
+                       src="/images/plots/base/0.png" alt="Base land">
+                  <div v-if="plot.bought === true"
+                       class="absolute top-0 left-0 w-full h-full">
+                    <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                         class="absolute top-0 left-0 w-full h-full"
+                         :src="`/images/plots/soil_type/${plot.soil_type}.png`" alt="Soil Type">
+                    <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                         class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
+                         alt="Level">
+                    <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                         class="absolute top-0 left-0 w-full h-full"
+                         :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
+                    <img :class="ownedPlots.includes(plot.token_id) ? 'border-2 border-white' : ''"
+                         class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crime_rate}.png`"
+                         alt="Crime">
+
+                    <div
+                        class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
+                        style="line-height: 0.75;pointer-events: none;">
+
+                      <!--                  <div class="absolute top-0 left-0 w-full h-full flex">-->
+                      <!--                    <button-->
+                      <!--                        @click="$modal.show('coming-soon')"-->
+                      <!--                        class="opacity-75 hover:opacity-100 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">-->
+                      <!--                      Enter plot!-->
+                      <!--                    </button>-->
+                      <!--                  </div>-->
+
+
+                      <small>
+                        ID: {{ plot.token_id }}
+                      </small>
+                      <br>
+                      <br>
+                      <div class="absolute bottom-0 pb-2">
+                        <small>
+                          Soil: {{ soilTypes[plot.soil_type] }}
+                        </small>
+                        <br>
+                        <small>
+                          F: {{ plot.level }}
+                        </small>
+
+                        <small>
+                          L: {{ plot.fertility }}
+                        </small>
+
+                        <small>
+                          C: {{ plot.crime_rate }}
+                        </small>
+                      </div>
+                    </div>
+
+                    <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full flex">
+                      <div @click="visitPlot(plot)" class="m-auto" v-if="ownedPlots.includes(plot.token_id)">VISIT</div>
+                      <div @click="buyPlot(plot)" class="m-auto" v-else-if="plot.sales && plot.sales.forSale">FOR SALE
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="absolute top-0 left-0 w-full h-full flex">
+                    <!--                    <button-->
+                    <!--                        @click="mintPlot(plot.plot_number)"-->
+                    <!--                        class="opacity-25 hover:opacity-75 m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-1 px-2 rounded-md text-white text-sm font-semibold">-->
+                    <!--                      Buy!-->
+                    <!--                    </button>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-show="loading === true" class="my-12 flex w-full h-full">
+              <p class="m-auto text-xl text-center">
+                Loading plots...
+              </p>
+            </div>
           </div>
         </div>
 
 
-        <window name="coming-soon" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+        <window @before-close="modalClose" name="plot" width="80%">
+          <div v-if="plotModalReason === 'visit' || plotModalReason === 'buy'"
+               class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
-              <div class="text-2xl">Plot!</div>
+              <div class="text-2xl">{{ allNeighbourhoods[selectedPlotData.neighbourhood] }} {{ plotModalId }}</div>
             </div>
             <div class="w-1/5 text-right">
-              <i @click="$modal.hide('coming-soon')" class="fas fa-times cursor-pointer text-xl"></i>
+              <i @click="$modal.hide('plot')" class="fas fa-times cursor-pointer text-xl"></i>
             </div>
-            <p class="w-full text-center mt-4">
-              Coming soon..
-            </p>
+            <div v-if="plotModalReason === 'visit'" class="w-full">
+              <p v-if="selectedPlotData.amountOwnedByPlot">Plot chest: {{
+                  selectedPlotData.amountOwnedByPlot.split('.')[0]
+                }}.{{ selectedPlotData.amountOwnedByPlot.split('.')[1].slice(0, 2) }}</p>
+              <p>Soil type: {{ soilTypes[selectedPlotData.soil_type] }}</p>
+              <p>Fertility: {{ selectedPlotData.fertility }}</p>
+              <p>Level: {{ selectedPlotData.level }}</p>
+              <p>Crime rate: {{ selectedPlotData.crime_rate }}</p>
+              <br>
+              <div
+                  v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
+                <input class="text-black py-1 px-2" type="number" v-model="plotPrice">
+                <br>
+                <button @click="approvePlotToSellNow(selectedPlotData.token_id)"
+                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                  {{ loadingApproveSellPlot ? 'APPROVING' : 'APPROVE' }}
+                </button>
+                <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)"
+                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                  {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
+                </button>
+              </div>
+              <div v-else>
+                <button @click="cancelListing(selectedPlotData.token_id)"
+                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                  {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
+                </button>
+              </div>
+            </div>
+            <div v-if="plotModalReason === 'buy'" class="w-full">
+              <p v-if="selectedPlotData.amountOwnedByPlot">Plot chest: {{
+                  selectedPlotData.amountOwnedByPlot.split('.')[0]
+                }}.{{ selectedPlotData.amountOwnedByPlot.split('.')[1].slice(0, 2) }}</p>
+              <p>Soil type: {{ soilTypes[selectedPlotData.soil_type] }}</p>
+              <p>Fertility: {{ selectedPlotData.fertility }}</p>
+              <p>Level: {{ selectedPlotData.level }}</p>
+              <p>Crime rate: {{ selectedPlotData.crime_rate }}</p>
+              <br>
+              <p>Plot price: {{ selectedPlotData.sales.price / Math.pow(10, 18) }} {{
+                  neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
+                }}</p>
+              <button @click="approvePlotNow(selectedPlotData.sales.price)"
+                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                {{ loadingApproveBuyPlot ? 'APPROVING' : 'APPROVE' }}
+              </button>
+              <button @click="buyPlotNow(selectedPlotData.sales.price, selectedPlotData.token_id)"
+                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                {{ loadingBuyPlot ? 'BUYING' : 'BUY' }}
+              </button>
+            </div>
           </div>
         </window>
 
@@ -251,6 +385,9 @@ import PlotsFreyala from "../plugins/artifacts/plotsfreyala.json";
 import Freyala from "../plugins/artifacts/freyala.json";
 import Yin from "../plugins/artifacts/yin.json";
 import Yang from "../plugins/artifacts/yang.json";
+import PlotsMarket from "../plugins/artifacts/plotsmarket.json";
+import PlotsYinMarket from "../plugins/artifacts/plotsyinmarket.json";
+import PlotsYangMarket from "../plugins/artifacts/plotsyangmarket.json";
 import {ethers} from "ethers";
 import fromExponential from "from-exponential";
 
@@ -264,11 +401,25 @@ export default {
   mixins: [wallet],
   data() {
     return {
+      plotPrice: 0,
+      plotModalId: 0,
+      selectedPlotData: {},
+      plotModalReason: '',
+      plotMarketContract: undefined,
+      plotYinMarketContract: undefined,
+      plotYangMarketContract: undefined,
+      myPlots: false,
+      neighbourhoodSales: false,
       snapshot: [],
       xyaAllowance: 0,
       yinAllowance: 0,
       yangAllowance: 0,
       error: '',
+      loadingApproveSellPlot: false,
+      loadingApproveBuyPlot: false,
+      loadingBuyPlot: false,
+      loadingSellPlot: false,
+      loadingCancelPlotListing: false,
       loadingxyaapprove: false,
       loadingyinapprove: false,
       loadingyangapprove: false,
@@ -345,67 +496,22 @@ export default {
   },
   async mounted() {
     const xya = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-    const xyaAllowance = await xya.allowance(this.metaMaskAccount, PlotsFreyala.address)
-    this.xyaAllowance = (xyaAllowance / Math.pow(10, 18))
-
     const yin = new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer)
-    const yinAllowance = await yin.allowance(this.metaMaskAccount, PlotsYin.address)
-    this.yinAllowance = (yinAllowance / Math.pow(10, 18))
-
     const yang = new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer)
-    const yangAllowance = await yang.allowance(this.metaMaskAccount, PlotsYang.address)
-    this.yangAllowance = (yangAllowance / Math.pow(10, 18))
 
     this.plotFreyalaContract = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer)
     this.plotYinContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
     this.plotYangContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
 
-    const xyaPlots = await this.plotFreyalaContract.tokensOfOwner(this.metaMaskAccount)
-    const yinPlots = await this.plotYinContract.tokensOfOwner(this.metaMaskAccount)
-    const yangPlots = await this.plotYangContract.tokensOfOwner(this.metaMaskAccount)
+    const [xyaAllowance, yinAllowance, yangAllowance] = await Promise.all([
+      xya.allowance(this.metaMaskAccount, PlotsFreyala.address),
+      yin.allowance(this.metaMaskAccount, PlotsYin.address),
+      yang.allowance(this.metaMaskAccount, PlotsYang.address),
+    ])
 
-    xyaPlots.map(async (plot) => {
-      this.ownedPlots.push(plot.toNumber())
-
-      const ownedPlot = await this.plotFreyalaContract.plots(plot.toNumber())
-      this.ownedPlotsData.push({
-        neighbourhood: ownedPlot._neighbourhood.toNumber(),
-        token_id: ownedPlot._tokenId.toNumber(),
-        plot_number: ownedPlot._plotNumber.toNumber(),
-        soil_type: ownedPlot._soilType.toNumber(),
-        fertility: ownedPlot._fertility.toNumber(),
-        level: ownedPlot._level.toNumber(),
-        crime_rate: ownedPlot._crimeRate.toNumber(),
-      })
-    })
-    yinPlots.map(async (plot) => {
-      this.ownedPlots.push(plot.toNumber())
-
-      const ownedPlot = await this.plotYinContract.plots(plot.toNumber())
-      this.ownedPlotsData.push({
-        neighbourhood: ownedPlot._neighbourhood.toNumber(),
-        token_id: ownedPlot._tokenId.toNumber(),
-        plot_number: ownedPlot._plotNumber.toNumber(),
-        soil_type: ownedPlot._soilType.toNumber(),
-        fertility: ownedPlot._fertility.toNumber(),
-        level: ownedPlot._level.toNumber(),
-        crime_rate: ownedPlot._crimeRate.toNumber(),
-      })
-    })
-    yangPlots.map(async (plot) => {
-      this.ownedPlots.push(plot.toNumber())
-
-      const ownedPlot = await this.plotYangContract.plots(plot.toNumber())
-      this.ownedPlotsData.push({
-        neighbourhood: ownedPlot._neighbourhood.toNumber(),
-        token_id: ownedPlot._tokenId.toNumber(),
-        plot_number: ownedPlot._plotNumber.toNumber(),
-        soil_type: ownedPlot._soilType.toNumber(),
-        fertility: ownedPlot._fertility.toNumber(),
-        level: ownedPlot._level.toNumber(),
-        crime_rate: ownedPlot._crimeRate.toNumber(),
-      })
-    })
+    this.xyaAllowance = (xyaAllowance / Math.pow(10, 18))
+    this.yinAllowance = (yinAllowance / Math.pow(10, 18))
+    this.yangAllowance = (yangAllowance / Math.pow(10, 18))
 
     if (this.neighbourhood === 18 || this.neighbourhood === 19) {
       await this.reGrabPlots('yin')
@@ -449,6 +555,147 @@ export default {
     ...mapActions([
       'setFavourite'
     ]),
+    modalClose() {
+      this.plotModalReason = ''
+    },
+    async cancelListing(id) {
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        this.loadingCancelPlotListing = true
+        const cancel = await this.plotYinMarketContract.cancelListing(id)
+        await cancel.wait(1)
+
+        this.loadingCancelPlotListing = false
+        window.location.reload(1)
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        this.loadingCancelPlotListing = true
+        const cancel = await this.plotYangMarketContract.cancelListing(id)
+        await cancel.wait(1)
+
+        this.loadingCancelPlotListing = false
+        window.location.reload(1)
+      } else {
+        this.loadingCancelPlotListing = true
+        const cancel = await this.plotMarketContract.cancelListing(id)
+        await cancel.wait(1)
+
+        this.loadingCancelPlotListing = false
+        window.location.reload(1)
+      }
+    },
+    async approvePlotToSellNow(id) {
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        this.loadingApproveSellPlot = true
+        this.plotYinFreyalaContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
+        const approve = await this.plotYinFreyalaContract.approve(PlotsYinMarket.address, id)
+        await approve.wait(1)
+
+        this.loadingApproveSellPlot = false
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        this.loadingApproveSellPlot = true
+        this.plotYangFreyalaContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
+        const approve = await this.plotYangFreyalaContract.approve(PlotsYangMarket.address, id)
+        await approve.wait(1)
+
+        this.loadingApproveSellPlot = false
+      } else {
+        this.loadingApproveSellPlot = true
+        this.plotFreyalaContract = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer)
+        const approve = await this.plotFreyalaContract.approve(PlotsMarket.address, id)
+        await approve.wait(1)
+
+        this.loadingApproveSellPlot = false
+      }
+    },
+    async sellPlotNow(amount, id) {
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        this.loadingSellPlot = true
+        const actual = amount * (10 ** 18)
+        const arg = fromExponential(actual)
+        const sales = await this.plotYinMarketContract.createListing(id, arg)
+        await sales.wait(1)
+
+        this.loadingSellPlot = false
+        window.location.reload(1)
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        this.loadingSellPlot = true
+        const actual = amount * (10 ** 18)
+        const arg = fromExponential(actual)
+        const sales = await this.plotYangMarketContract.createListing(id, arg)
+        await sales.wait(1)
+
+        this.loadingSellPlot = false
+        window.location.reload(1)
+      } else {
+        this.loadingSellPlot = true
+        const actual = amount * (10 ** 18)
+        const arg = fromExponential(actual)
+        const sales = await this.plotMarketContract.createListing(id, arg)
+        await sales.wait(1)
+
+        this.loadingSellPlot = false
+        window.location.reload(1)
+      }
+    },
+    async approvePlotNow(amount) {
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        this.loadingApproveBuyPlot = true
+        const mainYinContract = new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer)
+        const approve = await mainYinContract.approve(PlotsYinMarket.address, amount)
+        await approve.wait(1)
+
+        this.loadingApproveBuyPlot = false
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        this.loadingApproveBuyPlot = true
+        const mainYangContract = new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer)
+        const approve = await mainYangContract.approve(PlotsYangMarket.address, amount)
+        await approve.wait(1)
+
+        this.loadingApproveBuyPlot = false
+      } else {
+        this.loadingApproveBuyPlot = true
+        this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+        const approve = await this.mainContract.approve(PlotsMarket.address, amount)
+        await approve.wait(1)
+
+        this.loadingApproveBuyPlot = false
+      }
+    },
+    async buyPlotNow(amount, id) {
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        this.loadingBuyPlot = true
+        const sales = await this.plotYinMarketContract.buy(amount, id)
+        await sales.wait(1)
+
+        this.loadingBuyPlot = false
+        window.location.reload(1)
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        this.loadingBuyPlot = true
+        const sales = await this.plotYangMarketContract.buy(amount, id)
+        await sales.wait(1)
+
+        this.loadingBuyPlot = false
+        window.location.reload(1)
+      } else {
+        this.loadingBuyPlot = true
+        const sales = await this.plotMarketContract.buy(amount, id)
+        await sales.wait(1)
+
+        this.loadingBuyPlot = false
+        window.location.reload(1)
+      }
+    },
+    visitPlot(data) {
+      this.selectedPlotData = data
+      this.plotModalReason = 'visit'
+
+      this.$modal.show('plot')
+    },
+    buyPlot(data) {
+      this.selectedPlotData = data
+      this.plotModalReason = 'buy'
+
+      this.$modal.show('plot')
+    },
     editPanZoom() {
       const element = document.getElementById('plots')
 
@@ -563,14 +810,13 @@ export default {
         this.plotMin = (2000 / 16) * (this.neighbourhood + 1) - (2000 / 16)
         this.plotMax = (2000 / 16) * (this.neighbourhood + 1)
 
-        this.loading = false
-
         this.mainContact = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
         this.plotFreyalaContract = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer)
 
-        const totalSupply = await this.plotFreyalaContract.totalSupply()
-
-        const ownedPlots = await this.plotFreyalaContract.tokensOfOwner(this.metaMaskAccount)
+        const [totalSupply, ownedPlots] = await Promise.all([
+          this.plotFreyalaContract.totalSupply(),
+          this.plotFreyalaContract.tokensOfOwner(this.metaMaskAccount)
+        ])
 
         ownedPlots.map(async (plot) => {
           this.ownedPlots.push(plot.toNumber())
@@ -589,6 +835,25 @@ export default {
             bought: false
           })
         }
+
+        this.ownedPlotsData = []
+
+        const xyaPlots = await this.plotFreyalaContract.tokensOfOwner(this.metaMaskAccount)
+
+        xyaPlots.map(async (plot) => {
+          const ownedPlot = await this.plotFreyalaContract.plots(plot.toNumber())
+
+          this.ownedPlotsData.push({
+            neighbourhood: ownedPlot._neighbourhood.toNumber(),
+            token_id: ownedPlot._tokenId.toNumber(),
+            plot_number: ownedPlot._plotNumber.toNumber(),
+            soil_type: ownedPlot._soilType.toNumber(),
+            fertility: ownedPlot._fertility.toNumber(),
+            level: ownedPlot._level.toNumber(),
+            crime_rate: ownedPlot._crimeRate.toNumber(),
+            amountOwnedByPlot: ethers.utils.formatEther(ownedPlot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(ownedPlot._amountOwnedByPlot).toString() : ownedPlot._amountOwnedByPlot),
+          })
+        })
 
         freyalaSnapshot.plots.map((plot) => {
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
@@ -626,6 +891,7 @@ export default {
                   fertility: plot._fertility.toNumber(),
                   level: plot._level.toNumber(),
                   crime_rate: plot._crimeRate.toNumber(),
+                  amountOwnedByPlot: ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot),
                   bought: true
                 }
               }
@@ -633,18 +899,91 @@ export default {
           }
         })
 
-        await Promise.all(promises).then(() => {
+        await Promise.all(promises).then(async () => {
           this.plots = this.plots.sort((a, b) => {
             return a.plot_number - b.plot_number;
           })
 
-          this.loading = false
+          const plots = await this.plots.map(async (plot) => {
+            if (plot.token_id) {
+              this.plotMarketContract = new ethers.Contract(PlotsMarket.address, PlotsMarket.abi, this.metaMaskWallet.signer)
+              const sales = await this.plotMarketContract.getListing(plot.token_id)
+
+              if (sales[4]) {
+                plot.sales = {
+                  seller: sales[0],
+                  buyer: sales[1],
+                  tokenId: sales[2].toNumber(),
+                  price: ethers.BigNumber.from(sales[3]).toString(),
+                  forSale: sales[4],
+                }
+              } else {
+                plot.sales = {
+                  seller: 0,
+                  buyer: 0,
+                  tokenId: plot.token_id,
+                  price: 0,
+                  forSale: false,
+                }
+              }
+            } else {
+              plot.sales = {
+                seller: 0,
+                buyer: 0,
+                tokenId: undefined,
+                price: 0,
+                forSale: false,
+              }
+            }
+
+          })
+
+          const ownPlots = await this.ownedPlotsData.map(async (plot) => {
+            if (plot.token_id) {
+              this.plotMarketContract = new ethers.Contract(PlotsMarket.address, PlotsMarket.abi, this.metaMaskWallet.signer)
+              const sales = await this.plotMarketContract.getListing(plot.token_id)
+
+              if (sales[4]) {
+                plot.sales = {
+                  seller: sales[0],
+                  buyer: sales[1],
+                  tokenId: sales[2].toNumber(),
+                  price: ethers.BigNumber.from(sales[3]).toString(),
+                  forSale: sales[4],
+                }
+              } else {
+                plot.sales = {
+                  seller: 0,
+                  buyer: 0,
+                  tokenId: plot.token_id,
+                  price: 0,
+                  forSale: false,
+                }
+              }
+            } else {
+              plot.sales = {
+                seller: 0,
+                buyer: 0,
+                tokenId: undefined,
+                price: 0,
+                forSale: false,
+              }
+            }
+
+          })
+
+          await Promise.all(plots).then(async () => {
+            await Promise.all(ownPlots).then(() => {
+              this.ownedPlots = this.ownedPlots.sort()
+              this.ownedPlotsData = this.ownedPlotsData.sort((a,b) => a.token_id - b.token_id)
+
+              this.loading = false
+            })
+          })
         })
       } else if (type === 'yang') {
         this.plotMin = (250 / 2) * ((this.neighbourhood - 16) + 1) - (250 / 2)
         this.plotMax = (250 / 2) * ((this.neighbourhood - 16) + 1)
-
-        this.loading = false
 
         this.mainContact = new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer)
         this.plotYangContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
@@ -667,6 +1006,24 @@ export default {
             bought: false
           })
         }
+
+        this.ownedPlotsData = []
+        const yangPlots = await this.plotYangContract.tokensOfOwner(this.metaMaskAccount)
+
+        yangPlots.map(async (plot) => {
+
+          const ownedPlot = await this.plotYangContract.plots(plot.toNumber())
+          this.ownedPlotsData.push({
+            neighbourhood: ownedPlot._neighbourhood.toNumber(),
+            token_id: ownedPlot._tokenId.toNumber(),
+            plot_number: ownedPlot._plotNumber.toNumber(),
+            soil_type: ownedPlot._soilType.toNumber(),
+            fertility: ownedPlot._fertility.toNumber(),
+            level: ownedPlot._level.toNumber(),
+            crime_rate: ownedPlot._crimeRate.toNumber(),
+            amountOwnedByPlot: ethers.utils.formatEther(ownedPlot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(ownedPlot._amountOwnedByPlot).toString() : ownedPlot._amountOwnedByPlot),
+          })
+        })
 
         yangSnapshot.plots.map((plot) => {
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
@@ -691,12 +1048,82 @@ export default {
           return a.plot_number - b.plot_number;
         })
 
-        this.loading = false
+        const plots = await this.plots.map(async (plot) => {
+          if (plot.token_id) {
+            this.plotYangMarketContract = new ethers.Contract(PlotsYangMarket.address, PlotsYangMarket.abi, this.metaMaskWallet.signer)
+            const sales = await this.plotYangMarketContract.getListing(plot.token_id)
+
+            if (sales[4]) {
+              plot.sales = {
+                seller: sales[0],
+                buyer: sales[1],
+                tokenId: sales[2].toNumber(),
+                price: ethers.BigNumber.from(sales[3]).toString(),
+                forSale: sales[4],
+              }
+            } else {
+              plot.sales = {
+                seller: 0,
+                buyer: 0,
+                tokenId: plot.token_id,
+                price: 0,
+                forSale: false,
+              }
+            }
+          } else {
+            plot.sales = {
+              seller: 0,
+              buyer: 0,
+              tokenId: undefined,
+              price: 0,
+              forSale: false,
+            }
+          }
+
+        })
+
+        const ownPlots = await this.ownedPlotsData.map(async (plot) => {
+          if (plot.token_id) {
+            this.plotYangMarketContract = new ethers.Contract(PlotsYangMarket.address, PlotsYangMarket.abi, this.metaMaskWallet.signer)
+            const sales = await this.plotYangMarketContract.getListing(plot.token_id)
+
+            if (sales[4]) {
+              plot.sales = {
+                seller: sales[0],
+                buyer: sales[1],
+                tokenId: sales[2].toNumber(),
+                price: ethers.BigNumber.from(sales[3]).toString(),
+                forSale: sales[4],
+              }
+            } else {
+              plot.sales = {
+                seller: 0,
+                buyer: 0,
+                tokenId: plot.token_id,
+                price: 0,
+                forSale: false,
+              }
+            }
+          } else {
+            plot.sales = {
+              seller: 0,
+              buyer: 0,
+              tokenId: undefined,
+              price: 0,
+              forSale: false,
+            }
+          }
+
+        })
+
+        await Promise.all(plots).then(async () => {
+          await Promise.all(ownPlots).then(() => {
+            this.loading = false
+          })
+        })
       } else if (type === 'yin') {
         this.plotMin = (250 / 2) * ((this.neighbourhood - 18) + 1) - (250 / 2)
         this.plotMax = (250 / 2) * ((this.neighbourhood - 18) + 1)
-
-        this.loading = false
 
         this.mainContact = new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer)
         this.plotYinContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
@@ -719,6 +1146,23 @@ export default {
             bought: false
           })
         }
+
+        this.ownedPlotsData = []
+        const yinPlots = await this.plotYinContract.tokensOfOwner(this.metaMaskAccount)
+        yinPlots.map(async (plot) => {
+
+          const ownedPlot = await this.plotYinContract.plots(plot.toNumber())
+          this.ownedPlotsData.push({
+            neighbourhood: ownedPlot._neighbourhood.toNumber(),
+            token_id: ownedPlot._tokenId.toNumber(),
+            plot_number: ownedPlot._plotNumber.toNumber(),
+            soil_type: ownedPlot._soilType.toNumber(),
+            fertility: ownedPlot._fertility.toNumber(),
+            level: ownedPlot._level.toNumber(),
+            crime_rate: ownedPlot._crimeRate.toNumber(),
+            amountOwnedByPlot: ethers.utils.formatEther(ownedPlot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(ownedPlot._amountOwnedByPlot).toString() : ownedPlot._amountOwnedByPlot),
+          })
+        })
 
         yinSnapshot.plots.map((plot) => {
           if (plot[0] !== '0x0000000000000000000000000000000000000000') {
@@ -743,7 +1187,79 @@ export default {
           return a.plot_number - b.plot_number;
         })
 
-        this.loading = false
+        const plots = await this.plots.map(async (plot) => {
+          if (plot.token_id) {
+            this.plotYinMarketContract = new ethers.Contract(PlotsYinMarket.address, PlotsYinMarket.abi, this.metaMaskWallet.signer)
+            const sales = await this.plotYinMarketContract.getListing(plot.token_id)
+
+            if (sales[4]) {
+              plot.sales = {
+                seller: sales[0],
+                buyer: sales[1],
+                tokenId: sales[2].toNumber(),
+                price: ethers.BigNumber.from(sales[3]).toString(),
+                forSale: sales[4],
+              }
+            } else {
+              plot.sales = {
+                seller: 0,
+                buyer: 0,
+                tokenId: plot.token_id,
+                price: 0,
+                forSale: false,
+              }
+            }
+          } else {
+            plot.sales = {
+              seller: 0,
+              buyer: 0,
+              tokenId: undefined,
+              price: 0,
+              forSale: false,
+            }
+          }
+
+        })
+
+        const ownPlots = await this.ownedPlotsData.map(async (plot) => {
+          if (plot.token_id) {
+            this.plotYinMarketContract = new ethers.Contract(PlotsYinMarket.address, PlotsYinMarket.abi, this.metaMaskWallet.signer)
+            const sales = await this.plotYinMarketContract.getListing(plot.token_id)
+
+            if (sales[4]) {
+              plot.sales = {
+                seller: sales[0],
+                buyer: sales[1],
+                tokenId: sales[2].toNumber(),
+                price: ethers.BigNumber.from(sales[3]).toString(),
+                forSale: sales[4],
+              }
+            } else {
+              plot.sales = {
+                seller: 0,
+                buyer: 0,
+                tokenId: plot.token_id,
+                price: 0,
+                forSale: false,
+              }
+            }
+          } else {
+            plot.sales = {
+              seller: 0,
+              buyer: 0,
+              tokenId: undefined,
+              price: 0,
+              forSale: false,
+            }
+          }
+
+        })
+
+        await Promise.all(plots).then(async () => {
+          await Promise.all(ownPlots).then(() => {
+            this.loading = false
+          })
+        })
       }
     }
   }
