@@ -284,7 +284,7 @@
           <div v-if="plotModalReason === 'visit' || plotModalReason === 'buy'"
                class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
             <div class="w-4/5">
-              <div class="text-2xl">{{ allNeighbourhoods[selectedPlotData.neighbourhood] }} {{ plotModalId }}</div>
+              <div class="text-2xl">{{ allNeighbourhoods[selectedPlotData.neighbourhood] }}</div>
             </div>
             <div class="w-1/5 text-right">
               <i @click="$modal.hide('plot')" class="fas fa-times cursor-pointer text-xl"></i>
@@ -292,7 +292,9 @@
             <div v-if="plotModalReason === 'visit'" class="w-full">
               <p v-if="selectedPlotData.amountOwnedByPlot">Plot chest: {{
                   selectedPlotData.amountOwnedByPlot.split('.')[0]
-                }}.{{ selectedPlotData.amountOwnedByPlot.split('.')[1].slice(0, 2) }}</p>
+                }}.{{ selectedPlotData.amountOwnedByPlot.split('.')[1].slice(0, 2) }} {{
+                  neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
+                }}</p>
               <p>Soil type: {{ soilTypes[selectedPlotData.soil_type] }}</p>
               <p>Fertility: {{ selectedPlotData.fertility }}</p>
               <p>Level: {{ selectedPlotData.level }}</p>
@@ -321,7 +323,9 @@
             <div v-if="plotModalReason === 'buy'" class="w-full">
               <p v-if="selectedPlotData.amountOwnedByPlot">Plot chest: {{
                   selectedPlotData.amountOwnedByPlot.split('.')[0]
-                }}.{{ selectedPlotData.amountOwnedByPlot.split('.')[1].slice(0, 2) }}</p>
+                }}.{{ selectedPlotData.amountOwnedByPlot.split('.')[1].slice(0, 2) }} {{
+                  neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
+                }}</p>
               <p>Soil type: {{ soilTypes[selectedPlotData.soil_type] }}</p>
               <p>Fertility: {{ selectedPlotData.fertility }}</p>
               <p>Level: {{ selectedPlotData.level }}</p>
@@ -684,14 +688,38 @@ export default {
         window.location.reload(1)
       }
     },
-    visitPlot(data) {
+    async visitPlot(data) {
+      let plot = {}
+
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        plot = await this.plotYinContract.plots(data.token_id)
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        plot = await this.plotYangContract.plots(data.token_id)
+      } else {
+        plot = await this.plotFreyalaContract.plots(data.token_id)
+      }
+
+      data.amountOwnedByPlot = ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot)
       this.selectedPlotData = data
+
       this.plotModalReason = 'visit'
 
       this.$modal.show('plot')
     },
-    buyPlot(data) {
+    async buyPlot(data) {
+      let plot = {}
+
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        plot = await this.plotYinContract.plots(data.token_id)
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        plot = await this.plotYangContract.plots(data.token_id)
+      } else {
+        plot = await this.plotFreyalaContract.plots(data.token_id)
+      }
+
+      data.amountOwnedByPlot = ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot)
       this.selectedPlotData = data
+
       this.plotModalReason = 'buy'
 
       this.$modal.show('plot')
