@@ -779,6 +779,8 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   transform: translate(-10vw, 0%);
+  margin-top: -100px !important;
+  height: 500px !important;
 
 
   border-radius: 15px !important;

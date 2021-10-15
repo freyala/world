@@ -134,8 +134,19 @@
 
 
                   <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full flex">
-                    <div @click="visitPlot(plot)" class="m-auto" v-if="ownedPlots.includes(plot.token_id)">VISIT</div>
-                    <div @click="buyPlot(plot)" class="m-auto" v-else-if="plot.sales && plot.sales.forSale">FOR SALE
+                    <div @click="visitPlot(plot)" class="m-auto text-center" v-if="ownedPlots.includes(plot.token_id)">
+                      VISIT
+                      <br>
+                      {{
+                        plot.sales === undefined || (plot.sales && parseInt(plot.sales.price) === 0) ? '' : parseFloat(plot.sales.price / Math.pow(10, 18)).toFixed(2) + (neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA')
+                      }}
+                    </div>
+                    <div @click="buyPlot(plot)" class="m-auto text-center" v-else-if="plot.sales && plot.sales.forSale">
+                      FOR SALE
+                      <br>
+                      {{ parseFloat(plot.sales.price / Math.pow(10, 18)).toFixed(2) }} {{
+                        neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
+                      }}
                     </div>
                   </div>
                 </div>
@@ -188,8 +199,19 @@
 
 
                   <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full flex">
-                    <div @click="visitPlot(plot)" class="m-auto" v-if="ownedPlots.includes(plot.token_id)">VISIT</div>
-                    <div @click="buyPlot(plot)" class="m-auto" v-else-if="plot.sales && plot.sales.forSale">FOR SALE
+                    <div @click="visitPlot(plot)" class="m-auto text-center" v-if="ownedPlots.includes(plot.token_id)">
+                      VISIT
+                      <br>
+                      {{
+                        plot.sales === undefined || (plot.sales && parseInt(plot.sales.price) === 0) ? '' : parseFloat(plot.sales.price / Math.pow(10, 18)).toFixed(2) + (neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA')
+                      }}
+                    </div>
+                    <div @click="buyPlot(plot)" class="m-auto text-center" v-else-if="plot.sales && plot.sales.forSale">
+                      FOR SALE
+                      <br>
+                      {{ parseFloat(plot.sales.price / Math.pow(10, 18)).toFixed(2) }} {{
+                        neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
+                      }}
                     </div>
                   </div>
                 </div>
@@ -256,8 +278,21 @@
                     </div>
 
                     <div class="absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full flex">
-                      <div @click="visitPlot(plot)" class="m-auto" v-if="ownedPlots.includes(plot.token_id)">VISIT</div>
-                      <div @click="buyPlot(plot)" class="m-auto" v-else-if="plot.sales && plot.sales.forSale">FOR SALE
+                      <div @click="visitPlot(plot)" class="text-center m-auto"
+                           v-if="ownedPlots.includes(plot.token_id)">
+                        VISIT
+                        <br>
+                        {{
+                          plot.sales === undefined || (plot.sales && parseInt(plot.sales.price) === 0) ? '' : parseFloat(plot.sales.price / Math.pow(10, 18)).toFixed(2) + (neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA')
+                        }}
+                      </div>
+                      <div @click="buyPlot(plot)" class="text-center m-auto"
+                           v-else-if="plot.sales && plot.sales.forSale">
+                        FOR SALE
+                        <br>
+                        {{ parseFloat(plot.sales.price / Math.pow(10, 18)).toFixed(2) }} {{
+                          neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
+                        }}
                       </div>
                     </div>
                   </div>
@@ -311,6 +346,16 @@
                 <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)"
                         class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
                   {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
+                </button>
+
+                <br>
+                <br>
+
+                <input class="text-black py-1 px-2" type="text" placeholder="Address to send plot to..." v-model="selectedPlotData.sendToAddress">
+                <br>
+                <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"
+                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                  {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
                 </button>
               </div>
               <div v-else>
@@ -467,7 +512,8 @@ export default {
       plotFreyalaContract: undefined,
       plotYinContract: undefined,
       plotYangContract: undefined,
-      mounted: false
+      mounted: false,
+      loadingSendPlot: false
     }
   },
   watch: {
@@ -561,6 +607,30 @@ export default {
     ]),
     modalClose() {
       this.plotModalReason = ''
+    },
+    async sendPlotNow(address, id) {
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        this.loadingSendPlot = true
+        const send = await this.plotYinContract.transferFrom(this.metaMaskAccount, address, id)
+        await send.wait(1)
+
+        this.loadingSendPlot = false
+        window.location.reload(1)
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        this.loadingSendPlot = true
+        const send = await this.plotYangContract.transferFrom(this.metaMaskAccount, address, id)
+        await send.wait(1)
+
+        this.loadingSendPlot = false
+        window.location.reload(1)
+      } else {
+        this.loadingSendPlot = true
+        const send = await this.plotFreyalaContract.transferFrom(this.metaMaskAccount, address, id)
+        await send.wait(1)
+
+        this.loadingSendPlot = false
+        window.location.reload(1)
+      }
     },
     async cancelListing(id) {
       if (this.neighbourhood === 18 || this.neighbourhood === 19) {
@@ -1003,7 +1073,7 @@ export default {
           await Promise.all(plots).then(async () => {
             await Promise.all(ownPlots).then(() => {
               this.ownedPlots = this.ownedPlots.sort()
-              this.ownedPlotsData = this.ownedPlotsData.sort((a,b) => a.token_id - b.token_id)
+              this.ownedPlotsData = this.ownedPlotsData.sort((a, b) => a.token_id - b.token_id)
 
               this.loading = false
             })
