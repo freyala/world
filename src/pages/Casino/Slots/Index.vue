@@ -1,7 +1,7 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
-    <div style="z-index: 9999; overflow-y: auto;" class="screen bg-white rounded-2xl w-full">
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
@@ -35,16 +35,8 @@ export default {
   mixins: [wallet],
   computed: {
     ...mapGetters([
-      'chainID',
-      'chainStatus',
-      'loadingBalances',
-      'userBalance',
-      'loggedIn',
-      'walletConnected',
       'metaMaskAccount',
       'metaMaskWallet',
-      'openWindow',
-      'allowance'
     ])
   },
   methods: {

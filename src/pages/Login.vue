@@ -1,8 +1,8 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh;"
            class="flex w-full px-4 md:px-16 lg:px-32 xl:px-64">
-    <div style="z-index: 9999; overflow-y: auto; max-width: 650px;"
-         class="m-auto screen bg-white rounded-2xl w-full">
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;max-width: 650px;"
+         class="m-auto screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-8 md:pt-16 pb-8 md:pb-16">
@@ -13,28 +13,14 @@
       </section>
 
       <div class="py-8 px-4 md:p-16 relative">
-
-        <div class="cursor-pointer flex h-full" @click="$router.push({ name: 'world-map' })">
+        <div class="cursor-pointer flex h-full" @click="connectToWallet()">
           <button
-              class="m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
-              v-if="walletConnected">Continue
-          </button>
-        </div>
-
-        <br>
-
-        <div class="cursor-pointer flex h-full" @click="connectWallet()">
-          <button
-              class="m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
-              v-if="chainStatus === 'wrong'">Connect to the Harmony Shard 0 network
+              class="m-auto tracking-widest uppercase bg-dark py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
+              v-if="chainStatus !== true" v-html="chainStatus">
           </button>
           <button
-              class="m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
-              v-else-if="walletConnected">Disconnect wallet
-          </button>
-          <button
-              class="m-auto tracking-widest uppercase bg-gradient-to-r from-primary to-secondary py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
-              v-else-if="!walletConnected">Connect Wallet
+              class="m-auto tracking-widest uppercase bg-dark py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
+              v-else>Connect Wallet
           </button>
         </div>
       </div>
@@ -47,8 +33,13 @@ import wallet from "../plugins/wallet"
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: 'Slots',
+  name: 'Login',
   mixins: [wallet],
+  data() {
+    return {
+      loading: false
+    }
+  },
   computed: {
     ...mapGetters([
       'chainID',
@@ -60,9 +51,18 @@ export default {
     ])
   },
   methods: {
-    ...mapActions([
-      ''
-    ])
+    async connectToWallet() {
+      this.loading = true
+
+      await this.connectWallet().then((success) => {
+        if (success === true) {
+          this.loading = false
+          this.$router.push({name: 'world-map'})
+        } else {
+          this.loading = false
+        }
+      })
+    }
   }
 }
 </script>

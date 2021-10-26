@@ -26,89 +26,55 @@
 </template>
 
 <script>
-import {ethers} from "ethers";
-import {mapGetters, mapActions} from "vuex";
-import Freyala from "./plugins/artifacts/freyala.json";
-import Staking from "./plugins/artifacts/staking.json";
-import RouletteLow from "./plugins/artifacts/roulettelow.json";
-import RouletteMedium from "./plugins/artifacts/roulettemedium.json";
-import RouletteHigh from "./plugins/artifacts/roulettehigh.json";
-import Slots from "./plugins/artifacts/slots.json";
-import Topple from "./plugins/artifacts/topple.json";
-import CoinFlip from "./plugins/artifacts/coinflip.json";
-import JennyMine from "./plugins/artifacts/jennymines.json";
-import wallet from "./plugins/wallet";
+import {mapGetters, mapActions} from 'vuex'
+import wallet from './plugins/wallet'
 
 export default {
   name: 'Freyala',
   mixins: [wallet],
   data() {
     return {
-      loading: true
+      loading: true,
+      mobile: false
     }
   },
   async mounted() {
-    this.setFirstTime()
-
-    if (window.ethereum === undefined && this.$route.name !== 'login') {
-      await this.$router.push({name: 'login'})
-      this.loading = false
-      return
-    } else if (window.ethereum === undefined) {
-      this.loading = false
-      return
-    } else {
-      const succeeded = await this.connectWallet()
-
-      if (succeeded === false && this.$route.name !== 'login') {
-        await this.$router.push({name: 'login'})
-        this.loading = false
-      }
+    if (window.innerWidth < 768) {
+      await this.$router.push({ name: 'not-supported' })
     }
 
-    setTimeout(() => {
-      this.loading = false
-    }, 3000)
-
-    setInterval(() => {
-      this.loading = false
-      this.fetchData()
-    }, 1500)
-
+    this.setFirstTime()
     this.setFavourites()
 
-    window.ethereum.on('accountsChanged', (accounts) => {
-      if (this.$route.name !== 'login') {
-        window.location.href = '#/login'
-
-        this.connectWallet()
-        this.setMetaMaskAccount(accounts[0])
+    await this.connectWallet().then((success) => {
+      if (success === true) {
+        this.loading = false
       } else {
-        this.connectWallet()
-        this.setMetaMaskAccount(accounts[0])
+        this.loading = false
+        this.$router.push({name: 'login'})
       }
     })
 
-    window.ethereum.on('chainChanged', (chainId) => {
-      if (this.$route.name !== 'login') {
-        window.location.href = '#/login'
+    window.ethereum.on('accountsChanged', async () => {
+      await this.connectWallet().then((success) => {
+        if (success === true) {
+          this.loading = false
+        } else {
+          this.loading = false
+          this.$router.push({name: 'login'})
+        }
+      })
+    })
 
-        if (chainId === '0x63564c40') {
-          this.setChainStatus('correct')
-          this.setChainId(1666600000)
+    window.ethereum.on('chainChanged', async () => {
+      await this.connectWallet().then((success) => {
+        if (success === true) {
+          this.loading = false
         } else {
-          this.setChainStatus('wrong')
-          this.setChainId(chainId)
+          this.loading = false
+          this.$router.push({name: 'login'})
         }
-      } else {
-        if (chainId === '0x63564c40') {
-          this.setChainStatus('correct')
-          this.setChainId(1666600000)
-        } else {
-          this.setChainStatus('wrong')
-          this.setChainId(chainId)
-        }
-      }
+      })
     })
   },
   computed: {
@@ -122,42 +88,9 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setChainStatus',
-      'setChainId',
-      'setWalletConnectionStatus',
-      'setMetaMaskAccount',
-      'setAllowances',
-      'setBalances',
       'setFavourites',
       'setFirstTime'
-    ]),
-    async fetchData() {
-      if (document.hasFocus()) {
-        const mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-        const stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
-        const jennyMineContract = new ethers.Contract(JennyMine.address, JennyMine.abi, this.metaMaskWallet.signer)
-
-        const allowances = await Promise.all([
-          mainContract.allowance(this.metaMaskAccount, Staking.address),
-          mainContract.allowance(this.metaMaskAccount, RouletteMedium.address),
-          mainContract.allowance(this.metaMaskAccount, Topple.address),
-          mainContract.allowance(this.metaMaskAccount, CoinFlip.address),
-          mainContract.allowance(this.metaMaskAccount, RouletteHigh.address),
-          mainContract.allowance(this.metaMaskAccount, RouletteLow.address),
-          mainContract.allowance(this.metaMaskAccount, Slots.address)
-        ])
-
-        const balances = await Promise.all([
-          mainContract.balanceOf(this.metaMaskAccount),
-          stakingContract.stakes(this.metaMaskAccount),
-          stakingContract.calculateEarnings(this.metaMaskAccount),
-          jennyMineContract.returnValuesOfMiner()
-        ])
-
-        await this.setAllowances(allowances)
-        await this.setBalances(balances)
-      }
-    }
+    ])
   }
 }
 </script>

@@ -12,7 +12,8 @@ module.exports = {
         'secondary': '#27a2ac',
         'gray': '#0d5651',
         'yellow': '#54b67a',
-        'brown': '#211c17'
+        'brown': '#211c17',
+        'dark': '#1c1c1c'
       },
       width: {
         '1/7': '14.2857142857%',

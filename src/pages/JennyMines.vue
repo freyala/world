@@ -1,7 +1,7 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
-    <div style="z-index: 9999; overflow-y: auto;" class="hidden md:block screen bg-white rounded-2xl w-full">
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
@@ -18,41 +18,31 @@
         </div>
       </section>
 
-      <div class="p-4 md:p-8 relative">
+      <div v-if="jennyMineMounted" class="p-4 md:p-8 relative">
         <div class="absolute top-0 left-0 p-4 md:p-8">
           <router-link :to="{ name: 'world-map' }">
             <i class="fas fa-long-arrow-alt-left"></i> Back
           </router-link>
         </div>
 
-        <div v-if="chainStatus === 'correct' && walletConnected && jennyMineMounted" class="flex">
+        <div class="flex">
           <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
             <div class="flex flex-wrap">
-              <div class="w-full flex flex-wrap" v-if="!jennyMineFetchedData.minerInfo.registered">
-                <div class="w-full text-center mb-4">
-                  <a href="https://viper.exchange/#/add/0x2F459Dd7CBcC9D8323621f6Fb430Cd0555411E7B/0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4"
-                     target="_blank">
-                    Your balance:
-                    {{ parseInt(jennyMineFetchedData.lpBalance) }} {{ jennyMineFetchedData.feeInfo.feeTicker }}
-                    <br>
-                    Click to get {{ jennyMineFetchedData.feeInfo.feeTicker }}!
-                  </a>
-                </div>
-                <div class="w-1/2 text-center">
-                  <p class="text-2xl">In the mines: </p>
-                  <p>
-                    {{ jennyMineFetchedData.mineInfo.totalMiners }} / {{ jennyMineFetchedData.mineInfo.maxMiners }}
-                  </p>
-                </div>
-                <div class="w-1/2 text-center">
-                  <p class="text-2xl">Mine entry fee:</p>
-                  <p>
-                    {{ jennyMineFetchedData.feeInfo.feeAmount }} {{ jennyMineFetchedData.feeInfo.feeTicker }}
-                  </p>
+              <div class="w-full flex flex-wrap">
+                <div class="w-full text-center">
+                  <p class="text-4xl">Mining has stopped!</p>
                 </div>
               </div>
-              <div class="w-full text-center" v-else>
-                <p class="text-2xl">There are currently <br> {{ jennyMineFetchedData.mineInfo.totalMiners }} miners in the
+              <br>
+              <br>
+              <div class="w-1/2 text-center">
+                <p class="text-2xl">Mine entry fee was:</p>
+                <p>
+                  {{ jennyMineFetchedData.feeInfo.feeAmount }} {{ jennyMineFetchedData.feeInfo.feeTicker }}
+                </p>
+              </div>
+              <div class="w-1/2 text-center">
+                <p class="text-2xl">There were a total of <br> {{ jennyMineFetchedData.mineInfo.totalMiners }} miners in the
                   mines. </p>
               </div>
 
@@ -60,17 +50,8 @@
 
               <div class="w-full text-center text-xl">
                 <p>
-                  XYA per mining block:
-                  {{ jennyMineFetchedData.emissionInfo.emissionPerBlock }}
                   <br>
-                  <br>
-                  Blocks left to mine:
-                  {{
-                    parseFloat(jennyMineFetchedData.mineInfo.blockEnds) - parseFloat(jennyMineFetchedData.mineInfo.currentBlock)
-                  }}
-                  <br>
-                  <br>
-                  XYA left in mine: <br>
+                  XYA left unclaimed in mine: <br>
                   {{ parseFloat(jennyMineFetchedData.mineInfo.remainingDeposited).toFixed(1) }} /
                   {{ jennyMineFetchedData.mineInfo.totalDeposited }}
                   <br>
@@ -79,19 +60,7 @@
               </div>
             </div>
 
-            <div v-if="!jennyMineFetchedData.minerInfo.registered" class="w-full text-center">
-              <button v-if="parseInt(jennyMineFetchedData.lpBalance) >= 300" type="button"
-                      class="w-full rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                      @click="enterMines()">
-                <span>Enter the mines </span>
-                <i v-if="jennyMineLoading.entering" class="fas fa-cog fa-spin"></i>
-              </button>
-              <button v-else type="button"
-                      class="w-full rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
-                <span>Need 300 {{ jennyMineFetchedData.feeInfo.feeTicker }} to enter mines.</span>
-              </button>
-            </div>
-            <div v-else class="w-full text-center">
+            <div class="w-full text-center">
               <button type="button"
                       class="w-full rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
                       @click="claim()">
@@ -134,134 +103,14 @@
           </div>
         </div>
       </div>
-    </div>
-    <div style="z-index: 9999; overflow-y: auto;" class="block md:hidden screen bg-white rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
-               style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
-          <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
-            Jenny's mines
-          </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('jennymines')">
-            <i v-if="favourites.includes('jennymines')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('jennymines')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
-        </div>
-      </section>
-
-      <div class="p-4 md:p-8 relative">
-        <div class="absolute top-0 left-0 p-4 md:p-8">
-          <router-link :to="{ name: 'world-map' }">
-            <i class="fas fa-long-arrow-alt-left"></i> Back
-          </router-link>
-        </div>
-
-        <div class="flex flex-wrap mt-12">
-          <div class="w-full flex flex-wrap" v-if="!jennyMineFetchedData.minerInfo.registered">
-            <div class="w-full text-center mb-4">
-              <a href="https://viper.exchange/#/add/0x2F459Dd7CBcC9D8323621f6Fb430Cd0555411E7B/0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4" target="_blank">
-                Your balance:
-                {{ parseInt(jennyMineFetchedData.lpBalance) }} {{ jennyMineFetchedData.feeInfo.feeTicker }}
-                <br>
-                <small>Click to get {{ jennyMineFetchedData.feeInfo.feeTicker }}!</small>
-              </a>
-            </div>
-            <div class="w-full mt-2 text-center">
-              <p class="text-xl">In the mines: </p>
-              <p>
-                {{ jennyMineFetchedData.mineInfo.totalMiners }} / {{ jennyMineFetchedData.mineInfo.maxMiners }}
-              </p>
-            </div>
-            <div class="w-full mt-2 text-center">
-              <p class="text-xl">Mine entry fee:</p>
-              <p>
-                {{ jennyMineFetchedData.feeInfo.feeAmount }} {{ jennyMineFetchedData.feeInfo.feeTicker }}
-              </p>
-            </div>
+      <div v-else class="p-4 md:p-8 relative mt-12">
+        <div class="m-auto text-center">
+          <div class="w-full flex">
+            <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
+                 style="animation: rotation 2s infinite linear;">
           </div>
-          <div class="w-full text-center" v-else>
-            <p class="text-xl">There are currently <br> {{ jennyMineFetchedData.mineInfo.totalMiners }} miners in the
-              mines. </p>
-          </div>
-
-          <hr class="w-full my-8">
-
-          <div class="w-full text-center">
-            <p>
-              XYA per mining block:
-              {{ jennyMineFetchedData.emissionInfo.emissionPerBlock }}
-              <br>
-              <br>
-              Blocks left to mine:
-              {{
-                parseFloat(jennyMineFetchedData.mineInfo.blockEnds) - parseFloat(jennyMineFetchedData.mineInfo.currentBlock)
-              }}
-              <br>
-              <br>
-              XYA left in mine: <br>
-              {{ parseFloat(jennyMineFetchedData.mineInfo.remainingDeposited).toFixed(1) }} /
-              {{ jennyMineFetchedData.mineInfo.totalDeposited }}
-              <br>
-              <br>
-            </p>
-          </div>
-        </div>
-
-        <div v-if="!jennyMineFetchedData.minerInfo.registered" class="w-full text-center">
-          <button v-if="parseInt(jennyMineFetchedData.lpBalance) >= 300" type="button"
-                  class="w-full rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                  @click="enterMines()">
-            <span>Enter the mines </span>
-            <i v-if="jennyMineLoading.entering" class="fas fa-cog fa-spin"></i>
-          </button>
-          <button v-else type="button"
-                  class="w-full rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
-            <span>Need 300 {{ jennyMineFetchedData.feeInfo.feeTicker }} to enter mines.</span>
-          </button>
-        </div>
-        <div v-else class="w-full text-center">
-          <button type="button"
-                  class="w-full rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12"
-                  @click="claim()">
-            <span>Claim {{ parseFloat(jennyMineFetchedData.minerInfo.unclaimedRewards).toFixed(1) }} XYA </span>
-            <i v-if="jennyMineLoading.claiming" class="fas fa-cog fa-spin"></i>
-          </button>
           <br>
-          You have mined a total of {{
-            (parseFloat(jennyMineFetchedData.minerInfo.totalClaimed) + parseFloat(jennyMineFetchedData.minerInfo.unclaimedRewards)).toFixed(1)
-          }} XYA
-        </div>
-
-        <br>
-        <hr>
-        <br>
-
-        <div class="pb-24">
-          <p>
-            Intrepid groups of miners ventured deeper into the expansive cave system. They would eventually come across
-            covert extraction operations from other land embassies, all monitored by the monarch, unbeknownst to most of
-            the Freyfolk.
-          </p>
-
-          <br>
-
-          <p class="text-center">
-            <em>
-              <small>
-                More mines can be found in these tunnels.
-              </small>
-            </em>
-          </p>
-
-          <a href="https://tokenjenny.one/gemmines" target="_blank">
-            <button type="button"
-                    class="w-full rounded-none border border-yellow hover:bg-yellow hover:text-brown px-4 py-2 min-h-12">
-              <span>Enter the tunnels</span>
-            </button>
-          </a>
+          <p class="text-2xl">Loading...</p>
         </div>
       </div>
     </div>
@@ -273,7 +122,6 @@ import wallet from "../plugins/wallet"
 import {mapActions, mapGetters} from "vuex";
 import {ethers} from "ethers";
 import jennyMineContract from "../plugins/artifacts/jennymines.json";
-import fromExponential from "from-exponential";
 import Freyala from "../plugins/artifacts/freyala.json";
 
 export default {
@@ -281,15 +129,9 @@ export default {
   mixins: [wallet],
   computed: {
     ...mapGetters([
-      'chainID',
-      'chainStatus',
-      'loggedIn',
-      'walletConnected',
       'metaMaskAccount',
       'metaMaskWallet',
-      'openWindow',
-      'favourites',
-      'allowance'
+      'favourites'
     ])
   },
   data() {
@@ -312,43 +154,34 @@ export default {
       }
     }
   },
-  created() {
-    if (this.metaMaskWallet) {
-      this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-      this.pairContract = new ethers.Contract('0xdc607e3cfb286eb8176fbc2e3f86f0c5ce6f8523', Freyala.abi, this.metaMaskWallet.signer)
-      this.jennyMineContract = new ethers.Contract(jennyMineContract.address, jennyMineContract.abi, this.metaMaskWallet.signer)
-      this.fetchJennyMineData()
-    }
-  },
-  watch: {
-    async metaMaskWallet() {
-      this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-      this.pairContract = new ethers.Contract('0xdc607e3cfb286eb8176fbc2e3f86f0c5ce6f8523', Freyala.abi, this.metaMaskWallet.signer)
-      this.jennyMineContract = new ethers.Contract(jennyMineContract.address, jennyMineContract.abi, this.metaMaskWallet.signer)
-    }
-  },
-  mounted() {
+  async mounted() {
+    this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+    this.jennyMineContract = new ethers.Contract(jennyMineContract.address, jennyMineContract.abi, this.metaMaskWallet.signer)
+
+    await this.fetchData()
+    this.jennyMineMounted = true
+
     this.jennyMineInterval = setInterval(() => {
-      this.fetchJennyMineData()
-    }, 2500)
+      this.fetchData()
+    }, 4000)
+  },
+  beforeDestroy() {
+    clearInterval(this.jennyMineInterval)
   },
   methods: {
     ...mapActions([
       'setFavourite'
     ]),
     // CALL
-    async fetchJennyMineData() {
-      if (document.hasFocus()) {
-        const [valuesOfGem, valuesOfFees, valuesOfEmissions, valuesOfMine, valuesOfMiner, lpBalance] = await Promise.all([
+    async fetchData() {
+        const [valuesOfGem, valuesOfFees, valuesOfEmissions, valuesOfMine, valuesOfMiner] = await Promise.all([
           this.jennyMineContract.returnValuesOfGem(),
           this.jennyMineContract.returnValuesOfFees(),
           this.jennyMineContract.returnValuesOfEmissions(),
           this.jennyMineContract.returnValuesOfMine(),
           this.jennyMineContract.returnValuesOfMiner(),
-          this.pairContract.balanceOf(this.metaMaskAccount)
         ])
 
-        this.jennyMineFetchedData.lpBalance = ethers.utils.formatEther(lpBalance._isBigNumber ? ethers.BigNumber.from(lpBalance).toString() : lpBalance)
         this.jennyMineFetchedData.gemInfo = {
           address: valuesOfGem[0],
           decimals: valuesOfGem[1]._isBigNumber ? ethers.BigNumber.from(valuesOfGem[1]).toString() : valuesOfGem[1],
@@ -383,49 +216,14 @@ export default {
         }
         this.jennyMineFetchedData.minerInfo = {
           totalClaimed: ethers.utils.formatEther(valuesOfMiner[0]._isBigNumber ? ethers.BigNumber.from(valuesOfMiner[0]).toString() : valuesOfMiner[0]),
-          registered: valuesOfMiner[1],
           unclaimedRewards: ethers.utils.formatEther(valuesOfMiner[2]._isBigNumber ? ethers.BigNumber.from(valuesOfMiner[2]).toString() : valuesOfMiner[2]),
           lastBlockClaimed: valuesOfMiner[4]._isBigNumber ? ethers.BigNumber.from(valuesOfMiner[4]).toString() : valuesOfMiner[4],
         }
 
         this.jennyMineMounted = true
-      }
     },
 
     // SEND
-    async enterMines() {
-      this.jennyMineLoading.entering = true
-      this.error = ''
-
-      // APPROVE
-      const actual = 300 * (10 ** 18);
-      const arg = fromExponential(actual);
-
-      try {
-        const tx = await this.pairContract.approve(jennyMineContract.address, arg)
-        await tx.wait(1)
-      } catch (err) {
-        if (err.code !== 4001) {
-          this.error = err.data ? err.data.message : err
-          this.$modal.show('error')
-        }
-        this.error = err.data ? err.data.message : err
-        this.$modal.show('error')
-      }
-
-      // ENTER MINES
-      try {
-        const tx = await this.jennyMineContract.registerWalletForMining()
-        await tx.wait(1)
-
-      } catch (err) {
-        if (err.code !== 4001) {
-          this.error = err
-        }
-      }
-
-      this.jennyMineLoading.entering = false
-    },
     async claim() {
       this.error = ''
 

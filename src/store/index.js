@@ -24,7 +24,6 @@ export default new Vuex.Store({
             topple: 0,
             coinflip: 0
         },
-        OPEN_WINDOW: '',
         USER_LOGGED_IN: undefined,
         WALLET_CONNECTION_STATUS: undefined,
         METAMASK_ACCOUNT: undefined,
@@ -65,9 +64,6 @@ export default new Vuex.Store({
         },
         allowance(state) {
             return state.ALLOWANCE
-        },
-        openWindow(state) {
-            return state.OPEN_WINDOW
         },
         loggedIn(state) {
             return state.USER_LOGGED_IN
@@ -119,9 +115,6 @@ export default new Vuex.Store({
         },
         SET_ALLOWANCE(state, value) {
             state.ALLOWANCE = value
-        },
-        SET_OPEN_WINDOW(state, value) {
-            state.OPEN_WINDOW = value
         },
         SET_USER_LOGGED_IN(state, value) {
             state.USER_LOGGED_IN = value
@@ -182,37 +175,7 @@ export default new Vuex.Store({
             }
 
             commit('SET_FAVOURITE_ITEMS', favourites)
-            console.log(favourites)
             localStorage.favourites = JSON.stringify(favourites);
-        },
-        setBalances({commit}, values) {
-            commit('SET_USER_BALANCE', (values[0] / Math.pow(10, 18)).toFixed(3))
-            commit('SET_STAKING_BALANCE', (values[1] / Math.pow(10, 18)).toFixed(3))
-            commit('SET_REWARD_BALANCE', (values[2] / Math.pow(10, 18)).toFixed(3))
-            commit('SET_MINING_BALANCE', (values[3][2] / Math.pow(10, 18)).toFixed(3))
-
-            commit('SET_LOADING_BALANCES_STATUS', false)
-        },
-        setAllowances({commit}, values) {
-            const allowances = {
-                staking: (values[0] / Math.pow(10, 18)).toFixed(3),
-                rouletteMedium: (values[1] / Math.pow(10, 18)).toFixed(3),
-                topple: (values[2] / Math.pow(10, 18)).toFixed(3),
-                coinflip: (values[3] / Math.pow(10, 18)).toFixed(3),
-                rouletteHigh: (values[4] / Math.pow(10, 18)).toFixed(3),
-                rouletteLow: (values[5] / Math.pow(10, 18)).toFixed(3),
-                slots: (values[6] / Math.pow(10, 18)).toFixed(3)
-            }
-
-            commit('SET_ALLOWANCE', allowances)
-            commit('SET_LOADING_ALLOWANCES_STATUS', false)
-        },
-        setOpenWindow({commit, state}, value) {
-            if (state.OPEN_WINDOW !== value) {
-                commit('SET_OPEN_WINDOW', value)
-            } else {
-                commit('SET_OPEN_WINDOW', '')
-            }
         },
         setUserLoggedIn({commit}, value) {
             commit('SET_USER_LOGGED_IN', value)

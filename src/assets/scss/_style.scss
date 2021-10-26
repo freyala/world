@@ -105,55 +105,12 @@ html, body {
     position: relative;
     background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
     color: #FFFFFF;
-    font-size: 0.6vw;
+    font-size: 0.5vw;
     box-shadow: 5px 5px 15px 0 #000000;
     text-align: center;
     border-radius: 6px;
-    padding: 5px;
-    line-height: 1.4;
-  }
-
-  .bubble:after {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 0;
-    z-index: 1;
-    border-style: solid;
-    border-color: #27a1ac transparent;
-    border-width: 0 1vw 0.4vw;
-    border-radius: 100%;
-    top: -0.3vw;
-    left: 50%;
-    transform: translate(-50%, 0%);
-  }
-
-  .bubble-top {
-    display: block;
-    position: relative;
-    background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
-    color: #FFFFFF;
-    font-size: 0.6vw;
-    box-shadow: 5px 5px 15px 0 #000000;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    line-height: 1.4;
-  }
-
-  .bubble-top:after {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 0;
-    z-index: 1;
-    border-style: solid;
-    border-color: #7fca49 transparent;
-    border-width: 0.4vw 1vw 0;
-    border-radius: 100%;
-    bottom: -0.3vw;
-    left: 50%;
-    transform: translate(-50%, 0%);
+    padding: 0.2vw;
+    line-height: 0.75vw;
   }
 }
 

@@ -11,7 +11,7 @@ export default {
         async connectWallet() {
             if (this.metaMaskAccount === true) {
                 await this.disconnectWallet()
-                return
+                return true
             }
 
             if (window.ethereum !== undefined) {
@@ -25,22 +25,30 @@ export default {
                     this.setMetaMaskAccount(accounts)
                     this.setChainId(network.chainId)
 
-                    if (network.chainId !== 1666600000) {
-                        this.setChainStatus('wrong')
-                        return
-                    } else {
-                        this.setChainStatus('correct')
-                    }
 
-                    this.setMetaMaskWallet({signer})
-                    this.setUserLoggedIn(true)
+                    if (network.chainId === 1666600001 || network.chainId === 1666600002 || network.chainId === 1666600003 || network.chainId === 1666700000 || network.chainId === 1666700001 || network.chainId === 1666700002 || network.chainId === 1666700003) {
+                        this.setChainStatus('Wrong shard or connected to the testnet. <br> Please connect to Harmony Mainnet Shard 0 to connect to the world.')
+                        this.setUserLoggedIn(true)
+                        return false
+                    } else if (network.chainId === 1666600000) {
+                        this.setChainStatus(true)
+                        this.setMetaMaskWallet({signer})
+                        this.setUserLoggedIn(true)
+                    } else {
+                        this.setChainStatus('Wrong network. <br> Please connect to Harmony Mainnet Shard 0 to connect to the world.')
+                        this.setUserLoggedIn(true)
+                        return false
+                    }
 
                     if (this.loggedIn === true) {
                         this.setWalletConnectionStatus(!this.walletConnected)
+                        return true
                     }
                 } catch {
                     return false
                 }
+            } else {
+                return false
             }
         },
 

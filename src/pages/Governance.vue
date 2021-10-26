@@ -1,7 +1,7 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
-    <div style="z-index: 9999; overflow-y: auto;" class="screen bg-white rounded-2xl w-full">
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
@@ -25,14 +25,8 @@
         </div>
         <br>
 
-        <div v-if="chainStatus === 'correct' && walletConnected && governanceMounted" class="flex">
+        <div v-if="governanceMounted" class="flex">
           <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
-
-            <p v-if="error !== ''" class="mt-4 text-center">
-              {{ error }}
-            </p>
-
-
             <div class="w-full">
               <p class="text-center text-2xl mt-8">
                 Current proposal:
@@ -83,7 +77,7 @@
                   </div>
                 </div>
 
-                <div v-else>
+                <div class="text-center" v-else>
                   <p class="text-xl">
                     Votes:
                   </p>
@@ -136,6 +130,16 @@
             </p>
           </div>
         </div>
+        <div v-else class="p-4 md:p-8 relative mt-12">
+          <div class="m-auto text-center">
+            <div class="w-full flex">
+              <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
+                   style="animation: rotation 2s infinite linear;">
+            </div>
+            <br>
+            <p class="text-2xl">Loading...</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -152,13 +156,8 @@ export default {
   mixins: [wallet],
   computed: {
     ...mapGetters([
-      'chainID',
-      'chainStatus',
-      'loggedIn',
-      'walletConnected',
       'metaMaskAccount',
       'metaMaskWallet',
-      'openWindow',
       'favourites'
     ])
   },
@@ -176,25 +175,18 @@ export default {
       }
     }
   },
-  created() {
-    if (this.metaMaskWallet) {
-      this.governanceContract = new ethers.Contract(governanceContract.address, governanceContract.abi, this.metaMaskWallet.signer)
-      this.fetchGovernanceData()
-    }
-  },
-  watch: {
-    async metaMaskWallet() {
-      this.governanceContract = new ethers.Contract(governanceContract.address, governanceContract.abi, this.metaMaskWallet.signer)
-    }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.governanceMounted = true
-    }, 1000)
+  async mounted() {
+    this.governanceContract = new ethers.Contract(governanceContract.address, governanceContract.abi, this.metaMaskWallet.signer)
+
+    await this.fetchData()
+    this.governanceMounted = true
 
     this.governanceInterval = setInterval(() => {
-      this.fetchGovernanceData()
-    }, 1000)
+      this.fetchData()
+    }, 4000)
+  },
+  beforeDestroy() {
+    clearInterval(this.jennyMineInterval)
   },
   methods: {
     ...mapActions([
@@ -217,43 +209,41 @@ export default {
     },
 
     // CALL
-    async fetchGovernanceData() {
-      if (document.hasFocus()) {
-        const nextBallotId = await this.governanceContract.nextBallotId();
+    async fetchData() {
+      const nextBallotId = await this.governanceContract.nextBallotId();
 
-        const [ballotInfo, ballot, lastBallot, voted] = await Promise.all([
-          this.governanceContract.getBallot(nextBallotId - 1),
-          this.governanceContract.ballots(nextBallotId - 1),
-          this.governanceContract.ballots(nextBallotId - 2),
-          this.governanceContract.votes(this.metaMaskAccount, nextBallotId - 1)
-        ])
+      const [ballotInfo, ballot, lastBallot, voted] = await Promise.all([
+        this.governanceContract.getBallot(nextBallotId - 1),
+        this.governanceContract.ballots(nextBallotId - 1),
+        this.governanceContract.ballots(nextBallotId - 2),
+        this.governanceContract.votes(this.metaMaskAccount, nextBallotId - 1)
+      ])
 
-        this.governanceFetchedData.currentBallot = {
-          id: ballot[0]._isBigNumber ? ethers.BigNumber.from(ballot[0]).toString() : ballot[0],
-          name: ballot[1],
-          endEpoch: ballot[2]._isBigNumber ? ethers.BigNumber.from(ballot[2]).toString() : ballot[2],
-          amountNeededToVote: ethers.utils.formatEther(ballot[3]._isBigNumber ? ethers.BigNumber.from(ballot[3]).toString() : ballot[3]),
-          timeLeft: parseInt(ballot[2]._isBigNumber ? ethers.BigNumber.from(ballot[2]).toString() : ballot[2]) - Date.now() / 1000 | 0,
-          voted: voted,
-          info: {
-            yin: {
-              id: ballotInfo[2][0][0]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][0][0]).toString() : ballotInfo[2][0][0],
-              votes: ballotInfo[2][0][2]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][0][2]).toString() : ballotInfo[2][0][2]
-            },
-            yang: {
-              id: ballotInfo[2][1][0]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][1][0]).toString() : ballotInfo[2][1][0],
-              votes: ballotInfo[2][1][2]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][1][2]).toString() : ballotInfo[2][1][2]
-            }
+      this.governanceFetchedData.currentBallot = {
+        id: ballot[0]._isBigNumber ? ethers.BigNumber.from(ballot[0]).toString() : ballot[0],
+        name: ballot[1],
+        endEpoch: ballot[2]._isBigNumber ? ethers.BigNumber.from(ballot[2]).toString() : ballot[2],
+        amountNeededToVote: ethers.utils.formatEther(ballot[3]._isBigNumber ? ethers.BigNumber.from(ballot[3]).toString() : ballot[3]),
+        timeLeft: parseInt(ballot[2]._isBigNumber ? ethers.BigNumber.from(ballot[2]).toString() : ballot[2]) - Date.now() / 1000 | 0,
+        voted: voted,
+        info: {
+          yin: {
+            id: ballotInfo[2][0][0]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][0][0]).toString() : ballotInfo[2][0][0],
+            votes: ballotInfo[2][0][2]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][0][2]).toString() : ballotInfo[2][0][2]
+          },
+          yang: {
+            id: ballotInfo[2][1][0]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][1][0]).toString() : ballotInfo[2][1][0],
+            votes: ballotInfo[2][1][2]._isBigNumber ? ethers.BigNumber.from(ballotInfo[2][1][2]).toString() : ballotInfo[2][1][2]
           }
         }
+      }
 
-        this.governanceFetchedData.lastBallot = {
-          id: lastBallot[0]._isBigNumber ? ethers.BigNumber.from(lastBallot[0]).toString() : lastBallot[0],
-          name: lastBallot[1],
-          endEpoch: lastBallot[2]._isBigNumber ? ethers.BigNumber.from(lastBallot[2]).toString() : lastBallot[2],
-          amountNeededToVote: ethers.utils.formatEther(lastBallot[3]._isBigNumber ? ethers.BigNumber.from(lastBallot[3]).toString() : lastBallot[3]),
-          timeLeft: parseInt(lastBallot[2]._isBigNumber ? ethers.BigNumber.from(lastBallot[2]).toString() : lastBallot[2]) - Date.now() / 1000 | 0
-        }
+      this.governanceFetchedData.lastBallot = {
+        id: lastBallot[0]._isBigNumber ? ethers.BigNumber.from(lastBallot[0]).toString() : lastBallot[0],
+        name: lastBallot[1],
+        endEpoch: lastBallot[2]._isBigNumber ? ethers.BigNumber.from(lastBallot[2]).toString() : lastBallot[2],
+        amountNeededToVote: ethers.utils.formatEther(lastBallot[3]._isBigNumber ? ethers.BigNumber.from(lastBallot[3]).toString() : lastBallot[3]),
+        timeLeft: parseInt(lastBallot[2]._isBigNumber ? ethers.BigNumber.from(lastBallot[2]).toString() : lastBallot[2]) - Date.now() / 1000 | 0
       }
     },
 
@@ -281,8 +271,6 @@ export default {
         this.governanceLoading.voting = false
         console.error(err)
       }
-
-      this.$store.dispatch('setOpenWindow', '');
     }
   }
 }

@@ -19,18 +19,18 @@
               <div @mouseenter="hovering = 'plots'" @mouseleave="hovering = ''">
                 <router-link :to="{ name: 'plots' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
-                       @click="$store.dispatch('setOpenWindow', 'plots')"
-                       style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;" src="/images/map/FreyalaPlots.png" alt="FreyalaPlots">
-                  <div @click="$store.dispatch('setOpenWindow', 'plots')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+
+                       style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;" src="/images/map/FreyalaPlots.png"
+                       alt="FreyalaPlots">
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/FreyalaPlots_MO.png" alt="FreyalaPlots">
                     </div>
                   </div>
                   <p :class="hovering === 'plots' ? 'md:opacity-90' : 'md:opacity-50'"
-                     class="text-center bubble-top text-white absolute"
-                     style="pointer-events: none; left: 37.5171875%; top: 35.78472222222222%;">
+                     class="text-center bubble text-white absolute"
+                     style="pointer-events: none; left: 38.0172%; top: 42.7847%;">
                     Plots of Land
                   </p>
                 </router-link>
@@ -39,10 +39,9 @@
               <div @mouseenter="hovering = 'delegate'" @mouseleave="hovering = ''">
                 <router-link :to="{ name: 'delegating' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
-                       @click="$store.dispatch('setOpenWindow', 'delegate')"
+
                        style="left: 30.6719%;top: 36.139%; width: 4vw;" src="/images/map/Beacon.png" alt="Beacon">
-                  <div @click="$store.dispatch('setOpenWindow', 'delegate')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 30.6719%;top: 36.139%; width: 4vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/Beacon_MO.png" alt="Beacon">
@@ -50,7 +49,7 @@
                   </div>
                   <p :class="hovering === 'delegate' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 29.6719%; top: 47.139%;">
+                     style="pointer-events: none; left: 30.1719%; top: 46.839%;">
                     Beacon of Light
                   </p>
                 </router-link>
@@ -60,8 +59,7 @@
                 <router-link :to="{ name: 'sneak-peek' }">
                   <img class="cursor-pointer absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;"
                        src="/images/map/FreyalaTree.png" alt="FreyalaTree">
-                  <div @click="$store.dispatch('setOpenWindow', 'harmons')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 80.6172%; top: 37.6319%; width: 7vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">
@@ -79,8 +77,7 @@
                 <router-link :to="{ name: 'faucet' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
                        style="left: 42.3555%; top: 51.1806%; width: 5vw;" src="/images/map/Soup.png" alt="Soup">
-                  <div @click="$store.dispatch('setOpenWindow', 'faucet')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 42.3555%; top: 51.1806%; width: 5vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/Soup_MO.png" alt="FreyalaTree">
@@ -88,7 +85,7 @@
                   </div>
                   <p :class="hovering === 'faucet' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 42.3555%; top: 57.1806%">
+                     style="pointer-events: none; left: 42.5555%; top: 56.8806%">
                     Soup Kitchen
                   </p>
                 </router-link>
@@ -98,8 +95,7 @@
                 <router-link :to="{ name: 'staking' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
                        style="left: 71.0156%; top: 47.6111%; width: 4.54vw;" src="/images/map/Drill.png" alt="Drill">
-                  <div @click="$store.dispatch('setOpenWindow', 'staking')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 71.0156%; top: 47.6111%; width: 4.54vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/Drill_MO.png" alt="FreyalaTree">
@@ -107,7 +103,7 @@
                   </div>
                   <p :class="hovering === 'staking' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 70.0156%; top: 55.1111%">
+                     style="pointer-events: none; left: 70.6156%; top: 54.8111%">
                     Extraction Site
                   </p>
                 </router-link>
@@ -117,8 +113,7 @@
                 <router-link :to="{ name: 'casino' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
                        style="left: 38.3555%; top: 44.9792%; width: 5vw;" src="/images/map/Casino.png" alt="Casino">
-                  <div @click="$store.dispatch('setOpenWindow', 'casino')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 38.3555%; top: 44.9792%; width: 5vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/Casino_MO.png" alt="Casino">
@@ -126,7 +121,7 @@
                   </div>
                   <p :class="hovering === 'casino' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 38.3555%; top: 52.9792%">
+                     style="pointer-events: none; left: 38.9555%; top: 52.9792%">
                     Luderion
                   </p>
                 </router-link>
@@ -136,16 +131,15 @@
                 <router-link :to="{ name: 'governance' }">
                   <img class="cursor-pointer absolute" style="left: 41.8906%; top: 43.1389%; width: 6vw;"
                        src="/images/map/Palace.png" alt="Palace">
-                  <div @click="$store.dispatch('setOpenWindow', 'governance')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 41.8906%; top: 43.1389%; width: 6vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/Palace_MO.png" alt="Palace">
                     </div>
                   </div>
                   <p :class="hovering === 'governance' ? 'md:opacity-90' : 'md:opacity-50'"
-                     style="pointer-events: none;left: 41.5906%;top: 40.1389%;"
-                     class="text-center everglen bubble-top text-white absolute">
+                     style="pointer-events: none; left: 42.0906%; top: 50.1389%;"
+                     class="text-center everglen bubble text-white absolute">
                     Everglen Castle
                   </p>
                 </router-link>
@@ -155,8 +149,7 @@
                 <router-link :to="{ name: 'jennymines' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
                        style="left: 81.8281%; top: 29.8611%; width: 3vw;" src="/images/map/Mine.png" alt="Mine">
-                  <div @click="$store.dispatch('setOpenWindow', 'jennymines')"
-                       class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 81.8281%; top: 29.8611%; width: 3vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/Mine_MO.png" alt="Mine">
@@ -164,7 +157,7 @@
                   </div>
                   <p :class="hovering === 'jennymines' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 81.2281%; top: 35.2611%">
+                     style="pointer-events: none; left: 81.4281%; top: 34.9611%">
                     Jenny's Mine
                   </p>
                 </router-link>
@@ -257,7 +250,7 @@
 
       <div id="modals">
         <window name="1" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Projar Camp</div>
             </div>
@@ -272,7 +265,7 @@
           </div>
         </window>
         <window name="2" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Everglen</div>
             </div>
@@ -287,7 +280,7 @@
           </div>
         </window>
         <window name="3" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Everglen Outpost</div>
             </div>
@@ -302,7 +295,7 @@
           </div>
         </window>
         <window name="4" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Xyara Keep</div>
             </div>
@@ -317,7 +310,7 @@
           </div>
         </window>
         <window name="5" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Yang Lair</div>
             </div>
@@ -332,7 +325,7 @@
           </div>
         </window>
         <window name="6" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Everglen Castle</div>
             </div>
@@ -348,7 +341,7 @@
           </div>
         </window>
         <window name="7" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Ardenia</div>
             </div>
@@ -363,7 +356,7 @@
           </div>
         </window>
         <window name="8" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Lightside Barracks</div>
             </div>
@@ -378,7 +371,7 @@
           </div>
         </window>
         <window name="9" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Temple of Litha</div>
             </div>
@@ -393,7 +386,7 @@
           </div>
         </window>
         <window name="10" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Payne's Shack</div>
             </div>
@@ -408,7 +401,7 @@
           </div>
         </window>
         <window name="11" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Rowe's Camp</div>
             </div>
@@ -423,7 +416,7 @@
           </div>
         </window>
         <window name="12" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Muraspire</div>
             </div>
@@ -438,7 +431,7 @@
           </div>
         </window>
         <window name="13" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Ranspire Pavilion</div>
             </div>
@@ -453,7 +446,7 @@
           </div>
         </window>
         <window name="14" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Luderia Refuge</div>
             </div>
@@ -468,7 +461,7 @@
           </div>
         </window>
         <window name="15" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Crimson Dungeon</div>
             </div>
@@ -482,7 +475,7 @@
           </div>
         </window>
         <window name="16" width="80%">
-          <div class="flex flex-wrap py-2 px-3 bg-gradient-to-r from-primary to-secondary text-white h-full">
+          <div class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">Yin Lair</div>
             </div>
@@ -501,7 +494,7 @@
 
       <div id="tutorial">
         <window name="tutorial" height="auto" width="80%">
-          <div v-if="tutorialWindow === 1" class="flex flex-wrap py-2 px-3">
+          <div v-if="tutorialWindow === 1" class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">WELCOME TO FREYALA!</div>
             </div>
@@ -529,7 +522,7 @@
               </div>
             </div>
           </div>
-          <div v-if="tutorialWindow === 2" class="flex flex-wrap py-2 px-3">
+          <div v-if="tutorialWindow === 2" class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">WALLET BALANCE</div>
             </div>
@@ -558,7 +551,7 @@
               </div>
             </div>
           </div>
-          <div v-if="tutorialWindow === 3" class="flex flex-wrap py-2 px-3">
+          <div v-if="tutorialWindow === 3" class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">MAIN LOCATIONS</div>
             </div>
@@ -587,7 +580,7 @@
               </div>
             </div>
           </div>
-          <div v-if="tutorialWindow === 4" class="flex flex-wrap py-2 px-3">
+          <div v-if="tutorialWindow === 4" class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
               <div class="text-2xl">MINOR LOCATIONS</div>
             </div>
@@ -624,10 +617,8 @@
 
 <script>
 import topBar from './TopBar';
-
-import Panzoom from '@panzoom/panzoom'
-
 import wallet from '../../plugins/wallet';
+import Panzoom from '@panzoom/panzoom'
 import {mapGetters} from "vuex";
 
 export default {
@@ -635,6 +626,7 @@ export default {
   mixins: [wallet],
   data() {
     return {
+      event: {},
       window: undefined,
       hovering: '',
       tutorialWindow: 1
@@ -645,10 +637,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'chainID',
-      'chainStatus',
-      'loggedIn',
-      'walletConnected',
       'firstTime'
     ])
   },
@@ -659,17 +647,20 @@ export default {
     window.removeEventListener("resize", this.editPanZoom);
   },
   mounted() {
-    const element = document.getElementById('world-map')
-
-    let minScaleX = 2560 / window.innerWidth
-
-    const panzoom = Panzoom(element, {
+    const elem = document.getElementById('world-map')
+    const panzoom = Panzoom(elem, {
       maxScale: 10,
-      minScale: Math.ceil(minScaleX < 7 ? minScaleX : 7),
+      minScale: 1,
       contain: 'outside'
     })
 
-    panzoom.zoom(Math.ceil(minScaleX < 7 ? minScaleX : 7), { animate: true })
+    elem.parentElement.addEventListener('wheel', (e) => {
+      if (!e.target.closest('#world-map').length) {
+        panzoom.zoomWithWheel(e)
+      }
+    })
+
+    setTimeout(() => panzoom.zoom(1, { animate: false }))
 
     if (this.firstTime === true) {
       this.$modal.show('tutorial')
@@ -677,17 +668,21 @@ export default {
   },
   methods: {
     editPanZoom() {
-      const element = document.getElementById('world-map')
-
-      let minScaleX = 2560 / window.innerWidth
-
-      const panzoom = Panzoom(element, {
+      const elem = document.getElementById('world-map')
+      const panzoom = Panzoom(elem, {
         maxScale: 10,
-        minScale: Math.ceil(minScaleX < 7 ? minScaleX : 7),
+        minScale: 1,
+        startScale: 1.25,
         contain: 'outside'
       })
 
-      panzoom.zoom(Math.ceil(minScaleX < 7 ? minScaleX : 7), { animate: true })
+      elem.parentElement.addEventListener('wheel', (e) => {
+        if (!e.target.closest('#world-map').length) {
+          panzoom.zoomWithWheel(e)
+        }
+      })
+
+      setTimeout(() => panzoom.zoom(1, { animate: false }))
     },
     skipOrEnd() {
       this.$modal.hide('tutorial')
@@ -780,10 +775,10 @@ h1 {
   margin-right: auto;
   transform: translate(-10vw, 0%);
   margin-top: -100px !important;
-  height: 500px !important;
+  height: auto !important;
 
 
   border-radius: 15px !important;
-  border: 1px white solid;
+  border: 1px #54b67a solid;
 }
 </style>

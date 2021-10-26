@@ -1,7 +1,7 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
-    <div style="z-index: 9999; overflow-y: auto;" class="screen bg-white rounded-2xl w-full">
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
@@ -25,7 +25,7 @@
         </div>
         <br>
 
-        <div v-if="chainStatus === 'correct' && walletConnected" class="flex">
+        <div class="flex">
           <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
 
             <div class="flex flex-wrap text-center mt-4">
@@ -64,20 +64,9 @@
             </div>
             <br>
 
-            <div v-if="openWindow === 'casino-large'">
-              <br>
-              <br>
-              <hr>
-              <br>
-              <br>
-              <br>
-              <br>
-            </div>
-            <div v-else>
-              <br>
-              <hr>
-              <br>
-            </div>
+            <br>
+            <hr>
+            <br>
 
             <p class="text-lg md:text-xl pb-24">
               After the monarch’s defenses grew stronger, thieves and outcasts retreated to the outskirts of the Freyala
@@ -107,20 +96,11 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import wallet from "../../plugins/wallet";
 
 export default {
   name: 'Casino',
-  mixins: [wallet],
   computed: {
     ...mapGetters([
-      'chainID',
-      'chainStatus',
-      'loggedIn',
-      'walletConnected',
-      'metaMaskAccount',
-      'metaMaskWallet',
-      'openWindow',
       'favourites'
     ])
   },

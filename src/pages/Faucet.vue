@@ -1,7 +1,7 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
-    <div style="z-index: 9999; overflow-y: auto;" class="screen bg-white rounded-2xl w-full">
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
@@ -25,33 +25,38 @@
         </div>
         <br>
 
-        <div class="flex">
+        <div v-if="faucetLoaded" class="flex">
           <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
+<!--            <div class="flex flex-wrap">-->
+<!--              <div class="w-full text-center">-->
+<!--                <p class="text-xl">Faucet balance:</p>-->
+<!--                <p>{{ faucetFetchedData.balanceOf }} XYA</p>-->
+<!--              </div>-->
+<!--              <br>-->
+<!--              <br>-->
+<!--              <br>-->
+<!--              <br>-->
+<!--              <div class="w-full flex flex-wrap" v-if="faucetFetchedData.allowedToWithdraw">-->
+<!--                <div class="w-full">-->
+<!--                  <button type="button"-->
+<!--                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"-->
+<!--                          @click="requestTokens()">-->
+<!--                    Request a portion! <i v-if="faucetLoading.dripping" class="fas fa-cog fa-spin"></i>-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--                <div class="w-full text-center">-->
+<!--                  <small>-->
+<!--                    <em>The soup kitchen will send you 0.75 XYA on request.</em>-->
+<!--                  </small>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="w-full text-center" v-else>-->
+<!--                <p>The kitchen has already given you your portion of soup in the past 24 hours. Come back later.</p>-->
+<!--              </div>-->
+<!--            </div>-->
             <div class="flex flex-wrap">
               <div class="w-full text-center">
-                <p class="text-xl">Faucet balance:</p>
-                <p>{{ faucetFetchedData.balanceOf }} XYA</p>
-              </div>
-              <br>
-              <br>
-              <br>
-              <br>
-              <div class="w-full flex flex-wrap" v-if="faucetFetchedData.allowedToWithdraw">
-                <div class="w-full">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                          @click="requestTokens()">
-                    Request a portion! <i v-if="faucetLoading.dripping" class="fas fa-cog fa-spin"></i>
-                  </button>
-                </div>
-                <div class="w-full text-center">
-                  <small>
-                    <em>The soup kitchen will send you 0.75 XYA on request.</em>
-                  </small>
-                </div>
-              </div>
-              <div class="w-full text-center" v-else>
-                <p>The kitchen has already given you your portion of soup in the past 24 hours. Come back later.</p>
+                <p class="text-4xl">The soup kitchen is temporarily closed</p>
               </div>
             </div>
             <br>
@@ -92,13 +97,8 @@ export default {
   name: 'Faucet',
   computed: {
     ...mapGetters([
-      'chainID',
-      'chainStatus',
-      'loggedIn',
-      'walletConnected',
       'metaMaskAccount',
       'metaMaskWallet',
-      'openWindow',
       'favourites'
     ])
   },
@@ -108,6 +108,7 @@ export default {
       faucetContract: {},
       faucetMounted: false,
       faucetInterval: undefined,
+      faucetLoaded: false,
       faucetFetchedData: {
         balanceOf: 0,
         allowedToWithdraw: true
@@ -120,25 +121,15 @@ export default {
       }
     }
   },
-  created() {
-    if (this.metaMaskWallet) {
-      this.faucetContract = new ethers.Contract(Faucet.address, Faucet.abi, this.metaMaskWallet.signer)
-      this.fetchFaucetData()
-    }
-  },
-  watch: {
-    async metaMaskWallet() {
-      this.faucetContract = new ethers.Contract(Faucet.address, Faucet.abi, this.metaMaskWallet.signer)
-    }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.faucetMounted = true
-    }, 1000)
+  async mounted() {
+    this.faucetContract = new ethers.Contract(Faucet.address, Faucet.abi, this.metaMaskWallet.signer)
+
+    await this.fetchData()
+    this.faucetLoaded = true
 
     this.faucetInterval = setInterval(() => {
-      this.fetchFaucetData()
-    }, 1000)
+      this.fetchData()
+    }, 4000)
   },
   beforeDestroy() {
     clearInterval(this.faucetInterval)
@@ -149,7 +140,7 @@ export default {
     ]),
 
     // CALL DATA
-    async fetchFaucetData() {
+    async fetchData() {
       if (document.hasFocus()) {
         const data = await Promise.all([
           this.faucetContract.balanceOf(),
