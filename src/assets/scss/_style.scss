@@ -96,15 +96,7 @@ html, body {
 }
 
 .bubble {
-  display: block;
-  position: relative;
-  background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
-  color: #FFFFFF;
-  font-size: 1px;
-  box-shadow: 5px 5px 15px 0 #000000;
-  text-align: center;
-  border-radius: 6px;
-  padding: 1px 2px;
+  display: none;
 }
 
 @screen md {

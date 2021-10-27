@@ -648,11 +648,22 @@ export default {
   },
   mounted() {
     const elem = document.getElementById('world-map')
-    const panzoom = Panzoom(elem, {
-      maxScale: 10,
-      minScale: 1,
-      contain: 'outside'
-    })
+    let panzoom = undefined
+
+    if (window.innerWidth < 1024) {
+      panzoom = Panzoom(elem, {
+        maxScale: 10,
+        minScale: 1,
+        steps: 1,
+        contain: 'outside'
+      })
+    } else {
+      panzoom = Panzoom(elem, {
+        maxScale: 10,
+        minScale: 1,
+        contain: 'outside'
+      })
+    }
 
     elem.parentElement.addEventListener('wheel', (e) => {
       if (!e.target.closest('#world-map').length) {
@@ -671,11 +682,22 @@ export default {
   methods: {
     editPanZoom() {
       const elem = document.getElementById('world-map')
-      const panzoom = Panzoom(elem, {
-        maxScale: 10,
-        minScale: 1,
-        contain: 'outside'
-      })
+      let panzoom = undefined
+
+      if (window.innerWidth < 1024) {
+        panzoom = Panzoom(elem, {
+          maxScale: 10,
+          minScale: 1,
+          steps: 1,
+          contain: 'outside'
+        })
+      } else {
+        panzoom = Panzoom(elem, {
+          maxScale: 10,
+          minScale: 1,
+          contain: 'outside'
+        })
+      }
 
       elem.parentElement.addEventListener('wheel', (e) => {
         if (!e.target.closest('#world-map').length) {
