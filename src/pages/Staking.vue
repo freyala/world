@@ -273,7 +273,7 @@ export default {
         this.mainContract.balanceOf(this.metaMaskAccount),
         this.stakingContract.stakes(this.metaMaskAccount),
         this.stakingContract.calculateEarnings(this.metaMaskAccount),
-        this.stakingContract.rewardPool(),
+        this.mainContract.balanceOf('0x861ef0CaB3ab4a1372E7eDa936668C8967F70110'),
         this.stakingContract.totalStaked(),
         this.mainContract.allowance(this.metaMaskAccount, Staking.address)
       ])
@@ -281,7 +281,7 @@ export default {
       this.walletBalance = ethers.utils.formatEther(data[0]._isBigNumber ? ethers.BigNumber.from(data[0]).toString() : data[0])
       this.stakingBalance = ethers.utils.formatEther(data[1]._isBigNumber ? ethers.BigNumber.from(data[1]).toString() : data[1])
       this.rewardBalance = ethers.utils.formatEther(data[2]._isBigNumber ? ethers.BigNumber.from(data[2]).toString() : data[2])
-      this.rewardPool = ethers.utils.formatEther(data[3]._isBigNumber ? ethers.BigNumber.from(data[3]).toString() : data[3])
+      this.rewardPool = ethers.utils.formatEther(data[3]._isBigNumber ? ethers.BigNumber.from(data[3]).toString() : data[3]) - ethers.utils.formatEther(data[4]._isBigNumber ? ethers.BigNumber.from(data[4]).toString() : data[4])
       this.totalStaked = ethers.utils.formatEther(data[4]._isBigNumber ? ethers.BigNumber.from(data[4]).toString() : data[4])
       this.allowance = ethers.utils.formatEther(data[5]._isBigNumber ? ethers.BigNumber.from(data[5]).toString() : data[5])
 
