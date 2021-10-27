@@ -28,27 +28,27 @@
         <div class="flex">
           <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
             <div class="flex flex-wrap">
-              <div class="w-full flex flex-wrap">
+              <div class="w-full flex mt-8 md:mt-0 flex-wrap">
                 <div class="w-full text-center">
-                  <p class="text-4xl">Mining has stopped!</p>
+                  <p class="md:text-4xl">Mining has stopped!</p>
                 </div>
               </div>
               <br>
               <br>
-              <div class="w-1/2 text-center">
-                <p class="text-2xl">Mine entry fee was:</p>
+              <div class="w-full md:w-1/2 text-center">
+                <p class="mt-4 md:mt-0 md:text-2xl">Mine entry fee was:</p>
                 <p>
                   {{ jennyMineFetchedData.feeInfo.feeAmount }} {{ jennyMineFetchedData.feeInfo.feeTicker }}
                 </p>
               </div>
-              <div class="w-1/2 text-center">
-                <p class="text-2xl">There were a total of <br> {{ jennyMineFetchedData.mineInfo.totalMiners }} miners in the
+              <div class="mt-4 md:mt-0 w-full md:w-1/2 text-center">
+                <p class="md:text-2xl">There were a total of <br> {{ jennyMineFetchedData.mineInfo.totalMiners }} miners in the
                   mines. </p>
               </div>
 
               <hr class="w-full my-8">
 
-              <div class="w-full text-center text-xl">
+              <div class="w-full text-center md:text-xl">
                 <p>
                   <br>
                   XYA left unclaimed in mine: <br>
@@ -67,9 +67,11 @@
                 <span>Claim {{ parseFloat(jennyMineFetchedData.minerInfo.unclaimedRewards).toFixed(1) }} XYA </span>
                 <i v-if="jennyMineLoading.claiming" class="fas fa-cog fa-spin"></i>
               </button>
-              You have mined a total of {{
-                (parseFloat(jennyMineFetchedData.minerInfo.totalClaimed) + parseFloat(jennyMineFetchedData.minerInfo.unclaimedRewards)).toFixed(1)
-              }} XYA
+             <small>
+               You have mined a total of {{
+                 (parseFloat(jennyMineFetchedData.minerInfo.totalClaimed) + parseFloat(jennyMineFetchedData.minerInfo.unclaimedRewards)).toFixed(1)
+               }} XYA
+             </small>
             </div>
 
             <br>
@@ -77,7 +79,7 @@
             <br>
 
             <div class="pb-24">
-              <p class="text-xl">
+              <p class="md:text-xl">
                 Intrepid groups of miners ventured deeper into the expansive cave system. They would eventually come across
                 covert extraction operations from other land embassies, all monitored by the monarch, unbeknownst to most of
                 the Freyfolk.

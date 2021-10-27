@@ -1,18 +1,18 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
-           class="flex p-4 md:p-16 lg:px-32">
+           class="flex p-4 xl:p-16 xl:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
-          <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
+        <div class="container mx-auto text-center pt-16 xl:pt-24 pb-16 xl:pb-20">
+          <h1 class="text-2xl xl:text-5xl text-primary-alt font-semibold">
             Roulette
           </h1>
         </div>
       </section>
 
       <div class="relative">
-        <div class="absolute top-0 left-0 p-4 md:p-8">
+        <div class="absolute top-0 left-0 p-4 xl:p-8">
           <router-link :to="{ name: 'casino' }">
             <i class="fas fa-long-arrow-alt-left"></i> Back
           </router-link>
@@ -25,7 +25,8 @@
             <button
                 class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                 @click="addAllowance(0)">
-              Disable low roulette <small>(contract will no longer have rights to use your XYA)</small> <i
+              Disable <span class="hidden xl:inline">low</span> roulette <small class="hidden xl:inline">(contract
+              will no longer have rights to use your XYA)</small> <i
                 v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
@@ -34,36 +35,37 @@
             <button
                 class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
                 @click="addAllowance(999999999999.9999)">
-              Enable low roulette <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
+              Enable <span class="hidden xl:inline">low</span> roulette <i v-if="loading.maxAllowance"
+                                                                              class="fas fa-cog fa-spin"></i>
             </button>
           </div>
         </div>
 
         <div class="w-full flex flex-wrap">
-          <div class="w-1/4 mt-8 mb-6">
-            <h3 class="text-4xl mb-8">
+          <div class="w-full xl:w-1/4 mt-8 mb-6">
+            <h3 class="hidden xl:inline text-4xl mb-8">
               Menu
             </h3>
 
             <!--      lowTable-->
             <button type="button"
-                    class="bg-primary-alt text-brown w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="text-sm xl:text-base bg-primary-alt text-brown w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="$router.push({ name: 'roulette-low' })">
-              New kids table ( 1 - 50 )
+              New kids <span class="hidden xl:inline">table</span> ( 1 - 50 )
             </button>
 
             <!--      lowTable-->
             <button type="button"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="text-sm xl:text-base w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="$router.push({ name: 'roulette-medium' })">
-              Regular table ( 50 - 1000 )
+              Regular <span class="hidden xl:inline">table</span> ( 50 - 1000 )
             </button>
 
             <!--      highTable-->
             <button type="button"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="text-sm xl:text-base w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="$router.push({ name: 'roulette-high' })">
-              High stakes table ( 1000 - 15000 )
+              High stakes <span class="hidden xl:inline">table</span> ( 1000 - 15000 )
             </button>
 
             <br>
@@ -92,12 +94,15 @@
 
             <div v-if="rouletteMounted && rouletteFetchedData.currentRound.length > 0" class="flex flex-wrap mt-4">
               <div class="w-full">
-                <span class="text-xl" v-if="rouletteFetchedData.currentRound.length > 0">Current round bets: </span><br>
+                <span class="xl:text-xl"
+                      v-if="rouletteFetchedData.currentRound.length > 0">Current round bets: </span><br>
                 <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.currentRound">
-                  {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}
+                  <span style="word-break: break-all">{{ bet.player }}</span> <br> has bet {{ bet.betSize }} XYA on
+                  number {{ bet.spaceNumber }}
                 </div>
                 <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.currentRound">
-                  {{ bet.player }} <br> has bet {{ bet.betSize }} XYA on {{ bet.betType }}
+                  <span style="word-break: break-all">{{ bet.player }}</span> <br> has bet {{ bet.betSize }} XYA on
+                  {{ bet.betType }}
                 </div>
               </div>
             </div>
@@ -105,18 +110,18 @@
             <hr v-if="rouletteMounted">
             <br>
             <div v-if="rouletteMounted && rouletteFetchedData.lastWinners.length > 0" class="flex flex-wrap">
-              <div class="w-full mt-4">
-              <span class="text-xl">
+              <div class="w-full mt-2 xl:mt-4">
+              <span class="xl:text-xl">
                 Last rounds winners: <br>
               </span>
                 <div v-for="bet in rouletteFetchedData.lastWinners">
-                  {{ bet.player }} has won {{ bet.winnings }} XYA
+                  <span style="word-break: break-all">{{ bet.player }}</span> has won {{ bet.winnings }} XYA
                 </div>
               </div>
             </div>
             <div v-if="rouletteMounted && rouletteFetchedData.lastWinners.length === 0" class="flex flex-wrap">
-              <div class="w-full mt-4">
-              <span class="text-xl">
+              <div class="w-full mt-2 xl:mt-4">
+              <span class="xl:text-xl">
                 Last rounds winners: <br>
               </span>
                 No winners last round.
@@ -126,20 +131,20 @@
             <hr v-if="rouletteMounted && rouletteFetchedData.lastWinners.length > 0">
             <br>
             <div v-if="rouletteMounted && rouletteFetchedData.previousRound.length > 0" class="flex flex-wrap">
-              <div class="w-full">
-              <span class="text-xl"
-                    v-if="rouletteFetchedData.previousRound.length > 0">Last round winners bets: </span><br>
+              <div class="w-full mt-2 xl:mt-4">
+                <span class="xl:text-xl"
+                      v-if="rouletteFetchedData.previousRound.length > 0">Last round winners bets: </span><br>
                 <div v-if="bet.type === 'straight'" v-for="bet in rouletteFetchedData.previousRound">
-                  {{ bet.player }} <br> had bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}
+                  <span style="word-break: break-all">{{ bet.player }}</span> <br> had bet {{ bet.betSize }} XYA on number {{ bet.spaceNumber }}
                 </div>
                 <div v-if="bet.type === 'outside'" v-for="bet in rouletteFetchedData.previousRound">
-                  {{ bet.player }} <br> had bet {{ bet.betSize }} XYA on {{ bet.betType }}
+                  <span style="word-break: break-all">{{ bet.player }}</span> <br> had bet {{ bet.betSize }} XYA on {{ bet.betType }}
                 </div>
               </div>
             </div>
           </div>
 
-          <div v-if="parseInt(allowance) > 0" class="w-3/4 mt-8 px-8">
+          <div v-if="parseInt(allowance) > 0" class="w-full xl:w-3/4 mt-8 xl:px-8">
             <div class="flex flex-wrap">
               <div class="w-full">
                 <h3 class="text-4xl">
@@ -147,79 +152,79 @@
                 </h3>
               </div>
 
-              <div class="w-full 2xl:w-3/4 flex mt-8 p-1">
-                <div class="w-1/6">
+              <div class="w-full 2xl:w-3/4 flex flex-wrap mt-8 p-1">
+                <div class="w-1/3 xl:w-1/6">
                   <button type="button"
                           :class="rouletteBetAmount === '1000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                          class="w-full xl:w-auto rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
                           @click="rouletteBetAmount = '1000000000000000000'">
-                    1 XYA
+                    1 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
-                <div class="w-1/6">
+                <div class="w-1/3 xl:w-1/6">
                   <button type="button"
                           :class="rouletteBetAmount === '2000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                          class="w-full xl:w-auto rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
                           @click="rouletteBetAmount = '2000000000000000000'">
-                    2 XYA
+                    2 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
-                <div class="w-1/6">
+                <div class="w-1/3 xl:w-1/6">
                   <button type="button"
                           :class="rouletteBetAmount === '5000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
                           @click="rouletteBetAmount = '5000000000000000000'">
-                    5 XYA
+                    5 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
-                <div class="w-1/6">
+                <div class="w-1/3 xl:w-1/6">
                   <button type="button"
                           :class="rouletteBetAmount === '10000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
                           @click="rouletteBetAmount = '10000000000000000000'">
-                    10 XYA
+                    10 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
-                <div class="w-1/6">
+                <div class="w-1/3 xl:w-1/6">
                   <button type="button"
                           :class="rouletteBetAmount === '20000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
                           @click="rouletteBetAmount = '20000000000000000000'">
-                    20 XYA
+                    20 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
-                <div class="w-1/6">
+                <div class="w-1/3 xl:w-1/6">
                   <button type="button"
                           :class="rouletteBetAmount === '50000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
+                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
                           @click="rouletteBetAmount = '50000000000000000000'">
-                    50 XYA
+                    50 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
               </div>
             </div>
 
             <div class="flex flex-wrap">
-              <div class="w-full flex text-xl mt-7 mb-4">
-                <div class="w-1/4">
+              <div class="w-full flex flex-wrap xl:text-xl mt-7 mb-4">
+                <div class="w-full xl:w-1/4">
                   XYA Balance: {{ walletBalance }}
                 </div>
-                <div class="w-1/4">
+                <div class="w-full xl:w-1/4">
                   Round number: {{ rouletteFetchedData.currentRoundNumber }}
                 </div>
-                <div class="w-1/4">
+                <div class="w-full xl:w-1/4">
                   {{
                     rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `Wheel stoppable in: ${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}`
                   }}
                 </div>
-                <div class="w-1/4">
+                <div class="w-full xl:w-1/4">
                   Last game: {{ rouletteFetchedData.lastSpace.colour }} {{ rouletteFetchedData.lastSpace.number }}
                 </div>
               </div>
-              <div class="w-1/12 flex flex-wrap">
+              <div class="w-full xl:w-1/12 flex flex-wrap">
                 <div @click="rouletteSelectedItem = space.number"
                      v-for="space in rouletteFetchedData.wheel.slice(0, 1)"
-                     class="w-full p-1">
+                     class="w-full p-1 h-24 xl:h-auto">
                   <div class="h-full flex cursor-pointer"
                        :class="`text-${rouletteSelectedItem === space.number ? 'brown' : 'primary-alt'} bg-${rouletteSelectedItem === space.number ? 'white' : space.colour}`">
                     <p class="m-auto">
@@ -229,7 +234,7 @@
                 </div>
               </div>
 
-              <div class="w-8/12 pr-4 flex flex-wrap">
+              <div class="w-full xl:w-8/12 xl:pr-4 flex flex-wrap">
                 <div @click="rouletteSelectedItem = space.number"
                      v-for="space in rouletteFetchedData.wheel.slice(1, 37)"
                      class="w-1/6 p-1">
@@ -241,9 +246,9 @@
                   </div>
                 </div>
               </div>
-              <div class="w-3/12 flex flex-wrap">
+              <div class="w-full xl:w-3/12 flex flex-wrap">
                 <div class="w-1/2 flex flex-wrap">
-                  <div @click="rouletteSelectedItem = 'black'" class="w-full p-1">
+                  <div @click="rouletteSelectedItem = 'black'" class="h-24 xl:h-auto w-full p-1">
                     <div class="h-full flex cursor-pointer"
                          :class="`text-${rouletteSelectedItem === 'black' ? 'black' : 'primary-alt'} bg-${rouletteSelectedItem === 'black' ? 'white' : 'black'}`">
                       <p class="m-auto">
@@ -251,7 +256,7 @@
                       </p>
                     </div>
                   </div>
-                  <div @click="rouletteSelectedItem = 'red'" class="w-full p-1">
+                  <div @click="rouletteSelectedItem = 'red'" class="h-24 xl:h-auto w-full p-1">
                     <div class="h-full flex cursor-pointer"
                          :class="`text-${rouletteSelectedItem === 'red' ? 'red' : 'primary-alt'} bg-${rouletteSelectedItem === 'red' ? 'white' : 'red'}`">
                       <p class="m-auto">
@@ -261,7 +266,7 @@
                   </div>
                 </div>
                 <div class="w-1/2 flex flex-wrap">
-                  <div @click="rouletteSelectedItem = 'odds'" class="w-full p-1">
+                  <div @click="rouletteSelectedItem = 'odds'" class="h-24 xl:h-auto w-full p-1">
                     <div class="h-full flex cursor-pointer"
                          :class="`text-${rouletteSelectedItem === 'odds' ? 'black' : 'primary-alt'} bg-${rouletteSelectedItem === 'odds' ? 'white' : 'dark-gray'}`">
                       <p class="m-auto">
@@ -269,7 +274,7 @@
                       </p>
                     </div>
                   </div>
-                  <div @click="rouletteSelectedItem = 'evens'" class="w-full p-1">
+                  <div @click="rouletteSelectedItem = 'evens'" class="h-24 xl:h-auto w-full p-1">
                     <div class="h-full flex cursor-pointer"
                          :class="`text-${rouletteSelectedItem === 'evens' ? 'black' : 'primary-alt'} bg-${rouletteSelectedItem === 'evens' ? 'white' : 'dark-gray'}`">
                       <p class="m-auto">
@@ -278,7 +283,7 @@
                     </div>
                   </div>
                 </div>
-                <div @click="rouletteSelectedItem = (Math.floor(Math.random() * 37)).toString()" class="w-full p-1">
+                <div @click="rouletteSelectedItem = (Math.floor(Math.random() * 37)).toString()" class="h-24 xl:h-auto w-full p-1">
                   <div class="h-full flex cursor-pointer"
                        :class="`text-${rouletteSelectedItem === 'random' ? 'brown' : 'primary-alt'} bg-${rouletteSelectedItem === 'random' ? 'white' : 'primary-alt'}`">
                     <p class="m-auto text-black px-4 text-center">
@@ -311,7 +316,7 @@
         </div>
       </div>
 
-      <div v-if="!rouletteMounted" class="p-4 md:p-8 relative mt-12">
+      <div v-if="!rouletteMounted" class="p-4 xl:p-8 relative mt-12">
         <div class="m-auto text-center">
           <div class="w-full flex">
             <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"

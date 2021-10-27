@@ -28,7 +28,7 @@
         <div v-if="governanceMounted" class="flex">
           <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
             <div class="w-full">
-              <p class="text-center text-2xl mt-8">
+              <p class="text-center md:text-2xl mt-8">
                 Current proposal:
               </p>
             </div>
@@ -38,7 +38,7 @@
 
             <div class="flex flex-wrap mb-12 mt-8">
               <div class="w-full">
-                <div class="text-center text-xl" v-html="governanceFetchedData.currentBallot.name"></div>
+                <div class="text-center md:text-xl" v-html="governanceFetchedData.currentBallot.name"></div>
 
                 <br>
 
@@ -112,7 +112,7 @@
             <br>
             <hr>
             <br>
-            <p class="text-lg md:text-xl pb-24">
+            <p class="md:text-lg pb-24">
               Yin and Yang. Every single member of the Freyfolk knew these names. The two factions, originating after
               the
               rise of XYA in the kingdom, had forever divided the Freyfolk. Weeks after the village elder’s mysterious

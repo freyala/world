@@ -27,20 +27,20 @@
 
         <div class="flex">
           <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
-            <div class="flex flex-wrap">
+            <div class="flex mt-8 md:mt-0 flex-wrap">
               <div class="w-full">
-                <p class="text-xl text-center">
+                <p class="md:text-xl text-center">
                   Extractor information
                 </p>
               </div>
-              <div class="w-1/2">
+              <div class="w-full md:w-1/2 mt-4 md:mt-0">
                 <p class="text-center">
                   Gems left in pool
                 </p>
                 <p v-if="parseInt(rewardPool) === 0" class="text-center">Fetching...</p>
                 <p v-else class="text-center">{{ parseFloat(rewardPool).toFixed(4) }} XYA</p>
               </div>
-              <div class="w-1/2">
+              <div class="w-full md:w-1/2 mt-4 md:mt-0">
                 <p class="text-center">
                   Gems actively extracting
                 </p>
@@ -55,17 +55,17 @@
               </div>
 
               <div class="w-full">
-                <p class="text-xl text-center">
+                <p class="md:text-xl text-center">
                   User info
                 </p>
               </div>
-              <div class="w-1/2">
+              <div class="w-full md:w-1/2 mt-4 md:mt-0">
                 <p class="text-center">
                   In wallet
                 </p>
                 <p class="text-center">{{ walletBalance }} XYA</p>
               </div>
-              <div class="w-1/2">
+              <div class="w-full md:w-1/2 mt-4 md:mt-0">
                 <p class="text-center">
                   In extractor
                 <p class="text-center">{{ stakingBalance }} XYA</p>
@@ -79,7 +79,7 @@
               <div class="w-full" v-if="parseInt(allowance) > 0">
                 <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                         @click="addAllowance(0)">
-                  Disable extractor <small>(contract will no longer have rights to use your XYA)</small> <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
+                  Disable extractor <small class="hidden md:inline">(contract will no longer have rights to use your XYA)</small> <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
                 </button>
               </div>
 
@@ -96,11 +96,11 @@
             <div class="flex flex-wrap" v-if="parseInt(allowance) > 0">
               <button v-if="rewardBalance === '0.0'"
                       class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12">
-                No rewards to claim
+                No rewards yet
               </button>
               <button v-else class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                       @click="withdrawEarnings(false)">
-                Claim {{ rewardBalance }} XYA <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
+                Claim <span class="hidden md:inline">{{ rewardBalance }} XYA</span> <span class="md:hidden">rewards</span>  <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
               </button>
             </div>
 
@@ -110,11 +110,11 @@
               <div class="flex flex-wrap">
                 <small class="w-full">Max: {{ walletBalance }} XYA</small>
 
-                <div class="w-1/2 pr-2">
+                <div class="w-1/3 md:w-1/2 pr-2">
                   <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 h-12" v-model="amountToStake"
                          type="number">
                 </div>
-                <div class="w-1/2 pl-2">
+                <div class="w-2/3 md:w-1/2 pl-2">
                   <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                           @click="stake(false)">
                     Deposit <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
@@ -132,11 +132,11 @@
               <div class="flex flex-wrap">
                 <small class="w-full">Max: {{ stakingBalance }} XYA</small>
 
-                <div class="w-1/2 pr-2">
+                <div class="w-1/3 md:w-1/2 pr-2">
                   <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12" v-model="amountToUnstake"
                          type="number">
                 </div>
-                <div class="w-1/2 pl-2">
+                <div class="w-2/3 md:w-1/2 pl-2">
                   <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                           @click="unstake(false)">
                     Withdraw <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
@@ -159,7 +159,7 @@
             <br>
             <hr>
             <br>
-            <p class="text-lg md:text-xl pb-24">
+            <p class="text-xl md:text-lg pb-24">
               The vast cave system beneath the kingdom of Freyala had been untouched for centuries. There had always
               been
               rumors that these caves was where the world had been drawing magic from, with creatures naturally being

@@ -39,10 +39,6 @@ export default {
     }
   },
   async mounted() {
-    if (window.innerWidth < 768) {
-      await this.$router.push({ name: 'not-supported' })
-    }
-
     this.setFirstTime()
     this.setFavourites()
 

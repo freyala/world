@@ -33,7 +33,7 @@
               </p>
             </div>
             <div class="w-full text-left md:w-1/2 pb-1 flex flex-wrap">
-              <select class="md:ml-4 my-auto border border-yellow mx-auto cursor-pointer" name="neighbourhood"
+              <select class="md:ml-4 p-1 bg-dark w-full md:w-auto my-auto border border-yellow mx-auto cursor-pointer" name="neighbourhood"
                       id="neighbourhood-select"
                       v-model="neighbourhood">
                 <option v-for="(n, index) in allNeighbourhoods" :value="index">{{ n }}</option>
@@ -50,11 +50,11 @@
             </div>
             <div class="w-full">
               <button v-if="neighbourhoodSales === false"
-                      class="mb-2 border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
+                      class="mb-2 w-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
                       @click="myPlots = !myPlots">{{ myPlots ? 'Show all plots' : 'Show my plots in neighbourhood' }}
               </button>
               <button v-if="myPlots === false"
-                      class="mb-2 border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
+                      class="mb-2 w-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
                       @click="neighbourhoodSales = !neighbourhoodSales">
                 {{ neighbourhoodSales ? 'Show all plots' : 'Show only neighbourhood sales' }}
               </button>
@@ -284,7 +284,7 @@
               <br>
               <div
                   v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
-                <input class="text-black py-1 px-2" type="number" v-model="plotPrice">
+                <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="number" v-model="plotPrice">
                 <br>
                 <button @click="approvePlotToSellNow(selectedPlotData.token_id)"
                         class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
@@ -298,7 +298,7 @@
                 <br>
                 <br>
 
-                <input class="text-black py-1 px-2" type="text" placeholder="Address to send plot to..."
+                <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="text" placeholder="Address to send plot to..."
                        v-model="selectedPlotData.sendToAddress">
                 <br>
                 <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"

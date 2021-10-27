@@ -68,7 +68,7 @@
             <hr>
             <br>
 
-            <p class="text-lg md:text-xl pb-24">
+            <p class="md:text-lg pb-24">
               After the monarch’s defenses grew stronger, thieves and outcasts retreated to the outskirts of the Freyala
               kingdom. Roaming in a secluded alleyway, deadly games of chance were hosted for those that were
               adventurous. To

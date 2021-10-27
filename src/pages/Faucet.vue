@@ -54,16 +54,16 @@
 <!--                <p>The kitchen has already given you your portion of soup in the past 24 hours. Come back later.</p>-->
 <!--              </div>-->
 <!--            </div>-->
-            <div class="flex flex-wrap">
+            <div class="flex flex-wrap mt-4">
               <div class="w-full text-center">
-                <p class="text-4xl">The soup kitchen is temporarily closed</p>
+                <p class="md:text-4xl">The soup kitchen is temporarily closed</p>
               </div>
             </div>
             <br>
             <br>
             <hr>
             <br>
-            <p class="text-lg md:text-xl pb-24">
+            <p class="md:text-lg pb-24">
               As his obsession to understand XYA grew with every passing day, Regent Carroway decided that it was time
               to
               conduct human trials. He knew that this would be no easy task. At first, the regent had his royal guards

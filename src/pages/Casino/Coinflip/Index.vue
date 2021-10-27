@@ -25,7 +25,7 @@
             <button
                 class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                 @click="addAllowance(0)">
-              Disable coinflip <small>(contract will no longer have rights to use your XYA)</small> <i
+              Disable coinflip <small class="hidden md:inline">(contract will no longer have rights to use your XYA)</small> <i
                 v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
@@ -40,8 +40,8 @@
         </div>
 
         <div v-if="parseInt(allowance) > 0" class="w-full flex flex-wrap">
-          <div class="w-1/4 mt-8 mb-6">
-            <h3 class="hidden 2xl:block text-4xl mb-8">
+          <div class="w-full md:w-1/4 mt-8 mb-6">
+            <h3 class="hidden 2xl:block md:text-4xl mb-8">
               Menu
             </h3>
 
@@ -49,8 +49,26 @@
               <br>
               <br>
 
-              <h3 class="text-4xl mb-2">
-                {{ coinFlipSelectedButton === 'createGame' ? 'Create' : 'Look up' }}
+              <!--      lobby-->
+              <button type="button"
+                      :class="coinFlipDefaultView === 'default' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
+                      class="md:hidden w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                      @click="coinFlipDefaultView = 'default'">
+                Lobby
+              </button>
+
+              <!--      yourGames-->
+              <button type="button"
+                      :class="coinFlipDefaultView === 'yourGames' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
+                      class="md:hidden w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                      @click="recentGamesByUser(metaMaskAccount, 25)">
+                Your games
+              </button>
+
+              <hr class="md:hidden pb-4">
+
+              <h3 class="text-2xl md:text-4xl mb-2">
+                {{ coinFlipSelectedButton === 'createGame' ? 'Create game' : 'Look up' }}
               </h3>
 
               <!--      coinFlipCreateGame-->
@@ -106,7 +124,7 @@
               </div>
 
               <!--      playerByPlayerIdAndGameId-->
-              <div v-if="coinFlipSelectedButton === 'playerByPlayerIdAndGameId'">
+              <div class="hidden md:block" v-if="coinFlipSelectedButton === 'playerByPlayerIdAndGameId'">
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
                     <small>Player 1 or 2</small>
@@ -142,7 +160,7 @@
               </div>
 
               <!--      betsByGameId-->
-              <div v-if="coinFlipSelectedButton === 'betsByGameId'">
+              <div class="hidden md:block" v-if="coinFlipSelectedButton === 'betsByGameId'">
                 <small>Game ID</small>
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
@@ -169,7 +187,7 @@
               </div>
 
               <!--      recentGames-->
-              <div v-if="coinFlipSelectedButton === 'recentGames'">
+              <div class="hidden md:block" v-if="coinFlipSelectedButton === 'recentGames'">
                 <small>Number of games</small>
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
@@ -191,7 +209,7 @@
               </div>
 
               <!--      recentGamesByUser-->
-              <div v-if="coinFlipSelectedButton === 'recentGamesByUser'">
+              <div class="hidden md:block" v-if="coinFlipSelectedButton === 'recentGamesByUser'">
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
                     <small>User address</small>
@@ -220,7 +238,7 @@
               </div>
 
               <!--      coinFlipperByGameId-->
-              <div v-if="coinFlipSelectedButton === 'coinFlipperByGameId'">
+              <div class="hidden md:block" v-if="coinFlipSelectedButton === 'coinFlipperByGameId'">
                 <small>Game ID</small>
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
@@ -248,7 +266,7 @@
               </div>
 
               <!--      gameById-->
-              <div v-if="coinFlipSelectedButton === 'gameById'">
+              <div class="hidden md:block" v-if="coinFlipSelectedButton === 'gameById'">
                 <small>Game ID</small>
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
@@ -270,7 +288,7 @@
               </div>
 
               <!--      gameByName-->
-              <div v-if="coinFlipSelectedButton === 'gameByName'">
+              <div class="hidden md:block" v-if="coinFlipSelectedButton === 'gameByName'">
                 <small>Game name</small>
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
@@ -295,7 +313,7 @@
             <!--      lobby-->
             <button type="button"
                     :class="coinFlipDefaultView === 'default' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipDefaultView = 'default'">
               Lobby
             </button>
@@ -303,19 +321,19 @@
             <!--      yourGames-->
             <button type="button"
                     :class="coinFlipDefaultView === 'yourGames' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="recentGamesByUser(metaMaskAccount, 25)">
               Your games
             </button>
 
-            <br>
-            <br>
-            <br>
+            <br class="hidden md:block">
+            <br class="hidden md:block">
+            <br class="hidden md:block">
 
             <!--      coinFlipCreateGame-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'createGame' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'createGame'">
               Create new game
             </button>
@@ -323,7 +341,7 @@
             <!--      gameById-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'gameById' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'gameById'">
               Look up game by ID
             </button>
@@ -331,7 +349,7 @@
             <!--      gameByName-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'gameByName' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'gameByName'">
               Look up game by name
             </button>
@@ -339,7 +357,7 @@
             <!--      recentGames-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'recentGames' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'recentGames'">
               Look up recent games
             </button>
@@ -347,7 +365,7 @@
             <!--      recentGamesByUser-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'recentGamesByUser' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'recentGamesByUser'">
               Look up recent games by user
             </button>
@@ -355,7 +373,7 @@
             <!--      playerByPlayerIdAndGameId-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'playerByPlayerIdAndGameId' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'playerByPlayerIdAndGameId'">
               Look up player by game
             </button>
@@ -363,7 +381,7 @@
             <!--      betsByGameId-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'betsByGameId' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'betsByGameId'">
               Look up bet by game ID
             </button>
@@ -371,25 +389,25 @@
             <!--      coinFlipperByGameId-->
             <button type="button"
                     :class="coinFlipSelectedButton === 'coinFlipperByGameId' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
                     @click="coinFlipSelectedButton = 'coinFlipperByGameId'">
               Look up coin flipper
             </button>
           </div>
 
-          <div class="w-3/4 2xl:w-1/2 px-8">
+          <div class="w-full md:w-3/4 2xl:w-1/2 md:px-8">
             <!--      Game lobby-->
-            <div class="mt-8">
-              <div class="flex">
-                <div class="w-1/3"></div>
-                <div class="w-1/3">
-                  <h3 class="text-4xl text-center">
+            <div class="md:mt-8">
+              <div class="flex flex-wrap">
+                <div class="hidden md:block w-1/3"></div>
+                <div class="w-full w-1/3">
+                  <h3 class="text-2xl md:text-4xl text-center">
                     {{
                       coinFlipDefaultView === 'default' ? 'Lobby' : coinFlipDefaultView === 'yourGames' ? 'Your games' : 'Custom search'
                     }}
                   </h3>
                 </div>
-                <div class="w-1/3 text-right my-auto">
+                <div class="w-full md:w-1/3 text-center md:text-right my-auto">
                 <span @click="coinFlipShowEndedGames = !coinFlipShowEndedGames" class="cursor-pointer">
                   {{ coinFlipShowEndedGames ? 'Hide' : 'Show' }} finished games
                 </span>
@@ -398,27 +416,27 @@
 
               <div class="mt-4">
                 <div class="pb-8" v-if="!game.ended && game.betAmount > 0" v-for="game in coinFlipShownGames">
-                  <div style="border: 1px solid #b8a984" class="flex p-4 relative">
-                    <div class="w-3/5">
+                  <div style="border: 1px solid #b8a984" class="flex flex-wrap p-4 relative">
+                    <div class="w-full md:w-3/5">
                       <p>
                         Game ID: {{ game.id }}
                       </p>
                       <p>
-                        Name: {{ game.name }}
+                        Name: <span style="word-break: break-all">{{ game.name }}</span>
                       </p>
                       <p style="word-break: break-all">
-                        Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
+                        Player 1: <span style="word-break: break-all">{{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}</span>
                       </p>
                       <p>
-                        Player 2: {{
+                        Player 2: <span style="word-break: break-all">{{
                           game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' ? 'House' : game.p2
-                        }}
+                        }}</span>
                       </p>
                       <p>
                         Amount: {{ game.betAmount }} XYA
                       </p>
                     </div>
-                    <div class="w-2/5 pl-6">
+                    <div class="w-full md:w-2/5 mt-4 md:mt-0 md:pl-6">
                       <div>
                         <div
                             v-if="game.p2 !== '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' || (game.p1 !== metaMaskAccount && game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992')">
@@ -461,7 +479,7 @@
                               class="flex flex-wrap"
                               v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && game.flipper === metaMaskAccount">
                             <div v-if="game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992'"
-                                 class="w-full mb-4 pr-8">
+                                 class="w-full mb-4 md:pr-8">
                               <small>Play against the house or wait for a player to join your game.</small>
                             </div>
                             <div
@@ -474,18 +492,18 @@
                                   type="password"
                               >
                             </div>
-                            <div class="w-full flex pr-8">
+                            <div class="w-full flex flex-wrap md:pr-8">
                               <button type="button"
                                       @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
-                                      class="w-2/5 rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                                      class="w-full md:w-2/5 rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
                                 Heads!
                               </button>
-                              <div class="w-1/5 my-auto text-center">
+                              <div class="w-full md:w-1/5 my-1 text-center">
                                 <i v-if="coinFlipLoading.flipping === game.id" class="fas fa-cog fa-spin"></i>
                               </div>
                               <button type="button"
                                       @click="startGame(game.id, coinFlipPasswords[game.id], 2)"
-                                      class="w-2/5 ml-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                                      class="w-full md:w-2/5 ml-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
                                 Tails!
                               </button>
                             </div>
@@ -511,27 +529,27 @@
                 </div>
                 <div class="pb-8" v-if="coinFlipShowEndedGames && game.ended && game.betAmount > 0"
                      v-for="game in coinFlipShownGames">
-                  <div style="border: 1px solid #b8a984" class="flex p-4 relative">
-                    <div class="w-3/5">
+                  <div style="border: 1px solid #b8a984" class="flex flex-wrap p-4 relative">
+                    <div class="w-full md:w-3/5">
                       <p>
                         Game ID: {{ game.id }}
                       </p>
                       <p>
-                        Name: {{ game.name }}
+                        Name: <span style="word-break: break-all">{{ game.name }}</span>
                       </p>
                       <p style="word-break: break-all">
-                        Player 1: {{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}
+                        Player 1: <span style="word-break: break-all">{{ game.p1 === metaMaskAccount ? 'You' : game.p1 }}</span>
                       </p>
                       <p>
-                        Player 2: {{
+                        Player 2: <span style="word-break: break-all">{{
                           game.p2 === metaMaskAccount ? 'You' : game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' ? 'House' : game.p2
-                        }}
+                        }}</span>
                       </p>
                       <p>
                         Amount: {{ game.betAmount }} XYA
                       </p>
                     </div>
-                    <div class="w-2/5 pl-6">
+                    <div class="w-full md:w-2/5 mt-4 md:mt-0 md:pl-6">
                       <div>
                         Status: <br>
                         Ended
@@ -963,7 +981,7 @@ export default {
         this.coinFlipContract.lastGameId(),
         this.coinFlipContract.recentGames(100),
         this.coinFlipContract.recentGamesByUser(this.metaMaskAccount, 5),
-        this.mainContract.allowance(this.metaMaskAccount, RouletteMedium.address)
+        this.mainContract.allowance(this.metaMaskAccount, CoinFlip.address)
       ])
 
       this.allowance = ethers.utils.formatEther(coinFlipFetchedData[3]._isBigNumber ? ethers.BigNumber.from(coinFlipFetchedData[3]).toString() : coinFlipFetchedData[3])
@@ -1285,7 +1303,7 @@ export default {
 
       const data = await this.mainContract.allowance(this.metaMaskAccount, CoinFlip.address)
       this.allowance = ethers.utils.formatEther(data._isBigNumber ? ethers.BigNumber.from(data).toString() : data)
-    },
+    }
   }
 }
 </script>

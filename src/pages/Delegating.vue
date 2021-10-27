@@ -25,12 +25,12 @@
           </router-link>
         </div>
 
-        <p class="text-center text-4xl py-24">
+        <p class="text-center text-2xl md:text-4xl py-24">
           Coming soon...
         </p>
 
 
-        <p class="text-lg md:text-xl pb-24">
+        <p class="md:text-lg pb-24">
           Seeing the limitless possibilities XYA had to offer, Regent Carroway sought out to harness all the magical power
           from the world’s core. He ordered a beacon to be constructed, which siphoned the world’s magic and shot up a
           blinding light to the sky, forever making the Freyala kingdom’s presence known. The regent proudly showed this
