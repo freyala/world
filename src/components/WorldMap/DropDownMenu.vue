@@ -9,8 +9,6 @@
     </div>
 
     <section class="menuIconWrapper bg-dark p-4 text-right" v-if="isOpen">
-      <router-link :to="{ name: 'world-map' }">World Map</router-link>
-      <hr class="my-3">
       <router-link :to="{ name: 'staking' }">Extraction Mines</router-link>
       <hr class="my-3">
       <router-link :to="{ name: 'jennymines' }">Jenny's Mine</router-link>
