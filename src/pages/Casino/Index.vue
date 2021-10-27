@@ -8,13 +8,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             The Luderion Alleyway
           </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('casino')">
-            <i v-if="favourites.includes('casino')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('casino')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
         </div>
       </section>
       <div class="p-4 md:p-8 relative">
@@ -95,19 +88,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
-
 export default {
-  name: 'Casino',
-  computed: {
-    ...mapGetters([
-      'favourites'
-    ])
-  },
-  methods: {
-    ...mapActions([
-      'setFavourite'
-    ])
-  }
+  name: 'Casino'
 }
 </script>

@@ -8,13 +8,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Beacon of Light
           </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('delegate')">
-            <i v-if="favourites.includes('delegate')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('delegate')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
         </div>
       </section>
 
@@ -49,18 +42,9 @@
 
 <script>
 import wallet from "../plugins/wallet"
-import {mapActions,mapGetters} from "vuex";
 
 export default {
   name: 'Delegating',
-  mixins: [wallet],
-  computed: {
-    ...mapGetters(['favourites'])
-  },
-  methods: {
-    ...mapActions([
-      'setFavourite'
-    ])
-  }
+  mixins: [wallet]
 }
 </script>

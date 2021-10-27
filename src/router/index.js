@@ -12,7 +12,6 @@ import Casino from "../pages/Casino/Index";
 
 import Harmons from "../pages/Harmons/Index";
 
-import NotSupported from "../pages/NotSupported";
 import Login from "../pages/Login";
 import Delegating from "../pages/Delegating";
 import Faucet from "../pages/Faucet";
@@ -30,11 +29,6 @@ export default new Router({
       path: '/',
       name: 'world-map',
       component: WorldMap
-    },
-    {
-      path: '/not-supported',
-      name: 'not-supported',
-      component: NotSupported
     },
     {
       path: '/login',

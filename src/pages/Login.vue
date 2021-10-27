@@ -15,11 +15,11 @@
       <div class="py-8 px-4 md:p-16 relative">
         <div class="cursor-pointer flex h-full" @click="connectToWallet()">
           <button
-              class="m-auto tracking-widest uppercase bg-dark py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
+              class="m-auto tracking-widest uppercase bg-dark py-4 px-8 border border-yellow rounded-md text-sm md:text-lg font-semibold"
               v-if="chainStatus !== true" v-html="chainStatus">
           </button>
           <button
-              class="m-auto tracking-widest uppercase bg-dark py-4 px-8 rounded-md text-white text-sm md:text-xl font-semibold"
+              class="m-auto tracking-widest uppercase bg-dark py-4 px-8 border border-yellow rounded-md text-sm md:text-lg font-semibold"
               v-else>Connect Wallet
           </button>
         </div>
@@ -30,7 +30,7 @@
 
 <script>
 import wallet from "../plugins/wallet"
-import {mapActions, mapGetters} from "vuex";
+import {mapGetters} from "vuex"
 
 export default {
   name: 'Login',

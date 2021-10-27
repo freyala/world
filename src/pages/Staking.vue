@@ -8,13 +8,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Extraction Mines
           </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('staking')">
-            <i v-if="favourites.includes('staking')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('staking')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
         </div>
       </section>
 
@@ -207,7 +200,7 @@
 <script>
 import fromExponential from "from-exponential"
 
-import {mapGetters, mapActions} from "vuex"
+import {mapGetters} from "vuex"
 import {ethers} from "ethers"
 
 import wallet from "../plugins/wallet"
@@ -220,8 +213,7 @@ export default {
   computed: {
     ...mapGetters([
       'metaMaskAccount',
-      'metaMaskWallet',
-      'favourites'
+      'metaMaskWallet'
     ])
   },
   data() {
@@ -269,9 +261,6 @@ export default {
     clearInterval(this.dataInterval)
   },
   methods: {
-    ...mapActions([
-      'setFavourite'
-    ]),
     async fetchData() {
       const data = await Promise.all([
         this.mainContract.balanceOf(this.metaMaskAccount),

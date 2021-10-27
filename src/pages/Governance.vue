@@ -8,13 +8,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Everglen Castle
           </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('governance')">
-            <i v-if="favourites.includes('governance')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('governance')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
         </div>
       </section>
       <div class="p-4 md:p-8 relative">
@@ -147,7 +140,7 @@
 
 <script>
 import wallet from "../plugins/wallet"
-import {mapActions, mapGetters} from "vuex";
+import {mapGetters} from "vuex";
 import {ethers} from "ethers";
 import governanceContract from "../plugins/artifacts/governance.json";
 
@@ -158,7 +151,6 @@ export default {
     ...mapGetters([
       'metaMaskAccount',
       'metaMaskWallet',
-      'favourites'
     ])
   },
   data() {
@@ -189,9 +181,6 @@ export default {
     clearInterval(this.jennyMineInterval)
   },
   methods: {
-    ...mapActions([
-      'setFavourite'
-    ]),
     fancyTimeFormat(duration) {
       // Hours, minutes and seconds
       let hrs = ~~(duration / 3600);

@@ -2,7 +2,7 @@
 
   <section class="dropDownMenuWrapper">
 
-    <div :class="`${isOpen ? 'bg-dark' : 'bg-white'}`" class="iconWrapper cursor-pointer" @click="openClose">
+    <div class="iconWrapper cursor-pointer bg-dark" @click="openClose">
       <div class="bar1" :class="{ 'bar1--open' : isOpen }"/>
       <div class="bar2" :class="{ 'bar2--open' : isOpen }"/>
       <div class="bar3" :class="{ 'bar3--open' : isOpen }"/>

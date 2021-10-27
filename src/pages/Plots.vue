@@ -8,13 +8,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Plots of Land
           </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('plots')">
-            <i v-if="favourites.includes('plots')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('plots')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
         </div>
       </section>
 
@@ -359,7 +352,7 @@
 
 <script>
 import wallet from "../plugins/wallet"
-import {mapActions, mapGetters} from "vuex";
+import {mapGetters} from "vuex";
 import PlotsYang from "../plugins/artifacts/plotsyang.json";
 import PlotsYin from "../plugins/artifacts/plotsyin.json";
 import PlotsFreyala from "../plugins/artifacts/plotsfreyala.json";
@@ -498,14 +491,10 @@ export default {
   computed: {
     ...mapGetters([
       'metaMaskAccount',
-      'metaMaskWallet',
-      'favourites'
+      'metaMaskWallet'
     ])
   },
   methods: {
-    ...mapActions([
-      'setFavourite'
-    ]),
     async reGrabPlots(type) {
       this.loading = true
 

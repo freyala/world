@@ -8,13 +8,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Jenny's mines
           </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('jennymines')">
-            <i v-if="favourites.includes('jennymines')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('jennymines')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
         </div>
       </section>
 
@@ -121,7 +114,7 @@
 
 <script>
 import wallet from "../plugins/wallet"
-import {mapActions, mapGetters} from "vuex";
+import {mapGetters} from "vuex";
 import {ethers} from "ethers";
 import jennyMineContract from "../plugins/artifacts/jennymines.json";
 import Freyala from "../plugins/artifacts/freyala.json";
@@ -132,8 +125,7 @@ export default {
   computed: {
     ...mapGetters([
       'metaMaskAccount',
-      'metaMaskWallet',
-      'favourites'
+      'metaMaskWallet'
     ])
   },
   data() {
@@ -171,9 +163,6 @@ export default {
     clearInterval(this.jennyMineInterval)
   },
   methods: {
-    ...mapActions([
-      'setFavourite'
-    ]),
     // CALL
     async fetchData() {
         const [valuesOfGem, valuesOfFees, valuesOfEmissions, valuesOfMine, valuesOfMiner] = await Promise.all([

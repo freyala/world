@@ -48,6 +48,7 @@ export default {
                     return false
                 }
             } else {
+                this.setChainStatus('Install metamask to continue.')
                 return false
             }
         },

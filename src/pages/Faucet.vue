@@ -8,13 +8,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Soup Kitchen
           </h1>
-          <p class="text-xl text-primary-alt cursor-pointer" @click="setFavourite('faucet')">
-            <i v-if="favourites.includes('faucet')" class="fas fa-star"></i>
-            <i v-else class="far fa-star"></i>
-
-            <span v-if="favourites.includes('faucet')">Favourite</span>
-            <span v-else>Favourite</span>
-          </p>
         </div>
       </section>
       <div class="p-4 md:p-8 relative">
@@ -89,7 +82,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapGetters} from "vuex";
 import {ethers} from "ethers";
 import Faucet from "../plugins/artifacts/faucet.json";
 
@@ -98,8 +91,7 @@ export default {
   computed: {
     ...mapGetters([
       'metaMaskAccount',
-      'metaMaskWallet',
-      'favourites'
+      'metaMaskWallet'
     ])
   },
   data() {
@@ -135,9 +127,6 @@ export default {
     clearInterval(this.faucetInterval)
   },
   methods: {
-    ...mapActions([
-      'setFavourite'
-    ]),
 
     // CALL DATA
     async fetchData() {
