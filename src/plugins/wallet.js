@@ -45,6 +45,7 @@ export default {
                         return true
                     }
                 } catch {
+                    this.setChainStatus('Please connect your metamask.')
                     return false
                 }
             } else {
