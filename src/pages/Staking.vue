@@ -117,13 +117,13 @@
                 <div class="w-1/2 pl-2">
                   <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                           @click="stake(false)">
-                    Stake <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
+                    Deposit <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
                   </button>
                 </div>
 
                 <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
                         @click="stake(true)">
-                  Stake all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
+                  Deposit all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
                 </button>
               </div>
 
@@ -139,14 +139,18 @@
                 <div class="w-1/2 pl-2">
                   <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
                           @click="unstake(false)">
-                    Unstake <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
+                    Withdraw <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
                   </button>
                 </div>
 
                 <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4  h-12 mt-4"
                         @click="unstake(true)">
-                  Unstake all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
+                  Withdraw all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
                 </button>
+
+                <div class="text-center w-full">
+                  <small>A small 0.5% tax fee will be charged upon withdrawal. This fee will be sent back to the staking contract.</small>
+                </div>
               </div>
             </div>
 
