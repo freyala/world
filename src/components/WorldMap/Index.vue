@@ -660,7 +660,9 @@ export default {
       }
     })
 
-    setTimeout(() => panzoom.zoom(1, { animate: false }))
+    setTimeout(() => {
+      panzoom.zoom(1, {animate: false})
+    })
 
     if (this.firstTime === true) {
       this.$modal.show('tutorial')
@@ -672,7 +674,6 @@ export default {
       const panzoom = Panzoom(elem, {
         maxScale: 10,
         minScale: 1,
-        startScale: 1.25,
         contain: 'outside'
       })
 
@@ -682,7 +683,9 @@ export default {
         }
       })
 
-      setTimeout(() => panzoom.zoom(1, { animate: false }))
+      setTimeout(() => {
+        panzoom.zoom(1, {animate: false})
+      })
     },
     skipOrEnd() {
       this.$modal.hide('tutorial')

@@ -95,23 +95,16 @@ html, body {
   border: 1px solid #00b67a;
 }
 
-.bubble-top, .bubble {
-  display: none;
-}
-
-@screen md {
-  .bubble {
-    display: block;
-    position: relative;
-    background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
-    color: #FFFFFF;
-    font-size: 0.5vw;
-    box-shadow: 5px 5px 15px 0 #000000;
-    text-align: center;
-    border-radius: 6px;
-    padding: 0.2vw;
-    line-height: 0.75vw;
-  }
+.bubble {
+  display: block;
+  position: relative;
+  background: linear-gradient(-175deg, #27a1ac 19%, #7fca49 100%);
+  color: #FFFFFF;
+  font-size: 0.5vw;
+  box-shadow: 5px 5px 15px 0 #000000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 1px 2px;
 }
 
 img {
