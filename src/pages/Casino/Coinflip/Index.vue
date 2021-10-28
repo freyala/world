@@ -407,10 +407,16 @@
                     }}
                   </h3>
                 </div>
-                <div class="w-full md:w-1/3 text-center md:text-right my-auto">
-                <span @click="coinFlipShowEndedGames = !coinFlipShowEndedGames" class="cursor-pointer">
-                  {{ coinFlipShowEndedGames ? 'Hide' : 'Show' }} finished games
-                </span>
+                <div class="w-full text-center my-auto">
+                  <span class="text-lg">
+                    XYA Balance: {{ walletBalance }}
+                  </span>
+                </div>
+
+                <div class="w-full mt-2 text-center my-auto">
+                  <span @click="coinFlipShowEndedGames = !coinFlipShowEndedGames" class="cursor-pointer">
+                    {{ coinFlipShowEndedGames ? 'Hide' : 'Show' }} finished games
+                  </span>
                 </div>
               </div>
 
@@ -906,6 +912,7 @@ export default {
       coinFlipContract: {},
       coinFlipMounted: false,
       coinFlipInterval: undefined,
+      walletBalance: 0,
 
       amount: 0,
       loading: {
@@ -981,10 +988,12 @@ export default {
         this.coinFlipContract.lastGameId(),
         this.coinFlipContract.recentGames(100),
         this.coinFlipContract.recentGamesByUser(this.metaMaskAccount, 5),
-        this.mainContract.allowance(this.metaMaskAccount, CoinFlip.address)
+        this.mainContract.allowance(this.metaMaskAccount, CoinFlip.address),
+        this.mainContract.balanceOf(this.metaMaskAccount)
       ])
 
       this.allowance = ethers.utils.formatEther(coinFlipFetchedData[3]._isBigNumber ? ethers.BigNumber.from(coinFlipFetchedData[3]).toString() : coinFlipFetchedData[3])
+      this.walletBalance = (coinFlipFetchedData[4] / Math.pow(10, 18)).toFixed(2)
 
       let lastGameId = coinFlipFetchedData[0]._isBigNumber ? ethers.BigNumber.from(coinFlipFetchedData[0]).toString() : coinFlipFetchedData[0]
       let recentGames = []
