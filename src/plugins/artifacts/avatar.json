@@ -1,0 +1,82 @@
+{
+  "address": "0x50ae1E8F53b1237498F0e59E0D1F1f79452eeCE6",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_freyAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_cryptoPigAddress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "getAvatar",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "freyId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "freySet",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pigId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "pigSet",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "removeUser",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        }
+      ],
+      "name": "selectAvatar",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        }
+      ],
+      "name": "selectCompanion",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}
