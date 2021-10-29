@@ -57,7 +57,15 @@
           </div>
         </div>
         <div v-if="yourFrey.length > 0 && loading === false" class="w-full flex flex-wrap" style="max-height: 30vh; overflow: auto">
-          <div @click="selectFrey(frey.tokenId)" class="w-1/4 px-2 py-1 -mx-1 relative" :key="frey.name" v-for="frey in yourFrey">
+          <div v-if="yourFrey[0] === 'You do not own any Frey NFT.'">
+            <p>
+              You do not own any Frey NFT.
+              <br>
+              <br>
+              To get an avatar, mint a Frey at <a href="https://nft.freyala.com/" class="underline" target="_blank">nft.freyala.com</a>
+            </p>
+          </div>
+          <div v-else @click="selectFrey(frey.tokenId)" class="w-1/4 px-2 py-1 -mx-1 relative" :key="frey.name" v-for="frey in yourFrey">
             <img class="w-full h-auto" v-lazy="frey.image" :alt="frey.name">
 
             <div class="absolute top-0 flex left-0 w-full h-full opacity-0 hover:opacity-100 cursor-pointer" style="background: rgba(0,0,0,.5)">
@@ -169,11 +177,15 @@ export default {
         return frey._isBigNumber ? ethers.BigNumber.from(frey._hex).toString() : frey._hex
       })
 
-      await Promise.all(ids)
-        .then(async (listOfIds) => {
-          const yourFrey = await axios.get(`https://frey.freyala.com/meta/list?items=${listOfIds}`)
-          this.yourFrey = yourFrey.data
-        })
+      if (ids.length > 0) {
+        await Promise.all(ids)
+            .then(async (listOfIds) => {
+              const yourFrey = await axios.get(`https://frey.freyala.com/meta/list?items=${listOfIds}`)
+              this.yourFrey = yourFrey.data
+            })
+      } else {
+        this.yourFrey.push('You do not own any Frey NFT.')
+      }
     },
     async removeFrey() {
       this.error = ''
