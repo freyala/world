@@ -58,7 +58,7 @@
         </div>
         <div v-if="yourFrey.length > 0 && loading === false" class="w-full flex flex-wrap" style="max-height: 30vh; overflow: auto">
           <div @click="selectFrey(frey.tokenId)" class="w-1/4 px-2 py-1 -mx-1 relative" :key="frey.name" v-for="frey in yourFrey">
-            <img class="w-full h-auto" :src="frey.image" :alt="frey.name">
+            <img class="w-full h-auto" v-lazy="frey.image" :alt="frey.name">
 
             <div class="absolute top-0 flex left-0 w-full h-full opacity-0 hover:opacity-100 cursor-pointer" style="background: rgba(0,0,0,.5)">
               <p class="m-auto text-white font-black">
