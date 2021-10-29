@@ -1,5 +1,5 @@
 {
-  "address": "0x50ae1E8F53b1237498F0e59E0D1F1f79452eeCE6",
+  "address": "0x119010A63a80ce10F0DE2e765Df9A48cf2463D31",
   "abi": [
     {
       "inputs": [
@@ -18,7 +18,13 @@
       "type": "constructor"
     },
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
       "name": "getAvatar",
       "outputs": [
         {

@@ -160,7 +160,7 @@ export default {
       this.stakingBalance = (balances[1] / Math.pow(10, 18)).toFixed(2)
       this.rewardBalance = (balances[2] / Math.pow(10, 18)).toFixed(2)
 
-      const avatar = await this.avatarContract.getAvatar()
+      const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
 
       if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex) !== '99999') {
         this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
@@ -203,7 +203,7 @@ export default {
         console.error(err)
       }
 
-      const avatar = await this.avatarContract.getAvatar()
+      const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
 
       if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex) !== '99999') {
         this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
@@ -229,7 +229,7 @@ export default {
         console.error(err)
       }
 
-      const avatar = await this.avatarContract.getAvatar()
+      const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
 
       if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex) !== '99999') {
         this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
