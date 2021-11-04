@@ -676,14 +676,10 @@ export default {
 
       try {
         let web3 = await initWeb3()
-        const gasPrice = await web3.eth.getGasPrice();
 
         const rouletteLowContract = await new web3.eth.Contract(RouletteLow.abi, RouletteLow.address);
         await rouletteLowContract.methods.spinWheel().send({
-          from: this.metaMaskAccount,
-          gasPrice: gasPrice,
-          gasLimit: 250000,
-          gas: parseFloat((gasPrice * 250000) / Math.pow(10, 9))
+          from: this.metaMaskAccount
         })
 
       } catch (err) {

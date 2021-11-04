@@ -6,7 +6,7 @@
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
-            Extraction Mines
+            Extraction Site
           </h1>
         </div>
       </section>

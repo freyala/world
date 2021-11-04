@@ -1,10 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import addressConstants from './modules/addressConstants';
+import wallet from './modules/wallet';
+import exchange from './modules/exchange';
+import liquidity from './modules/liquidity';
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     namespaced: true,
+
+    modules: {
+        addressConstants,
+        exchange,
+        liquidity,
+        wallet
+    },
 
     state: {
         FIRST_TIME: true,
