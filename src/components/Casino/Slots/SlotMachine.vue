@@ -427,7 +427,7 @@
           if (!this.roundFinished)
             throw {
               message: "Invalid operation."
-            };;
+            };
           const holds = await this.contract.availableHolds();
           const helds = await this.contract.held();
 
@@ -451,8 +451,8 @@
 
           this.solveGameTransaction(tx);
           validateClick(true);
-
           this.gameReels[index].holdReel();
+
         } catch (err) {
           this.showGameError(err.message);
           this.solveGameTransaction(tx);
@@ -463,7 +463,7 @@
         try {
           if (!this.roundFinished) throw {
             message: "Invalid operation."
-          };;
+          };
           const nudges = await this.contract.availableNudges();
 
           if (nudges === 0 || !nudges) {
@@ -480,6 +480,7 @@
           this.gameReels[index].setFinalPosition(positions[index]);
           this.solveGameTransaction(tx);
           await this.endRound(positions);
+
         } catch (err) {
           this.showGameError(err.message);
           this.solveGameTransaction(tx);
@@ -537,8 +538,6 @@
           "" + this.gameReelSheets[1][positions[1]],
           "" + this.gameReelSheets[2][positions[2]],
         ];
-
-        console.log(positions);
 
         const roundWinnings = await this.contract.getPayoutFor(contractPositions);
         this.roundWinnings = roundWinnings / (10 ** 18);
