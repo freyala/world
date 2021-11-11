@@ -228,34 +228,4 @@ export default {
 .reel-leave-to {
   height: 0px!important;
 }
-
-@keyframes glow {
-  0% {
-    box-shadow: 0px 0px 12px var(--var-hilight-color);
-  }
-  50% {
-    box-shadow: 0px 0px 2px var(--var-hilight-color);
-  }
-  100% {
-    box-shadow: 0px 0px 12px var(--var-hilight-color);
-  }
-}
-
-@keyframes hold {
-  0% {
-    box-shadow: 0px 0px 2px var(--var-hilight-color);
-  }
-  50% {
-    box-shadow: 0px 0px 12px var(--var-hilight-color);
-  }
-}
-
-@keyframes force-stop {
-  0% {
-    filter: blur(20px);
-  }
-  50% {
-    filter: blur(0px);
-  }
-}
 </style>

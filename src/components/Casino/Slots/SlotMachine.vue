@@ -243,6 +243,7 @@ export default {
       roundWinnings: 0,
       roundState: ROUND_STATE.OFF,
       playerCredit: 0,
+      playerBank: 0,
       playerHolds: 0,
       playerNudges: 0,
       playerTransactions: [],
@@ -680,21 +681,6 @@ export default {
   color: var(--var-hilight-strong);
 }
 
-.hilight-spot {
-  position: relative;
-  width: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row !important;
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    #213927 0%,
-    rgba(49, 90, 58, 0.562) 0.01%,
-    #1e2a22 100%
-  );
-}
-
 .machine-container::before {
   content: "";
   position: absolute;
@@ -843,39 +829,6 @@ export default {
   z-index: -1;
 }
 
-.slot-button {
-  position: relative;
-  background: radial-gradient(50% 50% at 50% 50%, #4ad78057 100%, #213927 100%);
-  border-radius: 50%;
-  min-height: 96px;
-  max-width: 96px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 10px var(--var-slots-dark-bg);
-  color: white;
-}
-
-.slot-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 50%;
-  padding: 1px;
-  background: linear-gradient(
-    225deg,
-    var(--var-hilight-color),
-    var(--var-soft-shadow-color),
-    var(--var-soft-shadow-color)
-  );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
-}
 
 .slot-trigger {
   width: 80px;
