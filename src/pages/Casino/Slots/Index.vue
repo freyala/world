@@ -113,11 +113,10 @@
   import {
     ethers
   } from "ethers";
-  import {
-    initWeb3
-  } from "../../../plugins/initWeb3";
 
   import wallet from "../../../plugins/wallet";
+
+  //These are the contracts I deployed on the testnet for testing purposes
   import Slots from "../../../plugins/artifacts/newSlots.json";
   import HPTToken from "../../../plugins/artifacts/hptToken.json";
 
@@ -154,12 +153,12 @@
       showPayTable() {
         this.$refs.slotMachine.showPayTable();
       },
+      showInsertCoinModal() {
+        this.$modal.show("insert");
+      },
       async forceMachineUpdate() {
         await this.$refs.slotMachine.fetchPlayerData();
         await this.$refs.slotMachine.fetchGameReels();
-      },
-      showInsertCoinModal() {
-        this.$modal.show("insert");
       },
       async insertCoin() {
         if (this.loader.contractInsert) return;
@@ -285,7 +284,7 @@
         ethers.BigNumber.from(allowance).toString() :
         allowance
       );
-      
+
       this.loader.allowance = true;
       this.loader.slots = true;
 

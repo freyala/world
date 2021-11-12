@@ -118,7 +118,7 @@
         for (let i = 0; i < this.reelItems.length; i++) {
           this.reelItems[i].y =
             this.reelItems[i].initialPosition + 
-            ((1 - position) * this.reelBlockSize) / 5;
+            ((1 - position) * this.reelBlockSize) / animation.arg;
         }
         if (animation.timer >= animation.duration * 1000) {
           animation.timer = 0;
@@ -130,8 +130,8 @@
       },
       startRound() {
         if (this.isReelHeld) return;
-        this.reelSpeed = 10;
         this.reelAnimations.start.running = true;
+        this.reelSpeed = 10;
       },
       resetReel() {
         for (let i = 0; i < this.reelItems.length; i++) {

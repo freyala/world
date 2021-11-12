@@ -61,40 +61,38 @@
         </div>
       </div>
       <div style="height: 35%; width: 80%">
-        <SlotScreen v-bind:class="{
-            'glow-red': showRoundWinnings && roundWinnings == 0,
-            'glow-green': showRoundWinnings && roundWinnings > 0,
-          }">
+        <SlotScreen :glowRed='showRoundWinnings && roundWinnings == 0' :glowGreen='showRoundWinnings && roundWinnings > 0'>
           <template v-slot:content>
             <div v-show="!gameLoaded" class="w-full h-4/6 flex justify-center items-center text-center">
               Fetching data...
             </div>
 
-            <div v-show="gameLoaded" v-if="!showRoundWinnings" :key="keys.screen" class="w-full h-4/6">
+            <div v-show="gameLoaded" v-if="!showRoundWinnings" :key="keys.screen" class="w-full relative h-4/6">
               <div class="flex justify-evenly mb-5 w-full text-center">
                 <div>
-                  <p>Holds</p>
-                  <span>{{ playerHolds }}</span>
+                  <p class='glitch' data-text='Holds'>Holds</p>
+                  <span class='glitch2' :data-text='playerHolds'>{{ playerHolds }}</span>
                 </div>
                 <div>
-                  <p>Credits</p>
-                  <span>{{ playerCredit }}</span>
+                  <p class='glitch' data-text='Credits'>Credits</p>
+                  <span class='glitch2' :data-text='playerCredit'>{{ playerCredit }}</span>
                 </div>
                 <div>
-                  <p>Nudges</p>
-                  <span>{{ playerNudges }}</span>
+                  <p class='glitch' data-text='Nudges'>Nudges</p>
+                  <span class='glitch2' :data-text='playerNudges'>{{ playerNudges }}</span>
                 </div>
               </div>
               <hr class='opacity-25' />
               <div class="flex justify-evenly mt-5 w-full">
-                <p>Bank: </p>
-                <span>0</span>
+
+                <p>Bank</p>
+                <span>{{ playerBank }}</span>
               </div>
             </div>
             <div v-else class="w-full h-4/6 flex justify-center items-center text-center">
               <div>
-                <p>Winnings</p>
-                <span> {{ roundWinnings }}</span>
+                <p class='glitch' data-text='Winnings'>Winnings</p>
+                <span class='glitch2' :data-text='roundWinnings'>{{ roundWinnings }}</span>
               </div>
             </div>
           </template>
@@ -329,10 +327,10 @@
         if (this.spamProtection > 0) return;
 
         if (
-            this.roundState === ROUND_STATE.ON ||
-            this.playerTransactions.length > 0
-          )
-            return;
+          this.roundState === ROUND_STATE.ON ||
+          this.playerTransactions.length > 0
+        )
+          return;
 
         try {
           this.gameReelSheets = await this.contract.getReels();
@@ -540,7 +538,7 @@
         }
       },
       showGameError(error, additionalText = "") {
-        const errorMessage = typeof(error) == "object" ? error.message : error.toLowerCase();
+        const errorMessage = typeof (error) == "object" ? error.message : error.toLowerCase();
         const lcMessage = errorMessage.toLowerCase();
         if (lcMessage.indexOf("user denied") > -1) return;
         if (lcMessage.indexOf("transaction failed") > -1) {
