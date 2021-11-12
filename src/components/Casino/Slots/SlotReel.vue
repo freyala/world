@@ -65,10 +65,14 @@
         if (!this.isReelSpinning) return;
 
         for (let i = 0; i < this.reelItems.length; i++) {
-          this.reelItems[i].y += this.reelSpeed;
+          this.reelItems[i].y -= this.reelSpeed;
 
-          if (this.reelItems[i].y >= this.reelBounds - this.reelBlockSize) {
-            this.reelItems[i].y = this.reelItems[i].y - this.reelBounds;
+         // if (this.reelItems[i].y >= this.reelBounds - this.reelBlockSize) {
+         //   this.reelItems[i].y = this.reelItems[i].y - this.reelBounds;
+         // }
+
+          if (this.reelItems[i].y <= -this.reelBlockSize) {
+            this.reelItems[i].y = this.reelBounds - this.reelBlockSize;
           }
         }
       },
@@ -92,7 +96,7 @@
         animation.timer += dt;
 
         for (let i = 0; i < this.reelItems.length; i++) {
-          this.reelItems[i].y -= 1;
+          this.reelItems[i].y += 1;
         }
         if (animation.timer >= animation.duration * 1000) {
           animation.timer = 0;
@@ -113,7 +117,7 @@
 
         for (let i = 0; i < this.reelItems.length; i++) {
           this.reelItems[i].y =
-            this.reelItems[i].initialPosition +
+            this.reelItems[i].initialPosition + 
             ((1 - position) * this.reelBlockSize) / 5;
         }
         if (animation.timer >= animation.duration * 1000) {
@@ -166,7 +170,7 @@
 
         const shifts = index - 1 < 0 ? this.reelItemCount - 1 : index - 1;
         for (let i = 0; i < this.reelItems.length; i++) {
-          const newPosition = this.reelItems[i].index - shifts;
+          const newPosition = this.reelItems[i].index + shifts;
 
           if (newPosition < 0) {
             this.reelItems[i].initialPosition =
@@ -195,7 +199,7 @@
       getImageClass(index) {
         if (!this.isReelSpinning) return "";
         return {
-          filter: "blur(6px)",
+          filter: "blur(8px)",
         };
       },
     },
@@ -210,15 +214,5 @@
   .reel-blur {
     background-color: var(--var-hilight-color);
     opacity: 1;
-  }
-
-  .reel-enter-active,
-  .reel-leave-active {
-    transition: all 1s;
-  }
-
-  .reel-enter,
-  .reel-leave-to {
-    height: 0px !important;
   }
 </style>

@@ -131,6 +131,7 @@
     data() {
       return {
         roundsHistory: [],
+        roundsHistoryMax: 5,
         mainContract: null,
         allowance: 0,
         slotsContract: null,
@@ -228,9 +229,9 @@
         );
       },
       async onRoundFinished(roundWinnings) {
-        this.appendToLocalStorageList("rounds_history", roundWinnings, 5);
+        this.appendToLocalStorageList("rounds_history", roundWinnings, this.roundsHistoryMax);
         this.roundsHistory.unshift(roundWinnings);
-        this.roundsHistory = this.roundsHistory.slice(0, 5);
+        this.roundsHistory = this.roundsHistory.slice(0, this.roundsHistoryMax);
       },
 
       //WILL MOVE THESE IN A LOCAL STORAGE VUE PLUGIN
@@ -279,18 +280,17 @@
         this.metaMaskAccount,
         Slots.address
       );
-
       this.allowance = ethers.utils.formatEther(
         allowance._isBigNumber ?
         ethers.BigNumber.from(allowance).toString() :
         allowance
       );
+      
       this.loader.allowance = true;
       this.loader.slots = true;
 
       this.roundsHistory = await this.getLocalStorageItem("rounds_history");
-      if (!this.roundsHistory) this.roundsHistory = [];
-      this.roundsHistory = this.roundsHistory.slice(0, 5);
+      this.roundsHistory = !this.roundsHistory ? [] : this.roundsHistory.slice(0,this.roundsHistoryMax);
     },
   };
 </script>

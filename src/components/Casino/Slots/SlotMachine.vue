@@ -49,7 +49,7 @@
         <transition name="nudge">
           <div v-if="showNudges" class="z-50 absolute flex justify-around bottom-5 w-80 h-3">
             <div v-on:click="nudgeReel(i - 1)" class="nudge-button" v-for="i in 3" :key="i">
-              LOWER
+              NUDGE
             </div>
           </div>
         </transition>
@@ -326,14 +326,15 @@
         }
       },
       async fetchGameReels() {
-        try {
-          if (this.spamProtection > 0) return;
-          if (
+        if (this.spamProtection > 0) return;
+
+        if (
             this.roundState === ROUND_STATE.ON ||
             this.playerTransactions.length > 0
           )
             return;
 
+        try {
           this.gameReelSheets = await this.contract.getReels();
           const positions = await this.contract.getPositions();
           const currentHolds = await this.contract.held();
@@ -360,9 +361,7 @@
             }
           }
         } catch (err) {
-          this.showGameError({
-            message: "Transaction failed."
-          });
+          this.showGameError("Transaction failed.");
         }
       },
       async startRound() {
@@ -393,7 +392,7 @@
           for (let i = 0; i < this.gameReels.length; i++) {
             setTimeout(() => {
               this.gameReels[i].setFinalPosition(positions[i]);
-            }, 1000 + 250 * i);
+            }, 1500 - 250 * i);
           }
 
           const roundEnd = setTimeout(async () => {
@@ -412,34 +411,24 @@
           this.solveGameTransaction(tx);
 
           if (this.playerCredit == 0) {
-            this.showGameError({
-                message: "Not enough credit!"
-              },
-              "Please insert more tokens to play the game!"
-            );
+            this.showGameError("Not enough credit!", "Please insert more tokens to play the game!");
           } else {
-            this.showGameError(err.message);
+            this.showGameError(err);
           }
         }
       },
       async holdGameReel(index, validateClick) {
         try {
           if (!this.roundFinished)
-            throw {
-              message: "Invalid operation."
-            };
+            throw "Invalid operation.";
           const holds = await this.contract.availableHolds();
           const helds = await this.contract.held();
 
           if (helds.filter((c) => c == true).length >= 2 || !this.isLegalHold)
-            throw {
-              message: "You can't hold more than 2 reels at a time!"
-            };
+            throw "You can't hold more than 2 reels at a time!";
 
           if (holds == 0 || !holds) {
-            throw {
-              message: "You have 0 holds left."
-            };
+            throw "You have 0 holds left."
           }
 
           var tx = await this.contract.hold(index);
@@ -454,22 +443,18 @@
           this.gameReels[index].holdReel();
 
         } catch (err) {
-          this.showGameError(err.message);
+          this.showGameError(err);
           this.solveGameTransaction(tx);
           validateClick(false);
         }
       },
       async nudgeReel(index) {
         try {
-          if (!this.roundFinished) throw {
-            message: "Invalid operation."
-          };
+          if (!this.roundFinished) throw "Invalid operation."
           const nudges = await this.contract.availableNudges();
 
           if (nudges === 0 || !nudges) {
-            throw {
-              message: "You have 0 nudges left."
-            };
+            throw "You have 0 nudges left."
           }
 
           var tx = await this.contract.nudge(index);
@@ -482,7 +467,7 @@
           await this.endRound(positions);
 
         } catch (err) {
-          this.showGameError(err.message);
+          this.showGameError(err);
           this.solveGameTransaction(tx);
         }
       },
@@ -555,13 +540,14 @@
         }
       },
       showGameError(error, additionalText = "") {
-        const lowError = error.toLowerCase();
-        if (lowError.indexOf("user denied") > -1) return;
-        if (lowError.indexOf("transaction failed") > -1) {
+        const errorMessage = typeof(error) == "object" ? error.message : error.toLowerCase();
+        const lcMessage = errorMessage.toLowerCase();
+        if (lcMessage.indexOf("user denied") > -1) return;
+        if (lcMessage.indexOf("transaction failed") > -1) {
           this.gameError[0] = "Transaction Failed.";
           this.gameError[1] = "The state of the game has been reverted.";
         } else {
-          this.gameError[0] = error.toString();
+          this.gameError[0] = errorMessage;
           this.gameError[1] = additionalText;
         }
         this.$modal.show("error");
