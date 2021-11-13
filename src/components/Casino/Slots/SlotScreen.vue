@@ -117,8 +117,8 @@
       left: -2px;
       text-shadow: -2px 0 var(--var-hilight-color), 2px 2px var(--var-hilight-color);
       clip: rect(44px, 450px, 56px, 0);
-      animation: glitch-anim 1s infinite linear alternate-reverse;
-      animation-delay: 2s;
+      animation: glitch-anim 3s infinite linear alternate-reverse;
+      animation-delay: 7.8s;
     }
   }
 
@@ -126,7 +126,7 @@
     position: relative;
     color: #fff;
     font-size: 12px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 
     &::after {
       @include glitch-shadow;
@@ -134,7 +134,7 @@
       opacity: 0.5;
       text-shadow: -2px 0 var(--var-hilight-color), 2px 2px var(--var-hilight-color);
       clip: rect(44px, 450px, 56px, 0);
-      animation: glitch-anim2 1s infinite linear alternate-reverse;
+      animation: glitch-anim2 3s infinite linear alternate-reverse;
       animation-delay: 6s;
     }
   }
@@ -144,8 +144,8 @@
 
     @for $i from 0 to $steps {
       #{percentage($i*(1/$steps))} {
-        clip: rect((random(300)) + px, 9999px, (random(100)) + px, 0);
-        transform: skew((random(100) / 100) + deg);
+        clip: rect((random(300)) + px, 9999px, (random(200)) + px, 0);
+        transform: skew((random(300) / 100) + deg);
       }
     }
   }
@@ -155,8 +155,8 @@
 
     @for $i from 0 to $steps {
       #{percentage($i*(1/$steps))} {
-        clip: rect((random(300)) + px, 9999px, (random(100)) + px, 0);
-        transform: skew((random(100) / 100) + deg);
+        clip: rect((random(300)) + px, 9999px, (random(200)) + px, 0);
+        transform: skew((random(300) / 100) + deg);
       }
     }
   }

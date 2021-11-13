@@ -33,12 +33,15 @@
         this.pressed = !this.pressed;
         this.$emit("buttonClick", this.validateButtonClick);
       },
+
       pressButton() {
         this.pressed = true;
       },
+
       releaseButton() {
         this.pressed = false;
       },
+      
       validateButtonClick(valid) {
         if (!valid) this.pressed = !this.pressed;
       },

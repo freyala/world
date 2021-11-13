@@ -55,6 +55,7 @@
     methods: {
       ...mapGetters("exchange", ["getToken"]),
       ...mapActions("exchange", ["resetTokens", "goTo"]),
+
       update(dt) {
         if (this.reelAnimations.start.running) {
           this.runStartAnimation(dt);
@@ -76,6 +77,7 @@
           }
         }
       },
+
       initializeAnimations() {
         this.reelAnimations = {
           start: {
@@ -91,6 +93,7 @@
           },
         };
       },
+
       runStartAnimation(dt) {
         const animation = this.reelAnimations.start;
         animation.timer += dt;
@@ -108,6 +111,7 @@
           this.isReelSpinning = true;
         }
       },
+
       runReboundAnimation(dt) {
         const animation = this.reelAnimations.rebound;
         animation.timer += dt;
@@ -128,21 +132,25 @@
           }
         }
       },
+
       startRound() {
         if (this.isReelHeld) return;
         this.reelAnimations.start.running = true;
         this.reelSpeed = 10;
       },
+
       resetReel() {
         for (let i = 0; i < this.reelItems.length; i++) {
           this.reelItems[i].initialPosition = i * this.reelBlockSize;
         }
       },
+
       forceStop(index) {
         this.reelAnimations.rebound.running = true;
         this.isReelSpinning = false;
         this.setFinalPosition(index);
       },
+
       setReelSheet(reelSheet, assets) {
         if (this.reelSheet.length > 0) return;
 
@@ -161,6 +169,7 @@
         }
         this.keys.loader++;
       },
+
       setFinalPosition(index) {
         if (this.isReelHeld) return;
 
@@ -170,7 +179,7 @@
 
         const shifts = index - 1 < 0 ? this.reelItemCount - 1 : index - 1;
         for (let i = 0; i < this.reelItems.length; i++) {
-          const newPosition = this.reelItems[i].index + shifts;
+          const newPosition = this.reelItems[i].index - shifts;
 
           if (newPosition < 0) {
             this.reelItems[i].initialPosition =
@@ -180,22 +189,27 @@
           }
         }
       },
+
       holdReel() {
         this.isReelHeld = true;
       },
+
       releaseReel() {
         this.isReelHeld = false;
       },
+
       stopSpinning() {
         this.reelSpeed = 0;
         this.isReelSpinning = false;
         this.isReelHeld = false;
       },
+
       getReelStyle(index) {
         return {
           top: -35 + this.reelItems[index].y + "px",
         };
       },
+      
       getImageClass(index) {
         if (!this.isReelSpinning) return "";
         return {

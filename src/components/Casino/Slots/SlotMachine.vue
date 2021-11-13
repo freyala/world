@@ -61,7 +61,8 @@
         </div>
       </div>
       <div style="height: 35%; width: 80%">
-        <SlotScreen :glowRed='showRoundWinnings && roundWinnings == 0' :glowGreen='showRoundWinnings && roundWinnings > 0'>
+        <SlotScreen :glowRed="showRoundWinnings && roundWinnings == 0"
+          :glowGreen="showRoundWinnings && roundWinnings > 0">
           <template v-slot:content>
             <div v-show="!gameLoaded" class="w-full h-4/6 flex justify-center items-center text-center">
               Fetching data...
@@ -70,29 +71,36 @@
             <div v-show="gameLoaded" v-if="!showRoundWinnings" :key="keys.screen" class="w-full relative h-4/6">
               <div class="flex justify-evenly mb-5 w-full text-center">
                 <div>
-                  <p class='glitch' data-text='Holds'>Holds</p>
-                  <span class='glitch2' :data-text='playerHolds'>{{ playerHolds }}</span>
+                  <p class="glitch" data-text="Holds">Holds</p>
+                  <span class="glitch2" :data-text="playerHolds">{{
+                    playerHolds
+                  }}</span>
                 </div>
                 <div>
-                  <p class='glitch' data-text='Credits'>Credits</p>
-                  <span class='glitch2' :data-text='playerCredit'>{{ playerCredit }}</span>
+                  <p class="glitch" data-text="Credits">Credits</p>
+                  <span class="glitch2" :data-text="playerCredit">{{
+                    parseInt(playerCredit)
+                  }}</span>
                 </div>
                 <div>
-                  <p class='glitch' data-text='Nudges'>Nudges</p>
-                  <span class='glitch2' :data-text='playerNudges'>{{ playerNudges }}</span>
+                  <p class="glitch" data-text="Nudges">Nudges</p>
+                  <span class="glitch2" :data-text="playerNudges">{{
+                    playerNudges
+                  }}</span>
                 </div>
               </div>
-              <hr class='opacity-25' />
+              <hr class="opacity-25" />
               <div class="flex justify-evenly mt-5 w-full">
-
                 <p>Bank</p>
-                <span>{{ playerBank }}</span>
+                <span>{{ parseInt(playerBank) }}</span>
               </div>
             </div>
             <div v-else class="w-full h-4/6 flex justify-center items-center text-center">
               <div>
-                <p class='glitch' data-text='Winnings'>Winnings</p>
-                <span class='glitch2' :data-text='roundWinnings'>{{ roundWinnings }}</span>
+                <p class="glitch" data-text="Winnings">You Won!</p>
+                <span class="glitch2" :data-text="roundWinnings">{{
+                  roundWinnings
+                }}</span>
               </div>
             </div>
           </template>
@@ -157,6 +165,11 @@
     OFF: 2,
   };
 
+  const lerp = (x, y, a) => {
+    if (y - x < 2) return y;
+    return x * (1 - a) + y * a;
+  };
+
   export default {
     name: "SlotMachine",
     mixins: [wallet],
@@ -194,6 +207,10 @@
         playerHolds: 0,
         playerNudges: 0,
         playerTransactions: [],
+        playerPacket: {
+          playerCredit: 0,
+          playerBank: 0,
+        },
         assets: {
           images: [],
         },
@@ -214,29 +231,35 @@
         await this.fetchPlayerData();
         await this.fetchGameReels();
 
-        this.contract.on("Deposit", (error, event) => {
-          this.fetchPlayerCredit();
+        this.contract.on("Withdraw", async (error, event) => {
+          await this.fetchPlayerData();
         });
 
-        for (let i = 0; i < 4; i++) {
-          const payLine = ["" + i, "" + i, "" + i];
-          const payOut = await this.contract.getPayoutFor(payLine);
+        this.contract.on("Deposit", async (error, event) => {
+          await this.fetchPlayerData();
+        });
+
+        const payLinesCount = await this.contract.getPayTableLength();
+
+        this.gamePayTable = [];
+        for (let i = 0; i < payLinesCount; i++) {
+          const payLine = await this.contract.getPayLineData(i);
           this.gamePayTable.push({
-            payLineId: payLine.join("-"),
-            payLine: payLine,
-            payOut: payOut / 10 ** 18,
+            payLineId: payLine[0].join("-"),
+            payLine: payLine[0],
+            payOut: payLine[1],
           });
         }
       });
 
       /*const txData = await localStorage.getItem("slots_tx");
-      let transactions = JSON.parse(txData);
-      if (transactions) {
-        for (let i = 0; i < transactions.length; i++) {
-          this.playerTransactions.push(transactions[i]);
-          this.resolveTransaction(transactions[i].tx);
-        }
-      }*/
+            let transactions = JSON.parse(txData);
+            if (transactions) {
+              for (let i = 0; i < transactions.length; i++) {
+                this.playerTransactions.push(transactions[i]);
+                this.resolveTransaction(transactions[i].tx);
+              }
+            }*/
     },
     methods: {
       startGameLoop() {
@@ -248,12 +271,24 @@
           this.update(dt);
         }, 0);
       },
+
       update(dt) {
         for (let i = 0; i < this.gameReels.length; i++) {
           this.gameReels[i].update(dt);
         }
 
         this.spamProtection -= dt;
+
+        this.playerCredit = lerp(
+          this.playerCredit,
+          this.playerPacket.playerCredit,
+          0.02
+        );
+        this.playerBank = lerp(
+          this.playerBank,
+          this.playerPacket.playerBank,
+          0.02
+        );
 
         if (this.showRoundWinnings) {
           this.roundWinningsTimer += dt;
@@ -262,6 +297,278 @@
           }
         }
       },
+
+      async fetchPlayerData() {
+        try {
+          if (this.spamProtection > 0) return;
+
+          const playerCredit =
+            (await this.contract.creditBalanceOf(this.metaMaskAccount)) /
+            10 ** 18;
+          const playerBank = await this.contract.bankOf(this.metaMaskAccount);
+
+          this.playerHolds = await this.contract.holdsOf(this.metaMaskAccount);
+          this.playerNudges = await this.contract.nudgesOf(this.metaMaskAccount);
+          this.playerPacket = {
+            playerCredit: playerCredit,
+            playerBank: playerBank,
+          };
+
+          this.keys.screen++;
+          this.gameLoaded = true;
+        } catch (err) {
+          this.gameLoaded = false;
+          setTimeout(async () => {
+            await this.fetchPlayerData();
+          }, 1000);
+        }
+      },
+
+      async fetchGameReels() {
+        if (this.spamProtection > 0) return;
+
+        if (
+          this.roundState === ROUND_STATE.ON ||
+          this.playerTransactions.length > 0
+        )
+          return;
+
+        try {
+          this.gameReelSheets = await this.contract.reels();
+          const positions = await this.contract.positionsOf(this.metaMaskAccount);
+          const currentHolds = await this.contract.heldOf(this.metaMaskAccount);
+
+          let imageIds = this.gameReelSheets[0].filter(
+            (item, i, ar) => ar.indexOf(item) === i
+          );
+
+          for (let i = 0; i < imageIds.length; i++) {
+            this.assets.images.push(
+              require("../../../../public/images/casino/freys/" +
+                imageIds[i] +
+                ".png")
+            );
+          }
+
+          for (let i = 0; i < this.gameReels.length; i++) {
+            this.gameReels[i].setReelSheet(this.gameReelSheets[i], this.assets);
+            this.gameReels[i].setFinalPosition(positions[i]);
+
+            if (currentHolds[i]) {
+              this.gameButtons[i].pressButton();
+              this.gameReels[i].holdReel();
+            }
+          }
+        } catch (err) {
+          this.showGameError("Transaction failed.");
+        }
+      },
+
+      async startRound() {
+        if (this.spamProtection > 0) return;
+        if (
+          this.roundState === ROUND_STATE.ON ||
+          this.playerTransactions.length > 0
+        )
+          return;
+
+        try {
+          this.spamProtection = 1500;
+          var tx = await this.contract.spin();
+          this.showRoundWinnings = false;
+          this.roundState = ROUND_STATE.ON;
+          this.animateKnob();
+
+          for (let i = 0; i < this.gameReels.length; i++) {
+            setTimeout(() => {
+              this.gameReels[i].startRound();
+            }, i * 150);
+          }
+
+          this.addGameTransaction(tx, "SPIN");
+          await tx.wait(1);
+          const positions = await this.contract.positionsOf(this.metaMaskAccount);
+
+          for (let i = 0; i < this.gameReels.length; i++) {
+            setTimeout(() => {
+              this.gameReels[i].setFinalPosition(positions[i]);
+            }, 1500 - 250 * i);
+          }
+
+          const roundEnd = setTimeout(async () => {
+            await this.endRound(positions);
+          }, 1000 + 250 * this.gameReels.length);
+
+          this.fetchPlayerData();
+          this.solveGameTransaction(tx);
+        } catch (err) {
+          const positions = await this.contract.positionsOf(this.metaMaskAccount);
+
+          for (let i = 0; i < this.gameReels.length; i++) {
+            this.gameReels[i].forceStop(positions[i]);
+          }
+          this.roundState = ROUND_STATE.OFF;
+          this.solveGameTransaction(tx);
+
+          if (this.playerCredit == 0) {
+            this.showGameError(
+              "Not enough credit!",
+              "Please insert more tokens to play the game!"
+            );
+          } else {
+            this.showGameError(err);
+          }
+        }
+      },
+
+      async holdGameReel(index, validateClick) {
+        try {
+          if (!this.roundFinished) throw "Invalid operation.";
+          const holds = await this.contract.holdsOf(this.metaMaskAccount);
+          const helds = await this.contract.heldOf(this.metaMaskAccount);
+
+          if (helds.filter((c) => c == true).length >= 2 || !this.isLegalHold)
+            throw "You can't hold more than 2 reels at a time!";
+
+          if (holds == 0 || !holds) {
+            throw "You have 0 holds left.";
+          }
+
+          var tx = await this.contract.hold(index);
+          this.addGameTransaction(tx, "HOLD");
+          await tx.wait(1);
+
+          const holdsPositions = await this.contract.heldOf(this.metaMaskAccount);
+          if (!holdsPositions[index]) return;
+
+          this.solveGameTransaction(tx);
+          validateClick(true);
+          this.gameReels[index].holdReel();
+        } catch (err) {
+          this.showGameError(err);
+          this.solveGameTransaction(tx);
+          validateClick(false);
+        }
+      },
+
+      async nudgeReel(index) {
+        try {
+          if (!this.roundFinished) throw "Invalid operation.";
+          const nudges = await this.contract.nudgesOf(this.metaMaskAccount);
+
+          if (nudges === 0 || !nudges) {
+            throw "You have 0 nudges left.";
+          }
+
+          var tx = await this.contract.nudge(index);
+          this.addGameTransaction(tx, "NUDGE");
+          await tx.wait(1);
+
+          const positions = await this.contract.positionsOf(this.metaMaskAccount);
+          this.gameReels[index].setFinalPosition(positions[index]);
+          this.solveGameTransaction(tx);
+          await this.endRound(positions);
+        } catch (err) {
+          this.showGameError(err);
+          this.solveGameTransaction(tx);
+        }
+      },
+
+      async addGameTransaction(tx, type) {
+        const newTx = {
+          tx: tx,
+          type: type,
+        };
+        this.playerTransactions.push(newTx);
+
+        /*const itemsData = await localStorage.getItem("slots_tx");
+              let items = JSON.parse(itemsData);
+              if (!items || items.length === 0) {
+                await localStorage.setItem("slots_tx", JSON.stringify([newTx]));
+                return;
+              }
+
+              items.push(newTx);
+              await localStorage.setItem("slots_tx", JSON.stringify(items));*/
+      },
+
+      async solveGameTransaction(tx) {
+        this.playerTransactions = this.playerTransactions.filter(
+          (c) => c.tx.hash !== tx.hash
+        );
+        this.$emit("txFinished");
+        await this.fetchPlayerData();
+
+        /*const itemsData = await localStorage.getItem("slots_tx");
+              let items = JSON.parse(itemsData);
+
+              items = items.filter((c) => c.tx.hash !== tx.hash);
+              await localStorage.setItem("slots_tx", JSON.stringify(items));*/
+      },
+
+      animateKnob() {
+        const handle = this.$refs.handle;
+        const shadow1 = this.$refs.shadow1;
+        const shadow2 = this.$refs.shadow2;
+
+        handle.classList.add("handle-anim");
+        shadow1.classList.add("shadow-anim");
+        shadow2.classList.add("shadow-anim");
+
+        setTimeout(() => {
+          handle.classList.remove("handle-anim");
+          shadow1.classList.remove("shadow-anim");
+          shadow1.classList.remove("shadow-anim");
+        }, 1000);
+      },
+
+      async endRound(positions) {
+        this.resetHolds();
+        const payLineId =
+          this.gameReelSheets[0][positions[0]] +
+          "-" +
+          this.gameReelSheets[1][positions[1]] +
+          "-" +
+          this.gameReelSheets[2][positions[2]];
+        const payLine = this.gamePayTable.filter(
+          (c) => c.payLineId === payLineId
+        );
+
+        this.roundWinnings = !payLine[0] ? 0 : payLine[0].payOut;
+
+        this.showRoundWinnings = true;
+        this.roundWinningsTimer = 0;
+        this.roundState = ROUND_STATE.OFF;
+
+        this.$emit("roundFinished", this.roundWinnings);
+      },
+
+      resetHolds() {
+        for (let i = 0; i < this.gameButtons.length; i++) {
+          this.gameButtons[i].releaseButton();
+          this.gameReels[i].releaseReel();
+        }
+      },
+
+      showGameError(error, additionalText = "") {
+        const errorMessage =
+          typeof error == "object" ? error.message : error.toLowerCase();
+        const lcMessage = errorMessage.toLowerCase();
+        if (lcMessage.indexOf("user denied") > -1) return;
+        if (lcMessage.indexOf("transaction failed") > -1) {
+          this.gameError[0] = "Transaction Failed.";
+          this.gameError[1] = "The state of the game has been reverted.";
+        } else {
+          this.gameError[0] = errorMessage;
+          this.gameError[1] = additionalText;
+        }
+        this.$modal.show("error");
+      },
+
+      showPayTable() {
+        this.$modal.show("payTable");
+      },
+
       async solvePendingTransactions(tx) {
         // TEMPORARILY DISABLED
         const promise = new Promise((resolve, reject) => {
@@ -299,277 +606,30 @@
           }, 2000);
         });
       },
-      async fetchPlayerCredit() {
-        const promise = new Promise((resolve, reject) => {
-          resolve(this.contract.getCredit());
-        }).then((value) => {
-          this.playerCredit = value / 10 ** 18;
-          this.keys.screen++;
-        });
-      },
-      async fetchPlayerData() {
-        try {
-          if (this.spamProtection > 0) return;
-          this.playerHolds = await this.contract.availableHolds();
-          this.playerNudges = await this.contract.availableNudges();
-          this.fetchPlayerCredit();
-
-          this.keys.screen++;
-          this.gameLoaded = true;
-        } catch (err) {
-          this.gameLoaded = false;
-          setTimeout(async () => {
-            await this.fetchPlayerData();
-          }, 1000);
-        }
-      },
-      async fetchGameReels() {
-        if (this.spamProtection > 0) return;
-
-        if (
-          this.roundState === ROUND_STATE.ON ||
-          this.playerTransactions.length > 0
-        )
-          return;
-
-        try {
-          this.gameReelSheets = await this.contract.getReels();
-          const positions = await this.contract.getPositions();
-          const currentHolds = await this.contract.held();
-
-          let imageIds = this.gameReelSheets[0].filter(
-            (item, i, ar) => ar.indexOf(item) === i
-          );
-
-          for (let i = 0; i < imageIds.length; i++) {
-            this.assets.images.push(
-              require("../../../../public/images/casino/freys/" +
-                imageIds[i] +
-                ".png")
-            );
-          }
-
-          for (let i = 0; i < this.gameReels.length; i++) {
-            this.gameReels[i].setReelSheet(this.gameReelSheets[i], this.assets);
-            this.gameReels[i].setFinalPosition(positions[i]);
-
-            if (currentHolds[i]) {
-              this.gameButtons[i].pressButton();
-              this.gameReels[i].holdReel();
-            }
-          }
-        } catch (err) {
-          this.showGameError("Transaction failed.");
-        }
-      },
-      async startRound() {
-        if (this.spamProtection > 0) return;
-        if (
-          this.roundState === ROUND_STATE.ON ||
-          this.playerTransactions.length > 0
-        )
-          return;
-
-        try {
-          this.spamProtection = 1500;
-          var tx = await this.contract.spin();
-          this.showRoundWinnings = false;
-          this.roundState = ROUND_STATE.ON;
-          this.animateKnob();
-
-          for (let i = 0; i < this.gameReels.length; i++) {
-            setTimeout(() => {
-              this.gameReels[i].startRound();
-            }, i * 150);
-          }
-
-          this.addGameTransaction(tx, "SPIN");
-          await tx.wait(1);
-          const positions = await this.contract.getPositions();
-
-          for (let i = 0; i < this.gameReels.length; i++) {
-            setTimeout(() => {
-              this.gameReels[i].setFinalPosition(positions[i]);
-            }, 1500 - 250 * i);
-          }
-
-          const roundEnd = setTimeout(async () => {
-            await this.endRound(positions);
-          }, 1000 + 250 * this.gameReels.length);
-
-          this.fetchPlayerData();
-          this.solveGameTransaction(tx);
-        } catch (err) {
-          const positions = await this.contract.getPositions();
-
-          for (let i = 0; i < this.gameReels.length; i++) {
-            this.gameReels[i].forceStop(positions[i]);
-          }
-          this.roundState = ROUND_STATE.OFF;
-          this.solveGameTransaction(tx);
-
-          if (this.playerCredit == 0) {
-            this.showGameError("Not enough credit!", "Please insert more tokens to play the game!");
-          } else {
-            this.showGameError(err);
-          }
-        }
-      },
-      async holdGameReel(index, validateClick) {
-        try {
-          if (!this.roundFinished)
-            throw "Invalid operation.";
-          const holds = await this.contract.availableHolds();
-          const helds = await this.contract.held();
-
-          if (helds.filter((c) => c == true).length >= 2 || !this.isLegalHold)
-            throw "You can't hold more than 2 reels at a time!";
-
-          if (holds == 0 || !holds) {
-            throw "You have 0 holds left."
-          }
-
-          var tx = await this.contract.hold(index);
-          this.addGameTransaction(tx, "HOLD");
-          await tx.wait(1);
-
-          const holdsPositions = await this.contract.held();
-          if (!holdsPositions[index]) return;
-
-          this.solveGameTransaction(tx);
-          validateClick(true);
-          this.gameReels[index].holdReel();
-
-        } catch (err) {
-          this.showGameError(err);
-          this.solveGameTransaction(tx);
-          validateClick(false);
-        }
-      },
-      async nudgeReel(index) {
-        try {
-          if (!this.roundFinished) throw "Invalid operation."
-          const nudges = await this.contract.availableNudges();
-
-          if (nudges === 0 || !nudges) {
-            throw "You have 0 nudges left."
-          }
-
-          var tx = await this.contract.nudge(index);
-          this.addGameTransaction(tx, "NUDGE");
-          await tx.wait(1);
-
-          const positions = await this.contract.getPositions();
-          this.gameReels[index].setFinalPosition(positions[index]);
-          this.solveGameTransaction(tx);
-          await this.endRound(positions);
-
-        } catch (err) {
-          this.showGameError(err);
-          this.solveGameTransaction(tx);
-        }
-      },
-      async addGameTransaction(tx, type) {
-        const newTx = {
-          tx: tx,
-          type: type
-        };
-        this.playerTransactions.push(newTx);
-
-        /*const itemsData = await localStorage.getItem("slots_tx");
-        let items = JSON.parse(itemsData);
-        if (!items || items.length === 0) {
-          await localStorage.setItem("slots_tx", JSON.stringify([newTx]));
-          return;
-        }
-
-        items.push(newTx);
-        await localStorage.setItem("slots_tx", JSON.stringify(items));*/
-      },
-      async solveGameTransaction(tx) {
-        this.playerTransactions = this.playerTransactions.filter(
-          (c) => c.tx.hash !== tx.hash
-        );
-        this.$emit("txFinished");
-        await this.fetchPlayerData();
-
-        /*const itemsData = await localStorage.getItem("slots_tx");
-        let items = JSON.parse(itemsData);
-
-        items = items.filter((c) => c.tx.hash !== tx.hash);
-        await localStorage.setItem("slots_tx", JSON.stringify(items));*/
-      },
-      animateKnob() {
-        const handle = this.$refs.handle;
-        const shadow1 = this.$refs.shadow1;
-        const shadow2 = this.$refs.shadow2;
-
-        handle.classList.add("handle-anim");
-        shadow1.classList.add("shadow-anim");
-        shadow2.classList.add("shadow-anim");
-
-        setTimeout(() => {
-          handle.classList.remove("handle-anim");
-          shadow1.classList.remove("shadow-anim");
-          shadow1.classList.remove("shadow-anim");
-        }, 1000);
-      },
-      async endRound(positions) {
-        this.resetHolds();
-        const contractPositions = [
-          "" + this.gameReelSheets[0][positions[0]],
-          "" + this.gameReelSheets[1][positions[1]],
-          "" + this.gameReelSheets[2][positions[2]],
-        ];
-
-        const roundWinnings = await this.contract.getPayoutFor(contractPositions);
-        this.roundWinnings = roundWinnings / (10 ** 18);
-
-        this.showRoundWinnings = true;
-        this.roundWinningsTimer = 0;
-        this.roundState = ROUND_STATE.OFF;
-
-        this.$emit("roundFinished", this.roundWinnings);
-      },
-      resetHolds() {
-        for (let i = 0; i < this.gameButtons.length; i++) {
-          this.gameButtons[i].releaseButton();
-          this.gameReels[i].releaseReel();
-        }
-      },
-      showGameError(error, additionalText = "") {
-        const errorMessage = typeof (error) == "object" ? error.message : error.toLowerCase();
-        const lcMessage = errorMessage.toLowerCase();
-        if (lcMessage.indexOf("user denied") > -1) return;
-        if (lcMessage.indexOf("transaction failed") > -1) {
-          this.gameError[0] = "Transaction Failed.";
-          this.gameError[1] = "The state of the game has been reverted.";
-        } else {
-          this.gameError[0] = errorMessage;
-          this.gameError[1] = additionalText;
-        }
-        this.$modal.show("error");
-      },
-      showPayTable() {
-        this.$modal.show("payTable");
-      },
     },
+
     computed: {
       isLegalHold() {
-        const holdTransactions = this.playerTransactions.filter((c) => c.type === 'HOLD');
+        const holdTransactions = this.playerTransactions.filter(
+          (c) => c.type === "HOLD"
+        );
         const heldReels = this.gameReels.filter((c) => c.isReelHeld);
         return (
-          holdTransactions.length < 2 && (holdTransactions.length + heldReels.length) < 2
+          holdTransactions.length < 2 &&
+          holdTransactions.length + heldReels.length < 2
         );
       },
+
       roundFinished() {
         return this.gameReels.filter((c) => c.isSpinning).length === 0;
       },
+
       isBusy() {
         return (
           this.playerTransactions.filter((c) => c.type !== "SPIN").length > 0
         );
       },
+
       showNudges() {
         return (
           !this.isBusy &&
@@ -764,7 +824,6 @@
     left: calc(50% - 10px);
     z-index: -1;
   }
-
 
   .slot-trigger {
     width: 80px;

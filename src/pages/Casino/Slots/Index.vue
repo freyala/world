@@ -52,14 +52,16 @@
                 <span v-if="!loader.contractWithdraw">Collect</span>
                 <i v-if="loader.contractWithdraw" class="fas fa-cog fa-spin"></i></span></a>
           </div>
-
-          <div class="mt-3 mb-3 flex justify-center">
-            <a v-on:click="showPayTable()" class="hpt-btn" href="javascript:;"><span>Paytable</span></a>
-          </div>
           <div v-if="allowance > 0" class="mt-3 mb-3 flex justify-center">
             <a v-on:click="forceMachineUpdate()" class="hpt-btn" href="javascript:;"><span><span
                   v-if="!loader.contractUpdateMachine">Update Machine</span>
                 <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></a>
+          </div>
+          <div class="mt-3 mb-3 flex justify-center">
+            <a v-on:click="showPayTable()" class="hpt-btn" href="javascript:;"><span>Paytable</span></a>
+          </div>
+          <div class="mt-3 mb-3 flex justify-center">
+            <a v-on:click="showTutorial()" class="hpt-btn" href="javascript:;"><span>Tutorial</span></a>
           </div>
         </div>
         <SlotMachine class="mr-40 ml-40" style="width: 450px; height: 500px" :contract="this.slotsContract"
@@ -98,6 +100,71 @@
           </div>
         </div>
       </window>
+
+      <window id='tutorial' name="tutorial">
+        <div class="flex flex-wrap p-6 bg-dark h-full">
+          <div class="w-4/5">
+            <div class="text-2xl">Tutorial</div>
+          </div>
+          <div class="w-1/5 text-right">
+            <i @click="$modal.hide('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
+          </div>
+          <div class="text-center w-full">
+            <img v-bind:src='"/images/casino/slots/pg_" + tutorial.page + ".png"' />
+          </div>
+          <div class="mt-4 flex flex-col w-full" style='min-height: 175px'>
+            <template v-if="tutorial.page === 0">
+              <p class="text-xl">Credits</p>
+              <p class='txt-tutorial'>
+                In order to play the game you need to <span>insert XYA</span> into the
+                machine, which will be converted into game credits at a <span>1:1 rate</span>.
+              </p>
+            </template>
+
+            <template v-if="tutorial.page === 1">
+              <p class="text-xl">Holds</p>
+              <p class='txt-tutorial'>
+                Using a <span>HOLD</span> will pin the selected reel in place for one
+                round.
+              </p>
+              <br>
+              <p class='txt-tutorial'>
+                After every spin you have a <span>{{ holdInfo.chance }}%</span> to receive
+                between <span>{{ holdInfo.min }}</span> and <span> {{ holdInfo.max }} </span> holds.
+              </p>
+            </template>
+
+            <template v-if="tutorial.page === 2">
+              <p class="text-xl">Nudges</p>
+              <p class='txt-tutorial'>Using a <span>Nudge</span> will move the reel up one position.</p>
+              <br>
+              <p class='txt-tutorial'>
+                After every spin you have a <span>{{ nudgeInfo.chance }}%</span> to receive
+                between <span>{{ nudgeInfo.min }}</span> and <span>{{ nudgeInfo.max }}</span> nudges.
+              </p>
+            </template>
+
+            <template v-if="tutorial.page === 3">
+              <p class="text-xl">Bank</p>
+              <p class='txt-tutorial'>
+                Every winning combination will reward a specific number of
+                tokens which are stored in the bank.
+              </p>
+              <br>
+              <p class='txt-tutorial'>
+                You can withdraw these tokens at any time by using the
+                <span>Collect</span> button.
+              </p>
+            </template>
+          </div>
+          <div class='w-full flex justify-center cursor-pointer select-none'>
+            <span><a v-bind:class='{"opacity-50": tutorial.page - 1 < 0}'
+                v-on:click='tutorial.page = Math.max(0, tutorial.page - 1)' class="mr-5">Previous</a>
+              <a v-bind:class='{"opacity-50": tutorial.page + 1 > tutorial.pages}'
+                v-on:click='tutorial.page = Math.min(tutorial.pages, tutorial.page + 1)'>Next</a></span>
+          </div>
+        </div>
+      </window>
     </div>
   </section>
 </template>
@@ -124,7 +191,7 @@
     name: "Slots",
     components: {
       SlotMachine,
-      SlotScreen
+      SlotScreen,
     },
     mixins: [wallet],
     data() {
@@ -143,23 +210,72 @@
           slots: false,
           allowance: false,
         },
+        nudgeInfo: {
+          chance: 0,
+          min: 0,
+          max: 0,
+        },
+        holdInfo: {
+          chance: 0,
+          min: 0,
+          max: 0,
+        },
+        tutorial: {
+          page: 0,
+          pages: 3
+        },
       };
+    },
+    async mounted() {
+      this.mainContract = new ethers.Contract(
+        HPTToken.address,
+        HPTToken.abi,
+        this.metaMaskWallet.signer
+      );
+      this.slotsContract = new ethers.Contract(
+        Slots.address,
+        Slots.abi,
+        this.metaMaskWallet.signer
+      );
+
+      const allowance = await this.mainContract.allowance(
+        this.metaMaskAccount,
+        Slots.address
+      );
+      this.allowance = ethers.utils.formatEther(
+        allowance._isBigNumber ?
+        ethers.BigNumber.from(allowance).toString() :
+        allowance
+      );
+
+      await this.fetchGameData();
+
+      this.loader.allowance = true;
+      this.loader.slots = true;
     },
     computed: {
       ...mapGetters(["metaMaskAccount", "metaMaskWallet"]),
     },
     methods: {
       ...mapActions([""]),
+
       showPayTable() {
         this.$refs.slotMachine.showPayTable();
       },
+
       showInsertCoinModal() {
         this.$modal.show("insert");
       },
+
+      showTutorial() {
+        this.$modal.show("tutorial");
+      },
+
       async forceMachineUpdate() {
         await this.$refs.slotMachine.fetchPlayerData();
         await this.$refs.slotMachine.fetchGameReels();
       },
+
       async insertCoin() {
         if (this.loader.contractInsert) return;
         try {
@@ -173,21 +289,23 @@
           }
 
           const arg = fromExponential(actual);
-          const tx = await this.slotsContract.insertXYA(arg);
+          const tx = await this.slotsContract.deposit(arg);
 
           this.loader.contractInsert = true;
           this.$modal.hide("insert");
 
           await tx.wait(1);
           this.loader.contractInsert = false;
+          this.xyaAmount = 0;
         } catch (err) {
           this.loader.contractInsert = false;
         }
       },
+
       async withdraw() {
         if (this.loader.contractWithdraw) return;
         try {
-          const tx = await this.slotsContract.withdraw();
+          const tx = await this.slotsContract.withdrawBank();
           this.loader.contractWithdraw = true;
           await tx.wait(1);
           this.loader.contractWithdraw = false;
@@ -195,6 +313,7 @@
           this.loader.contractWithdraw = false;
         }
       },
+
       async addAllowance(amount) {
         if (this.loader.contractAllowance) return;
         let actual = 0;
@@ -227,10 +346,32 @@
           data._isBigNumber ? ethers.BigNumber.from(data).toString() : data
         );
       },
+
       async onRoundFinished(roundWinnings) {
-        this.appendToLocalStorageList("rounds_history", roundWinnings, this.roundsHistoryMax);
+        this.appendToLocalStorageList(
+          "rounds_history",
+          roundWinnings,
+          this.roundsHistoryMax
+        );
         this.roundsHistory.unshift(roundWinnings);
         this.roundsHistory = this.roundsHistory.slice(0, this.roundsHistoryMax);
+      },
+
+      async fetchGameData() {
+        const holdsInfo = await this.slotsContract.holdsInfo();
+        const nudgesInfo = await this.slotsContract.nudgesInfo();
+
+        this.holdInfo.chance = holdsInfo[0];
+        this.holdInfo.min = holdsInfo[1];
+        this.holdInfo.max = holdsInfo[2];
+
+        this.nudgeInfo.chance = nudgesInfo[0];
+        this.nudgeInfo.min = nudgesInfo[1];
+        this.nudgeInfo.max = nudgesInfo[2];
+
+        this.roundsHistory = await this.getLocalStorageItem("rounds_history");
+        this.roundsHistory = !this.roundsHistory ? [] :
+          this.roundsHistory.slice(0, this.roundsHistoryMax);
       },
 
       //WILL MOVE THESE IN A LOCAL STORAGE VUE PLUGIN
@@ -249,6 +390,7 @@
         listItems.unshift(item);
         await localStorage.setItem(key, JSON.stringify(listItems));
       },
+
       async removeFromLocalStorageList(key, item) {
         const listData = await localStorage.getItem(key);
         let listItems = JSON.parse(listData);
@@ -256,6 +398,7 @@
         listItems = listItems.filter((c) => c !== item);
         await localStorage.setItem(key, JSON.stringify(listItems));
       },
+
       async getLocalStorageItem(key) {
         const itemData = await localStorage.getItem(key);
         let item = JSON.parse(itemData);
@@ -263,38 +406,10 @@
         return item;
       },
     },
-    async mounted() {
-      this.mainContract = new ethers.Contract(
-        HPTToken.address,
-        HPTToken.abi,
-        this.metaMaskWallet.signer
-      );
-      this.slotsContract = new ethers.Contract(
-        Slots.address,
-        Slots.abi,
-        this.metaMaskWallet.signer
-      );
-
-      const allowance = await this.mainContract.allowance(
-        this.metaMaskAccount,
-        Slots.address
-      );
-      this.allowance = ethers.utils.formatEther(
-        allowance._isBigNumber ?
-        ethers.BigNumber.from(allowance).toString() :
-        allowance
-      );
-
-      this.loader.allowance = true;
-      this.loader.slots = true;
-
-      this.roundsHistory = await this.getLocalStorageItem("rounds_history");
-      this.roundsHistory = !this.roundsHistory ? [] : this.roundsHistory.slice(0,this.roundsHistoryMax);
-    },
   };
 </script>
 
-<style>
+<style scoped>
   #slot-container {
     --var-slots-bg: #1e2b22;
     --var-slots-dark-bg: #181f1f;
@@ -306,10 +421,28 @@
     border-radius: 12px;
   }
 
+  #tutorial p>span {
+    font-weight: bold;
+    color: #8cd1a6 !important;
+  }
+
+  #tutorial a:hover {
+    color: #8cd1a6;
+  }
+
   .inner-shadow {
     -moz-box-shadow: inset 0 0 12px var(--var-shadow-color);
     -webkit-box-shadow: inset 0 0 12px var(--var-shadow-color);
     box-shadow: inset 0 0 12px var(--var-shadow-color);
+  }
+
+  .txt-hilight {
+    font-weight: bold;
+    color: #8cd1a6 !important;
+  }
+
+  .txt-tutorial {
+    color: rgba(255, 255, 255, 0.75);
   }
 
   .highlight-border {
