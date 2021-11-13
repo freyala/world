@@ -24,15 +24,17 @@
           <p class="text-2xl">Loading...</p>
         </div>
       </div>
-      <div v-if="loader.slots" id="slot-container" class="p-4 md:p-8 relative flex justify-center mt-10">
+      <div v-if="loader.slots" id="slot-container"
+        class="p-4 md:p-8 relative flex xl:flex-row md:flex-col sm:flex-col justify-evenly mt-10">
         <div class="absolute top-0 left-0 p-4 md:p-8">
           <router-link :to="{ name: 'casino' }">
             <i class="fas fa-long-arrow-alt-left"></i> Back
           </router-link>
         </div>
 
-        <div class="w-1/5 mt-16 text-center">
-          <div class="text-2xl mb-3">Control Panel</div>
+        <div
+          class="xl:w-1/5 md:w-full sm:w-full xl:mt-16 md:mt-6 md:mb-4 sm:mt-6 sm:mb-4 text-center flex xl:flex-col md:flex-row sm:flex-row xl:justify-start md:justify-evenly sm:justify-evenly">
+          <div v-if='windowWidth > 1024' class="text-2xl mb-3">Control Panel</div>
           <hr class="opacity-50" />
           <div :key="loader.allowance" class="mt-3 mb-3 flex justify-center">
             <a v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)" class="hpt-btn w-5/6"
@@ -64,9 +66,10 @@
             <a v-on:click="showTutorial()" class="hpt-btn" href="javascript:;"><span>Tutorial</span></a>
           </div>
         </div>
-        <SlotMachine class="mr-40 ml-40" style="width: 450px; height: 500px" :contract="this.slotsContract"
-          ref="slotMachine" v-on:roundFinished="onRoundFinished($event)"></SlotMachine>
-        <div class="w-1/5 mt-16 text-center">
+        <SlotMachine style="width: 450px; height: 500px"
+          class='xl:mr-10 xl:mt-0 xl:mr-0 xl:ml-0 md:mr-auto md:ml-auto md:mt-10 sm:mr-auto sm:ml-auto'
+          :contract="this.slotsContract" ref="slotMachine" v-on:roundFinished="onRoundFinished($event)"></SlotMachine>
+        <div v-if='windowWidth > 1440' class="w-1/5 mt-16 text-center xl:visible md:invisible sm:invisible">
           <div class="text-2xl mb-3">Round Winnings</div>
           <div v-if="roundsHistory.length === 0">
             <hr class="opacity-50" />
@@ -202,6 +205,7 @@
         allowance: 0,
         slotsContract: null,
         xyaAmount: 0,
+        windowWidth: 0,
         loader: {
           contractAllowance: false,
           contractInsert: false,
@@ -249,15 +253,36 @@
       );
 
       await this.fetchGameData();
+      this.onResize();
 
       this.loader.allowance = true;
       this.loader.slots = true;
+
+      this.$nextTick(() => {
+        window.addEventListener('resize', this.onResize);
+      })
     },
     computed: {
       ...mapGetters(["metaMaskAccount", "metaMaskWallet"]),
     },
     methods: {
       ...mapActions([""]),
+
+      onResize() {
+        this.windowWidth = window.innerWidth;
+        if (this.windowWidth > 1440) {
+          this.roundsHistoryMax = 5;
+        } else {
+          this.roundsHistoryMax = 3;
+        }
+        this.getHistoryData();
+      },
+
+      async getHistoryData() {
+        this.roundsHistory = await this.getLocalStorageItem("rounds_history");
+        this.roundsHistory = !this.roundsHistory ? [] :
+          this.roundsHistory.slice(0, this.roundsHistoryMax);
+      },
 
       showPayTable() {
         this.$refs.slotMachine.showPayTable();
@@ -461,13 +486,15 @@
     color: #8cd1a7c7;
     display: block;
     height: 40px;
-    font-size: 18px;
+    font-size: max(calc(1vw - 1px), 12px);
     padding: 4px;
     position: relative;
     text-decoration: none;
     z-index: 2;
     transition: all 1s ease-out;
-    width: 75%;
+    width: 100%;
+    max-width: 228px;
+    min-width: 96px;
   }
 
   .hpt-btn:hover {
