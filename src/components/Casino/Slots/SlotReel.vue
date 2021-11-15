@@ -51,6 +51,7 @@
       };
     },
     mounted() {
+      this.reelOffset = window.innerWidth < 512 ? window.innerWidth < 368 ? 0 : 12 : 4;
       this.initializeAnimations();
     },
     methods: {
@@ -68,10 +69,6 @@
 
         for (let i = 0; i < this.reelItems.length; i++) {
           this.reelItems[i].y -= this.reelSpeed;
-
-         // if (this.reelItems[i].y >= this.reelBounds - this.reelBlockSize) {
-         //   this.reelItems[i].y = this.reelItems[i].y - this.reelBounds;
-         // }
 
           if (this.reelItems[i].y <= -this.reelBlockSize - this.reelOffset) {
             this.reelItems[i].y = this.reelBounds - this.reelBlockSize - this.reelOffset;

@@ -90,7 +90,7 @@
             </div>
             <div v-else class="w-full h-4/6 flex justify-center items-center text-center">
               <div>
-                <p class="glitch" data-text="Winnings">You Won!</p>
+                <p class="glitch" data-text="Winnings">Round prize:</p>
                 <span class="glitch2" :data-text="roundWinnings">{{
                   roundWinnings
                 }}</span>
@@ -371,7 +371,10 @@
 
         try {
           this.spamProtection = 1500;
-          var tx = await this.contract.spin({ gasPrice: 100000000000, gasLimit: 500000});
+          var tx = await this.contract.spin({
+            gasPrice: 100000000000,
+            gasLimit: 500000
+          });
           this.showRoundWinnings = false;
           this.roundState = ROUND_STATE.ON;
           this.animateKnob();
@@ -566,7 +569,7 @@
         this.$modal.show("payTable");
       },
 
-      getReelBlockSize(){
+      getReelBlockSize() {
         return this.windowWidth > 512 ? 96 : this.windowWidth <= 368 ? 66 : 80;
       },
 
@@ -984,9 +987,9 @@
     transform: translateY(50px);
   }
 
-  @media only screen and (max-width: 512px){
-      .nudge-button {
-    width: 60px;
-  }
+  @media only screen and (max-width: 512px) {
+    .nudge-button {
+      width: 60px;
+    }
   }
 </style>
