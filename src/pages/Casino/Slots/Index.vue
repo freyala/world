@@ -12,11 +12,6 @@
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Slots
           </h1>
-          <div class="absolute top-0 left-0 p-4 md:p-8">
-            <router-link :to="{ name: 'casino' }">
-              <i class="fas fa-long-arrow-alt-left"></i> Back
-            </router-link>
-          </div>
         </div>
       </section>
       <div v-if="!loader.slots" class="p-4 xl:p-8 relative mt-12">
@@ -31,7 +26,11 @@
       </div>
       <div v-if="loader.slots" id="slot-container"
         class="md:p-8 relative flex flex-col xl:flex-row tablet:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-10 tablet:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
-
+          <div class="absolute top-0 left-0 p-4 md:p-8">
+            <router-link :to="{ name: 'casino' }">
+              <i class="fas fa-long-arrow-alt-left"></i> Back
+            </router-link>
+          </div>
 
         <div class="xl:w-1/6 flex-row w-full tablet:w-3/12 md:w-full sm:w-full flex xl:flex-col tablet:flex-col md:flew-row sm:flex-row flex-wrap 
           xl:mt-8 tablet:mt-8 md:mt-2 sm:mt-2 xl:mb-0 tablet:mb-0 md:mb-5 sm:mb-5 p-1 mb-5">
