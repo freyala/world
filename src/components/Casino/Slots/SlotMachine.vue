@@ -3,7 +3,7 @@
     <div class="machine-top"></div>
     <div class="machine-bottom"></div>
     <div class="machine-container flex items-center flex-col justify-center">
-      <div class="slot-trigger">
+      <div class="slot-trigger xl:flex tablet:flex md:flex sm:flex hidden">
         <div class="slot-ring-1">
           <div ref="shadow1" class="ring-shadow"></div>
         </div>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="flex justify-evenly" style="width: 75%; height: 15%"></div>
-      <div class="screen medium inner-shadow flex flex-row justify-evenly">
+      <div class="screen inner-shadow flex flex-row justify-evenly">
         <transition name="fade">
           <div v-if="isBusy" class="
               absolute
@@ -44,17 +44,17 @@
             pl-3
             pr-3
           ">
-          <SlotReel v-for="i in reelCount" :reelBlockSize="96 - 10 * (reelCount - 3)" :key="i"></SlotReel>
+          <SlotReel v-for="i in reelCount" :reelBlockSize="getReelBlockSize()" :key="i"></SlotReel>
         </div>
         <transition name="nudge">
-          <div v-if="showNudges" class="z-50 absolute flex justify-around bottom-5 w-80 h-3">
+          <div v-if="showNudges" class="z-50 absolute flex justify-evenly bottom-5 w-full h-3">
             <div v-on:click="nudgeReel(i - 1)" class="nudge-button" v-for="i in 3" :key="i">
               NUDGE
             </div>
           </div>
         </transition>
       </div>
-      <div class="flex justify-evenly" style="width: 75%">
+      <div class="flex justify-evenly w-11/12 xl:w-9/12 md:w-9/12 tablet:w-9/12 sm:w-9/12">
         <div v-for="i in 3" :key="i" class="w-4/12 h-16 p-4">
           <SlotButton v-on:buttonClick="holdGameReel(i - 1, $event)" :title="'Hold'" :info="'25'">
           </SlotButton>
@@ -90,7 +90,7 @@
                 </div>
               </div>
               <hr class="opacity-25" />
-              <div class="flex justify-evenly mt-5 w-full">
+              <div class="flex justify-evenly mt-4 w-full">
                 <p>Bank</p>
                 <span>{{ parseInt(playerBank) }}</span>
               </div>
@@ -186,6 +186,10 @@
         type: Number,
         default: 3,
       },
+      windowWidth: {
+        type: Number,
+        default: 1920
+      },
       contract: Object,
     },
     data() {
@@ -247,7 +251,7 @@
           this.gamePayTable.push({
             payLineId: payLine[0].join("-"),
             payLine: payLine[0],
-            payOut: payLine[1],
+            payOut: payLine[1] / (10 ** 18),
           });
         }
       });
@@ -305,7 +309,7 @@
           const playerCredit =
             (await this.contract.creditBalanceOf(this.metaMaskAccount)) /
             10 ** 18;
-          const playerBank = await this.contract.bankOf(this.metaMaskAccount);
+          const playerBank = await this.contract.bankOf(this.metaMaskAccount) / 10 ** 18;
 
           this.playerHolds = await this.contract.holdsOf(this.metaMaskAccount);
           this.playerNudges = await this.contract.nudgesOf(this.metaMaskAccount);
@@ -374,7 +378,7 @@
 
         try {
           this.spamProtection = 1500;
-          var tx = await this.contract.spin();
+          var tx = await this.contract.spin({ gasPrice: 100000000000, gasLimit: 500000});
           this.showRoundWinnings = false;
           this.roundState = ROUND_STATE.ON;
           this.animateKnob();
@@ -569,6 +573,10 @@
         this.$modal.show("payTable");
       },
 
+      getReelBlockSize(){
+        return this.windowWidth > 512 ? 96 : this.windowWidth <= 368 ? 66 : 80;
+      },
+
       async solvePendingTransactions(tx) {
         // TEMPORARILY DISABLED
         const promise = new Promise((resolve, reject) => {
@@ -647,6 +655,8 @@
     background-color: var(--var-slots-dark-bg);
     border-radius: var(--var-border-radius);
     overflow: hidden;
+    height: 45%;
+    width: 80%;
   }
 
   .screen::before {
@@ -777,28 +787,13 @@
     border-radius: 12px;
   }
 
-  .screen.small {
-    width: 200px;
-    height: 300px;
-  }
-
-  .screen.medium {
-    width: 350px;
-    height: 210px;
-  }
-
-  .screen.large {
-    width: 400px;
-    height: 600px;
-  }
-
   .nudge-button {
     position: relative;
     color: white;
     cursor: pointer;
     font-size: 12px;
     height: 24px;
-    width: 96px;
+    width: 80px;
     text-align: center;
     line-height: 24px;
     border-radius: 12px;
@@ -830,7 +825,6 @@
     height: 160px;
     position: absolute;
     right: -80px;
-    display: flex;
     align-items: center;
   }
 

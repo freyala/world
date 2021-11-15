@@ -58,9 +58,10 @@
     color: white;
     text-shadow: 2px 2px --var-soft-shadow-color;
     min-height: 48px;
-    min-width: 80px;
+    min-width: 48px;
     width: 100%;
     height: 100%;
+    font-size: calc(0.4vw + 0.5rem);
     display: flex;
     align-content: center;
     align-items: center;

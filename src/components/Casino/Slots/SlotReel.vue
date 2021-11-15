@@ -2,7 +2,7 @@
   <div class="w-4/12 pt-3 pb-1 h-full reel-mask">
     <div class="flex items-center h-full w-full flex-col">
       <div class="absolute reel" v-bind:style="getReelStyle(index)" v-for="(item, index) in reelItems" :key="index">
-        <img v-bind:style="getImageClass(index)" v-bind:class="{ 'reel-hold': isReelHeld === true }" class="rounded"
+        <img v-bind:style="getImageClass(index)" v-bind:class="{ 'reel-hold': isReelHeld === true }"  class="rounded-lg"
           :width="reelBlockSize * 0.9" :height="reelBlockSize * 0.9" :src="item.image" />
       </div>
     </div>
@@ -89,7 +89,7 @@
             running: false,
             timer: 0,
             duration: 0.3,
-            arg: 5,
+            arg: 6,
           },
         };
       },
@@ -121,7 +121,7 @@
 
         for (let i = 0; i < this.reelItems.length; i++) {
           this.reelItems[i].y =
-            this.reelItems[i].initialPosition + 
+            this.reelItems[i].initialPosition - 
             ((1 - position) * this.reelBlockSize) / animation.arg;
         }
         if (animation.timer >= animation.duration * 1000) {
@@ -209,7 +209,7 @@
           top: -35 + this.reelItems[index].y + "px",
         };
       },
-      
+
       getImageClass(index) {
         if (!this.isReelSpinning) return "";
         return {

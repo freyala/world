@@ -46,7 +46,7 @@
   }
 
   .info-screen p {
-    font-size: 16px;
+    font-size: calc(0.35vw + 0.6rem);
   }
 
   .info-screen span {

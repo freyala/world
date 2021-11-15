@@ -8,10 +8,15 @@
       <section id="section-i-1" class="border-b-4 border-primary-alt" style="
           background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right;
         ">
-        <div class="container mx-auto text-center pt-12 md:pt-12 pb-12 md:pb-12">
+        <div class="container relative mx-auto text-center pt-12 md:pt-12 pb-12 md:pb-12">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Slots
           </h1>
+          <div class="absolute top-0 left-0 p-4 md:p-8">
+            <router-link :to="{ name: 'casino' }">
+              <i class="fas fa-long-arrow-alt-left"></i> Back
+            </router-link>
+          </div>
         </div>
       </section>
       <div v-if="!loader.slots" class="p-4 xl:p-8 relative mt-12">
@@ -25,51 +30,72 @@
         </div>
       </div>
       <div v-if="loader.slots" id="slot-container"
-        class="p-4 md:p-8 relative flex xl:flex-row md:flex-col sm:flex-col justify-evenly mt-10">
-        <div class="absolute top-0 left-0 p-4 md:p-8">
-          <router-link :to="{ name: 'casino' }">
-            <i class="fas fa-long-arrow-alt-left"></i> Back
-          </router-link>
-        </div>
+        class="md:p-8 relative flex flex-col xl:flex-row tablet:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-10 tablet:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
 
-        <div
-          class="xl:w-1/5 md:w-full sm:w-full xl:mt-16 md:mt-6 md:mb-4 sm:mt-6 sm:mb-4 text-center flex xl:flex-col md:flex-row sm:flex-row xl:justify-start md:justify-evenly sm:justify-evenly">
-          <div v-if='windowWidth > 1024' class="text-2xl mb-3">Control Panel</div>
-          <hr class="opacity-50" />
-          <div :key="loader.allowance" class="mt-3 mb-3 flex justify-center">
-            <a v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)" class="hpt-btn w-5/6"
-              href="javascript:;"><span><span v-if="!loader.contractAllowance">Enable Contract</span>
-                <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></a>
-            <a v-if="allowance > 0" v-on:click="addAllowance(0)" class="hpt-btn w-5/6" href="javascript:;"><span><span
-                  v-if="!loader.contractAllowance">Disable Contract</span>
-                <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></a>
+
+        <div class="xl:w-1/6 flex-row w-full tablet:w-3/12 md:w-full sm:w-full flex xl:flex-col tablet:flex-col md:flew-row sm:flex-row flex-wrap 
+          xl:mt-8 tablet:mt-8 md:mt-2 sm:mt-2 xl:mb-0 tablet:mb-0 md:mb-5 sm:mb-5 p-1 mb-5">
+          <div class="text-2xl mb-3 xl:block tablet:block md:hidden sm:hidden hidden mt-5 text-center">
+            <h2 class='text-xl'>Contract</h2>
           </div>
-          <div v-if="allowance > 0" class="mt-3 mb-3 flex justify-center">
-            <a v-on:click="showInsertCoinModal()" class="hpt-btn" href="javascript:;"><span><span
-                  v-if="!loader.contractInsert">Insert XYA</span>
-                <i v-if="loader.contractInsert" class="fas fa-cog fa-spin"></i></span></a>
+          <div class="xl:hidden tablet:hidden md:block sm:block text-center w-full text-center mt-3 mb-3">
+            <h2 class='text-xl'>Contract</h2>
           </div>
-          <div v-if="allowance > 0" class="mt-3 mb-3 flex justify-center">
-            <a v-on:click="withdraw()" class="hpt-btn" href="javascript:;"><span>
-                <span v-if="!loader.contractWithdraw">Collect</span>
-                <i v-if="loader.contractWithdraw" class="fas fa-cog fa-spin"></i></span></a>
+          <hr class="xl:block tablet:block md:hidden sm:hidden mb-3 opacity-50" />
+
+          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+            <div :key="loader.allowance" class="mt-1 mb-2 flex justify-evenly">
+              <button v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)"
+                class="hpt-btn" href="javascript:;"><span><span
+                    v-if="!loader.contractAllowance">Enable</span>
+                  <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
+              <button v-if="allowance > 0" v-on:click="addAllowance(0)"
+                class="hpt-btn"><span><span v-if="!loader.contractAllowance">Disable</span>
+                  <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
+            </div>
           </div>
-          <div v-if="allowance > 0" class="mt-3 mb-3 flex justify-center">
-            <a v-on:click="forceMachineUpdate()" class="hpt-btn" href="javascript:;"><span><span
-                  v-if="!loader.contractUpdateMachine">Update Machine</span>
-                <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></a>
+          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+              <button v-on:click="showInsertCoinModal()" class="hpt-btn">Insert XYA
+                <i v-if="loader.contractInsert" class="fas fa-cog fa-spin"></i></button>
+            </div>
           </div>
-          <div class="mt-3 mb-3 flex justify-center">
-            <a v-on:click="showPayTable()" class="hpt-btn" href="javascript:;"><span>Paytable</span></a>
+          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+              <button v-on:click="withdraw()" class="hpt-btn"><span>
+                  <span v-if="!loader.contractWithdraw">Collect</span>
+                  <i v-if="loader.contractWithdraw" class="fas fa-cog fa-spin"></i></span></button>
+            </div>
           </div>
-          <div class="mt-3 mb-3 flex justify-center">
-            <a v-on:click="showTutorial()" class="hpt-btn" href="javascript:;"><span>Tutorial</span></a>
+          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+              <button v-on:click="forceMachineUpdate()" class="hpt-btn"><span><span
+                    v-if="!loader.contractUpdateMachine">Update</span>
+                  <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
+            </div>
+          </div>
+          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+              <button v-on:click="showPayTable()" class="hpt-btn"><span><span
+                    v-if="!loader.contractUpdateMachine">Paytable</span>
+                  <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
+            </div>
+          </div>
+          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+            <div class="mt-1 mb-2 flex justify-center">
+              <button v-on:click="showTutorial()" class="hpt-btn"><span>Tutorial</span></button>
+            </div>
+          </div>
+          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 mt-1 w-full xl:hidden tablet:hidden md:hidden sm:hidden block">
+            <div class="mt-1 mb-0 flex justify-center">
+              <button v-on:click="manualSpin()" class="hpt-btn" style='width:92.5%!important'><span>Spin</span></button>
+            </div>
           </div>
         </div>
-        <SlotMachine style="width: 450px; height: 500px"
-          class='xl:mr-10 xl:mt-0 xl:mr-0 xl:ml-0 md:mr-auto md:ml-auto md:mt-10 sm:mr-auto sm:ml-auto'
+        <SlotMachine :windowWidth='windowWidth' v-bind:style="getMachineSize()"
+          class='xl:mr-10 xl:mt-0 xl:ml-0 md:mt-0 mr-auto ml-auto'
           :contract="this.slotsContract" ref="slotMachine" v-on:roundFinished="onRoundFinished($event)"></SlotMachine>
-        <div v-if='windowWidth > 1440' class="w-1/5 mt-16 text-center xl:visible md:invisible sm:invisible">
+        <div v-if='windowWidth > 1440' class="w-1/5 mt-8 text-center xl:visible md:invisible sm:invisible">
           <div class="text-2xl mb-3">Round Winnings</div>
           <div v-if="roundsHistory.length === 0">
             <hr class="opacity-50" />
@@ -301,6 +327,19 @@
         await this.$refs.slotMachine.fetchGameReels();
       },
 
+      manualSpin(){
+        this.$refs.slotMachine.startRound();
+      },
+
+      getMachineSize(){
+        const width = this.windowWidth < 640 ? '90%' : '450px';
+        const height = this.windowWidth < 512 ? this.windowWidth <= 368 ? '350px' : '450px': '500px';
+        return {
+          width: width,
+          height: height
+        };
+      },
+
       async insertCoin() {
         if (this.loader.contractInsert) return;
         try {
@@ -485,16 +524,13 @@
     box-sizing: border-box;
     color: #8cd1a7c7;
     display: block;
-    height: 40px;
-    font-size: max(calc(1vw - 1px), 12px);
-    padding: 4px;
+    font-size: max(calc(1vw - 1px), 14px);
+    padding: 10px;
     position: relative;
     text-decoration: none;
     z-index: 2;
     transition: all 1s ease-out;
-    width: 100%;
-    max-width: 228px;
-    min-width: 96px;
+    width: 85%;
   }
 
   .hpt-btn:hover {
@@ -506,16 +542,6 @@
     color: #fff;
   }
 
-  .hpt-btn span {
-    align-items: center;
-    background: var(--var-slots-bg);
-    border-radius: var(--var-border-radius);
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    transition: background 0.1s ease;
-    width: 100%;
-  }
 
   .hpt-btn:hover span {
     background: transparent;
