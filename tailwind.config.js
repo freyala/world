@@ -3,9 +3,6 @@ module.exports = {
     darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {
-            screens: {
-                'tablet': '1024px',
-            },
             colors: {
                 'red': '#853435',
                 'green': '#58804D',

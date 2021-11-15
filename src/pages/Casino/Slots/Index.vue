@@ -25,24 +25,24 @@
         </div>
       </div>
       <div v-if="loader.slots" id="slot-container"
-        class="md:p-8 relative flex flex-col xl:flex-row tablet:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-10 tablet:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
+        class="md:p-8 relative flex flex-col xl:flex-row lg:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-10 lg:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
           <div class="absolute top-0 left-0 p-4 md:p-8">
             <router-link :to="{ name: 'casino' }">
               <i class="fas fa-long-arrow-alt-left"></i> Back
             </router-link>
           </div>
 
-        <div class="xl:w-1/6 flex-row w-full tablet:w-3/12 md:w-full sm:w-full flex xl:flex-col tablet:flex-col md:flew-row sm:flex-row flex-wrap 
-          xl:mt-8 tablet:mt-8 md:mt-2 sm:mt-2 xl:mb-0 tablet:mb-0 md:mb-5 sm:mb-5 p-1 mb-5">
-          <div class="text-2xl mb-3 xl:block tablet:block md:hidden sm:hidden hidden mt-5 text-center">
-            <h2 class='text-xl'>Contract</h2>
+        <div class="xl:w-3/12 flex-row w-full lg:w-3/12 md:w-full sm:w-full flex xl:flex-col lg:flex-col md:flew-row sm:flex-row flex-wrap 
+           md:mt-2 sm:mt-2 xl:mb-0 lg:mb-0 md:mb-5 sm:mb-5 p-1 mb-5">
+          <div class="text-2xl mb-3 xl:block lg:block md:hidden sm:hidden hidden mt-5 text-center">
+            <h2 class='text-2xl'>Contract</h2>
           </div>
-          <div class="xl:hidden tablet:hidden md:block sm:block text-center w-full text-center mt-3 mb-3">
-            <h2 class='text-xl'>Contract</h2>
+          <div class="xl:hidden lg:hidden md:block sm:block text-center w-full text-center mt-3 mb-3">
+            <h2 class='text-2xl'>Contract</h2>
           </div>
-          <hr class="xl:block tablet:block md:hidden sm:hidden mb-3 opacity-50" />
+          <hr class="xl:block lg:block md:hidden sm:hidden mb-3 opacity-50" />
 
-          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
             <div :key="loader.allowance" class="mt-1 mb-2 flex justify-evenly">
               <button v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)"
                 class="hpt-btn" href="javascript:;"><span><span
@@ -53,39 +53,39 @@
                   <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
             <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
               <button v-on:click="showInsertCoinModal()" class="hpt-btn">Insert XYA
                 <i v-if="loader.contractInsert" class="fas fa-cog fa-spin"></i></button>
             </div>
           </div>
-          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
             <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
               <button v-on:click="withdraw()" class="hpt-btn"><span>
                   <span v-if="!loader.contractWithdraw">Collect</span>
                   <i v-if="loader.contractWithdraw" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
             <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
               <button v-on:click="forceMachineUpdate()" class="hpt-btn"><span><span
                     v-if="!loader.contractUpdateMachine">Update</span>
                   <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
             <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
               <button v-on:click="showPayTable()" class="hpt-btn"><span><span
                     v-if="!loader.contractUpdateMachine">Paytable</span>
                   <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
             <div class="mt-1 mb-2 flex justify-center">
               <button v-on:click="showTutorial()" class="hpt-btn"><span>Tutorial</span></button>
             </div>
           </div>
-          <div class="xl:w-full tablet:w-full md:w-3/6 sm:w-3/6 mt-1 w-full xl:hidden tablet:hidden md:hidden sm:hidden block">
+          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 mt-1 w-full xl:hidden lg:hidden md:hidden sm:hidden block">
             <div class="mt-1 mb-0 flex justify-center">
               <button v-on:click="manualSpin()" class="hpt-btn" style='width:92.5%!important'><span>Spin</span></button>
             </div>
@@ -332,7 +332,7 @@
 
       getMachineSize(){
         const width = this.windowWidth < 640 ? '90%' : '450px';
-        const height = this.windowWidth < 512 ? this.windowWidth <= 368 ? '350px' : '450px': '500px';
+        const height = this.windowWidth < 512 ? this.windowWidth <= 368 ? '400px' : '450px': '500px';
         return {
           width: width,
           height: height

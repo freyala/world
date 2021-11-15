@@ -38,6 +38,7 @@
         reelItems: [],
         reelSpeed: 0,
         reelPosition: 0,
+        reelOffset: 16,
         reelSheet: [],
         reelBounds: 0,
         reelItemCount: 0,
@@ -72,8 +73,8 @@
          //   this.reelItems[i].y = this.reelItems[i].y - this.reelBounds;
          // }
 
-          if (this.reelItems[i].y <= -this.reelBlockSize) {
-            this.reelItems[i].y = this.reelBounds - this.reelBlockSize;
+          if (this.reelItems[i].y <= -this.reelBlockSize - this.reelOffset) {
+            this.reelItems[i].y = this.reelBounds - this.reelBlockSize - this.reelOffset;
           }
         }
       },
@@ -162,8 +163,8 @@
         for (let i = 0; i < this.reelItemCount; i++) {
           this.reelItems.push({
             index: i,
-            y: i * this.reelBlockSize,
-            initialPosition: i * 96,
+            y: i * this.reelBlockSize - this.reelOffset,
+            initialPosition: i * this.reelBlockSize - this.reelOffset,
             image: assets.images[this.reelSheet[i]],
           });
         }
@@ -183,9 +184,9 @@
 
           if (newPosition < 0) {
             this.reelItems[i].initialPosition =
-              (this.reelItemCount + newPosition) * this.reelBlockSize;
+              (this.reelItemCount + newPosition) * this.reelBlockSize - this.reelOffset;
           } else {
-            this.reelItems[i].initialPosition = newPosition * this.reelBlockSize;
+            this.reelItems[i].initialPosition = newPosition * this.reelBlockSize - this.reelOffset;
           }
         }
       },

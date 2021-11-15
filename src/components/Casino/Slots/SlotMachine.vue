@@ -3,7 +3,7 @@
     <div class="machine-top"></div>
     <div class="machine-bottom"></div>
     <div class="machine-container flex items-center flex-col justify-center">
-      <div class="slot-trigger xl:flex tablet:flex md:flex sm:flex hidden">
+      <div class="slot-trigger xl:flex lg:flex md:flex sm:flex hidden">
         <div class="slot-ring-1">
           <div ref="shadow1" class="ring-shadow"></div>
         </div>
@@ -14,8 +14,8 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-evenly" style="width: 75%; height: 15%"></div>
-      <div class="screen inner-shadow flex flex-row justify-evenly">
+      <div class="flex justify-evenly" style="width: 75%; height: 10%"></div>
+      <div class="screen inner-shadow flex flex-row justify-evenly xl:h-2/5 lg:h-2/5 md:h-2/5 sm:h-2/5 h-1/3">
         <transition name="fade">
           <div v-if="isBusy" class="
               absolute
@@ -54,7 +54,7 @@
           </div>
         </transition>
       </div>
-      <div class="flex justify-evenly w-11/12 xl:w-9/12 md:w-9/12 tablet:w-9/12 sm:w-9/12">
+      <div class="flex justify-evenly w-11/12 xl:w-9/12 md:w-9/12 lg:w-9/12 sm:w-9/12">
         <div v-for="i in 3" :key="i" class="w-4/12 h-16 p-4">
           <SlotButton v-on:buttonClick="holdGameReel(i - 1, $event)" :title="'Hold'" :info="'25'">
           </SlotButton>
@@ -90,7 +90,7 @@
                 </div>
               </div>
               <hr class="opacity-25" />
-              <div class="flex justify-evenly mt-4 w-full">
+              <div class="flex justify-evenly xl:mt-5 lg:mt-6 md:mt-6 sm:mt-6 mt-5 w-full">
                 <p>Bank</p>
                 <span>{{ parseInt(playerBank) }}</span>
               </div>
@@ -655,7 +655,6 @@
     background-color: var(--var-slots-dark-bg);
     border-radius: var(--var-border-radius);
     overflow: hidden;
-    height: 45%;
     width: 80%;
   }
 
