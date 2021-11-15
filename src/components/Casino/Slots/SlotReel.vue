@@ -38,7 +38,7 @@
         reelItems: [],
         reelSpeed: 0,
         reelPosition: 0,
-        reelOffset: 16,
+        reelOffset: 4,
         reelSheet: [],
         reelBounds: 0,
         reelItemCount: 0,

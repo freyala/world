@@ -35,19 +35,12 @@
         </transition>
         <div class="screen-shadow"></div>
 
-        <div class="
-            w-full
-            h-full
-            flex flex-row
-            justify-evenly
-            overflow-hidden
-            pl-3
-            pr-3
+        <div class="w-full h-full flex flex-row justify-evenly overflow-hidden xl:pl-3 xl:pr-3 lg:pl-3 lg:pr-3 md:pr-3 md:pl-3 sm:pr-2 sm:pl-2 pr-2 pl-2
           ">
           <SlotReel v-for="i in reelCount" :reelBlockSize="getReelBlockSize()" :key="i"></SlotReel>
         </div>
         <transition name="nudge">
-          <div v-if="showNudges" class="z-50 absolute flex justify-evenly bottom-5 w-full h-3">
+          <div v-if="showNudges" class="z-50 absolute flex justify-evenly bottom-5 w-full h-3 ">
             <div v-on:click="nudgeReel(i - 1)" class="nudge-button" v-for="i in 3" :key="i">
               NUDGE
             </div>
@@ -792,7 +785,7 @@
     cursor: pointer;
     font-size: 12px;
     height: 24px;
-    width: 80px;
+    width: 90px;
     text-align: center;
     line-height: 24px;
     border-radius: 12px;
@@ -989,5 +982,11 @@
   .nudge-enter,
   .nudge-leave-to {
     transform: translateY(50px);
+  }
+
+  @media only screen and (max-width: 512px){
+      .nudge-button {
+    width: 60px;
+  }
   }
 </style>

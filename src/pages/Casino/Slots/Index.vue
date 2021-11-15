@@ -26,14 +26,14 @@
       </div>
       <div v-if="loader.slots" id="slot-container"
         class="md:p-8 relative flex flex-col xl:flex-row lg:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-10 lg:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
-          <div class="absolute top-0 left-0 p-4 md:p-8">
+          <div class="xl:absolute lg:absolute md:absolute sm:absolute relative top-0 left-0 p-4 md:p-8">
             <router-link :to="{ name: 'casino' }">
               <i class="fas fa-long-arrow-alt-left"></i> Back
             </router-link>
           </div>
 
-        <div class="xl:w-3/12 flex-row w-full lg:w-3/12 md:w-full sm:w-full flex xl:flex-col lg:flex-col md:flew-row sm:flex-row flex-wrap 
-           md:mt-2 sm:mt-2 xl:mb-0 lg:mb-0 md:mb-5 sm:mb-5 p-1 mb-5">
+        <div class="xl:w-3/12 flex-row w-full lg:w-3/12 md:w-10/12 sm:w-full flex xl:flex-col lg:flex-col md:flex-row sm:flex-row flex-wrap 
+           md:mt-2 sm:mt-2 xl:mb-0 lg:mb-0 md:mb-5 sm:mb-5 p-1 mb-5 xl:mr-0 xl:ml-0 lg:mr-0 lg:ml-0 md:mr-auto md:ml-auto">
           <div class="text-2xl mb-3 xl:block lg:block md:hidden sm:hidden hidden mt-5 text-center">
             <h2 class='text-2xl'>Contract</h2>
           </div>
