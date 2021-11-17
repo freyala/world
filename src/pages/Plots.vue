@@ -81,15 +81,15 @@
                     </small>
                     <br>
                     <small>
-                      F: {{ plot.fertility }}
+                      F: {{ plot.fertility }} ({{ plot.fertility_buff }})
                     </small>
 
                     <small>
-                      L: {{ plot.level }}
+                      L: {{ plot.level }} ({{ plot.level_buff }})
                     </small>
 
                     <small>
-                      C: {{ plot.crime_rate }}
+                      C: {{ plot.crime_rate }} ({{ plot.crime_rate_buff }})
                     </small>
                   </div>
                 </div>
@@ -136,15 +136,15 @@
                     </small>
                     <br>
                     <small>
-                      F: {{ plot.fertility }}
+                      F: {{ plot.fertility }} ({{ plot.fertility_buff }})
                     </small>
                     |
                     <small>
-                      L: {{ plot.level }}
+                      L: {{ plot.level }} ({{ plot.level_buff }})
                     </small>
                     |
                     <small>
-                      C: {{ plot.crime_rate }}
+                      C: {{ plot.crime_rate }} ({{ plot.crime_rate_buff }})
                     </small>
                   </div>
                 </div>
@@ -195,7 +195,7 @@
 
 
                     <small>
-                      ID: {{ plot.token_id }}
+                      ID: {{ plot.token_id }} + 
                     </small>
                     <br>
                     <br>
@@ -205,15 +205,15 @@
                       </small>
                       <br>
                       <small>
-                        F: {{ plot.fertility }}
+                        F: {{ plot.fertility }} ({{ plot.fertility_buff }})
                       </small>
 
                       <small>
-                        L: {{ plot.level }}
+                        L: {{ plot.level }} ({{ plot.level_buff }})
                       </small>
 
                       <small>
-                        C: {{ plot.crime_rate }}
+                        C: {{ plot.crime_rate }} ({{ plot.crime_rate_buff }})
                       </small>
                     </div>
                   </div>
@@ -271,9 +271,9 @@
                   neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
                 }}</p>
               <p>Soil type: {{ soilTypes[selectedPlotData.soil_type] }}</p>
-              <p>Fertility: {{ selectedPlotData.fertility }}</p>
-              <p>Level: {{ selectedPlotData.level }}</p>
-              <p>Crime rate: {{ selectedPlotData.crime_rate }}</p>
+              <p>Fertility: {{ selectedPlotData.fertility + selectedPlotData.fertility_buff }} ({{ selectedPlotData.fertility }} + {{ selectedPlotData.fertility_buff }})</p>
+              <p>Level: {{ selectedPlotData.level + selectedPlotData.level_buff }}({{ selectedPlotData.level }} + {{ selectedPlotData.level_buff }})</p>
+              <p>Crime rate: {{ selectedPlotData.crime_rate + selectedPlotData.crime_rate_buff }} ({{ selectedPlotData.crime_rate }} + {{ selectedPlotData.crime_rate_buff }})</p>
               <br>
               <div
                   v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
@@ -298,6 +298,60 @@
                         class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
                   {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
                 </button>
+
+                <!-- attribute up/down grading -->
+                <br>                
+                <br>
+                <div class="text-2xl">Plot Management</div>
+                <br>
+                <div v-if="!selectedPlotData.registered">
+                  <button  @click="registerPlotToHandler(selectedPlotData)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                    {{ isRegisteringPlot ? 'REGISTERING' : 'REGISTER' }}
+                  </button>
+                </div>
+                <div v-else>
+                  <p>Current upgrade cost: {{ selectedPlotData.currentUpgradeCost }}</p>
+                  <!-- fertility -->
+                  <div>
+                    <p>Fertility: {{ selectedPlotData.fertility + selectedPlotData.fertility_buff }}</p>
+                    <button @click="downgradePlotAttribute('fertility', selectedPlotData, false)"
+                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                      {{ attributeCanBeAltered("fertility", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
+                    </button>
+                    <button @click="upgradePlotAttribute('fertility', selectedPlotData, true)"
+                            class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                      {{ attributeCanBeAltered("fertility", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
+                    </button>
+                  </div>
+
+                  <!-- level -->
+                  <div>
+                    <p>Level: {{ selectedPlotData.level + selectedPlotData.level_buff }}</p>
+                    <button @click="downgradePlotAttribute('level', selectedPlotData, false)"
+                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                      {{ attributeCanBeAltered("level", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
+                    </button>
+                    <button @click="upgradePlotAttribute('level', selectedPlotData, true)"
+                            class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                      {{ attributeCanBeAltered("level", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
+                    </button>
+                  </div>
+
+                  <!-- crime rate -->
+                  <div>
+                    <p>Crime Rate: {{ selectedPlotData.crime_rate + selectedPlotData.crime_rate_buff }}</p>
+                    <button @click="downgradePlotAttribute('crime', selectedPlotData, false)"
+                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                      {{ attributeCanBeAltered("crime", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
+                    </button>
+                    <button @click="upgradePlotAttribute('crime', selectedPlotData, true)"
+                            class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                      {{ attributeCanBeAltered("crime", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
+                    </button>
+                  </div>
+                </div>
+
               </div>
               <div v-else>
                 <button @click="cancelListing(selectedPlotData.token_id)"
@@ -313,9 +367,9 @@
                   neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
                 }}</p>
               <p>Soil type: {{ soilTypes[selectedPlotData.soil_type] }}</p>
-              <p>Fertility: {{ selectedPlotData.fertility }}</p>
-              <p>Level: {{ selectedPlotData.level }}</p>
-              <p>Crime rate: {{ selectedPlotData.crime_rate }}</p>
+              <p>Fertility: {{ selectedPlotData.fertility }} ({{ selectedPlotData.fertility_buff }})</p>
+              <p>Level: {{ selectedPlotData.level }} ({{ selectedPlotData.level_buff }})</p>
+              <p>Crime rate: {{ selectedPlotData.crime_rate }} ({{ selectedPlotData.crime_rate_buff }})</p>
               <br>
               <p>Plot price: {{ selectedPlotData.sales.price / Math.pow(10, 18) }} {{
                   neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
@@ -362,6 +416,7 @@ import Yang from "../plugins/artifacts/yang.json";
 import PlotsMarket from "../plugins/artifacts/plotsmarket.json";
 import PlotsYinMarket from "../plugins/artifacts/plotsyinmarket.json";
 import PlotsYangMarket from "../plugins/artifacts/plotsyangmarket.json";
+import PlotsHandler from "../plugins/artifacts/plotshandler.json";
 import {ethers} from "ethers";
 import fromExponential from "from-exponential";
 
@@ -378,6 +433,7 @@ export default {
         xya: undefined,
         yin: undefined,
         yang: undefined,
+        handler: undefined,
       },
       tokenContracts: {
         xya: undefined,
@@ -436,7 +492,9 @@ export default {
       loadingApproveBuyPlot: false,
       loadingApproveSellPlot: false,
       loadingSendPlot: false,
-      loadingCancelPlotListing: false
+      loadingCancelPlotListing: false,
+
+      isRegisteringPlot: false
     }
   },
   watch: {
@@ -466,10 +524,11 @@ export default {
     }
   },
   async mounted() {
-    [this.plotContracts.xya, this.plotContracts.yin, this.plotContracts.yang, this.tokenContracts.xya, this.tokenContracts.yin, this.tokenContracts.yang, this.marketContracts.xya, this.marketContracts.yin, this.marketContracts.yang] = await Promise.all([
+    [this.plotContracts.xya, this.plotContracts.yin, this.plotContracts.yang, this.plotContracts.handler, this.tokenContracts.xya, this.tokenContracts.yin, this.tokenContracts.yang, this.marketContracts.xya, this.marketContracts.yin, this.marketContracts.yang] = await Promise.all([
       new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer),
+      new ethers.Contract(PlotsHandler.address, PlotsHandler.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer),
@@ -510,6 +569,10 @@ export default {
         this.ownedPlots.push(plot.toNumber())
       })
 
+      // grab the registered plots for a neighbourhood, if they are there then grab their stats too in the next loop and add them to it
+      const plotType = type === 'freyala' ? 0 : type === 'yin' ? 1 : 2
+      const registeredPlots = [0, 1, 2, 25] // await this.plotContracts.handler.getAllRegisteredPlots(plotType) // NOTE: returns the tokenId in the contract
+
       for (let i = 0; i < 125; i++) {
         this.plots.push({
           neighbourhood: this.neighbourhood,
@@ -518,7 +581,11 @@ export default {
           fertility: 0,
           level: 0,
           crime_rate: 0,
-          bought: false
+          fertility_buff: 0,
+          level_buff: 0,
+          crime_rate_buff: 0,
+          bought: false,
+          registered: false
         })
       }
 
@@ -549,7 +616,23 @@ export default {
               fertility: filteredPlot[0].fertility,
               level: filteredPlot[0].level,
               crime_rate: filteredPlot[0].crime_rate,
+              fertility_buff: 0,
+              level_buff: 0,
+              crime_rate_buff: 0,
               bought: true
+            }
+
+            if (registeredPlots.includes(this.plots[index].token_id)) {
+              console.log("Registered plot found!")
+
+              // faked right now
+              const plotStats = [0, 0, 0, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3), Math.floor(Math.random() * 3)]  // await this.plotContracts.handler.getPlotData(plotType, index);
+              this.plots[index].fertility_buff = plotStats[3] - this.plots[index].fertility;
+              this.plots[index].level_buff = plotStats[3] - this.plots[index].level;
+              this.plots[index].crime_rate_buff = plotStats[3] - this.plots[index].crime_rate;
+
+              this.plots[index].currentUpgradeCost = "10000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(plotType, this.plots[index].token_id);
+              this.plots[index].registered = true;
             }
           }
 
@@ -736,19 +819,39 @@ export default {
     },
     async visitPlot(data) {
       let plot = {}
+      let isRegistered = false;
+      let plotType = -1;
 
+      // TODO: talk to plot handler for this instead if we are registered?!
       if (this.neighbourhood === 18 || this.neighbourhood === 19) {
         plot = await this.plotContracts.yin.plots(data.token_id)
+        plotType = 1;
       } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        plotType = 2;
         plot = await this.plotContracts.yang.plots(data.token_id)
       } else {
+        plotType = 0;
         plot = await this.plotContracts.xya.plots(data.token_id)
       }
+
+      isRegistered = await this.plotContracts.handler.isPlotRegistered(plotType, data.token_id)
 
       data.amountOwnedByPlot = ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot)
       this.selectedPlotData = data
 
+      // get the extra data here for the registered stuff
+      if (!isRegistered) {
+        console.log("FORCING TO BE REGISTERED FOR TEST")
+        isRegistered = true
+      }
+
+      if (isRegistered) {
+        this.selectedPlotData.registered = true
+      }
+
       this.plotModalReason = 'visit'
+
+      console.log(this.selectedPlotData)
 
       this.$modal.show('plot')
     },
@@ -765,11 +868,97 @@ export default {
 
       data.amountOwnedByPlot = ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot)
       this.selectedPlotData = data
-
       this.plotModalReason = 'buy'
 
       this.$modal.show('plot')
     },
+    async registerPlotToHandler(data) {
+      if (data.registered)
+        return
+
+      console.log("Registering plot:")
+
+      let plotType = -1
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+         plotType = 1
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        plotType = 2
+      } else {
+        plotType = 0
+      }
+
+      data.isRegisteringPlot = true;
+      const register = await this.plotContracts.handler.registerPlot(plotType, data.token_id)
+      await register.wait(1)
+      
+      let isRegistered = await this.plotContracts.handler.isPlotRegistered(plotType, data.token_id)
+      data.registered = isRegistered
+    },
+    attributeCanBeAltered(attributeId, plotData, isUpgrading) {
+      let currentTotal = (attributeId === 'fertility' ? 
+        plotData.fertility + plotData.fertility_buff : attributeId === 'level' ? 
+          plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
+
+      if (isUpgrading) {
+        return (currentTotal < 9)
+      } else {
+        return (currentTotal > 0)
+      }
+    }, 
+    async downgradePlotAttribute(attributeId, plotData, isUpgrading) {
+      // sanity check we can downgrade before creating the tx
+      if (!this.attributeCanBeAltered(attributeId, plotData, isUpgrading)) {
+        return
+      }
+
+      let plotType = -1
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+         plotType = 1
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        plotType = 2
+      } else {
+        plotType = 0
+      }
+
+      let currentTotal = (attributeId === 'fertility' ? 
+        plotData.fertility + plotData.fertility_buff : attributeId === 'level' ? 
+          plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
+
+      let attribVal = (attributeId === 'fertility' ? 0 : attributeId === 'level' ? 1 : 2)
+
+      // downgradePlot(uint8 _plotType, uint256 _plotId, uint8 _attribute, uint256 _currentLevel)
+      const downgrade = await this.plotContracts.handler.downgradePlot(plotType, plotData.token_id, attribVal, currentTotal)
+      await downgrade.wait(1)
+
+      // todo: refresh the data on screen showing the new stats
+    },
+    async upgradePlotAttribute(attributeId, plotData, isUpgrading) {
+      // sanity check we can downgrade before creating the tx
+      if (!this.attributeCanBeAltered(attributeId, plotData, isUpgrading)) {
+        return
+      }
+
+      let plotType = -1
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+         plotType = 1
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        plotType = 2
+      } else {
+        plotType = 0
+      }
+
+      let currentTotal = (attributeId === 'fertility' ? 
+        plotData.fertility + plotData.fertility_buff : attributeId === 'level' ? 
+          plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
+
+      let attribVal = (attributeId === 'fertility' ? 0 : attributeId === 'level' ? 1 : 2)
+
+      // upgradePlot(uint8 _plotType, uint256 _plotId, uint8 _attribute, uint256 _currentLevel)
+      const upgrade = await this.plotContracts.handler.upgradePlot(plotType, plotData.token_id, attribVal, currentTotal)
+      await upgrade.wait(1)
+
+      // todo: refresh the data on screen showing the new stats
+    }
   }
 }
 </script>
