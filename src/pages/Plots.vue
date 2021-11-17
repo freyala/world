@@ -36,10 +36,12 @@
         </div>
 
         <div class="flex flex-wrap w-full mt-4">
-
-          <div class="w-full md:w-3/5 mx-auto text-center flex flex-wrap">
+          <div class="w-full md:w-4/5 mx-auto text-center flex flex-wrap">
             <div class="w-full">
-              F: Fertility - L: Level - C: Crime rate
+              Emissions Left: {{ emissionsLeft }} | Emission Rate: {{ emissionsRate }} | Plots Emitting: {{ currentTotalEmittingPlots }}
+            </div>
+            <div class="w-full">
+              F: Fertility - L: Level - C: Crime rate - E: Emitting
             </div>
             <div class="w-full">
               <button v-if="neighbourhoodSales === false"
@@ -195,7 +197,7 @@
 
 
                     <small>
-                      ID: {{ plot.token_id }} + 
+                      ID: {{ plot.token_id }} +  {{ getUtilityUiElements(plot.utility) }}
                     </small>
                     <br>
                     <br>
@@ -417,6 +419,7 @@ import PlotsMarket from "../plugins/artifacts/plotsmarket.json";
 import PlotsYinMarket from "../plugins/artifacts/plotsyinmarket.json";
 import PlotsYangMarket from "../plugins/artifacts/plotsyangmarket.json";
 import PlotsHandler from "../plugins/artifacts/plotshandler.json";
+import PlotsXyaEmitter from "../plugins/artifacts/plotsxyaemitter.json";
 import {ethers} from "ethers";
 import fromExponential from "from-exponential";
 
@@ -434,6 +437,7 @@ export default {
         yin: undefined,
         yang: undefined,
         handler: undefined,
+        xyaEmitter: undefined,
       },
       tokenContracts: {
         xya: undefined,
@@ -475,6 +479,7 @@ export default {
         'Silt'
       ],
       neighbourhood: 0,
+      plotType: 0,
       ownedPlots: [],
       plots: [],
       loading: true,
@@ -494,7 +499,12 @@ export default {
       loadingSendPlot: false,
       loadingCancelPlotListing: false,
 
-      isRegisteringPlot: false
+      isRegisteringPlot: false,
+
+      // emission data
+      emissionsLeft: 0,
+      emissionsRate: 0,
+      currentTotalEmittingPlots: 0 
     }
   },
   watch: {
@@ -508,10 +518,13 @@ export default {
 
         if (this.neighbourhood === 18 || this.neighbourhood === 19) {
           await this.reGrabPlots('yin')
+          this.plotType = 1
         } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
           await this.reGrabPlots('yang')
+          this.plotType = 2
         } else {
           await this.reGrabPlots('freyala')
+          this.plotType = 0
         }
       }
     }
@@ -524,11 +537,16 @@ export default {
     }
   },
   async mounted() {
-    [this.plotContracts.xya, this.plotContracts.yin, this.plotContracts.yang, this.plotContracts.handler, this.tokenContracts.xya, this.tokenContracts.yin, this.tokenContracts.yang, this.marketContracts.xya, this.marketContracts.yin, this.marketContracts.yang] = await Promise.all([
+    [
+      this.plotContracts.xya, this.plotContracts.yin, this.plotContracts.yang, this.plotContracts.handler, this.plotContracts.xyaEmitter,
+      this.tokenContracts.xya, this.tokenContracts.yin, this.tokenContracts.yang, 
+      this.marketContracts.xya, this.marketContracts.yin, this.marketContracts.yang
+    ] = await Promise.all([
       new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsHandler.address, PlotsHandler.abi, this.metaMaskWallet.signer),
+      new ethers.Contract(PlotsXyaEmitter.address, PlotsXyaEmitter.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer),
@@ -537,12 +555,18 @@ export default {
       new ethers.Contract(PlotsYangMarket.address, PlotsYangMarket.abi, this.metaMaskWallet.signer)
     ])
 
+    // async query the emitter contract
+    this.getEmissionsData();
+
     if (this.neighbourhood === 18 || this.neighbourhood === 19) {
       await this.reGrabPlots('yin')
+      this.plotType = 1
     } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
       await this.reGrabPlots('yang')
+      this.plotType = 2
     } else {
       await this.reGrabPlots('freyala')
+      this.plotType = 0
     }
 
     this.mounted = true
@@ -570,8 +594,7 @@ export default {
       })
 
       // grab the registered plots for a neighbourhood, if they are there then grab their stats too in the next loop and add them to it
-      const plotType = type === 'freyala' ? 0 : type === 'yin' ? 1 : 2
-      const registeredPlots = [0, 1, 2, 25] // await this.plotContracts.handler.getAllRegisteredPlots(plotType) // NOTE: returns the tokenId in the contract
+      const registeredPlots = [0, 1, 2, 25] // await this.plotContracts.handler.getAllRegisteredPlots(this.plotType) // NOTE: returns the tokenId in the contract
 
       for (let i = 0; i < 125; i++) {
         this.plots.push({
@@ -619,20 +642,34 @@ export default {
               fertility_buff: 0,
               level_buff: 0,
               crime_rate_buff: 0,
-              bought: true
+              bought: true,
+
+              // set up a utility array for all plots
+              utility: []
             }
 
             if (registeredPlots.includes(this.plots[index].token_id)) {
               console.log("Registered plot found!")
 
               // faked right now
-              const plotStats = [0, 0, 0, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3), Math.floor(Math.random() * 3)]  // await this.plotContracts.handler.getPlotData(plotType, index);
+              const plotStats = [0, 0, 0, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3), Math.floor(Math.random() * 3)]  // await this.plotContracts.handler.getPlotData(this.plotType, index);
               this.plots[index].fertility_buff = plotStats[3] - this.plots[index].fertility;
               this.plots[index].level_buff = plotStats[3] - this.plots[index].level;
               this.plots[index].crime_rate_buff = plotStats[3] - this.plots[index].crime_rate;
 
-              this.plots[index].currentUpgradeCost = "10000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(plotType, this.plots[index].token_id);
+              this.plots[index].currentUpgradeCost = "10000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
               this.plots[index].registered = true;
+
+              // check if we are emitting XYA at this time
+              let isEmitting = await this.plotContracts.xyaEmitter.isEmitting(this.plotType, this.plots[index].token_id);
+              console.log(isEmitting)
+
+              // FAKED:
+              isEmitting = true;
+              if (isEmitting) {
+                console.log("We are emitting XYA!");
+                this.plots[index].utility.append("emittingXya");
+              }
             }
           }
 
@@ -663,6 +700,15 @@ export default {
 
         this.loading = false
       })
+    },
+    async getEmissionsData() {
+      const emissionsLeft = await this.plotContracts.xyaEmitter.emissionsLeft();
+      const emissionsRate = await this.plotContracts.xyaEmitter.emissionRate();
+      const emittingPlotCount = await this.plotContracts.xyaEmitter.currentPlotsEmitting();
+
+      this.emissionsLeft = emissionsLeft;
+      this.emissionsRate = emissionsRate;
+      this.currentTotalEmittingPlots = emittingPlotCount;
     },
     modalClose() {
       this.plotModalReason = ''
@@ -878,20 +924,11 @@ export default {
 
       console.log("Registering plot:")
 
-      let plotType = -1
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
-         plotType = 1
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
-        plotType = 2
-      } else {
-        plotType = 0
-      }
-
       data.isRegisteringPlot = true;
-      const register = await this.plotContracts.handler.registerPlot(plotType, data.token_id)
+      const register = await this.plotContracts.handler.registerPlot(this.plotType, data.token_id)
       await register.wait(1)
       
-      let isRegistered = await this.plotContracts.handler.isPlotRegistered(plotType, data.token_id)
+      let isRegistered = await this.plotContracts.handler.isPlotRegistered(this.plotType, data.token_id)
       data.registered = isRegistered
     },
     attributeCanBeAltered(attributeId, plotData, isUpgrading) {
@@ -911,15 +948,6 @@ export default {
         return
       }
 
-      let plotType = -1
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
-         plotType = 1
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
-        plotType = 2
-      } else {
-        plotType = 0
-      }
-
       let currentTotal = (attributeId === 'fertility' ? 
         plotData.fertility + plotData.fertility_buff : attributeId === 'level' ? 
           plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
@@ -927,10 +955,19 @@ export default {
       let attribVal = (attributeId === 'fertility' ? 0 : attributeId === 'level' ? 1 : 2)
 
       // downgradePlot(uint8 _plotType, uint256 _plotId, uint8 _attribute, uint256 _currentLevel)
-      const downgrade = await this.plotContracts.handler.downgradePlot(plotType, plotData.token_id, attribVal, currentTotal)
-      await downgrade.wait(1)
+      //const downgrade = await this.plotContracts.handler.downgradePlot(this.plotType, plotData.token_id, attribVal, currentTotal)
+      //await downgrade.wait(1)
 
       // todo: refresh the data on screen showing the new stats
+      // await this.plotContracts.handler.getPlotData(this.plotType, index)
+      if (attributeId === 'fertility')
+        plotData.fertility_buff -= 1;
+      else if (attributeId === 'level')
+        plotData.level_buff -= 1;
+      else if (attributeId === 'crime')
+        plotData.crime_rate_buff -= 1;
+
+      plotData.currentUpgradeCost = "30000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
     },
     async upgradePlotAttribute(attributeId, plotData, isUpgrading) {
       // sanity check we can downgrade before creating the tx
@@ -954,10 +991,31 @@ export default {
       let attribVal = (attributeId === 'fertility' ? 0 : attributeId === 'level' ? 1 : 2)
 
       // upgradePlot(uint8 _plotType, uint256 _plotId, uint8 _attribute, uint256 _currentLevel)
-      const upgrade = await this.plotContracts.handler.upgradePlot(plotType, plotData.token_id, attribVal, currentTotal)
-      await upgrade.wait(1)
+      //const upgrade = await this.plotContracts.handler.upgradePlot(this.plotType, plotData.token_id, attribVal, currentTotal)
+      //await upgrade.wait(1)
 
       // todo: refresh the data on screen showing the new stats
+      // await this.plotContracts.handler.getPlotData(this.plotType, index)
+
+      if (attributeId === 'fertility')
+        plotData.fertility_buff += 1;
+      else if (attributeId === 'level')
+        plotData.level_buff += 1;
+      else if (attributeId === 'crime')
+        plotData.crime_rate_buff += 1;
+
+      plotData.currentUpgradeCost = "20000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+    },
+    getUtilityUiElements(utility) {
+      let toReturn = (utility.length > 0 ? " | " : "");
+
+      for (let u = 0; u < utility.length; u++) {
+        if (u === "emittingXya") {
+          toReturn += "E "
+        }
+      }
+
+      return toReturn;
     }
   }
 }
