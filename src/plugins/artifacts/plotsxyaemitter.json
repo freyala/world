@@ -1,5 +1,5 @@
 {
-  "address": "0xe2dF48C2518f7382d015D7669C2257f85EBFDEF3",
+  "address": "0xB968A7a0166671DB66F23b5315d202E97Ef6a950",
   "abi": [
     {
       "inputs": [
@@ -408,6 +408,19 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "feeToEmit",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint8",
@@ -463,6 +476,77 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getEmissionRequirements",
+      "outputs": [
+        {
+          "internalType": "int8",
+          "name": "",
+          "type": "int8"
+        },
+        {
+          "internalType": "int8",
+          "name": "",
+          "type": "int8"
+        },
+        {
+          "internalType": "int8",
+          "name": "",
+          "type": "int8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "hasPlotPaidOneTimeFee",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "isAllowedToEmit",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",

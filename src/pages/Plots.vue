@@ -287,6 +287,10 @@
                       class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
                 Manage
               </button>
+              <button @click="changePlotModalViewState('utility')"
+                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                Utility
+              </button>
 
               <div v-if="plotModalState === 'trade'">              
                 <br>
@@ -379,6 +383,41 @@
                             class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
                       {{ attributeCanBeAltered("crime", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
                     </button>
+                  </div>
+                </div>
+              </div>
+              <div v-if="plotModalState === 'utility'">
+                <br>  
+                <div class="text-2xl">Plot Utility</div>
+                <br>
+                <div v-if="!selectedPlotData.registered">
+                  <button  @click="registerPlotToHandler(selectedPlotData)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                    {{ isRegisteringPlot ? 'REGISTERING' : 'REGISTER' }}
+                  </button>
+                </div>
+                <div v-else>
+                  <!-- emitter utility option -->
+                  <div>
+                    <p>XYA Emitter</p>
+                    <hr>
+                    <p v-if="!hasPaidEmittingFee">There is a one time fee to start emitting</p>
+                    <p v-if="!hasPaidEmittingFee">Cost to emit: {{ costToEmit }} XYA-ONE</p>
+                    <br>
+                    <div v-if="selectedPlotData.isAllowedToEmit">
+                      <div>
+                        <button @click="startStopEmitting(selectedPlotData, !selectedPlotData.isEmitting)"
+                            class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                          {{ !selectedPlotData.isEmitting ? "Start Emitting" : "Stop Emitting" }} <!-- DOESNT FLIP WTF???? -->
+                        </button>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <p>Required stats to start emitting:-</p>
+                      <p>Fertility >= {{ fertilityReq }}</p>
+                      <p>Level >= {{ levelReq }}</p>
+                      <p>Crime Rate >= {{ crimeRateReq }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -524,9 +563,14 @@ export default {
       isRegisteringPlot: false,
 
       // emission data
+      fertilityReq: 0,
+      levelReq: 0,
+      crimeRateReq: 0,
+
       emissionsLeft: 0,
       emissionsRate: 0,
       currentTotalEmittingPlots: 0,
+      costToEmit: 0
     }
   },
   watch: {
@@ -693,6 +737,7 @@ export default {
               // FAKED:
               //if (isEmitting) {
                 this.plots[index].utility.append("emittingXya");
+                this.plots[index].isEmitting = true
               //}
             }
           }
@@ -733,9 +778,14 @@ export default {
       this.emissionsLeft = emissionsLeft;
       this.emissionsRate = emissionsRate;
       this.currentTotalEmittingPlots = emittingPlotCount;
+
+      const emitterAttributeRequirements = await this.plotContracts.xyaEmitter.getEmissionRequirements();
+      this.fertilityReq = emitterAttributeRequirements[0];
+      this.levelReq = emitterAttributeRequirements[1];
+      this.crimeRateReq = emitterAttributeRequirements[2];
     },
     changePlotModalViewState(state) {
-      if (state !== 'trade' && state !== 'manage') {
+      if (state !== 'trade' && state !== 'manage' && state !== 'utility') {
         this.plotModalState = "trade"
         return
       }
@@ -898,21 +948,16 @@ export default {
     async visitPlot(data) {
       let plot = {}
       let isRegistered = false;
-      let plotType = -1;
 
-      // TODO: talk to plot handler for this instead if we are registered?!
       if (this.neighbourhood === 18 || this.neighbourhood === 19) {
         plot = await this.plotContracts.yin.plots(data.token_id)
-        plotType = 1;
       } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
-        plotType = 2;
         plot = await this.plotContracts.yang.plots(data.token_id)
       } else {
-        plotType = 0;
         plot = await this.plotContracts.xya.plots(data.token_id)
       }
 
-      isRegistered = await this.plotContracts.handler.isPlotRegistered(plotType, data.token_id)
+      isRegistered = await this.plotContracts.handler.isPlotRegistered(this.plotType, data.token_id)
 
       data.amountOwnedByPlot = ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot)
       this.selectedPlotData = data
@@ -921,6 +966,7 @@ export default {
       if (!isRegistered) {
         //console.log("FORCING TO BE REGISTERED FOR TEST")
         //isRegistered = true
+        //this.selectedPlotData.registered = false
       }
 
       if (isRegistered) {
@@ -932,6 +978,23 @@ export default {
       // get the utility/emission data here
       const plotUtilityCount = 1 // await this.plotContracts.handler.getPlotAttribute(this.plotType, data.token_id, "utility")
       this.selectedPlotData.utilityCount = plotUtilityCount
+
+      this.selectedPlotData.isEmitting = true
+      if (!this.selectedPlotData.isEmitting) {
+        const isAllowedToEmit = true // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+        const hasPaidFee = true // await this.plotContracts.xyaEmitter.hasPlotPaidOneTimeFee(this.plotType, data.token_id)
+
+        if (!hasPaidFee) {
+          const emittingCost = await this.plotContracts.xyaEmitter.feeToEmit()
+          this.costToEmit = ethers.utils.formatEther(emittingCost.toString())
+        }
+
+        this.hasPaidEmittingFee = hasPaidFee;
+        this.selectedPlotData.isAllowedToEmit = isAllowedToEmit
+      } else {
+        this.hasPaidEmittingFee = true;
+        this.selectedPlotData.isAllowedToEmit = true
+      }
 
       console.log(this.selectedPlotData)
 
@@ -1078,6 +1141,19 @@ export default {
       }
 
       return toReturn;
+    },
+    startStopEmitting(plotData, isStarting) {
+      console.log(isStarting ? "Starting emissions" : "Stopping emissions")
+      
+      // let isEmitting = await this.plotContracts.xyaEmitter.isEmitting(this.plotType, this.plots[index].token_id);
+      if (isStarting) {
+        plotData.isEmitting = true;
+      } else {
+        plotData.isEmitting = false;
+      }
+
+      //console.log(this.selectedPlotData)
+      //console.log(plotData)
     }
   }
 }
