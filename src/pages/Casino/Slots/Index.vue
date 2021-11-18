@@ -26,13 +26,14 @@
       </div>
       <div v-if="loader.slots" id="slot-container"
         class="md:p-8 relative flex flex-col xl:flex-row lg:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-10 lg:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
-          <div class="xl:absolute lg:absolute md:absolute sm:absolute relative top-0 left-0 p-4 md:p-8">
-            <router-link :to="{ name: 'casino' }">
-              <i class="fas fa-long-arrow-alt-left"></i> Back
-            </router-link>
-          </div>
+        <div class="xl:absolute lg:absolute md:absolute sm:absolute relative top-0 left-0 p-4 md:p-8">
+          <router-link :to="{ name: 'casino' }">
+            <i class="fas fa-long-arrow-alt-left"></i> Back
+          </router-link>
+        </div>
 
-        <div class="xl:w-3/12 flex-row w-full lg:w-3/12 md:w-10/12 sm:w-full flex xl:flex-col lg:flex-col md:flex-row sm:flex-row flex-wrap 
+        <div
+          class="xl:w-3/12 flex-row w-full lg:w-3/12 md:w-10/12 sm:w-full flex xl:flex-col lg:flex-col md:flex-row sm:flex-row flex-wrap 
            md:mt-2 sm:mt-2 xl:mb-0 lg:mb-0 md:mb-5 sm:mb-5 p-1 mb-5 xl:mr-0 xl:ml-0 lg:mr-0 lg:ml-0 md:mr-auto md:ml-auto">
           <div class="text-2xl mb-3 xl:block lg:block md:hidden sm:hidden hidden mt-5 text-center">
             <h2 class='text-2xl'>Contract</h2>
@@ -44,12 +45,11 @@
 
           <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
             <div :key="loader.allowance" class="mt-1 mb-2 flex justify-evenly">
-              <button v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)"
-                class="hpt-btn" href="javascript:;"><span><span
-                    v-if="!loader.contractAllowance">Enable</span>
+              <button v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)" class="hpt-btn"
+                href="javascript:;"><span><span v-if="!loader.contractAllowance">Enable</span>
                   <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
-              <button v-if="allowance > 0" v-on:click="addAllowance(0)"
-                class="hpt-btn"><span><span v-if="!loader.contractAllowance">Disable</span>
+              <button v-if="allowance > 0" v-on:click="addAllowance(0)" class="hpt-btn"><span><span
+                    v-if="!loader.contractAllowance">Disable</span>
                   <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
@@ -92,8 +92,8 @@
           </div>
         </div>
         <SlotMachine :windowWidth='windowWidth' v-bind:style="getMachineSize()"
-          class='xl:mr-10 xl:mt-0 xl:ml-0 md:mt-0 mr-auto ml-auto'
-          :contract="this.slotsContract" ref="slotMachine" v-on:roundFinished="onRoundFinished($event)"></SlotMachine>
+          class='xl:mr-10 xl:mt-0 xl:ml-0 md:mt-0 mr-auto ml-auto' :contract="this.slotsContract" ref="slotMachine"
+          v-on:roundFinished="onRoundFinished($event)"></SlotMachine>
         <div v-if='windowWidth > 1440' class="w-1/5 mt-8 text-center xl:visible md:invisible sm:invisible">
           <div class="text-2xl mb-3">Round Winnings</div>
           <div v-if="roundsHistory.length === 0">
@@ -121,10 +121,13 @@
           </div>
           <div class="mt-4 flex w-full items-start justify-start">
             <input type="text" v-model="xyaAmount" />
-
             <div class="text-center w-full">
               <a v-on:click="insertCoin()" href="javascript:;"><span>Confirm</span></a>
             </div>
+          </div>
+          <div class='mt-4'>
+            <span class='text-xl'>Attention!</span> <br> The XYA you deposit will be converted into credits for the slot machine.
+            <p class='mt-1'>The <span class='text-lg'>Credits</span> can not be withdrawn!</p>
           </div>
         </div>
       </window>
@@ -140,7 +143,7 @@
           <div class="text-center w-full">
             <img v-bind:src='"/images/casino/slots/pg_" + tutorial.page + ".png"' />
           </div>
-          <div class="mt-4 flex flex-col w-full" style='min-height: 175px'>
+          <div class="mt-4 flex flex-col w-full" style='min-height: 190px'>
             <template v-if="tutorial.page === 0">
               <p class="text-xl">Credits</p>
               <p class='txt-tutorial'>
@@ -160,6 +163,7 @@
                 After every spin you have a <span>{{ holdInfo.chance }}%</span> to receive
                 between <span>{{ holdInfo.min }}</span> and <span> {{ holdInfo.max }} </span> holds.
               </p>
+              <p class='mt-2'>Holds are reset after every spin.</p>
             </template>
 
             <template v-if="tutorial.page === 2">
@@ -170,6 +174,7 @@
                 After every spin you have a <span>{{ nudgeInfo.chance }}%</span> to receive
                 between <span>{{ nudgeInfo.min }}</span> and <span>{{ nudgeInfo.max }}</span> nudges.
               </p>
+              <p class='mt-2'>Nudges are reset after every spin.</p>
             </template>
 
             <template v-if="tutorial.page === 3">
@@ -180,12 +185,12 @@
               </p>
               <br>
               <p class='txt-tutorial'>
-                You can withdraw these tokens at any time by using the
+                You can withdraw the tokens from the <span>Bank</span> at any time by using the
                 <span>Collect</span> button.
               </p>
             </template>
           </div>
-          <div class='w-full flex justify-center cursor-pointer select-none'>
+          <div class='w-full flex justify-center cursor-pointer select-none mt-5'>
             <span><a v-bind:class='{"opacity-50": tutorial.page - 1 < 0}'
                 v-on:click='tutorial.page = Math.max(0, tutorial.page - 1)' class="mr-5">Previous</a>
               <a v-bind:class='{"opacity-50": tutorial.page + 1 > tutorial.pages}'
@@ -210,10 +215,8 @@
   } from "ethers";
 
   import wallet from "../../../plugins/wallet";
-
-  //These are the contracts I deployed on the testnet for testing purposes
-  import Slots from "../../../plugins/artifacts/newSlots.json";
-  import HPTToken from "../../../plugins/artifacts/hptToken.json";
+  import Slots from "../../../plugins/artifacts/slots.json";
+  import HPTToken from "../../../plugins/artifacts/freyala.json";
 
   export default {
     name: "Slots",
@@ -326,13 +329,13 @@
         await this.$refs.slotMachine.fetchGameReels();
       },
 
-      manualSpin(){
+      manualSpin() {
         this.$refs.slotMachine.startRound();
       },
 
-      getMachineSize(){
+      getMachineSize() {
         const width = this.windowWidth < 640 ? '90%' : '450px';
-        const height = this.windowWidth < 512 ? this.windowWidth <= 368 ? '400px' : '450px': '500px';
+        const height = this.windowWidth < 512 ? this.windowWidth <= 368 ? '400px' : '450px' : '500px';
         return {
           width: width,
           height: height

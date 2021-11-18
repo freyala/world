@@ -103,15 +103,15 @@
     </div>
 
     <window name="payTable">
-      <div class="flex flex-wrap p-6 bg-dark h-full">
+      <div class="flex flex-wrap p-6 bg-dark h-full" style='height: 600px'>
         <div class="w-4/5">
           <div class="text-2xl">Paytable</div>
         </div>
         <div class="w-1/5 text-right">
           <i @click="$modal.hide('payTable')" class="fas fa-times cursor-pointer text-xl"></i>
         </div>
-        <div class="w-full">
-          <div v-for="(payLine, i) in gamePayTable" :key="i" class="flex flex-row justify-evenly items-center m-2 mb-5">
+        <div v-if='!gamePayTableLoading' class="w-full h-full overflow-y-scroll">
+          <div v-for="(payLine, i) in gameTempPayTable" :key="i" class="flex flex-row justify-evenly items-center m-2 mb-5">
             <div class="w-2/5 text-center text-xl">
               {{ payLine.payOut }} XYA
             </div>
@@ -119,6 +119,16 @@
               v-bind:src="assets.images[payLine.payLine[img - 1]]" />
           </div>
         </div>
+      <div v-else class="p-4 xl:p-8 relative mx-auto">
+        <div class="m-auto text-center">
+          <div class="w-full flex">
+            <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
+              style="animation: rotation 2s infinite linear" />
+          </div>
+          <br />
+          <p class="text-2xl">Loading...</p>
+        </div>
+      </div>
       </div>
     </window>
 
@@ -193,6 +203,8 @@
         gameButtons: [],
         gameError: [],
         gamePayTable: [],
+        gamePayTableLoading: true,
+        gameTempPayTable: [],
         spamProtection: 0,
         gameLoaded: false,
         showRoundWinnings: false,
@@ -247,16 +259,20 @@
             payOut: payLine[1] / (10 ** 18),
           });
         }
-      });
 
-      /*const txData = await localStorage.getItem("slots_tx");
-            let transactions = JSON.parse(txData);
-            if (transactions) {
-              for (let i = 0; i < transactions.length; i++) {
-                this.playerTransactions.push(transactions[i]);
-                this.resolveTransaction(transactions[i].tx);
-              }
-            }*/
+
+        this.gameTempPayTable = [
+          {payLine: ["0", "0", "0"], payOut: 16.6},
+          {payLine: ["1", "1", "1"], payOut: 25},
+          {payLine: ["2", "2", "2"], payOut: 125.5},
+          {payLine: ["3", "3", "3"], payOut: 168.75},
+          {payLine: ["0", "0", "4"], payOut: 2.85},
+          {payLine: ["1", "1", "4"], payOut: 3.57},
+          {payLine: ["2", "2", "4"], payOut: 8.43},
+          {payLine: ["3", "3", "4"], payOut: 14.06},
+        ];
+        this.gamePayTableLoading = false;
+      });
     },
     methods: {
       startGameLoop() {
@@ -289,7 +305,7 @@
 
         if (this.showRoundWinnings) {
           this.roundWinningsTimer += dt;
-          if (this.roundWinningsTimer > 3000) {
+          if (this.roundWinningsTimer > 2000) {
             this.showRoundWinnings = false;
           }
         }
@@ -346,6 +362,7 @@
                 ".png")
             );
           }
+          this.assets.images.push(require("../../../../public/images/casino/freys/any.png"));
 
           for (let i = 0; i < this.gameReels.length; i++) {
             this.gameReels[i].setReelSheet(this.gameReelSheets[i], this.assets);
@@ -370,10 +387,11 @@
           return;
 
         try {
+          if(this.playerCredit === 0) throw "";
           this.spamProtection = 1500;
           var tx = await this.contract.spin({
             gasPrice: 100000000000,
-            gasLimit: 500000
+            gasLimit: 1000000
           });
           this.showRoundWinnings = false;
           this.roundState = ROUND_STATE.ON;
@@ -480,16 +498,6 @@
           type: type,
         };
         this.playerTransactions.push(newTx);
-
-        /*const itemsData = await localStorage.getItem("slots_tx");
-              let items = JSON.parse(itemsData);
-              if (!items || items.length === 0) {
-                await localStorage.setItem("slots_tx", JSON.stringify([newTx]));
-                return;
-              }
-
-              items.push(newTx);
-              await localStorage.setItem("slots_tx", JSON.stringify(items));*/
       },
 
       async solveGameTransaction(tx) {
@@ -498,12 +506,6 @@
         );
         this.$emit("txFinished");
         await this.fetchPlayerData();
-
-        /*const itemsData = await localStorage.getItem("slots_tx");
-              let items = JSON.parse(itemsData);
-
-              items = items.filter((c) => c.tx.hash !== tx.hash);
-              await localStorage.setItem("slots_tx", JSON.stringify(items));*/
       },
 
       animateKnob() {
