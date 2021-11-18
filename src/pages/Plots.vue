@@ -277,33 +277,56 @@
               <p>Level: {{ selectedPlotData.level + selectedPlotData.level_buff }}({{ selectedPlotData.level }} + {{ selectedPlotData.level_buff }})</p>
               <p>Crime rate: {{ selectedPlotData.crime_rate + selectedPlotData.crime_rate_buff }} ({{ selectedPlotData.crime_rate }} + {{ selectedPlotData.crime_rate_buff }})</p>
               <br>
-              <div
-                  v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
-                <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="number" v-model="plotPrice">
-                <br>
-                <button @click="approvePlotToSellNow(selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                  {{ loadingApproveSellPlot ? 'APPROVING' : 'APPROVE' }}
-                </button>
-                <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                  {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
-                </button>
 
-                <br>
-                <br>
+              <!-- modal state toggle -->
+              <button @click="changePlotModalViewState('trade')"
+                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                Trade
+              </button>
+              <button @click="changePlotModalViewState('manage')"
+                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                Manage
+              </button>
 
-                <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="text" placeholder="Address to send plot to..."
-                       v-model="selectedPlotData.sendToAddress">
+              <div v-if="plotModalState === 'trade'">              
                 <br>
-                <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                  {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
-                </button>
+                <div class="text-2xl">Trade Your Plot</div>
+                <br>
+                <div
+                    v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
+                  <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="number" v-model="plotPrice">
+                  <br>
+                  <button @click="approvePlotToSellNow(selectedPlotData.token_id)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                    {{ loadingApproveSellPlot ? 'APPROVING' : 'APPROVE' }}
+                  </button>
+                  <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                    {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
+                  </button>
 
-                <!-- attribute up/down grading -->
-                <br>                
-                <br>
+                  <br>
+                  <br>
+
+                  <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="text" placeholder="Address to send plot to..."
+                        v-model="selectedPlotData.sendToAddress">
+                  <br>
+                  <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                    {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
+                  </button>
+
+                  <!-- attribute up/down grading -->
+                </div>
+                <div v-else>
+                  <button @click="cancelListing(selectedPlotData.token_id)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                    {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
+                  </button>
+                </div>
+              </div>
+              <div v-if="plotModalState === 'manage'">
+                <br>  
                 <div class="text-2xl">Plot Management</div>
                 <br>
                 <div v-if="!selectedPlotData.registered">
@@ -314,6 +337,11 @@
                 </div>
                 <div v-else>
                   <p>Current upgrade cost: {{ selectedPlotData.currentUpgradeCost }}</p>
+                  <p v-if="isPlotResetable(selectedPlotData)">Current reset cost: {{ selectedPlotData.currentResetCost }} </p>
+                  <button v-if="isPlotResetable(selectedPlotData)" @click="resetPlotAttributes(selectedPlotData)"
+                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                    Reset
+                  </button>
                   <!-- fertility -->
                   <div>
                     <p>Fertility: {{ selectedPlotData.fertility + selectedPlotData.fertility_buff }}</p>
@@ -353,13 +381,6 @@
                     </button>
                   </div>
                 </div>
-
-              </div>
-              <div v-else>
-                <button @click="cancelListing(selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                  {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
-                </button>
               </div>
             </div>
             <div v-if="plotModalReason === 'buy'" class="w-full">
@@ -491,6 +512,7 @@ export default {
       plotModalId: 0,
       selectedPlotData: {},
       plotModalReason: '',
+      plotModalState: 'trade',
       error: '',
       loadingBuyPlot: false,
       loadingSellPlot: false,
@@ -504,7 +526,7 @@ export default {
       // emission data
       emissionsLeft: 0,
       emissionsRate: 0,
-      currentTotalEmittingPlots: 0 
+      currentTotalEmittingPlots: 0,
     }
   },
   watch: {
@@ -595,6 +617,7 @@ export default {
 
       // grab the registered plots for a neighbourhood, if they are there then grab their stats too in the next loop and add them to it
       const registeredPlots = [0, 1, 2, 25] // await this.plotContracts.handler.getAllRegisteredPlots(this.plotType) // NOTE: returns the tokenId in the contract
+      const allEmittingPlots = [0, 1, 2, 25] // await this.plotContracts.xyaEmitter.getAllEmittingPlots(this.plotType)
 
       for (let i = 0; i < 125; i++) {
         this.plots.push({
@@ -657,19 +680,20 @@ export default {
               this.plots[index].level_buff = plotStats[3] - this.plots[index].level;
               this.plots[index].crime_rate_buff = plotStats[3] - this.plots[index].crime_rate;
 
-              this.plots[index].currentUpgradeCost = "10000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
               this.plots[index].registered = true;
+            }
 
-              // check if we are emitting XYA at this time
-              let isEmitting = await this.plotContracts.xyaEmitter.isEmitting(this.plotType, this.plots[index].token_id);
-              console.log(isEmitting)
+            if (allEmittingPlots.includes(this.plots[index].token_id)) {
+              console.log("Emitting plot found!")
+
+              // confirm we are emitting? probably not needed
+              //let isEmitting = await this.plotContracts.xyaEmitter.isEmitting(this.plotType, this.plots[index].token_id);
+              //console.log(isEmitting)
 
               // FAKED:
-              isEmitting = true;
-              if (isEmitting) {
-                console.log("We are emitting XYA!");
+              //if (isEmitting) {
                 this.plots[index].utility.append("emittingXya");
-              }
+              //}
             }
           }
 
@@ -709,6 +733,14 @@ export default {
       this.emissionsLeft = emissionsLeft;
       this.emissionsRate = emissionsRate;
       this.currentTotalEmittingPlots = emittingPlotCount;
+    },
+    changePlotModalViewState(state) {
+      if (state !== 'trade' && state !== 'manage') {
+        this.plotModalState = "trade"
+        return
+      }
+
+      this.plotModalState = state
     },
     modalClose() {
       this.plotModalReason = ''
@@ -887,18 +919,24 @@ export default {
 
       // get the extra data here for the registered stuff
       if (!isRegistered) {
-        console.log("FORCING TO BE REGISTERED FOR TEST")
-        isRegistered = true
+        //console.log("FORCING TO BE REGISTERED FOR TEST")
+        //isRegistered = true
       }
 
       if (isRegistered) {
         this.selectedPlotData.registered = true
+        this.selectedPlotData.currentUpgradeCost = ethers.utils.formatEther("10000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, data.token_id);
+        this.selectedPlotData.currentResetCost = ethers.utils.formatEther("20000000000000000000") // await this.plotContracts.handler.getCurrentResetCost(this.plotType, data.token_id);
       }
 
-      this.plotModalReason = 'visit'
+      // get the utility/emission data here
+      const plotUtilityCount = 1 // await this.plotContracts.handler.getPlotAttribute(this.plotType, data.token_id, "utility")
+      this.selectedPlotData.utilityCount = plotUtilityCount
 
       console.log(this.selectedPlotData)
 
+      this.plotModalReason = 'visit'
+      this.plotModalState = 'trade'
       this.$modal.show('plot')
     },
     async buyPlot(data) {
@@ -959,7 +997,7 @@ export default {
       //await downgrade.wait(1)
 
       // todo: refresh the data on screen showing the new stats
-      // await this.plotContracts.handler.getPlotData(this.plotType, index)
+      // await this.plotContracts.handler.getPlotData(this.plotType, plotData.token_id)
       if (attributeId === 'fertility')
         plotData.fertility_buff -= 1;
       else if (attributeId === 'level')
@@ -967,7 +1005,7 @@ export default {
       else if (attributeId === 'crime')
         plotData.crime_rate_buff -= 1;
 
-      plotData.currentUpgradeCost = "30000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+      plotData.currentUpgradeCost = ethers.utils.formatEther("30000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
     },
     async upgradePlotAttribute(attributeId, plotData, isUpgrading) {
       // sanity check we can downgrade before creating the tx
@@ -995,7 +1033,7 @@ export default {
       //await upgrade.wait(1)
 
       // todo: refresh the data on screen showing the new stats
-      // await this.plotContracts.handler.getPlotData(this.plotType, index)
+      // await this.plotContracts.handler.getPlotData(this.plotType, plotData.token_id)
 
       if (attributeId === 'fertility')
         plotData.fertility_buff += 1;
@@ -1004,7 +1042,31 @@ export default {
       else if (attributeId === 'crime')
         plotData.crime_rate_buff += 1;
 
-      plotData.currentUpgradeCost = "20000000000000000000" // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+      plotData.currentUpgradeCost = ethers.utils.formatEther("20000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+    },
+    isPlotResetable(plotData) {
+      return (
+        (plotData.fertility_buff + plotData.fertility) != plotData.fertility || 
+        (plotData.level_buff + plotData.level) != plotData.level || 
+        (plotData.crime_rate_buff + plotData.crime_rate) != plotData.crime_rate
+      );
+    },
+    async resetPlotAttributes(plotData) {
+      let currentTotal = (attributeId === 'fertility' ? 
+        plotData.fertility + plotData.fertility_buff : attributeId === 'level' ? 
+          plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
+
+      // resetPlotToBase(uint8 _plotType, uint256 _plotId)
+      //const resetPlot = await this.plotContracts.handler.resetPlotToBase(this.plotType, plotData.token_id)
+      //await resetPlot.wait(1)
+
+      // todo: refresh the data on screen showing the new stats
+      // await this.plotContracts.handler.getPlotData(this.plotType, plotData.token_id)
+
+      plotData.fertility_buff = 0;
+      plotData.level_buff = 0;
+      plotData.crime_rate_buff = 0;
+      plotData.currentUpgradeCost = ethers.utils.formatEther("40000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
     },
     getUtilityUiElements(utility) {
       let toReturn = (utility.length > 0 ? " | " : "");
