@@ -334,55 +334,62 @@
                 <div class="text-2xl">Plot Management</div>
                 <br>
                 <div v-if="!selectedPlotData.registered">
+                  <p>Register your plot to enable attribute leveling. Leveling your plots to specific level brackets unlocks various utility.</p>
+                  <p>Your plot will not leave your wallet during registration or whilst being utilised</p>
                   <button  @click="registerPlotToHandler(selectedPlotData)"
                           class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
                     {{ isRegisteringPlot ? 'REGISTERING' : 'REGISTER' }}
                   </button>
                 </div>
                 <div v-else>
-                  <p>Current upgrade cost: {{ selectedPlotData.currentUpgradeCost }}</p>
-                  <p v-if="isPlotResetable(selectedPlotData)">Current reset cost: {{ selectedPlotData.currentResetCost }} </p>
-                  <button v-if="isPlotResetable(selectedPlotData)" @click="resetPlotAttributes(selectedPlotData)"
-                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                    Reset
-                  </button>
-                  <!-- fertility -->
-                  <div>
-                    <p>Fertility: {{ selectedPlotData.fertility + selectedPlotData.fertility_buff }}</p>
-                    <button @click="downgradePlotAttribute('fertility', selectedPlotData, false)"
+                  <div v-if="selectedPlotData.utilityCount === 0">
+                    <p>Current upgrade cost: {{ selectedPlotData.currentUpgradeCost }}</p>
+                    <p v-if="isPlotResetable(selectedPlotData)">Current reset cost: {{ selectedPlotData.currentResetCost }} </p>
+                    <button v-if="isPlotResetable(selectedPlotData)" @click="resetPlotAttributes(selectedPlotData)"
                         class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                      {{ attributeCanBeAltered("fertility", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
+                      Reset
                     </button>
-                    <button @click="upgradePlotAttribute('fertility', selectedPlotData, true)"
-                            class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
-                      {{ attributeCanBeAltered("fertility", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
-                    </button>
-                  </div>
+                    <!-- fertility -->
+                    <div>
+                      <p>Fertility: {{ selectedPlotData.fertility + selectedPlotData.fertility_buff }}</p>
+                      <button @click="downgradePlotAttribute('fertility', selectedPlotData, false)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                        {{ attributeCanBeAltered("fertility", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
+                      </button>
+                      <button @click="upgradePlotAttribute('fertility', selectedPlotData, true)"
+                              class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                        {{ attributeCanBeAltered("fertility", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
+                      </button>
+                    </div>
 
-                  <!-- level -->
-                  <div>
-                    <p>Level: {{ selectedPlotData.level + selectedPlotData.level_buff }}</p>
-                    <button @click="downgradePlotAttribute('level', selectedPlotData, false)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                      {{ attributeCanBeAltered("level", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
-                    </button>
-                    <button @click="upgradePlotAttribute('level', selectedPlotData, true)"
-                            class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
-                      {{ attributeCanBeAltered("level", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
-                    </button>
-                  </div>
+                    <!-- level -->
+                    <div>
+                      <p>Level: {{ selectedPlotData.level + selectedPlotData.level_buff }}</p>
+                      <button @click="downgradePlotAttribute('level', selectedPlotData, false)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                        {{ attributeCanBeAltered("level", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
+                      </button>
+                      <button @click="upgradePlotAttribute('level', selectedPlotData, true)"
+                              class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                        {{ attributeCanBeAltered("level", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
+                      </button>
+                    </div>
 
-                  <!-- crime rate -->
-                  <div>
-                    <p>Crime Rate: {{ selectedPlotData.crime_rate + selectedPlotData.crime_rate_buff }}</p>
-                    <button @click="downgradePlotAttribute('crime', selectedPlotData, false)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
-                      {{ attributeCanBeAltered("crime", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
-                    </button>
-                    <button @click="upgradePlotAttribute('crime', selectedPlotData, true)"
-                            class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
-                      {{ attributeCanBeAltered("crime", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
-                    </button>
+                    <!-- crime rate -->
+                    <div>
+                      <p>Crime Rate: {{ selectedPlotData.crime_rate + selectedPlotData.crime_rate_buff }}</p>
+                      <button @click="downgradePlotAttribute('crime', selectedPlotData, false)"
+                          class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                        {{ attributeCanBeAltered("crime", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}
+                      </button>
+                      <button @click="upgradePlotAttribute('crime', selectedPlotData, true)"
+                              class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                        {{ attributeCanBeAltered("crime", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}
+                      </button>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <p>The plot is currently being utilised. Please stop all utilisation before altering the attributes.</p>
                   </div>
                 </div>
               </div>
@@ -391,6 +398,8 @@
                 <div class="text-2xl">Plot Utility</div>
                 <br>
                 <div v-if="!selectedPlotData.registered">
+                  <p>Register your plot to enable attribute leveling. Leveling your plots to specific level brackets unlocks various utility.</p>
+                  <p>Your plot will not leave your wallet during registration or whilst being utilised</p>
                   <button  @click="registerPlotToHandler(selectedPlotData)"
                           class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
                     {{ isRegisteringPlot ? 'REGISTERING' : 'REGISTER' }}
@@ -401,8 +410,8 @@
                   <div>
                     <p>XYA Emitter</p>
                     <hr>
-                    <p v-if="!hasPaidEmittingFee">There is a one time fee to start emitting</p>
-                    <p v-if="!hasPaidEmittingFee">Cost to emit: {{ costToEmit }} XYA-ONE</p>
+                    <p v-if="!selectedPlotData.hasPaidEmittingFee">There is a one time fee to start emitting</p>
+                    <p v-if="!selectedPlotData.hasPaidEmittingFee">Cost to emit: {{ costToEmit }} XYA-ONE</p>
                     <br>
                     <div v-if="selectedPlotData.isAllowedToEmit">
                       <div>
@@ -965,35 +974,35 @@ export default {
       // get the extra data here for the registered stuff
       if (!isRegistered) {
         //console.log("FORCING TO BE REGISTERED FOR TEST")
-        //isRegistered = true
-        //this.selectedPlotData.registered = false
+        isRegistered = true
+        this.selectedPlotData.registered = true
       }
 
       if (isRegistered) {
         this.selectedPlotData.registered = true
         this.selectedPlotData.currentUpgradeCost = ethers.utils.formatEther("10000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, data.token_id);
         this.selectedPlotData.currentResetCost = ethers.utils.formatEther("20000000000000000000") // await this.plotContracts.handler.getCurrentResetCost(this.plotType, data.token_id);
-      }
 
-      // get the utility/emission data here
-      const plotUtilityCount = 1 // await this.plotContracts.handler.getPlotAttribute(this.plotType, data.token_id, "utility")
-      this.selectedPlotData.utilityCount = plotUtilityCount
+        // get the utility/emission data here
+        const plotUtilityCount = 1 // await this.plotContracts.handler.getPlotAttribute(this.plotType, data.token_id, "utility")
+        this.selectedPlotData.utilityCount = plotUtilityCount
 
-      this.selectedPlotData.isEmitting = true
-      if (!this.selectedPlotData.isEmitting) {
-        const isAllowedToEmit = true // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
-        const hasPaidFee = true // await this.plotContracts.xyaEmitter.hasPlotPaidOneTimeFee(this.plotType, data.token_id)
+        this.selectedPlotData.isEmitting = true
+        if (!this.selectedPlotData.isEmitting) {
+          let isAllowedToEmit = false // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+          const hasPaidFee = true // await this.plotContracts.xyaEmitter.hasPlotPaidOneTimeFee(this.plotType, data.token_id)
 
-        if (!hasPaidFee) {
-          const emittingCost = await this.plotContracts.xyaEmitter.feeToEmit()
-          this.costToEmit = ethers.utils.formatEther(emittingCost.toString())
+          if (!hasPaidFee) {
+            const emittingCost = await this.plotContracts.xyaEmitter.feeToEmit()
+            this.costToEmit = ethers.utils.formatEther(emittingCost.toString())
+          }
+
+          this.selectedPlotData.hasPaidEmittingFee = hasPaidFee;
+          this.selectedPlotData.isAllowedToEmit = isAllowedToEmit
+        } else {
+          this.selectedPlotData.hasPaidEmittingFee = true;
+          this.selectedPlotData.isAllowedToEmit = true
         }
-
-        this.hasPaidEmittingFee = hasPaidFee;
-        this.selectedPlotData.isAllowedToEmit = isAllowedToEmit
-      } else {
-        this.hasPaidEmittingFee = true;
-        this.selectedPlotData.isAllowedToEmit = true
       }
 
       console.log(this.selectedPlotData)
@@ -1069,6 +1078,8 @@ export default {
         plotData.crime_rate_buff -= 1;
 
       plotData.currentUpgradeCost = ethers.utils.formatEther("30000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+      const isAllowedToEmit = true // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+      plotData.isAllowedToEmit = isAllowedToEmit
     },
     async upgradePlotAttribute(attributeId, plotData, isUpgrading) {
       // sanity check we can downgrade before creating the tx
@@ -1106,6 +1117,8 @@ export default {
         plotData.crime_rate_buff += 1;
 
       plotData.currentUpgradeCost = ethers.utils.formatEther("20000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+      const isAllowedToEmit = true // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+      plotData.isAllowedToEmit = isAllowedToEmit
     },
     isPlotResetable(plotData) {
       return (
@@ -1115,10 +1128,6 @@ export default {
       );
     },
     async resetPlotAttributes(plotData) {
-      let currentTotal = (attributeId === 'fertility' ? 
-        plotData.fertility + plotData.fertility_buff : attributeId === 'level' ? 
-          plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
-
       // resetPlotToBase(uint8 _plotType, uint256 _plotId)
       //const resetPlot = await this.plotContracts.handler.resetPlotToBase(this.plotType, plotData.token_id)
       //await resetPlot.wait(1)
@@ -1130,6 +1139,9 @@ export default {
       plotData.level_buff = 0;
       plotData.crime_rate_buff = 0;
       plotData.currentUpgradeCost = ethers.utils.formatEther("40000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+      
+      const isAllowedToEmit = false // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+      plotData.isAllowedToEmit = isAllowedToEmit
     },
     getUtilityUiElements(utility) {
       let toReturn = (utility.length > 0 ? " | " : "");
@@ -1148,8 +1160,10 @@ export default {
       // let isEmitting = await this.plotContracts.xyaEmitter.isEmitting(this.plotType, this.plots[index].token_id);
       if (isStarting) {
         plotData.isEmitting = true;
+        plotData.utilityCount = 1;
       } else {
         plotData.isEmitting = false;
+        plotData.utilityCount = 0;
       }
 
       //console.log(this.selectedPlotData)
