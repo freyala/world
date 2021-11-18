@@ -1,0 +1,17 @@
+[{
+        "name": "The Freys",
+        "image": "https://frey.freyala.com/images/3820.png",
+        "status": "OPEN",
+        "address": " "
+    },
+    {
+        "name": "Cryptopigs",
+        "image": "https://ipfs.io/ipfs/QmZmUytsgNEhXcRmRSLuzDqLniqbjPwsKzCZNTxFLtHhdE",
+        "status": "OPEN"
+    },
+    {
+        "name": "Cryptopigs",
+        "image": "https://ipfs.io/ipfs/QmZmUytsgNEhXcRmRSLuzDqLniqbjPwsKzCZNTxFLtHhdE",
+        "status": "SOON"
+    }
+]

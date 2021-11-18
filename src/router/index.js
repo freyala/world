@@ -19,12 +19,18 @@ import Governance from "../pages/Governance";
 import JennyMines from "../pages/JennyMines";
 import Staking from "../pages/Staking";
 import Plots from "../pages/Plots";
+import ReworkMarketplace from '../pages/ReworkMarketplace';
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'hash',
   routes: [
+    {
+      path: '/',
+      name: 'marketplace',
+      component: ReworkMarketplace
+    },
     {
       path: '/',
       name: 'world-map',

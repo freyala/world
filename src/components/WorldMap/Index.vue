@@ -74,7 +74,7 @@
               </div>
 
               <div @mouseenter="hovering = 'faucet'" @mouseleave="hovering = ''">
-                <router-link :to="{ name: 'faucet' }">
+                <router-link :to="{ name: 'marketplace' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
                        style="left: 42.3555%; top: 51.1806%; width: 5vw;" src="/images/map/Soup.png" alt="Soup">
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
