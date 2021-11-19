@@ -11,6 +11,12 @@ import Blackjack from "../pages/Casino/Blackjack/Index";
 import Casino from "../pages/Casino/Index";
 
 import Harmons from "../pages/Harmons/Index";
+import Marketplace from "../pages/Marketplace";
+
+import FreyNFT from "../pages/Frey/Home";
+import FreyCollection from "../pages/Frey/Collection";
+import FreyGallery from "../pages/Frey/Gallery";
+import FreyAttributes from "../pages/Frey/Attributes";
 
 import Login from "../pages/Login";
 import Delegating from "../pages/Delegating";
@@ -31,9 +37,34 @@ export default new Router({
       component: WorldMap
     },
     {
+      path: '/marketplace',
+      name: 'marketplace',
+      component: Marketplace
+    },
+    {
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/frey/home',
+      name: 'frey-nft',
+      component: FreyNFT
+    },
+    {
+      path: '/frey/attributes',
+      name: 'frey-attributes',
+      component: FreyAttributes
+    },
+    {
+      path: '/frey/gallery',
+      name: 'frey-gallery',
+      component: FreyGallery
+    },
+    {
+      path: '/frey/collection',
+      name: 'frey-collection',
+      component: FreyCollection
     },
     {
       path: '/casino/coinflip',
