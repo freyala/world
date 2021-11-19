@@ -1,5 +1,5 @@
 {
-  "address": "0x1B7EFf572Bec30c59554C9C5b0880FC7e8dcAae6",
+  "address": "0xaD780B418C7B5b25828228e511586E47baA38A46",
   "abi": [
     {
       "inputs": [
@@ -794,6 +794,30 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_plotIds",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "getPlotDataMultiple",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
         }
       ],
       "stateMutability": "view",

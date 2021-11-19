@@ -333,15 +333,15 @@
                 <br>  
                 <div class="text-2xl">Plot Management</div>
                 <br>
-                <div v-if="!selectedPlotData.registered">
+                <!--<div v-if="!selectedPlotData.registered">
                   <p>Register your plot to enable attribute leveling. Leveling your plots to specific level brackets unlocks various utility.</p>
                   <p>Your plot will not leave your wallet during registration or whilst being utilised</p>
                   <button  @click="registerPlotToHandler(selectedPlotData)"
                           class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
                     {{ isRegisteringPlot ? 'REGISTERING' : 'REGISTER' }}
                   </button>
-                </div>
-                <div v-else>
+                </div>-->
+                <div>
                   <div v-if="selectedPlotData.utilityCount === 0">
                     <p>Current upgrade cost: {{ selectedPlotData.currentUpgradeCost }}</p>
                     <p v-if="isPlotResetable(selectedPlotData)">Current reset cost: {{ selectedPlotData.currentResetCost }} </p>
@@ -397,15 +397,15 @@
                 <br>  
                 <div class="text-2xl">Plot Utility</div>
                 <br>
-                <div v-if="!selectedPlotData.registered">
+                <!--<div v-if="!selectedPlotData.registered">
                   <p>Register your plot to enable attribute leveling. Leveling your plots to specific level brackets unlocks various utility.</p>
                   <p>Your plot will not leave your wallet during registration or whilst being utilised</p>
                   <button  @click="registerPlotToHandler(selectedPlotData)"
                           class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
                     {{ isRegisteringPlot ? 'REGISTERING' : 'REGISTER' }}
                   </button>
-                </div>
-                <div v-else>
+                </div>-->
+                <div>
                   <!-- emitter utility option -->
                   <div>
                     <p>XYA Emitter</p>
@@ -669,7 +669,7 @@ export default {
       })
 
       // grab the registered plots for a neighbourhood, if they are there then grab their stats too in the next loop and add them to it
-      const registeredPlots = [0, 1, 2, 25] // await this.plotContracts.handler.getAllRegisteredPlots(this.plotType) // NOTE: returns the tokenId in the contract
+      //const registeredPlots = [0, 1, 2, 25] // await this.plotContracts.handler.getAllRegisteredPlots(this.plotType) // NOTE: returns the tokenId in the contract
       const allEmittingPlots = [0, 1, 2, 25] // await this.plotContracts.xyaEmitter.getAllEmittingPlots(this.plotType)
 
       for (let i = 0; i < 125; i++) {
@@ -684,7 +684,7 @@ export default {
           level_buff: 0,
           crime_rate_buff: 0,
           bought: false,
-          registered: false
+          //registered: false
         })
       }
 
@@ -724,8 +724,8 @@ export default {
               utility: []
             }
 
-            if (registeredPlots.includes(this.plots[index].token_id)) {
-              console.log("Registered plot found!")
+            //if (registeredPlots.includes(this.plots[index].token_id)) {
+            //  console.log("Registered plot found!")
 
               // faked right now
               const plotStats = [0, 0, 0, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3), Math.floor(Math.random() * 3)]  // await this.plotContracts.handler.getPlotData(this.plotType, index);
@@ -733,8 +733,8 @@ export default {
               this.plots[index].level_buff = plotStats[3] - this.plots[index].level;
               this.plots[index].crime_rate_buff = plotStats[3] - this.plots[index].crime_rate;
 
-              this.plots[index].registered = true;
-            }
+            //  this.plots[index].registered = true;
+            //}
 
             if (allEmittingPlots.includes(this.plots[index].token_id)) {
               console.log("Emitting plot found!")
@@ -956,7 +956,7 @@ export default {
     },
     async visitPlot(data) {
       let plot = {}
-      let isRegistered = false;
+      //let isRegistered = false;
 
       if (this.neighbourhood === 18 || this.neighbourhood === 19) {
         plot = await this.plotContracts.yin.plots(data.token_id)
@@ -966,44 +966,44 @@ export default {
         plot = await this.plotContracts.xya.plots(data.token_id)
       }
 
-      isRegistered = await this.plotContracts.handler.isPlotRegistered(this.plotType, data.token_id)
+      //isRegistered = await this.plotContracts.handler.isPlotRegistered(this.plotType, data.token_id)
 
       data.amountOwnedByPlot = ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot)
       this.selectedPlotData = data
 
       // get the extra data here for the registered stuff
-      if (!isRegistered) {
+      //if (!isRegistered) {
         //console.log("FORCING TO BE REGISTERED FOR TEST")
-        isRegistered = true
-        this.selectedPlotData.registered = true
-      }
+      //  isRegistered = true
+      //  this.selectedPlotData.registered = true
+      //}
 
-      if (isRegistered) {
-        this.selectedPlotData.registered = true
-        this.selectedPlotData.currentUpgradeCost = ethers.utils.formatEther("10000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, data.token_id);
-        this.selectedPlotData.currentResetCost = ethers.utils.formatEther("20000000000000000000") // await this.plotContracts.handler.getCurrentResetCost(this.plotType, data.token_id);
+      //if (isRegistered) {
+      //this.selectedPlotData.registered = true
+      this.selectedPlotData.currentUpgradeCost = ethers.utils.formatEther("10000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, data.token_id);
+      this.selectedPlotData.currentResetCost = ethers.utils.formatEther("20000000000000000000") // await this.plotContracts.handler.getCurrentResetCost(this.plotType, data.token_id);
 
-        // get the utility/emission data here
-        const plotUtilityCount = 1 // await this.plotContracts.handler.getPlotAttribute(this.plotType, data.token_id, "utility")
-        this.selectedPlotData.utilityCount = plotUtilityCount
+      // get the utility/emission data here
+      const plotUtilityCount = 1 // await this.plotContracts.handler.getPlotAttribute(this.plotType, data.token_id, "utility")
+      this.selectedPlotData.utilityCount = plotUtilityCount
 
-        this.selectedPlotData.isEmitting = true
-        if (!this.selectedPlotData.isEmitting) {
-          let isAllowedToEmit = false // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
-          const hasPaidFee = true // await this.plotContracts.xyaEmitter.hasPlotPaidOneTimeFee(this.plotType, data.token_id)
+      this.selectedPlotData.isEmitting = true
+      if (!this.selectedPlotData.isEmitting) {
+        let isAllowedToEmit = false // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+        const hasPaidFee = true // await this.plotContracts.xyaEmitter.hasPlotPaidOneTimeFee(this.plotType, data.token_id)
 
-          if (!hasPaidFee) {
-            const emittingCost = await this.plotContracts.xyaEmitter.feeToEmit()
-            this.costToEmit = ethers.utils.formatEther(emittingCost.toString())
-          }
-
-          this.selectedPlotData.hasPaidEmittingFee = hasPaidFee;
-          this.selectedPlotData.isAllowedToEmit = isAllowedToEmit
-        } else {
-          this.selectedPlotData.hasPaidEmittingFee = true;
-          this.selectedPlotData.isAllowedToEmit = true
+        if (!hasPaidFee) {
+          const emittingCost = await this.plotContracts.xyaEmitter.feeToEmit()
+          this.costToEmit = ethers.utils.formatEther(emittingCost.toString())
         }
+
+        this.selectedPlotData.hasPaidEmittingFee = hasPaidFee;
+        this.selectedPlotData.isAllowedToEmit = isAllowedToEmit
+      } else {
+        this.selectedPlotData.hasPaidEmittingFee = true;
+        this.selectedPlotData.isAllowedToEmit = true
       }
+      //}
 
       console.log(this.selectedPlotData)
 
@@ -1028,6 +1028,7 @@ export default {
 
       this.$modal.show('plot')
     },
+    /*
     async registerPlotToHandler(data) {
       if (data.registered)
         return
@@ -1041,6 +1042,7 @@ export default {
       let isRegistered = await this.plotContracts.handler.isPlotRegistered(this.plotType, data.token_id)
       data.registered = isRegistered
     },
+    */
     attributeCanBeAltered(attributeId, plotData, isUpgrading) {
       let currentTotal = (attributeId === 'fertility' ? 
         plotData.fertility + plotData.fertility_buff : attributeId === 'level' ? 
