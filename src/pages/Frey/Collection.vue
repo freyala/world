@@ -10,10 +10,10 @@
           </h1>
 
           <div class="flex">
-            <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4">
+            <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
               <router-link class="w-full md:w-1/5 mx-auto" :to="{ name: 'frey-nft' }">
                 <button
-                    class="w-full rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                    class="w-full mb-2 rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
                   Get Frey
                 </button>
               </router-link>
