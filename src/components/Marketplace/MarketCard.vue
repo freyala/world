@@ -84,13 +84,13 @@ export default {
 
     .card:hover {
         box-shadow: 0 8px 16px 3px rgba(#000, .6);
-        transform: translateY(-3px) scale(1.07) rotateX(15deg);
+        transform: translateY(-3px) rotateX(15deg);
     }
 
     .card img {
         width: 100%;
         height: 100%;
-        background-size: cover;
+        background-size: contain;
     }
 
     .caption {

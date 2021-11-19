@@ -24,7 +24,7 @@
             <h2 class='text-2xl font-bold'>Open Markets</h2>
             <div class='w-full flex flex-row'>
               <div v-on:click='openMarket(market)' v-for='(market, index) in openMarkets' :key='index' class='m-6 ml-0'>
-                <MarketCard :caption='market.name' :image='market.image'></MarketCard>
+                <MarketCard :caption='market.collectionName' :image='market.image'></MarketCard>
               </div>
             </div>
 
@@ -39,7 +39,7 @@
           </div>
         </div>
         <div v-else>
-            <MarketPlaza v-on:goBack='isMarketOpen = false' :tokenAddress='marketTokenAddress'>
+            <MarketPlaza :contract='marketContract' v-on:goBack='isMarketOpen = false' :market='selectedMarket'>
 
             </MarketPlaza>
         </div>
@@ -51,15 +51,15 @@
 
 
 <script>
-  import MarketCard from '../components/Marketplace/MarketCard.vue';
-  import MarketPlaza from '../components/Marketplace/MarketPlaza.vue';
-  import Markets from '../plugins/markets/markets.json';
+  import MarketCard from '../../components/Marketplace/MarketCard.vue';
+  import MarketPlaza from '../../components/Marketplace/MarketPlaza.vue';
+  import Markets from '../../plugins/markets/markets.json';
 
   import { mapGetters, mapActions } from "vuex";
 
   import { ethers } from "ethers";
-  import wallet from "../plugins/wallet";
-  import MarketPlaceArtifacts from '../plugins/artifacts/marketplaceR.json';
+  import wallet from "../../plugins/wallet";
+  import MarketPlaceArtifacts from '../../plugins/artifacts/marketplaceR.json';
 
   export default {
     name: "MarketPlace",
@@ -73,8 +73,8 @@
     data() {
       return {
         markets: [],
-        marketTokenAddress: '',
         marketContract: undefined,
+        selectedMarket: undefined,
         isMarketOpen: false,
       }
     },
@@ -85,7 +85,6 @@
         MarketPlaceArtifacts.abi,
         this.metaMaskWallet.signer
       );
-
       this.markets = Markets;
     },
 
@@ -105,7 +104,7 @@
     methods:{
       openMarket(market){
         this.isMarketOpen = true;
-        this.marketTokenAddress = market.address;
+        this.selectedMarket = market;
       }
     }
   }

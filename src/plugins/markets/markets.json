@@ -1,17 +1,25 @@
 [{
-        "name": "The Freys",
+        "collectionName": "The Freys",
+        "tokenName": "The Frey",
         "image": "https://frey.freyala.com/images/3820.png",
         "status": "OPEN",
-        "address": " "
+        "address": "0x75fA2f21b8d5AE8caB6D76B17092919331CD0B98",
+        "token": "0x3c8a8a7b7d0fea5078fb37c69e42b85d8fc6a063"
     },
     {
-        "name": "Cryptopigs",
+        "collectionName": "Cryptopigs",
+        "tokenName": "The Frey",
         "image": "https://ipfs.io/ipfs/QmZmUytsgNEhXcRmRSLuzDqLniqbjPwsKzCZNTxFLtHhdE",
-        "status": "OPEN"
+        "status": "OPEN",
+        "address": "0x75fA2f21b8d5AE8caB6D76B17092919331CD0B98",
+        "token": "0x3c8a8a7b7d0fea5078fb37c69e42b85d8fc6a063"
     },
     {
-        "name": "Cryptopigs",
+        "collectionName": "Cryptopigs",
+        "tokenName": "The Frey",
         "image": "https://ipfs.io/ipfs/QmZmUytsgNEhXcRmRSLuzDqLniqbjPwsKzCZNTxFLtHhdE",
-        "status": "SOON"
+        "status": "SOON",
+        "address": "0x75fA2f21b8d5AE8caB6D76B17092919331CD0B98",
+        "token": "0x3c8a8a7b7d0fea5078fb37c69e42b85d8fc6a063"
     }
 ]

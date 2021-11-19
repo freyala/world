@@ -19,101 +19,100 @@ import Governance from "../pages/Governance";
 import JennyMines from "../pages/JennyMines";
 import Staking from "../pages/Staking";
 import Plots from "../pages/Plots";
-import ReworkMarketplace from '../pages/ReworkMarketplace';
+import Marketplace from '../pages/Marketplace/Marketplace';
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash',
-  routes: [
-    {
-      path: '/',
-      name: 'marketplace',
-      component: ReworkMarketplace
-    },
-    {
-      path: '/',
-      name: 'world-map',
-      component: WorldMap
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/casino/coinflip',
-      name: 'coinflip',
-      component: Coinflip
-    },
-    {
-      path: '/casino/roulette/low',
-      name: 'roulette-low',
-      component: RouletteLow
-    },
-    {
-      path: '/casino/roulette/medium',
-      name: 'roulette-medium',
-      component: RouletteMedium
-    },
-    {
-      path: '/casino/roulette/high',
-      name: 'roulette-high',
-      component: RouletteHigh
-    },
-    {
-      path: '/casino/slots',
-      name: 'slots',
-      component: Slots
-    },
-    {
-      path: '/casino/blackjack',
-      name: 'blackjack',
-      component: Blackjack
-    },
-    {
-      path: '/casino',
-      name: 'casino',
-      component: Casino
-    },
-    {
-      path: '/sneak-peek',
-      name: 'sneak-peek',
-      component: Harmons
-    },
-    {
-      path: '/delegating',
-      name: 'delegating',
-      component: Delegating
-    },
-    {
-      path: '/faucet',
-      name: 'faucet',
-      component: Faucet
-    },
-    {
-      path: '/governance',
-      name: 'governance',
-      component: Governance
-    },
-    {
-      path: '/jenny-mines',
-      name: 'jennymines',
-      component: JennyMines
-    },
-    {
-      path: '/staking',
-      name: 'staking',
-      component: Staking
-    },
-    {
-      path: '/plots/:neighbourhood',
-      name: 'plots',
-      component: Plots
-    },
-    {
-      path: '*',
-      redirect: '/'
-    }
-  ]
+    mode: 'hash',
+    routes: [{
+            path: '/',
+            name: 'marketplace',
+            component: Marketplace
+        },
+        {
+            path: '/',
+            name: 'world-map',
+            component: WorldMap
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
+        },
+        {
+            path: '/casino/coinflip',
+            name: 'coinflip',
+            component: Coinflip
+        },
+        {
+            path: '/casino/roulette/low',
+            name: 'roulette-low',
+            component: RouletteLow
+        },
+        {
+            path: '/casino/roulette/medium',
+            name: 'roulette-medium',
+            component: RouletteMedium
+        },
+        {
+            path: '/casino/roulette/high',
+            name: 'roulette-high',
+            component: RouletteHigh
+        },
+        {
+            path: '/casino/slots',
+            name: 'slots',
+            component: Slots
+        },
+        {
+            path: '/casino/blackjack',
+            name: 'blackjack',
+            component: Blackjack
+        },
+        {
+            path: '/casino',
+            name: 'casino',
+            component: Casino
+        },
+        {
+            path: '/sneak-peek',
+            name: 'sneak-peek',
+            component: Harmons
+        },
+        {
+            path: '/delegating',
+            name: 'delegating',
+            component: Delegating
+        },
+        {
+            path: '/faucet',
+            name: 'faucet',
+            component: Faucet
+        },
+        {
+            path: '/governance',
+            name: 'governance',
+            component: Governance
+        },
+        {
+            path: '/jenny-mines',
+            name: 'jennymines',
+            component: JennyMines
+        },
+        {
+            path: '/staking',
+            name: 'staking',
+            component: Staking
+        },
+        {
+            path: '/plots/:neighbourhood',
+            name: 'plots',
+            component: Plots
+        },
+        {
+            path: '*',
+            redirect: '/'
+        }
+    ]
 })
