@@ -41,6 +41,11 @@
       </section>
 
       <div class="flex flex-wrap p-4 md:p-8">
+        <div class="w-full p-4 md:p-8">
+          <router-link :to="{ name: 'world-map' }">
+            <i class="fas fa-long-arrow-alt-left"></i> Back
+          </router-link>
+        </div>
         <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">
           <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full border border-yellow" type="text"
                  placeholder="Search attribute" v-model="search">

@@ -88,7 +88,7 @@
                   <p :class="hovering === 'harmons' ? 'md:opacity-100' : 'md:opacity-80'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 82.3172%; top: 51.6319%">
-                    Tree of Info
+                    Tree of Peek
                   </p>
                 </router-link>
               </div>
@@ -269,9 +269,9 @@
       <top-bar></top-bar>
 
       <div class="absolute bottom-0 left-0 mb-8 ml-8 opacity-70 hover:opacity-90 bg-black rounded-full py-2 px-4">
-        <router-link :to="{ name: 'sneak-peek' }">
+        <a href="https://docs.freyala.com/freyala" target="_blank">
           PROJECT INFO
-        </router-link>
+        </a>
       </div>
 
       <div id="modals">

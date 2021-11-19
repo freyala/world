@@ -40,13 +40,13 @@
         </div>
       </section>
       <div v-if="!loading" id="gallery" class="p-4 md:p-8">
+        <div class="w-full p-4 md:p-8">
+          <router-link :to="{ name: 'world-map' }">
+            <i class="fas fa-long-arrow-alt-left"></i> Back
+          </router-link>
+        </div>
 
         <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
-        <div class="content text-center">
-          <h1 class="text-3xl md:text-5xl mb-6">
-            {{ search === '' ? 'All entered Frey' : 'Look up Frey' }}
-          </h1>
-        </div>
 
         <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">
           <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full" type="number"
@@ -64,12 +64,12 @@
           <div class="minted-frey py-16 flex flex-wrap" v-else>
             <div class="w-full text-center mx-auto">
               <div class="inline" v-if="currentPage > 5">
-                <router-link class="px-1" :to="{ name: 'all-frey', query: { page: 1 } }">
+                <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: 1 } }">
                   <i class="fas fa-angle-double-left"></i>
                 </router-link>
               </div>
 
-              <router-link class="px-1" :to="{ name: 'all-frey', query: { page: currentPage - 1 } }"
+              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage - 1 } }"
                            v-if="currentPage > 1">
                 <i class="fas fa-angle-left"></i>
               </router-link>
@@ -79,7 +79,7 @@
               </div>
 
               <div class="inline" :key="`page-top-${page}`" v-for="page in pages">
-                <router-link class="text-lg px-1" :to="{ name: 'all-frey', query: { page: page } }"
+                <router-link class="text-lg px-1" :to="{ name: 'frey-gallery', query: { page: page } }"
                              v-if="page > (currentPage - 5) && page < (currentPage + 5)">
                   {{ page }}
                 </router-link>
@@ -89,13 +89,13 @@
                 ...
               </div>
 
-              <router-link class="px-1" :to="{ name: 'all-frey', query: { page: currentPage + 1 } }"
+              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage + 1 } }"
                            v-if="currentPage < pages">
                 <i class="fas fa-angle-right"></i>
               </router-link>
 
               <div class="inline" v-if="currentPage < pages && pages > 5">
-                <router-link class="px-1" :to="{ name: 'all-frey', query: { page: pages } }">
+                <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: pages } }">
                   <i class="fas fa-angle-double-right"></i>
                 </router-link>
               </div>
@@ -134,12 +134,12 @@
 
             <div class="w-full text-center mx-auto">
               <div class="inline" v-if="currentPage > 5">
-                <router-link class="px-1" :to="{ name: 'all-frey', query: { page: 1 } }">
+                <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: 1 } }">
                   <i class="fas fa-angle-double-left"></i>
                 </router-link>
               </div>
 
-              <router-link class="px-1" :to="{ name: 'all-frey', query: { page: currentPage - 1 } }"
+              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage - 1 } }"
                            v-if="currentPage > 1">
                 <i class="fas fa-angle-left"></i>
               </router-link>
@@ -149,7 +149,7 @@
               </div>
 
               <div class="inline" :key="`page-bot-${page}`" v-for="page in pages">
-                <router-link class="text-lg px-1" :to="{ name: 'all-frey', query: { page: page } }"
+                <router-link class="text-lg px-1" :to="{ name: 'frey-gallery', query: { page: page } }"
                              v-if="page > (currentPage - 5) && page < (currentPage + 5)">
                   {{ page }}
                 </router-link>
@@ -159,13 +159,13 @@
                 ...
               </div>
 
-              <router-link class="px-1" :to="{ name: 'all-frey', query: { page: currentPage + 1 } }"
+              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage + 1 } }"
                            v-if="currentPage < pages">
                 <i class="fas fa-angle-right"></i>
               </router-link>
 
               <div class="inline" v-if="currentPage < pages && pages > 5">
-                <router-link class="px-1" :to="{ name: 'all-frey', query: { page: pages } }">
+                <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: pages } }">
                   <i class="fas fa-angle-double-right"></i>
                 </router-link>
               </div>

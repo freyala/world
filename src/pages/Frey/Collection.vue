@@ -39,7 +39,12 @@
           </div>
         </div>
       </section>
-      <div v-if="!loading" class="minted-frey py-16 px-4 flex flex-wrap" v-else>
+      <div v-if="!loading" class="minted-frey py-8 px-4 flex flex-wrap">
+        <div class="w-full p-4 md:p-8">
+          <router-link :to="{ name: 'world-map' }">
+            <i class="fas fa-long-arrow-alt-left"></i> Back
+          </router-link>
+        </div>
         <div class="w-full lg:w-1/2 xl:w-1/3 2xl:w-1/4" :key="mint.tokenId" v-for="mint in yourFrey">
           <div class="p-2 relative">
             <img class="w-full" v-lazy="mint.image" alt="Frey image">

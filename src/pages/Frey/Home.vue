@@ -40,6 +40,11 @@
         </div>
       </section>
       <div v-if="freyMounted" id="home" class="flex flex-wrap p-4 md:p-8">
+        <div class="w-full p-4 md:p-8">
+          <router-link :to="{ name: 'world-map' }">
+            <i class="fas fa-long-arrow-alt-left"></i> Back
+          </router-link>
+        </div>
         <div class="w-full mx-auto 2xl:my-0 text-center">
           <img class="mx-auto w-64 md:w-96 mb-12" src="/images/LOADING.png" alt="Mint a Frey">
 
