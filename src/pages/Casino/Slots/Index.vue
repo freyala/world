@@ -26,8 +26,8 @@
         </div>
       </div>
       <div v-if="loader.slots" id="slot-container"
-        class="md:p-8 relative flex flex-col xl:flex-row lg:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-8 lg:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
-        <div class="xl:absolute lg:absolute md:absolute sm:absolute relative top-0 left-0 p-4 md:p-8">
+        class="md:p-8 relative flex flex-col lg:flex-row justify-evenly xl:mt-8 lg:mt-10 mt-2 ml-auto mr-auto">
+        <div class="md:absolute relative top-0 left-0  px-6 py-4">
           <router-link :to="{ name: 'casino' }">
             <i class="fas fa-long-arrow-alt-left"></i> Back
           </router-link>
@@ -44,7 +44,7 @@
           </div>
           <hr class="xl:block lg:block md:hidden sm:hidden mb-3 opacity-50" />
 
-          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div :key="loader.allowance" class="mt-1 mb-2 flex justify-evenly">
               <button v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)" class="hpt-btn"
                 href="javascript:;"><span><span v-if="!loader.contractAllowance">Enable</span>
@@ -54,46 +54,46 @@
                   <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
-            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+          <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
+            <div class="mt-1 mb-2 flex justify-center">
               <button v-on:click="showInsertCoinModal()" class="hpt-btn">Insert XYA
                 <i v-if="loader.contractInsert" class="fas fa-cog fa-spin"></i></button>
             </div>
           </div>
-          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
-            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+          <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
+            <div class="mt-1 mb-2 flex justify-center">
               <button v-on:click="withdraw()" class="hpt-btn"><span>
                   <span v-if="!loader.contractWithdraw">Collect</span>
                   <i v-if="loader.contractWithdraw" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
-            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+          <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
+            <div class="mt-1 mb-2 flex justify-center">
               <button v-on:click="forceMachineUpdate()" class="hpt-btn"><span><span
                     v-if="!loader.contractUpdateMachine">Update</span>
                   <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
-            <div v-if="allowance > 0" class="mt-1 mb-2 flex justify-center">
+          <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
+            <div class="mt-1 mb-2 flex justify-center">
               <button v-on:click="showPayTable()" class="hpt-btn"><span><span
                     v-if="!loader.contractUpdateMachine">Paytable</span>
                   <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
-          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 w-3/6">
+          <div class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div class="mt-1 mb-2 flex justify-center">
               <button v-on:click="showTutorial()" class="hpt-btn"><span>Tutorial</span></button>
             </div>
           </div>
-          <div class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 mt-1 w-full xl:hidden lg:hidden md:hidden sm:hidden block">
+          <div v-if="allowance > 0" class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 mt-1 w-full xl:hidden lg:hidden md:hidden sm:hidden block">
             <div class="mt-1 mb-0 flex justify-center">
               <button v-on:click="manualSpin()" class="hpt-btn" style='width:92.5%!important'><span>Spin</span></button>
             </div>
           </div>
         </div>
         <SlotMachine :windowWidth='windowWidth' v-bind:style="getMachineSize()"
-          class='xl:mr-10 xl:mt-0 xl:ml-0 md:mt-0 mr-auto ml-auto' :contract="this.slotsContract" ref="slotMachine"
+          class='xl:mr-20 xl:mt-0 xl:ml-0 md:mt-0 mr-auto ml-auto' :contract="this.slotsContract" ref="slotMachine"
           v-on:roundFinished="onRoundFinished($event)"></SlotMachine>
         <div v-if='windowWidth > 1440' class="w-1/5 mt-8 text-center xl:visible md:invisible sm:invisible">
           <div class="text-2xl mb-3">Round Winnings</div>
@@ -112,7 +112,7 @@
         </div>
       </div>
 
-      <window name="insert">
+      <window class='w-10/12' height="auto" width="80%" name="insert">
         <div class="flex flex-wrap p-6 bg-dark h-full">
           <div class="w-4/5">
             <div class="text-2xl">Insert XYA</div>
@@ -120,20 +120,23 @@
           <div class="w-1/5 text-right">
             <i @click="$modal.hide('insert')" class="fas fa-times cursor-pointer text-xl"></i>
           </div>
-          <div class="mt-4 flex w-full items-start justify-start">
-            <input type="text" v-model="xyaAmount" />
-            <div class="text-center w-full">
-              <a v-on:click="insertCoin()" href="javascript:;"><span>Confirm</span></a>
+          <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
+            <input class='w-full text-black px-2' type="text" v-model="xyaAmount" />
+            <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
+                    <button  v-on:click="insertCoin()" type="button"
+                          class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                    Confirm
+                  </button>
             </div>
           </div>
-          <div class='mt-4'>
-            <span class='text-xl'>Attention!</span> <br> The XYA you deposit will be converted into credits for the slot machine.
-            <p class='mt-1'>The <span class='text-lg'>Credits</span> can not be withdrawn!</p>
+          <div class='mt-4 md:text-base text-sm opacity-75'>
+            <span class='md:text-xl text-lg'>Attention!</span> <br> The XYA you deposit will be converted into credits for the slot machine.
+            <p class='mt-1'>The <span class='text-lg'>Credits</span> cannot be withdrawn!</p>
           </div>
         </div>
       </window>
 
-      <window id='tutorial' name="tutorial">
+      <window id='tutorial' height="auto" width="80%" name="tutorial">
         <div class="flex flex-wrap p-6 bg-dark h-full">
           <div class="w-4/5">
             <div class="text-2xl">Tutorial</div>
@@ -141,13 +144,13 @@
           <div class="w-1/5 text-right">
             <i @click="$modal.hide('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
           </div>
-          <div class="text-center w-full">
+          <div class="text-center w-full h-5/6 md:block hidden">
             <img v-bind:src='"/images/casino/slots/pg_" + tutorial.page + ".png"' />
           </div>
-          <div class="mt-4 flex flex-col w-full" style='min-height: 190px'>
+          <div class="mt-4 flex flex-col w-full" style='min-height: 140px'>
             <template v-if="tutorial.page === 0">
               <p class="text-xl">Credits</p>
-              <p class='txt-tutorial'>
+              <p class='txt-tutorial md:text-base text-sm'>
                 In order to play the game you need to <span>insert XYA</span> into the
                 machine, which will be converted into game credits at a <span>1:1 rate</span>.
               </p>
@@ -155,13 +158,13 @@
 
             <template v-if="tutorial.page === 1">
               <p class="text-xl">Holds</p>
-              <p class='txt-tutorial'>
+              <p class='txt-tutorial md:text-base text-sm'>
                 Using a <span>HOLD</span> will pin the selected reel in place for one
                 round.
               </p>
               <br>
               <p class='txt-tutorial'>
-                After every spin you have a <span>{{ holdInfo.chance }}%</span> to receive
+                After every spin you have a <span>{{ holdInfo.chance }}%</span> chance of receiving
                 one <span>hold</span>.
               </p>
               <p class='mt-2'>Holds are reset after every spin.</p>
@@ -169,10 +172,10 @@
 
             <template v-if="tutorial.page === 2">
               <p class="text-xl">Nudges</p>
-              <p class='txt-tutorial'>Using a <span>Nudge</span> will move the reel up one position.</p>
+              <p class='txt-tutorial md:text-base text-sm'>Using a <span>Nudge</span> will move the reel up one position.</p>
               <br>
-              <p class='txt-tutorial'>
-                After every spin you have a <span>{{ nudgeInfo.chance }}%</span> to receive one
+              <p class='txt-tutorial md:text-base text-sm'>
+                After every spin you have a <span>{{ nudgeInfo.chance }}%</span> chance of receiving one
                 <span>nudge</span>.
               </p>
               <p class='mt-2'>Nudges are reset after every spin.</p>
@@ -180,12 +183,12 @@
 
             <template v-if="tutorial.page === 3">
               <p class="text-xl">Bank</p>
-              <p class='txt-tutorial'>
+              <p class='txt-tutorial md:text-base text-sm'>
                 Every winning combination will reward a specific number of
                 tokens which are stored in the bank.
               </p>
               <br>
-              <p class='txt-tutorial'>
+              <p class='txt-tutorial md:text-base text-sm'>
                 You can withdraw the tokens from the <span>Bank</span> at any time by using the
                 <span>Collect</span> button.
               </p>
@@ -282,7 +285,7 @@
       );
 
       await this.fetchGameData();
-      this.onResize();
+      this.onResize(false);
 
       this.loader.allowance = true;
       this.loader.slots = true;
@@ -297,7 +300,7 @@
     methods: {
       ...mapActions([""]),
 
-      onResize() {
+      onResize(update = true) {
         this.windowWidth = window.innerWidth;
         if (this.windowWidth > 1440) {
           this.roundsHistoryMax = 5;
@@ -305,6 +308,8 @@
           this.roundsHistoryMax = 3;
         }
         this.getHistoryData();
+        
+        if(update) this.forceMachineUpdate();
       },
 
       async getHistoryData() {
@@ -326,6 +331,7 @@
       },
 
       async forceMachineUpdate() {
+        if(!this.$refs.slotMachine) return;
         await this.$refs.slotMachine.fetchPlayerData();
         await this.$refs.slotMachine.fetchGameReels();
       },

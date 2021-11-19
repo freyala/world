@@ -102,37 +102,40 @@
       <div class="mb-2"></div>
     </div>
 
-    <window name="payTable">
-      <div class="flex flex-wrap p-6 bg-dark h-full" style='height: 600px'>
+    <window height="auto" width="80%" name="payTable">
+      <div class="flex flex-wrap py-6 px-3 md:px-6 bg-dark h-full">
         <div class="w-4/5">
           <div class="text-2xl">Paytable</div>
         </div>
         <div class="w-1/5 text-right">
           <i @click="$modal.hide('payTable')" class="fas fa-times cursor-pointer text-xl"></i>
         </div>
-        <div v-if='!gamePayTableLoading' class="w-full h-full overflow-y-scroll">
-          <div v-for="(payLine, i) in gameTempPayTable" :key="i" class="flex flex-row justify-evenly items-center m-2 mb-5">
-            <div class="w-2/5 text-center text-xl">
+        <div v-if='!gamePayTableLoading' style='max-height: 450px' class="w-full h-full overflow-y-scroll">
+          <div v-for="(payLine, i) in gameTempPayTable" :key="i"
+            class="flex md:flex-nowrap flex-wrap justify-evenly items-center m-2 mb-5">
+            <div class="w-2/5 text-center md:text-base text-sm">
               {{ payLine.payOut }} XYA
             </div>
-            <img height="64px" width="64px" class="rounded-lg" v-for="img in 3" :key="img"
-              v-bind:src="assets.images[payLine.payLine[img - 1]]" />
+            <div class='w-full md:flex-row justify-evenly flex'>
+              <img width="64px" class="rounded-lg md:p-0 p-1" v-for="img in 3" :key="img"
+                v-bind:src="assets.images[payLine.payLine[img - 1]]" />
+            </div>
           </div>
         </div>
-      <div v-else class="p-4 xl:p-8 relative mx-auto">
-        <div class="m-auto text-center">
-          <div class="w-full flex">
-            <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
-              style="animation: rotation 2s infinite linear" />
+        <div v-else class="p-4 xl:p-8 relative mx-auto">
+          <div class="m-auto text-center">
+            <div class="w-full flex">
+              <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
+                style="animation: rotation 2s infinite linear" />
+            </div>
+            <br />
+            <p class="text-2xl">Loading...</p>
           </div>
-          <br />
-          <p class="text-2xl">Loading...</p>
         </div>
-      </div>
       </div>
     </window>
 
-    <window name="error">
+    <window height="auto" width="80%"  name="error">
       <div class="flex flex-wrap p-6 bg-dark h-full">
         <div class="w-4/5">
           <div class="text-2xl">Error</div>
@@ -261,15 +264,38 @@
         }
 
 
-        this.gameTempPayTable = [
-          {payLine: ["0", "0", "0"], payOut: 16.6},
-          {payLine: ["1", "1", "1"], payOut: 25},
-          {payLine: ["2", "2", "2"], payOut: 84.5},
-          {payLine: ["3", "3", "3"], payOut: 112.5},
-          {payLine: ["0", "0", "4"], payOut: 7.14},
-          {payLine: ["1", "1", "4"], payOut: 7.14},
-          {payLine: ["2", "2", "4"], payOut: 14},
-          {payLine: ["3", "3", "4"], payOut: 14},
+        this.gameTempPayTable = [{
+            payLine: ["0", "0", "0"],
+            payOut: 16.6
+          },
+          {
+            payLine: ["1", "1", "1"],
+            payOut: 25
+          },
+          {
+            payLine: ["2", "2", "2"],
+            payOut: 84.5
+          },
+          {
+            payLine: ["3", "3", "3"],
+            payOut: 112.5
+          },
+          {
+            payLine: ["0", "0", "4"],
+            payOut: 7.14
+          },
+          {
+            payLine: ["1", "1", "4"],
+            payOut: 7.14
+          },
+          {
+            payLine: ["2", "2", "4"],
+            payOut: 14
+          },
+          {
+            payLine: ["3", "3", "4"],
+            payOut: 14
+          },
         ];
         this.gamePayTableLoading = false;
       });
@@ -387,7 +413,7 @@
           return;
 
         try {
-          if(this.playerCredit === 0) throw "";
+          if (this.playerCredit === 0) throw "";
           this.spamProtection = 1500;
           var tx = await this.contract.spin({
             gasPrice: 100000000000,
