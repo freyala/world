@@ -264,12 +264,12 @@
         this.gameTempPayTable = [
           {payLine: ["0", "0", "0"], payOut: 16.6},
           {payLine: ["1", "1", "1"], payOut: 25},
-          {payLine: ["2", "2", "2"], payOut: 125.5},
-          {payLine: ["3", "3", "3"], payOut: 168.75},
-          {payLine: ["0", "0", "4"], payOut: 2.85},
-          {payLine: ["1", "1", "4"], payOut: 3.57},
-          {payLine: ["2", "2", "4"], payOut: 8.43},
-          {payLine: ["3", "3", "4"], payOut: 14.06},
+          {payLine: ["2", "2", "2"], payOut: 84.5},
+          {payLine: ["3", "3", "3"], payOut: 112.5},
+          {payLine: ["0", "0", "4"], payOut: 7.14},
+          {payLine: ["1", "1", "4"], payOut: 7.14},
+          {payLine: ["2", "2", "4"], payOut: 14},
+          {payLine: ["3", "3", "4"], payOut: 14},
         ];
         this.gamePayTableLoading = false;
       });

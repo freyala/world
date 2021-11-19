@@ -9,9 +9,10 @@
           background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right;
         ">
         <div class="container relative mx-auto text-center pt-12 md:pt-12 pb-12 md:pb-12">
-          <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
+          <h1 class="text-2xl md:text-5xl text-primary-alt mb-3 font-semibold">
             Slots
           </h1>
+          <p>5 XYA / Spin</p>
         </div>
       </section>
       <div v-if="!loader.slots" class="p-4 xl:p-8 relative mt-12">
@@ -25,7 +26,7 @@
         </div>
       </div>
       <div v-if="loader.slots" id="slot-container"
-        class="md:p-8 relative flex flex-col xl:flex-row lg:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-10 lg:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
+        class="md:p-8 relative flex flex-col xl:flex-row lg:flex-row md:flex-col sm:flex-col justify-evenly xl:mt-8 lg:mt-10 md:mt-2 sm:mt-2 ml-auto mr-auto">
         <div class="xl:absolute lg:absolute md:absolute sm:absolute relative top-0 left-0 p-4 md:p-8">
           <router-link :to="{ name: 'casino' }">
             <i class="fas fa-long-arrow-alt-left"></i> Back
@@ -161,7 +162,7 @@
               <br>
               <p class='txt-tutorial'>
                 After every spin you have a <span>{{ holdInfo.chance }}%</span> to receive
-                between <span>{{ holdInfo.min }}</span> and <span> {{ holdInfo.max }} </span> holds.
+                one <span>hold</span>.
               </p>
               <p class='mt-2'>Holds are reset after every spin.</p>
             </template>
@@ -171,8 +172,8 @@
               <p class='txt-tutorial'>Using a <span>Nudge</span> will move the reel up one position.</p>
               <br>
               <p class='txt-tutorial'>
-                After every spin you have a <span>{{ nudgeInfo.chance }}%</span> to receive
-                between <span>{{ nudgeInfo.min }}</span> and <span>{{ nudgeInfo.max }}</span> nudges.
+                After every spin you have a <span>{{ nudgeInfo.chance }}%</span> to receive one
+                <span>nudge</span>.
               </p>
               <p class='mt-2'>Nudges are reset after every spin.</p>
             </template>
