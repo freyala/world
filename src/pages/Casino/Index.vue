@@ -41,8 +41,11 @@
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'slots' }">
                   <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
+                          class="relative w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
                     Slots lobby
+                      <div class='new-ribbon'>
+                          <span>New</span>
+                      </div>
                   </button>
                 </router-link>
               </div>
@@ -92,3 +95,23 @@ export default {
   name: 'Casino'
 }
 </script>
+
+<style>
+.new-ribbon{
+  position: absolute;
+  top: -16px;
+  right: 16px;
+  transform: rotate(45deg);
+  color: #8cd1a6;
+  font-size: calc(0.75rem + 0.5vw);
+  width: 32px;
+  height: 100%;
+  transition: 0.3s;
+}
+button:hover > div{
+  color: white!important;
+  top: 6px;
+  right: 24px;
+  transform: rotate(0deg);
+}
+</style>
