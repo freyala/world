@@ -44,8 +44,8 @@ export default {
 <style>
     .card {
         position: relative;
-        width: 180px;
-        height: 270px;
+        width: 220px;
+        height: 280px;
         box-shadow: 0 5px 10px rgba(#000, .8);
         transform-origin: center top;
         transform-style: preserve-3d;
@@ -62,29 +62,10 @@ export default {
         filter:grayscale(100%);
     }
 
-    .card:after {
-        position: absolute;
-        content: '';
-        z-index: 10;
-        width: 200%;
-        height: 100%;
-        top: -90%;
-        left: -20px;
-        opacity: .1;
-        transform: rotate(45deg);
-        transition: .3s;
-        background: linear-gradient(to top, transparent, #fff 15%, rgba(255, 255, 255, 0.25));
-    }
-
-    .card:hover:after {
-        transform: rotate(25deg);
-        top: -40%;
-        opacity: .15;
-    }
 
     .card:hover {
         box-shadow: 0 8px 16px 3px rgba(#000, .6);
-        transform: translateY(-3px) rotateX(15deg);
+        transform: translateY(-3px) rotateX(0deg);
     }
 
     .card img {

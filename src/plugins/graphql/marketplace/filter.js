@@ -26,11 +26,52 @@ export const FetchMarketSales = (marketToken) => {
         }
         nft {
           token
-          tokenId
+          tokenId,
+          attributes{
+            key,
+            value
+          }
         }
       }
     }    
     `;
+};
+
+export const FetchMarketNfts = (marketToken, filter) => {
+    return `
+    {
+      sales: nfts(where: {market: "${marketToken}", attributes: ${filter}, currentSellOrder_not: null}) {
+        tokenId,
+        attributes{
+          key
+          value
+        }
+        order: currentSellOrder {
+          price
+          currency {
+            id
+          }
+        }
+      }
+      auctions: nfts(where: {market: "${marketToken}", attributes: ${filter}, currentAuction_not: null}) {
+        tokenId
+        attributes{
+          key
+          value
+        }
+        order: currentAuction {
+          highestBidder
+          price: highestBid
+          currency{
+            id
+          }
+          timestamp
+          ended
+          endsAt
+        }
+      }
+    }
+  `
 };
 
 export const FetchMarketSalesByCurrency = (marketToken, currency) => {

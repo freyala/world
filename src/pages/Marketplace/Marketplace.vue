@@ -1,7 +1,7 @@
 <template>
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
-    class="flex p-4 md:p-16 lg:px-32">
-    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
+    class="flex p-4 lg:px-32" v-bind:class='{"md:p-16": !isMarketOpen}'>
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" v-bind:class='{"screen": !isMarketOpen}' class="rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
         style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
@@ -11,7 +11,7 @@
         </div>
       </section>
 
-      <div class="p-4 md:p-8 relative">
+      <div class="p-4 md:py-8 md:pr-4 pl-0 relative">
         <div v-if='!isMarketOpen' class="absolute top-0 left-0 p-4 md:p-8">
           <router-link :to="{ name: 'world-map' }">
             <i class="fas fa-long-arrow-alt-left"></i> Back
@@ -85,6 +85,7 @@
         MarketPlaceArtifacts.abi,
         this.metaMaskWallet.signer
       );
+      
       this.markets = Markets;
     },
 
