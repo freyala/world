@@ -2,7 +2,7 @@
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -24,24 +24,21 @@
             <div class="flex flex-wrap text-center mt-4">
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'roulette-medium' }">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
+                  <button type="button" class="mx-auto xya-btn w-full">
                     Roulette lobby
                   </button>
                 </router-link>
               </div>
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'coinflip' }">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
+                  <button type="button" class="mx-auto xya-btn w-full">
                     Coinflip lobby
                   </button>
                 </router-link>
               </div>
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'slots' }">
-                  <button type="button"
-                          class="relative w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
+                  <button type="button" class="mx-auto xya-btn w-full">
                     Slots lobby
                       <div class='new-ribbon'>
                           <span>New</span>
@@ -51,8 +48,7 @@
               </div>
               <div class="w-full mt-4">
                 <router-link :to="{ name: 'blackjack' }">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
+                  <button type="button" class="mx-auto xya-btn w-full">
                     Blackjack lobby
                   </button>
                 </router-link>

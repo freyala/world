@@ -5,7 +5,7 @@
       min-height: 100vh;
     " class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt" style="
+      <section id="section-i-1" class="border-b-4 border-bbrown" style="
           background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right;
         ">
         <div class="container relative mx-auto text-center pt-12 md:pt-12 pb-12 md:pb-12">
@@ -46,49 +46,49 @@
 
           <div class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div :key="loader.allowance" class="mt-1 mb-2 flex justify-evenly">
-              <button v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)" class="hpt-btn"
+              <button v-if="allowance <= 0" v-on:click="addAllowance(999999999999.9999)" class="xya-btn"
                 href="javascript:;"><span><span v-if="!loader.contractAllowance">Enable</span>
                   <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
-              <button v-if="allowance > 0" v-on:click="addAllowance(0)" class="hpt-btn"><span><span
+              <button v-if="allowance > 0" v-on:click="addAllowance(0)" class="xya-btn"><span><span
                     v-if="!loader.contractAllowance">Disable</span>
                   <i v-if="loader.contractAllowance" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
           <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div class="mt-1 mb-2 flex justify-center">
-              <button v-on:click="showInsertCoinModal()" class="hpt-btn">Insert XYA
+              <button v-on:click="showInsertCoinModal()" class="xya-btn">Insert XYA
                 <i v-if="loader.contractInsert" class="fas fa-cog fa-spin"></i></button>
             </div>
           </div>
           <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div class="mt-1 mb-2 flex justify-center">
-              <button v-on:click="withdraw()" class="hpt-btn"><span>
+              <button v-on:click="withdraw()" class="xya-btn"><span>
                   <span v-if="!loader.contractWithdraw">Collect</span>
                   <i v-if="loader.contractWithdraw" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
           <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div class="mt-1 mb-2 flex justify-center">
-              <button v-on:click="forceMachineUpdate()" class="hpt-btn"><span><span
+              <button v-on:click="forceMachineUpdate()" class="xya-btn"><span><span
                     v-if="!loader.contractUpdateMachine">Update</span>
                   <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
           <div v-if="allowance > 0" class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div class="mt-1 mb-2 flex justify-center">
-              <button v-on:click="showPayTable()" class="hpt-btn"><span><span
+              <button v-on:click="showPayTable()" class="xya-btn"><span><span
                     v-if="!loader.contractUpdateMachine">Paytable</span>
                   <i v-if="loader.contractUpdateMachine" class="fas fa-cog fa-spin"></i></span></button>
             </div>
           </div>
           <div class="xl:w-10/12 lg:w-10/12 w-3/6 mx-auto">
             <div class="mt-1 mb-2 flex justify-center">
-              <button v-on:click="showTutorial()" class="hpt-btn"><span>Tutorial</span></button>
+              <button v-on:click="showTutorial()" class="xya-btn"><span>Tutorial</span></button>
             </div>
           </div>
           <div v-if="allowance > 0" class="xl:w-full lg:w-full md:w-3/6 sm:w-3/6 mt-1 w-full xl:hidden lg:hidden md:hidden sm:hidden block">
             <div class="mt-1 mb-0 flex justify-center">
-              <button v-on:click="manualSpin()" class="hpt-btn" style='width:92.5%!important'><span>Spin</span></button>
+              <button v-on:click="manualSpin()" class="xya-btn" style='width:92.5%!important'><span>Spin</span></button>
             </div>
           </div>
         </div>
@@ -124,7 +124,7 @@
             <input class='w-full text-black px-2' type="text" v-model="xyaAmount" />
             <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                     <button  v-on:click="insertCoin()" type="button"
-                          class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                          class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-bbrown rounded-xl bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                     Confirm
                   </button>
             </div>
@@ -527,7 +527,7 @@
         var(--var-soft-shadow-color)) 1 25%;
   }
 
-  .hpt-btn {
+  .xya-btn {
     background-color: var(--var-slots-bg);
     border-radius: var(--var-border-radius);
     box-sizing: border-box;
@@ -542,7 +542,7 @@
     width: 85%;
   }
 
-  .hpt-btn:hover {
+  .xya-btn:hover {
     background-image: linear-gradient(190deg,
         var(--var-hilight-strong) 5%,
         var(--var-hilight-color) 10%,
@@ -552,7 +552,7 @@
   }
 
 
-  .hpt-btn:hover span {
+  .xya-btn:hover span {
     background: transparent;
   }
 </style>

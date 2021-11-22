@@ -2,7 +2,7 @@
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -22,18 +22,14 @@
       <div v-if="coinFlipMounted" class="p-8 mt-8 flex flex-wrap">
         <div class="w-full flex flex-wrap">
           <div class="w-full" v-if="parseInt(allowance) > 0">
-            <button
-                class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
-                @click="addAllowance(0)">
+            <button class="w-full mx-auto xya-btn" @click="addAllowance(0)">
               Disable coinflip <small class="hidden md:inline">(contract will no longer have rights to use your XYA)</small> <i
                 v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
 
           <div class="w-full" v-else>
-            <button
-                class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
-                @click="addAllowance(999999999999.9999)">
+            <button class="w-full mx-auto xya-btn" @click="addAllowance(999999999999.9999)">
               Enable coinflip <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
@@ -51,17 +47,15 @@
 
               <!--      lobby-->
               <button type="button"
-                      :class="coinFlipDefaultView === 'default' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                      class="md:hidden w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                      @click="coinFlipDefaultView = 'default'">
+                      :class="coinFlipDefaultView === 'default' ? 'bg-primary-alt text-brown' : ''"
+                      class="w-full mx-auto xya-btn" @click="coinFlipDefaultView = 'default'">
                 Lobby
               </button>
 
               <!--      yourGames-->
               <button type="button"
-                      :class="coinFlipDefaultView === 'yourGames' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                      class="md:hidden w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                      @click="recentGamesByUser(metaMaskAccount, 25)">
+                      :class="coinFlipDefaultView === 'yourGames' ? 'bg-primary-alt text-brown' : ''"
+                      class="w-full mx-auto xya-btn" @click="recentGamesByUser(metaMaskAccount, 25)">
                 Your games
               </button>
 
@@ -76,36 +70,22 @@
                 <div class="flex flex-wrap">
                   <div class="w-full">
                     <small>Name of room</small>
-                    <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
-                        v-model="coinFlipCreateGame.name"
-                        type="text">
+                    <input class="w-full mx-auto xya-btn" v-model="coinFlipCreateGame.name" type="text">
                   </div>
                   <div class="w-full">
                     <small>Room password</small>
-                    <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
-                        v-model="coinFlipCreateGame.password"
-                        type="password">
+                    <input class="w-full mx-auto xya-btn" v-model="coinFlipCreateGame.password" type="password">
                   </div>
                   <div class="w-full">
                     <small>Confirm room password</small>
-                    <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
-                        v-model="coinFlipCreateGame.confirmPassword"
-                        type="password">
+                    <input class="w-full mx-auto xya-btn" v-model="coinFlipCreateGame.confirmPassword" type="password">
                   </div>
                   <div class="w-full">
                     <small>Amount to bet with</small>
-                    <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
-                        v-model="amount"
-                        type="number" maxlength="25000">
+                    <input class="w-full mx-auto xya-btn" v-model="amount" type="number" maxlength="25000">
                   </div>
                   <div class="w-full mt-4">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">
                       <span v-if="coinFlipLoading.creatingGame">Creating game... </span>
                       <span v-else>Create game! </span>
                       <i v-if="coinFlipLoading.creatingGame" class="fas fa-cog fa-spin"></i>
@@ -129,21 +109,19 @@
                   <div class="w-1/2 pr-2">
                     <small>Player 1 or 2</small>
                     <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                        class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                         v-model="coinFlipInput.playerId"
                         type="number">
                   </div>
                   <div class="w-1/2 pl-2">
                     <small>Game ID</small>
                     <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                        class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                         v-model="coinFlipInput.gameId"
                         type="number">
                   </div>
                   <div class="w-full mt-4">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="playerByPlayerIdAndGameId(coinFlipInput.playerId, coinFlipInput.gameId)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="playerByPlayerIdAndGameId(coinFlipInput.playerId, coinFlipInput.gameId)">
                       Fetch player <i v-if="coinFlipLoading.playerByPlayerIdAndGameId" class="fas fa-cog fa-spin"></i>
                     </button>
                   </div>
@@ -164,15 +142,10 @@
                 <small>Game ID</small>
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
-                    <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
-                        v-model="coinFlipInput.gameId"
-                        type="number">
+                    <input class="w-full mx-auto xya-btn" v-model="coinFlipInput.gameId" type="number">
                   </div>
                   <div class="w-1/2 pl-2">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="betsByGameId(coinFlipInput.gameId)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="betsByGameId(coinFlipInput.gameId)">
                       Fetch bets <i v-if="coinFlipLoading.betsByGameId" class="fas fa-cog fa-spin"></i>
                     </button>
                   </div>
@@ -192,14 +165,12 @@
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
                     <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                        class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                         v-model="coinFlipInput.numberOfGames"
                         type="number">
                   </div>
                   <div class="w-1/2 pl-2">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="recentGames(coinFlipInput.numberOfGames)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="recentGames(coinFlipInput.numberOfGames)">
                       Fetch games <i v-if="coinFlipLoading.recentGames" class="fas fa-cog fa-spin"></i>
                     </button>
                   </div>
@@ -213,22 +184,14 @@
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
                     <small>User address</small>
-                    <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
-                        v-model="coinFlipInput.userAddress"
-                        type="text">
+                    <input class="w-full mx-auto xya-btn" v-model="coinFlipInput.userAddress" type="text">
                   </div>
                   <div class="w-1/2 pl-2">
                     <small>Number of games</small>
-                    <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
-                        v-model="coinFlipInput.numberOfGames"
-                        type="number">
+                    <input class="w-full mx-auto xya-btn" v-model="coinFlipInput.numberOfGames" type="number">
                   </div>
                   <div class="w-full mt-4">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="recentGamesByUser(coinFlipInput.userAddress, coinFlipInput.numberOfGames)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="recentGamesByUser(coinFlipInput.userAddress, coinFlipInput.numberOfGames)">
                       Fetch games <i v-if="coinFlipLoading.recentGamesByUser" class="fas fa-cog fa-spin"></i>
                     </button>
                   </div>
@@ -243,14 +206,12 @@
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
                     <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                        class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                         v-model="coinFlipInput.gameId"
                         type="number">
                   </div>
                   <div class="w-1/2 pl-2">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="coinFlipperByGameId(coinFlipInput.gameId)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="coinFlipperByGameId(coinFlipInput.gameId)">
                       Fetch flipper <i v-if="coinFlipLoading.coinFlipperByGameId" class="fas fa-cog fa-spin"></i>
                     </button>
                   </div>
@@ -271,14 +232,12 @@
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
                     <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                        class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                         v-model="coinFlipInput.gameId"
                         type="number">
                   </div>
                   <div class="w-1/2 pl-2">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="gameById(coinFlipInput.gameId)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="gameById(coinFlipInput.gameId)">
                       Fetch game <i v-if="coinFlipLoading.gameById" class="fas fa-cog fa-spin"></i>
                     </button>
                   </div>
@@ -293,14 +252,12 @@
                 <div class="flex flex-wrap">
                   <div class="w-1/2 pr-2">
                     <input
-                        class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                        class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                         v-model="coinFlipInput.gameName"
                         type="text">
                   </div>
                   <div class="w-1/2 pl-2">
-                    <button type="button"
-                            class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                            @click="gameByName(coinFlipInput.gameName)">
+                    <button type="button" class="w-full mx-auto xya-btn" @click="gameByName(coinFlipInput.gameName)">
                       Fetch game <i v-if="coinFlipLoading.gameName" class="fas fa-cog fa-spin"></i>
                     </button>
                   </div>
@@ -312,17 +269,15 @@
 
             <!--      lobby-->
             <button type="button"
-                    :class="coinFlipDefaultView === 'default' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                    @click="coinFlipDefaultView = 'default'">
+                    :class="coinFlipDefaultView === 'default' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2" @click="coinFlipDefaultView = 'default'">
               Lobby
             </button>
 
             <!--      yourGames-->
             <button type="button"
-                    :class="coinFlipDefaultView === 'yourGames' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                    @click="recentGamesByUser(metaMaskAccount, 25)">
+                    :class="coinFlipDefaultView === 'yourGames' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2" @click="recentGamesByUser(metaMaskAccount, 25)">
               Your games
             </button>
 
@@ -332,64 +287,62 @@
 
             <!--      coinFlipCreateGame-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'createGame' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                    @click="coinFlipSelectedButton = 'createGame'">
+                    :class="coinFlipSelectedButton === 'createGame' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2" @click="coinFlipSelectedButton = 'createGame'">
               Create new game
             </button>
 
             <!--      gameById-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'gameById' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                    @click="coinFlipSelectedButton = 'gameById'">
+                    :class="coinFlipSelectedButton === 'gameById' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2" @click="coinFlipSelectedButton = 'gameById'">
               Look up game by ID
             </button>
 
             <!--      gameByName-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'gameByName' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    :class="coinFlipSelectedButton === 'gameByName' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2"
                     @click="coinFlipSelectedButton = 'gameByName'">
               Look up game by name
             </button>
 
             <!--      recentGames-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'recentGames' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    :class="coinFlipSelectedButton === 'recentGames' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2"
                     @click="coinFlipSelectedButton = 'recentGames'">
               Look up recent games
             </button>
 
             <!--      recentGamesByUser-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'recentGamesByUser' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    :class="coinFlipSelectedButton === 'recentGamesByUser' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2"
                     @click="coinFlipSelectedButton = 'recentGamesByUser'">
               Look up recent games by user
             </button>
 
             <!--      playerByPlayerIdAndGameId-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'playerByPlayerIdAndGameId' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    :class="coinFlipSelectedButton === 'playerByPlayerIdAndGameId' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2"
                     @click="coinFlipSelectedButton = 'playerByPlayerIdAndGameId'">
               Look up player by game
             </button>
 
             <!--      betsByGameId-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'betsByGameId' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    :class="coinFlipSelectedButton === 'betsByGameId' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2"
                     @click="coinFlipSelectedButton = 'betsByGameId'">
               Look up bet by game ID
             </button>
 
             <!--      coinFlipperByGameId-->
             <button type="button"
-                    :class="coinFlipSelectedButton === 'coinFlipperByGameId' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                    class="hidden md:block w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
+                    :class="coinFlipSelectedButton === 'coinFlipperByGameId' ? 'bg-primary-alt text-brown' : ''"
+                    class="hidden md:block w-full mx-auto xya-btn mb-2"
                     @click="coinFlipSelectedButton = 'coinFlipperByGameId'">
               Look up coin flipper
             </button>
@@ -456,7 +409,7 @@
 
                         <div v-if="game.passwordProtected && game.p1 !== metaMaskAccount" class="mb-2">
                           <input
-                              class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                              class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                               v-model="coinFlipPasswords[game.id]"
                               placeholder="password"
                               type="password"
@@ -467,7 +420,7 @@
                             v-if="(game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992' || game.p2 === '0x0000000000000000000000000000000000000000') && game.p1 !== metaMaskAccount">
                           <button type="button"
                                   @click="joinGame(game.id, coinFlipPasswords[game.id], game.betAmount, 2)"
-                                  class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4">
+                                  class="w-full mx-auto xya-btn">
                             <span v-if="coinFlipLoading.joiningGame">Challenging... </span>
                             <span v-else>Challenge </span>
                             <i v-if="coinFlipLoading.joiningGame === game.id" class="fas fa-cog fa-spin"></i>
@@ -476,8 +429,7 @@
                         <div v-else>
                           <div
                               v-if="game.p2 === '0x0000000000000000000000000000000000000000' && game.p1 === metaMaskAccount">
-                            <button type="button"
-                                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12 mb-4">
+                            <button type="button" class="w-full mx-auto xya-btn">
                               Waiting for challenger
                             </button>
                           </div>
@@ -492,24 +444,24 @@
                                 v-if="game.passwordProtected && game.p2 === '0x2B9F62aC65BCf956B6E15eC427456b2CF3a51992'"
                                 class="mb-2">
                               <input
-                                  class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                                  class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                                   v-model="coinFlipPasswords[game.id]"
                                   placeholder="password"
                                   type="password"
                               >
                             </div>
-                            <div class="w-full flex flex-wrap md:pr-8">
-                              <button type="button"
-                                      @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
-                                      class="w-full md:w-2/5 rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+                            <div class="w-full flex flex-wrap">
+                              <button type="button" @click="startGame(game.id, coinFlipPasswords[game.id], 1)"
+                                      class="w-full md:w-2/5 mr-auto xya-btn">
                                 Heads!
                               </button>
-                              <div class="w-full md:w-1/5 my-1 text-center">
+
+                              <div class="w-full md:w-1/5 mx-auto my-auto text-center">
                                 <i v-if="coinFlipLoading.flipping === game.id" class="fas fa-cog fa-spin"></i>
                               </div>
-                              <button type="button"
-                                      @click="startGame(game.id, coinFlipPasswords[game.id], 2)"
-                                      class="w-full md:w-2/5 ml-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+
+                              <button type="button" @click="startGame(game.id, coinFlipPasswords[game.id], 2)"
+                                      class="w-full md:w-2/5 ml-auto xya-btn">
                                 Tails!
                               </button>
                             </div>
@@ -518,7 +470,7 @@
                               v-if="game.p2 !== '0x0000000000000000000000000000000000000000' && ((game.p1 === metaMaskAccount || game.p2 === metaMaskAccount) && game.flipper !== metaMaskAccount)">
                             <button type="button"
                                     disabled
-                                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12 mb-4">
+                                    class="w-full mx-auto xya-btn">
                               Waiting for flipper
                             </button>
                           </div>
@@ -575,7 +527,7 @@
           <div class="hidden 2xl:block w-1/4 mt-20">
             <button @click="showLastGames = !showLastGames"
                     type="button"
-                    class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12">
+                    class="w-full mx-auto xya-btn">
               {{ showLastGames ? 'Hide your last 5 games' : 'Show your last 5 games' }}
             </button>
 
@@ -602,34 +554,33 @@
                 <div class="w-full">
                   <small>Name of room</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipCreateGame.name"
                       type="text">
                 </div>
                 <div class="w-full">
                   <small>Room password</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipCreateGame.password"
                       type="password">
                 </div>
                 <div class="w-full">
                   <small>Confirm room password</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipCreateGame.confirmPassword"
                       type="password">
                 </div>
                 <div class="w-full">
                   <small>Amount to bet with</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="amount"
                       type="number" maxlength="25000">
                 </div>
                 <div class="w-full mt-4">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
+                  <button type="button" class="w-full mx-auto xya-btn"
                           @click="createGameRoom(coinFlipCreateGame.name, coinFlipCreateGame.password, amount)">
                     <span v-if="coinFlipLoading.creatingGame">Creating game... </span>
                     <span v-else>Create game! </span>
@@ -654,20 +605,19 @@
                 <div class="w-1/2 pr-2">
                   <small>Player 1 or 2</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.playerId"
                       type="number">
                 </div>
                 <div class="w-1/2 pl-2">
                   <small>Game ID</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.gameId"
                       type="number">
                 </div>
                 <div class="w-full mt-4">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
+                  <button type="button" class="w-full mx-auto xya-btn"
                           @click="playerByPlayerIdAndGameId(coinFlipInput.playerId, coinFlipInput.gameId)">
                     Fetch player <i v-if="coinFlipLoading.playerByPlayerIdAndGameId" class="fas fa-cog fa-spin"></i>
                   </button>
@@ -690,13 +640,12 @@
               <div class="flex flex-wrap">
                 <div class="w-1/2 pr-2">
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.gameId"
                       type="number">
                 </div>
                 <div class="w-1/2 pl-2">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
+                  <button type="button" class="w-full mx-auto xya-btn"
                           @click="betsByGameId(coinFlipInput.gameId)">
                     Fetch bets <i v-if="coinFlipLoading.betsByGameId" class="fas fa-cog fa-spin"></i>
                   </button>
@@ -717,13 +666,12 @@
               <div class="flex flex-wrap">
                 <div class="w-1/2 pr-2">
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.numberOfGames"
                       type="number">
                 </div>
                 <div class="w-1/2 pl-2">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
+                  <button type="button" class="w-full mx-auto xya-btn"
                           @click="recentGames(coinFlipInput.numberOfGames)">
                     Fetch games <i v-if="coinFlipLoading.recentGames" class="fas fa-cog fa-spin"></i>
                   </button>
@@ -739,20 +687,19 @@
                 <div class="w-1/2 pr-2">
                   <small>User address</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.userAddress"
                       type="text">
                 </div>
                 <div class="w-1/2 pl-2">
                   <small>Number of games</small>
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.numberOfGames"
                       type="number">
                 </div>
                 <div class="w-full mt-4">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
+                  <button type="button" class="w-full mx-auto xya-btn"
                           @click="recentGamesByUser(coinFlipInput.userAddress, coinFlipInput.numberOfGames)">
                     Fetch games <i v-if="coinFlipLoading.recentGamesByUser" class="fas fa-cog fa-spin"></i>
                   </button>
@@ -768,13 +715,12 @@
               <div class="flex flex-wrap">
                 <div class="w-1/2 pr-2">
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.gameId"
                       type="number">
                 </div>
                 <div class="w-1/2 pl-2">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
+                  <button type="button" class="w-full mx-auto xya-btn"
                           @click="coinFlipperByGameId(coinFlipInput.gameId)">
                     Fetch flipper <i v-if="coinFlipLoading.coinFlipperByGameId" class="fas fa-cog fa-spin"></i>
                   </button>
@@ -796,14 +742,12 @@
               <div class="flex flex-wrap">
                 <div class="w-1/2 pr-2">
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.gameId"
                       type="number">
                 </div>
                 <div class="w-1/2 pl-2">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                          @click="gameById(coinFlipInput.gameId)">
+                  <button type="button" class="w-full mx-auto xya-btn" @click="gameById(coinFlipInput.gameId)">
                     Fetch game <i v-if="coinFlipLoading.gameById" class="fas fa-cog fa-spin"></i>
                   </button>
                 </div>
@@ -818,14 +762,12 @@
               <div class="flex flex-wrap">
                 <div class="w-1/2 pr-2">
                   <input
-                      class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 min-h-12"
+                      class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 min-h-12"
                       v-model="coinFlipInput.gameName"
                       type="text">
                 </div>
                 <div class="w-1/2 pl-2">
-                  <button type="button"
-                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-4 py-2 min-h-12"
-                          @click="gameByName(coinFlipInput.gameName)">
+                  <button type="button" class="w-full mx-auto xya-btn" @click="gameByName(coinFlipInput.gameName)">
                     Fetch game <i v-if="coinFlipLoading.gameName" class="fas fa-cog fa-spin"></i>
                   </button>
                 </div>

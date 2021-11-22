@@ -2,7 +2,7 @@
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 xl:p-16 xl:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 xl:pt-24 pb-16 xl:pb-20">
           <h1 class="text-2xl xl:text-5xl text-primary-alt font-semibold">
@@ -22,21 +22,15 @@
       <div v-if="rouletteMounted" class="flex flex-wrap mt-8 p-8">
         <div class="w-full flex flex-wrap">
           <div class="w-full" v-if="parseInt(allowance) > 0">
-            <button
-                class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
-                @click="addAllowance(0)">
+            <button class="w-full mx-auto xya-btn" @click="addAllowance(0)">
               Disable <span class="hidden xl:inline">low</span> roulette <small class="hidden xl:inline">(contract
-              will no longer have rights to use your XYA)</small> <i
-                v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
+              will no longer have rights to use your XYA)</small> <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
             </button>
           </div>
 
           <div class="w-full" v-else>
-            <button
-                class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
-                @click="addAllowance(999999999999.9999)">
-              Enable <span class="hidden xl:inline">low</span> roulette <i v-if="loading.maxAllowance"
-                                                                              class="fas fa-cog fa-spin"></i>
+            <button class="w-full mx-auto xya-btn" @click="addAllowance(999999999999.9999)">
+              Enable <span class="hidden xl:inline">low</span> roulette <i v-if="loading.maxAllowance"class="fas fa-cog fa-spin"></i>
             </button>
           </div>
         </div>
@@ -48,23 +42,17 @@
             </h3>
 
             <!--      lowTable-->
-            <button type="button"
-                    class="text-sm xl:text-base bg-primary-alt text-brown w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                    @click="$router.push({ name: 'roulette-low' })">
+            <button type="button" class="w-full mx-auto xya-btn mb-2" @click="$router.push({ name: 'roulette-low' })">
               New kids <span class="hidden xl:inline">table</span> ( 1 - 50 )
             </button>
 
             <!--      lowTable-->
-            <button type="button"
-                    class="text-sm xl:text-base w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                    @click="$router.push({ name: 'roulette-medium' })">
+            <button type="button" class="w-full mx-auto xya-btn mb-2" @click="$router.push({ name: 'roulette-medium' })">
               Regular <span class="hidden xl:inline">table</span> ( 50 - 1000 )
             </button>
 
             <!--      highTable-->
-            <button type="button"
-                    class="text-sm xl:text-base w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4"
-                    @click="$router.push({ name: 'roulette-high' })">
+            <button type="button" class="w-full mx-auto xya-btn mb-2" @click="$router.push({ name: 'roulette-high' })">
               High stakes <span class="hidden xl:inline">table</span> ( 1000 - 15000 )
             </button>
 
@@ -76,14 +64,12 @@
               <div class="w-full" v-if="rouletteFetchedData.timeLeft !== 'Finished'">
                 <p>Feel powerful! Be the one to stop the wheel!</p>
                 <button v-if="rouletteFetchedData.timeLeft > 0" type="button"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
+                        class="w-full rounded-none border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 py-2 min-h-12 mb-4 mt-4 mx-1">
                 <span>Wait for the timer to end... {{
                     rouletteFetchedData.timeLeft === 'Finished' ? 'Round finished' : `${rouletteFetchedData.timeLeft < 0 ? '0' : rouletteFetchedData.timeLeft}`
                   }}</span>
                 </button>
-                <button v-else type="button"
-                        class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1"
-                        @click="spinWheel()">
+                <button v-else type="button" class="w-full mx-auto xya-btn" @click="spinWheel()">
                   <span v-if="rouletteLoading.spinWheel">Stopping wheel... </span>
                   <span v-else>Stop wheel after placing bet! </span>
                   <i v-if="rouletteLoading.spinWheel" class="fas fa-cog fa-spin"></i>
@@ -155,49 +141,43 @@
               <div class="w-full 2xl:w-3/4 flex flex-wrap mt-8 p-1">
                 <div class="w-1/3 xl:w-1/6">
                   <button type="button"
-                          :class="rouletteBetAmount === '1000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="w-full xl:w-auto rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                          @click="rouletteBetAmount = '1000000000000000000'">
+                          :class="rouletteBetAmount === '1000000000000000000' ? 'bg-primary-alt text-brown' : ''"
+                          class="mx-auto xya-btn" @click="rouletteBetAmount = '1000000000000000000'">
                     1 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
                 <div class="w-1/3 xl:w-1/6">
                   <button type="button"
-                          :class="rouletteBetAmount === '2000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="w-full xl:w-auto rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                          @click="rouletteBetAmount = '2000000000000000000'">
+                          :class="rouletteBetAmount === '2000000000000000000' ? 'bg-primary-alt text-brown' : ''"
+                          class="mx-auto xya-btn" @click="rouletteBetAmount = '2000000000000000000'">
                     2 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
                 <div class="w-1/3 xl:w-1/6">
                   <button type="button"
-                          :class="rouletteBetAmount === '5000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                          @click="rouletteBetAmount = '5000000000000000000'">
+                          :class="rouletteBetAmount === '5000000000000000000' ? 'bg-primary-alt text-brown' : ''"
+                          class="mx-auto xya-btn" @click="rouletteBetAmount = '5000000000000000000'">
                     5 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
                 <div class="w-1/3 xl:w-1/6">
                   <button type="button"
-                          :class="rouletteBetAmount === '10000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                          @click="rouletteBetAmount = '10000000000000000000'">
+                          :class="rouletteBetAmount === '10000000000000000000' ? 'bg-primary-alt text-brown' : ''"
+                          class="mx-auto xya-btn" @click="rouletteBetAmount = '10000000000000000000'">
                     10 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
                 <div class="w-1/3 xl:w-1/6">
                   <button type="button"
-                          :class="rouletteBetAmount === '20000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                          @click="rouletteBetAmount = '20000000000000000000'">
+                          :class="rouletteBetAmount === '20000000000000000000' ? 'bg-primary-alt text-brown' : ''"
+                          class="mx-auto xya-btn" @click="rouletteBetAmount = '20000000000000000000'">
                     20 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
                 <div class="w-1/3 xl:w-1/6">
                   <button type="button"
-                          :class="rouletteBetAmount === '50000000000000000000' ? 'bg-primary-alt text-brown' : 'bg-transparent text-primary-alt'"
-                          class="w-full xl:w-auto rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"
-                          @click="rouletteBetAmount = '50000000000000000000'">
+                          :class="rouletteBetAmount === '50000000000000000000' ? 'bg-primary-alt text-brown' : ''"
+                          class="mx-auto xya-btn" @click="rouletteBetAmount = '50000000000000000000'">
                     50 <span class="hidden xl:inline">XYA</span>
                   </button>
                 </div>
@@ -297,16 +277,12 @@
             <div class="flex">
               <button
                   v-if="rouletteSelectedItem === 'odds' || rouletteSelectedItem === 'evens' || rouletteSelectedItem === 'black' || rouletteSelectedItem === 'red'"
-                  type="button"
-                  class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1"
-                  @click="makeOutsideBet(rouletteSelectedItem, rouletteBetAmount)">
+                  type="button" class="w-full mx-auto xya-btn" @click="makeOutsideBet(rouletteSelectedItem, rouletteBetAmount)">
                 <span v-if="rouletteLoading.makeOutsideBet">Placing bet... </span>
                 <span v-else>Place your bet! </span>
                 <i v-if="rouletteLoading.makeOutsideBet" class="fas fa-cog fa-spin"></i>
               </button>
-              <button v-else type="button"
-                      class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12 mb-4 mt-4 mx-1"
-                      @click="makeStraightBet(rouletteSelectedItem, rouletteBetAmount)">
+              <button v-else type="button" class="w-full mx-auto xya-btn" @click="makeStraightBet(rouletteSelectedItem, rouletteBetAmount)">
                 <span v-if="rouletteLoading.makeStraightBet">Placing bet... </span>
                 <span v-else>Place your bet! </span>
                 <i v-if="rouletteLoading.makeStraightBet" class="fas fa-cog fa-spin"></i>

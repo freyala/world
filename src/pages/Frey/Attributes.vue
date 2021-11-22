@@ -2,7 +2,7 @@
   <section id="frey-container" style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -12,22 +12,22 @@
           <div class="flex">
             <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-nft' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   Get Frey
                 </button>
               </router-link>
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-collection' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   Your Frey
                 </button>
               </router-link>
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-gallery' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   All Frey
                 </button>
               </router-link>
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-attributes' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   All Attributes
                 </button>
               </router-link>
@@ -43,7 +43,7 @@
           </router-link>
         </div>
         <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">
-          <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full border border-yellow" type="text"
+          <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full border border-bbrown rounded-xl" type="text"
                  placeholder="Search attribute" v-model="search">
         </div>
 
@@ -288,77 +288,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-#frey-container {
-  --var-slots-bg: #1e2b22;
-  --var-slots-dark-bg: #181f1f;
-  --var-hilight-color: #43ac6b;
-  --var-hilight-strong: #8cd1a6;
-  --var-soft-shadow-color: #263c2f;
-  --var-shadow-color: #0e1111;
-  --var-border-radius: 12px;
-}
-
-#tutorial p > span {
-  font-weight: bold;
-  color: #8cd1a6 !important;
-}
-
-#tutorial a:hover {
-  color: #8cd1a6;
-}
-
-.inner-shadow {
-  -moz-box-shadow: inset 0 0 12px var(--var-shadow-color);
-  -webkit-box-shadow: inset 0 0 12px var(--var-shadow-color);
-  box-shadow: inset 0 0 12px var(--var-shadow-color);
-}
-
-.txt-hilight {
-  font-weight: bold;
-  color: #8cd1a6 !important;
-}
-
-.txt-tutorial {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.highlight-border {
-  border-width: 1px;
-  border-style: solid;
-  border-image: linear-gradient(225deg,
-  var(--var-hilight-color),
-  var(--var-soft-shadow-color),
-  var(--var-soft-shadow-color)) 1 25%;
-}
-
-.hpt-btn {
-  background-color: var(--var-slots-bg);
-  border-radius: var(--var-border-radius);
-  box-sizing: border-box;
-  color: #8cd1a7c7;
-  display: block;
-  font-size: max(calc(1vw - 1px), 14px);
-  padding: 10px;
-  position: relative;
-  text-decoration: none;
-  z-index: 2;
-  transition: all 1s ease-out;
-  width: 85%;
-}
-
-.hpt-btn:hover {
-  background-image: linear-gradient(190deg,
-  var(--var-hilight-strong) 5%,
-  var(--var-hilight-color) 10%,
-  var(--var-soft-shadow-color),
-  var(--var-slots-bg));
-  color: #fff;
-}
-
-
-.hpt-btn:hover span {
-  background: transparent;
-}
-</style>

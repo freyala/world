@@ -2,7 +2,7 @@
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-12 pb-8">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -26,9 +26,11 @@
               </p>
             </div>
             <div class="w-full text-left md:w-1/2 pb-1 flex flex-wrap">
-              <select class="md:ml-4 p-1 bg-dark w-full md:w-auto my-auto border border-yellow mx-auto cursor-pointer" name="neighbourhood"
-                      id="neighbourhood-select"
-                      v-model="neighbourhood">
+              <select
+                  class="md:ml-4 p-1 bg-dark w-full md:w-auto my-auto border border-bbrown rounded-xl mx-auto cursor-pointer"
+                  name="neighbourhood"
+                  id="neighbourhood-select"
+                  v-model="neighbourhood">
                 <option v-for="(n, index) in allNeighbourhoods" :value="index">{{ n }}</option>
               </select>
             </div>
@@ -43,11 +45,11 @@
             </div>
             <div class="w-full">
               <button v-if="neighbourhoodSales === false"
-                      class="mb-2 w-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
+                      class="mb-2 w-full mx-auto xya-btn"
                       @click="myPlots = !myPlots">{{ myPlots ? 'Show all plots' : 'Show my plots in neighbourhood' }}
               </button>
               <button v-if="myPlots === false"
-                      class="mb-2 w-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none p-1 md:ml-4"
+                      class="mb-2 w-full mx-auto xya-btn"
                       @click="neighbourhoodSales = !neighbourhoodSales">
                 {{ neighbourhoodSales ? 'Show all plots' : 'Show only neighbourhood sales' }}
               </button>
@@ -277,31 +279,30 @@
               <br>
               <div
                   v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
-                <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="number" v-model="plotPrice">
+                <input class="w-full md:w-auto mb-1 bg-dark border border-bbrown rounded-xl py-1 px-2" type="number"
+                       v-model="plotPrice">
                 <br>
-                <button @click="approvePlotToSellNow(selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                <button @click="approvePlotToSellNow(selectedPlotData.token_id)" class="mx-auto xya-btn">
                   {{ loadingApproveSellPlot ? 'APPROVING' : 'APPROVE' }}
                 </button>
-                <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)" class="mx-auto xya-btn">
                   {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
                 </button>
 
                 <br>
                 <br>
 
-                <input class="w-full md:w-auto mb-1 bg-dark border border-yellow py-1 px-2" type="text" placeholder="Address to send plot to..."
+                <input class="w-full md:w-auto mb-1 bg-dark border border-bbrown rounded-xl py-1 px-2" type="text"
+                       placeholder="Address to send plot to..."
                        v-model="selectedPlotData.sendToAddress">
                 <br>
                 <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                        class="mx-auto xya-btn">
                   {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
                 </button>
               </div>
               <div v-else>
-                <button @click="cancelListing(selectedPlotData.token_id)"
-                        class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+                <button @click="cancelListing(selectedPlotData.token_id)" class="mx-auto xya-btn">
                   {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
                 </button>
               </div>
@@ -320,12 +321,11 @@
               <p>Plot price: {{ selectedPlotData.sales.price / Math.pow(10, 18) }} {{
                   neighbourhood === 18 || neighbourhood === 19 ? 'YIN' : neighbourhood === 16 || neighbourhood === 17 ? 'YANG' : 'XYA'
                 }}</p>
-              <button @click="approvePlotNow(selectedPlotData.sales.price)"
-                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 py-2">
+              <button @click="approvePlotNow(selectedPlotData.sales.price)" class="mx-auto xya-btn">
                 {{ loadingApproveBuyPlot ? 'APPROVING' : 'APPROVE' }}
               </button>
               <button @click="buyPlotNow(selectedPlotData.sales.price, selectedPlotData.token_id)"
-                      class="border border-yellow hover:text-white hover:bg-yellow rounded-none ml-1 px-4 py-2">
+                      class="mx-auto xya-btn">
                 {{ loadingBuyPlot ? 'BUYING' : 'BUY' }}
               </button>
             </div>

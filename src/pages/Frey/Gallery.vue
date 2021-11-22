@@ -2,7 +2,7 @@
   <section id="frey-container" style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -12,22 +12,22 @@
           <div class="flex">
             <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-nft' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   Get Frey
                 </button>
               </router-link>
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-collection' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   Your Frey
                 </button>
               </router-link>
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-gallery' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   All Frey
                 </button>
               </router-link>
               <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-attributes' }">
-                <button class="hpt-btn mx-auto">
+                <button class="xya-btn mx-auto">
                   All Attributes
                 </button>
               </router-link>
@@ -441,7 +441,7 @@ export default {
   var(--var-soft-shadow-color)) 1 25%;
 }
 
-.hpt-btn {
+.xya-btn {
   background-color: var(--var-slots-bg);
   border-radius: var(--var-border-radius);
   box-sizing: border-box;
@@ -456,7 +456,7 @@ export default {
   width: 85%;
 }
 
-.hpt-btn:hover {
+.xya-btn:hover {
   background-image: linear-gradient(190deg,
   var(--var-hilight-strong) 5%,
   var(--var-hilight-color) 10%,
@@ -466,7 +466,7 @@ export default {
 }
 
 
-.hpt-btn:hover span {
+.xya-btn:hover span {
   background: transparent;
 }
 </style>

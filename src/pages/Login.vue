@@ -4,7 +4,7 @@
            class="flex w-full px-4 md:px-16 lg:px-32 xl:px-64">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;max-width: 650px;"
          class="m-auto screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center py-10">
           <h1 class="text-2xl text-primary-alt font-semibold">
@@ -17,17 +17,17 @@
         <div class="cursor-pointer flex h-full" @click="connectToWallet()">
           <div class="w-full flex" v-if="chainStatus === 'Install metamask to continue.'">
             <a class="w-full flex" href="https://metamask.io/download.html" target="_blank">
-              <button class="m-auto hpt-btn" v-if="chainStatus !== true" v-html="chainStatus"></button>
+              <button class="m-auto xya-btn" v-if="chainStatus !== true" v-html="chainStatus"></button>
             </a>
           </div>
           <div class="w-full flex" v-else-if="chainStatus === 'Wrong network. <br> Click to connect to Harmony.'">
-            <button @click="changeNetwork()" class="m-auto hpt-btn" v-if="chainStatus !== true"
+            <button @click="changeNetwork()" class="m-auto xya-btn" v-if="chainStatus !== true"
                     v-html="chainStatus"></button>
           </div>
           <div class="w-full flex" v-else>
-            <button class="m-auto hpt-btn" v-if="chainStatus !== true" v-html="chainStatus"></button>
+            <button class="m-auto xya-btn" v-if="chainStatus !== true" v-html="chainStatus"></button>
 
-            <button class="m-auto hpt-btn" v-else>Connect Wallet</button>
+            <button class="m-auto xya-btn" v-else>Connect Wallet</button>
           </div>
         </div>
       </div>
@@ -144,7 +144,7 @@ export default {
   var(--var-soft-shadow-color)) 1 25%;
 }
 
-.hpt-btn {
+.xya-btn {
   background-color: var(--var-slots-bg);
   border-radius: var(--var-border-radius);
   box-sizing: border-box;
@@ -159,7 +159,7 @@ export default {
   width: 85%;
 }
 
-.hpt-btn:hover {
+.xya-btn:hover {
   background-image: linear-gradient(190deg,
   var(--var-hilight-strong) 5%,
   var(--var-hilight-color) 10%,
@@ -169,7 +169,7 @@ export default {
 }
 
 
-.hpt-btn:hover span {
+.xya-btn:hover span {
   background: transparent;
 }
 </style>

@@ -2,7 +2,7 @@
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -70,14 +70,14 @@
 
             <div class="flex flex-wrap">
               <div class="w-full" v-if="parseInt(allowance) > 0">
-                <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
+                <button class="w-full mx-auto xya-btn"
                         @click="addAllowance(0)">
                   Disable extractor <small class="hidden md:inline">(contract will no longer have rights to use your XYA)</small> <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
                 </button>
               </div>
 
               <div class="w-full" v-else>
-                <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
+                <button class="w-full mx-auto xya-btn"
                         @click="addAllowance(999999999999.9999)">
                   Enable extractor <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
                 </button>
@@ -88,10 +88,10 @@
 
             <div class="flex flex-wrap" v-if="parseInt(allowance) > 0">
               <button v-if="rewardBalance === '0.0'"
-                      class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12">
+                      class="w-full mx-auto xya-btn">
                 No rewards yet
               </button>
-              <button v-else class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
+              <button v-else class="w-full mx-auto xya-btn"
                       @click="withdrawEarnings(false)">
                 Claim <span class="hidden md:inline">{{ rewardBalance }} XYA</span> <span class="md:hidden">rewards</span>  <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
               </button>
@@ -104,17 +104,17 @@
                 <small class="w-full">Max: {{ walletBalance }} XYA</small>
 
                 <div class="w-1/3 md:w-1/2 pr-2">
-                  <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 h-12" v-model="amountToStake"
+                  <input class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 h-12" v-model="amountToStake"
                          type="number">
                 </div>
                 <div class="w-2/3 md:w-1/2 pl-2">
-                  <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
+                  <button class="w-full mx-auto xya-btn mb-2"
                           @click="stake(false)">
                     Deposit <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
                   </button>
                 </div>
 
-                <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12 mt-4"
+                <button class="w-full mx-auto xya-btn mb-2"
                         @click="stake(true)">
                   Deposit all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
                 </button>
@@ -126,18 +126,16 @@
                 <small class="w-full">Max: {{ stakingBalance }} XYA</small>
 
                 <div class="w-1/3 md:w-1/2 pr-2">
-                  <input class="w-full border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12" v-model="amountToUnstake"
+                  <input class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 py-2 h-12" v-model="amountToUnstake"
                          type="number">
                 </div>
                 <div class="w-2/3 md:w-1/2 pl-2">
-                  <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4 py-2 h-12"
-                          @click="unstake(false)">
+                  <button class="w-full mx-auto xya-btn mb-2" @click="unstake(false)">
                     Withdraw <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
                   </button>
                 </div>
 
-                <button class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-yellow hover:text-white px-4  h-12 mt-4"
-                        @click="unstake(true)">
+                <button class="w-full mx-auto xya-btn mb-2" @click="unstake(true)">
                   Withdraw all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
                 </button>
 

@@ -268,11 +268,11 @@
 
       <top-bar></top-bar>
 
-      <div class="absolute bottom-0 left-0 mb-8 ml-8 opacity-70 hover:opacity-90 bg-black rounded-full py-2 px-4">
+      <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
         <a href="https://docs.freyala.com/freyala" target="_blank">
           PROJECT INFO
         </a>
-      </div>
+      </button>
 
       <div id="modals">
         <window name="1" width="80%">
