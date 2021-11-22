@@ -1,5 +1,5 @@
 <template>
-  <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
+  <section id="frey-container" style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-primary-alt"
@@ -11,27 +11,23 @@
 
           <div class="flex">
             <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
-              <router-link class="w-full md:w-1/5 mx-auto" :to="{ name: 'frey-nft' }">
-                <button
-                    class="w-full mb-2 rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-nft' }">
+                <button class="hpt-btn mx-auto">
                   Get Frey
                 </button>
               </router-link>
-              <router-link class="w-full md:w-1/5 mx-auto" :to="{ name: 'frey-collection' }">
-                <button
-                    class="w-full mb-2 rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-collection' }">
+                <button class="hpt-btn mx-auto">
                   Your Frey
                 </button>
               </router-link>
-              <router-link class="w-full md:w-1/5 mx-auto" :to="{ name: 'frey-gallery' }">
-                <button
-                    class="w-full mb-2 rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-gallery' }">
+                <button class="hpt-btn mx-auto">
                   All Frey
                 </button>
               </router-link>
-              <router-link class="w-full md:w-1/5 mx-auto" :to="{ name: 'frey-attributes' }">
-                <button
-                    class="w-full mb-2o rounded-none border border-primary-alt hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12">
+              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-attributes' }">
+                <button class="hpt-btn mx-auto">
                   All Attributes
                 </button>
               </router-link>
@@ -48,20 +44,20 @@
 
         <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
 
-        <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">
-          <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full" type="number"
-                 placeholder="Search Frey" v-model="search">
-        </div>
+<!--        <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">-->
+        <!--          <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full" type="number"-->
+        <!--                 placeholder="Search Frey" v-model="search">-->
+        <!--        </div>-->
 
         <div v-if="search === ''">
-          <div class="minted-frey py-16 flex flex-wrap" v-if="frey.length < (showMax - (showMin - 1))">
+          <div class="minted-frey py-4 flex flex-wrap" v-if="frey.length < (showMax - (showMin - 1))">
             <div class="text-center">
               <h1 class="text-xl">
                 Fetching citizens...
               </h1>
             </div>
           </div>
-          <div class="minted-frey py-16 flex flex-wrap" v-else>
+          <div class="minted-frey py-4 flex flex-wrap" v-else>
             <div class="w-full text-center mx-auto">
               <div class="inline" v-if="currentPage > 5">
                 <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: 1 } }">
@@ -101,8 +97,15 @@
               </div>
             </div>
 
-            <div class="w-full lg:w-1/2 xl:w-1/3 2xl:w-1/4" :key="mint.tokenId" v-for="mint in frey">
+            <div class="w-full lg:w-1/2 xl:w-1/3 2xl:w-1/4" :key="mint.tokenId" v-for="(mint, index) in frey">
               <div class="p-2 relative">
+                <div class="absolute cursor-pointer bg-dark top-0 left-0 h-full w-full opacity-0 hover:opacity-90" @click="showAttributes(index)">
+                  <div class="flex w-full h-full">
+                    <p class="m-auto text-2xl">
+                      Show attributes
+                    </p>
+                  </div>
+                </div>
                 <img v-lazy="mint.image" alt="Frey image">
                 <div style="top: 15px; left: 15px"
                      class="absolute bg-white py-2 px-4 rounded-full text-sm uppercase text-dark"
@@ -113,22 +116,6 @@
                 <p class="py-3 text-xl">
                   {{ mint.name }} <br>
                 </p>
-                <div class="py-2">
-                  <div
-                      v-if="mint.attributes.some((a) => { return (a.trait_type === 'Gender' && a.value === 'Female') })"
-                      class="flex" :key="mint.tokenId + attribute.trait_type" v-for="attribute in mint.attributes">
-                    <strong class="w-5/12">{{ attribute.trait_type }}: </strong>
-                    <span class="w-7/12">{{
-                        attribute.value === '-' ? 'None' : (attribute.value === 'Yin' ? 'Yang' : (attribute.value === 'Yang' ? 'Yin' : attribute.value === 'Female Yin' ? 'Female Yang' : (attribute.value === 'Female Yang' ? 'Female Yin' : attribute.value)))
-                      }}</span>
-                  </div>
-                  <div
-                      v-if="!mint.attributes.some((a) => { return (a.trait_type === 'Gender' && a.value === 'Female') })"
-                      class="flex" :key="mint.tokenId + attribute.trait_type" v-for="attribute in mint.attributes">
-                    <strong class="w-5/12">{{ attribute.trait_type }}: </strong>
-                    <span class="w-7/12">{{ attribute.value === '-' ? 'None' : attribute.value }}</span>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -176,6 +163,14 @@
         <div v-else>
           <div class="w-full xl:w-2/3 mx-auto" :key="mint.tokenId" v-for="mint in foundFrey">
             <div class="p-2 relative flex flex-wrap">
+              <div class="absolute cursor-pointer bg-dark top-0 left-0 h-full w-full opacity-0 hover:opacity-90" @click="showAttributes(index)">
+                <div class="flex w-full h-full">
+                  <p class="m-auto text-2xl">
+                    Show attributes
+                  </p>
+                </div>
+              </div>
+
               <img class="w-full lg:w-1/2" v-lazy="mint.image" alt="Frey image">
               <div style="top: 15px; left: 15px"
                    class="absolute bg-white py-2 px-4 rounded-full text-sm uppercase text-dark"
@@ -186,12 +181,6 @@
                 <p class="py-3 text-xl">
                   {{ mint.name }} <br>
                 </p>
-                <div class="py-2">
-                  <div class="flex" :key="mint.tokenId + attribute.trait_type" v-for="attribute in mint.attributes">
-                    <strong class="w-5/12">{{ attribute.trait_type }}: </strong>
-                    <span class="w-7/12">{{ attribute.value === '-' ? 'None' : attribute.value }}</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -209,6 +198,33 @@
           <p class="text-2xl">Loading...</p>
         </div>
       </div>
+      <window window class='w-10/12' height="auto" width="80%" name="attributes">
+        <div class="flex flex-wrap p-6 bg-dark h-full">
+          <div class="w-4/5">
+            <div class="text-2xl">Attributes</div>
+          </div>
+          <div class="w-1/5 text-right">
+            <i @click="$modal.hide('attributes')" class="fas fa-times cursor-pointer text-xl"></i>
+          </div>
+          <div class="mt-4 flex flex-wrap w-full items-start justify-start">
+            <div
+                v-if="frey[selectedIndex].attributes.some((a) => { return (a.trait_type === 'Gender' && a.value === 'Female') })"
+                class="w-full flex flex-wrap" :key="frey[selectedIndex].tokenId + attribute.trait_type" v-for="attribute in frey[selectedIndex].attributes">
+              <strong class="w-5/12">{{ attribute.trait_type }}: </strong>
+              <span class="w-7/12">{{
+                  attribute.value === '-' ? 'None' : (attribute.value === 'Yin' ? 'Yang' : (attribute.value === 'Yang' ? 'Yin' : attribute.value === 'Female Yin' ? 'Female Yang' : (attribute.value === 'Female Yang' ? 'Female Yin' : attribute.value)))
+                }}</span>
+            </div>
+            <div
+                v-if="!frey[selectedIndex].attributes.some((a) => { return (a.trait_type === 'Gender' && a.value === 'Female') })"
+                class="w-full flex flex-wrap" :key="frey[selectedIndex].tokenId + attribute.trait_type" v-for="attribute in frey[selectedIndex].attributes">
+              <strong class="w-5/12">{{ attribute.trait_type }}: </strong>
+              <span class="w-7/12">{{ attribute.value === '-' ? 'None' : attribute.value }}</span>
+            </div>
+          </div>
+        </div>
+      </window>
+
     </div>
   </section>
 </template>
@@ -238,7 +254,8 @@ export default {
       pages: 1,
       showMin: 0,
       showMax: 0,
-      search: ''
+      search: '',
+      selectedIndex: 0
     }
   },
   watch: {
@@ -273,6 +290,10 @@ export default {
     await this.getAllFrey()
   },
   methods: {
+    showAttributes(index) {
+      this.selectedIndex = index
+      this.$modal.show('attributes')
+    },
     difference(n, m) {
       return Math.abs(n - m)
     },
@@ -375,3 +396,77 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+#frey-container {
+  --var-slots-bg: #1e2b22;
+  --var-slots-dark-bg: #181f1f;
+  --var-hilight-color: #43ac6b;
+  --var-hilight-strong: #8cd1a6;
+  --var-soft-shadow-color: #263c2f;
+  --var-shadow-color: #0e1111;
+  --var-border-radius: 12px;
+}
+
+#tutorial p > span {
+  font-weight: bold;
+  color: #8cd1a6 !important;
+}
+
+#tutorial a:hover {
+  color: #8cd1a6;
+}
+
+.inner-shadow {
+  -moz-box-shadow: inset 0 0 12px var(--var-shadow-color);
+  -webkit-box-shadow: inset 0 0 12px var(--var-shadow-color);
+  box-shadow: inset 0 0 12px var(--var-shadow-color);
+}
+
+.txt-hilight {
+  font-weight: bold;
+  color: #8cd1a6 !important;
+}
+
+.txt-tutorial {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.highlight-border {
+  border-width: 1px;
+  border-style: solid;
+  border-image: linear-gradient(225deg,
+  var(--var-hilight-color),
+  var(--var-soft-shadow-color),
+  var(--var-soft-shadow-color)) 1 25%;
+}
+
+.hpt-btn {
+  background-color: var(--var-slots-bg);
+  border-radius: var(--var-border-radius);
+  box-sizing: border-box;
+  color: #8cd1a7c7;
+  display: block;
+  font-size: max(calc(1vw - 1px), 14px);
+  padding: 10px;
+  position: relative;
+  text-decoration: none;
+  z-index: 2;
+  transition: all 1s ease-out;
+  width: 85%;
+}
+
+.hpt-btn:hover {
+  background-image: linear-gradient(190deg,
+  var(--var-hilight-strong) 5%,
+  var(--var-hilight-color) 10%,
+  var(--var-soft-shadow-color),
+  var(--var-slots-bg));
+  color: #fff;
+}
+
+
+.hpt-btn:hover span {
+  background: transparent;
+}
+</style>
