@@ -228,7 +228,14 @@
                     <div class='w-full flex items-center'>
                         <h2 v-if='collectionSelectedToken' class='text-4xl mb-1'>{{ market.tokenName }}
                             #{{ collectionSelectedToken.tokenId }}</h2>
-                        <span class='ml-auto'>SEND REGISTER COLLECT</span>
+
+                        <span v-on:click='showSendNftModal()' title='Send' data-tooltip-target="tooltip-send"
+                            data-tooltip-placement="left" class='cursor-pointer mx-2 ml-auto hover:text-white'><i
+                                class="fas fa-share-square"></i></span>
+                        <span v-on:click='showPickCurrencyModal()' title='Register'
+                            class='cursor-pointer mx-2 hover:text-white'><i class="fas fa-check"></i></span>
+                        <span title='Collect' class='cursor-pointer ml-2 hover:text-white'><i
+                                class="fas fa-percent"></i></span>
                     </div>
                     <h2 class='text-base text-white opacity-50'>Owned by: You</h2>
                 </div>
@@ -273,6 +280,11 @@
                         <h2 class='text-xl text-white'>
                             {{ collectionSelectedToken.price / (10 ** 18) }}
                             {{ getCurrencyName(collectionSelectedToken.currency.id) }}</h2>
+
+                        <button v-on:click='delistNft()' type="button"
+                            class="w-4/12 ml-auto mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                            Cancel
+                        </button>
                     </div>
 
                     <h2 v-if='collectionSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
@@ -285,20 +297,14 @@
                             {{ getAuctionEndDate(collectionSelectedToken) }}
                         </h2>
                     </div>
-                    <div v-else class='mt-auto flex flex-row items-center w-full'>
+                    <div v-else-if='collectionSelectedToken.type === CONSTANTS.AUCTION'
+                        class='mt-auto flex flex-row items-center w-full'>
                         <h2 class='text-xl text-white'>
                             Auction Ended
                         </h2>
                         <button v-on:click='withdrawNft(collectionSelectedToken)' type="button"
                             class="w-4/12 ml-auto mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
                             Withdraw
-                        </button>
-                    </div>
-
-                    <div v-if='collectionSelectedToken.type === CONSTANTS.SALE' class='mt-auto'>
-                        <button v-on:click='delistNft()' type="button"
-                            class="w-4/12 mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
-                            Cancel
                         </button>
                     </div>
                 </div>
