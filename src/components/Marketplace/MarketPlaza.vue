@@ -67,6 +67,9 @@
                         <option value="tokenId-desc">ID descending</option>
                     </select>
                 </div>
+                <div class='w-auto flex ml-5 items-center cursor-pointer' v-on:click='$modal.show("user-profile")'>
+                    <span><i class="fas fa-user text-xl hover:text-white"></i></span>
+                </div>
                 <div class='w-auto flex ml-5 items-center cursor-pointer' v-on:click='$modal.show("allowances")'>
                     <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
                 </div>
@@ -266,22 +269,29 @@
                     </h2>
                     <h2 v-else class='text-base mt-2 opacity-75'>Highest Bidder: </h2>
 
-                    <h2 class='text-xl text-white'>
-                        {{ collectionSelectedToken.price / (10 ** 18) }}
-                        {{ getCurrencyName(collectionSelectedToken.currency.id) }}</h2>
+                    <div class='flex w-full items-center'>
+                        <h2 class='text-xl text-white'>
+                            {{ collectionSelectedToken.price / (10 ** 18) }}
+                            {{ getCurrencyName(collectionSelectedToken.currency.id) }}</h2>
+                    </div>
 
                     <h2 v-if='collectionSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
                         In:
                     </h2>
 
-                    <div v-if='collectionSelectedToken.type === CONSTANTS.AUCTION'
+                    <div v-if='collectionSelectedToken.type === CONSTANTS.AUCTION && !collectionSelectedToken.order.ended'
                         class='mt-auto flex flex-row items-center w-full'>
                         <h2 class='text-xl text-white'>
                             {{ getAuctionEndDate(collectionSelectedToken) }}
                         </h2>
-                        <button v-if='collectionSelectedToken.order.ended' v-on:click='delistNft(true)' type="button"
-                            class="w-4/12 ml-auto mr-5 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
-                            Cancel
+                    </div>
+                    <div v-else class='mt-auto flex flex-row items-center w-full'>
+                        <h2 class='text-xl text-white'>
+                            Auction Ended
+                        </h2>
+                        <button v-on:click='withdrawNft(collectionSelectedToken)' type="button"
+                            class="w-4/12 ml-auto mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                            Withdraw
                         </button>
                     </div>
 
@@ -316,23 +326,32 @@
                     </h2>
                     <h2 v-else class='text-base mt-2 opacity-75'>Highest Bidder: </h2>
 
-                    <h2 class='text-xl text-white'>
-                        {{ marketSelectedToken.price / (10 ** 18) }}
-                        {{ getCurrencyName(marketSelectedToken.currency.id) }}</h2>
+                    <div class='flex w-full items-center'>
+                        <h2 class='text-xl text-white'>
+                            {{ marketSelectedToken.price / (10 ** 18) }}
+                            {{ getCurrencyName(marketSelectedToken.currency.id) }}</h2>
+
+                        <button v-if='marketSelectedToken.type === CONSTANTS.AUCTION'
+                            v-on:click='showMakeBidModal(marketSelectedToken)' type="button"
+                            class="w-4/12 ml-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                            Bid
+                        </button>
+                    </div>
 
                     <h2 v-if='marketSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
                         In:
                     </h2>
 
-                    <div v-if='marketSelectedToken.type === CONSTANTS.AUCTION'
+                    <div v-if='marketSelectedToken.type === CONSTANTS.AUCTION && !marketSelectedToken.order.ended'
                         class='mt-auto flex flex-row items-center w-full'>
                         <h2 class='text-xl text-white'>
                             {{ getAuctionEndDate(marketSelectedToken) }}
                         </h2>
-                        <button v-if='marketSelectedToken.order.ended' v-on:click='delistNft(true)' type="button"
-                            class="w-4/12 ml-auto mr-5 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
-                            Cancel
-                        </button>
+                    </div>
+                    <div v-else class='mt-auto flex flex-row items-center w-full'>
+                        <h2 class='text-xl text-white'>
+                            Auction Ended
+                        </h2>
                     </div>
                 </div>
             </template>
@@ -489,6 +508,32 @@
                 </div>
             </div>
         </window>
+
+        <window height='auto' width='80%' name='user-profile'>
+            <div class="flex flex-wrap p-6 bg-dark h-full">
+                <div class="w-4/5">
+                    <div class="text-2xl">User Profile</div>
+                </div>
+                <div class="w-1/5 text-right">
+                    <i @click="$modal.hide('user-profile')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <div class="mt-4 flex flex-col w-full items-start justify-start">
+                    <div class="w-4/5">
+                        <h2 class="text-xl my-2 opacity-75">Balances</h2>
+                    </div>
+                    <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                        <p class='w-2/12'>{{token.key}}</p>
+                        <p class='w-2/12 text-white'>{{token.balance}}</p>
+                        <div v-if='token.balance > 0' class="w-6/12 text-right md:text-center mx-2">
+                            <button v-on:click="withdraw(token)" type="button"
+                                class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                                <span>Collect</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </window>
     </div>
 </template>
 
@@ -590,27 +635,32 @@
                 tokens: [{
                         key: "ONE",
                         value: "0x0000000000000000000000000000000000000000",
-                        approved: true
+                        approved: true,
+                        balance: 0
                     },
                     {
                         key: "HOPI",
                         value: "0xd2bee32c075086562268094ac0790a69c70dc58f",
-                        approved: false
+                        approved: false,
+                        balance: 0
                     },
                     {
                         key: "XYA",
                         value: "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4",
-                        approved: false
+                        approved: false,
+                        balance: 0
                     },
                     {
                         key: "YANG",
                         value: "0xe59aa7f9e91b4cc6c25d3542cecb851e0316138c",
-                        approved: false
+                        approved: false,
+                        balance: 0
                     },
                     {
                         key: "YIN",
                         value: "0x340042552d19211795dbe55d84fa2e63bc49b890",
-                        approved: false
+                        approved: false,
+                        balance: 0
                     },
                 ],
                 acceptedTokens: [],
@@ -676,7 +726,13 @@
 
         methods: {
             async verifyTokens() {
-                for (let i = 1; i < this.acceptedTokens.length; i++) {
+                for (let i = 0; i < this.acceptedTokens.length; i++) {
+                    const balance = await this.contract.getBalance(this.metaMaskAccount, this
+                        .acceptedTokens[i].value) / (10 ** 18);
+                    this.acceptedTokens[i].balance = balance > 0 ? balance : 0;
+
+                    if (this.acceptedTokens[i].value === ONE_TOKEN) continue;
+
                     let tempContract = new ethers.Contract(this.acceptedTokens[i].value, HRC20.abi, this
                         .metaMaskWallet.signer);
                     const allowance = await tempContract.allowance(this.metaMaskAccount, this.contract.address);
@@ -685,6 +741,7 @@
                         ethers.BigNumber.from(allowance).toString() :
                         allowance
                     );
+
                     this.acceptedTokens[i].approved = etherAllowance > 0;
                 }
             },
@@ -997,7 +1054,7 @@
                 const [tokenAddress, tokenId, price, currency] = [this.market.token, token.tokenId,
                     token.price, token.currency.id
                 ];
-                    console.log(tokenAddress, tokenId, currency, price);
+                console.log(tokenAddress, tokenId, currency, price);
                 try {
                     const contractSellOrder = await this.contract.getSellOrder(tokenAddress, tokenId);
 
@@ -1021,7 +1078,9 @@
             },
 
             async bidMarketToken(token) {
-                const [tokenAddress, tokenId, currency, amount] = [this.market.token, token.tokenId, token.currency.id, this.marketBidAmount];
+                const [tokenAddress, tokenId, currency, amount] = [this.market.token, token.tokenId, token.currency
+                    .id, this.marketBidAmount
+                ];
                 const price = token.price;
 
                 try {
@@ -1079,6 +1138,16 @@
                     await this.fetchUserNfts();
                     this.collectionSale = false;
                 } catch (err) {}
+            },
+
+            async withdraw(token) {
+                try {
+                    const tx = await this.contract.withdraw(token.value);
+                    await tx.wait(1);
+                    token.balance = 0;
+                } catch (err) {
+
+                }
             },
 
             async setMarketApproval(approve) {
