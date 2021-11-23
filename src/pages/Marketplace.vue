@@ -623,7 +623,7 @@ export default {
           })
     },
 
-    async sendNFT(id) {
+    async sendNFT() {
       const address = this.sendToAddress
       try {
         this.sendingLoading = true

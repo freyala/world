@@ -37,63 +37,54 @@ export const FetchMarketSales = (marketToken) => {
     `;
 };
 
-export const FetchMarketNfts = (marketToken, filter) => {
+export const FetchMarketNfts = (marketToken, filters, pagination = undefined, orderInfo = undefined) => {
+    const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection},`;
+
+    const paginationQuery = !pagination ? '' : `first: ${paginationInfo.perPage}, skip: ${paginationInfo.page * paginationInfo.perPage},`;
+
+    const attributeFilter = filters && filters.attributeFilter ? filters.attributeFilter : "[]";
+
+    const currencyFilter = filters && filters.currency ? 'currentCurrency: "' + filters.currency + '", ' : "";
+
     return `
     {
-      sales: nfts(where: {market: "${marketToken}", attributes: ${filter}, currentSellOrder_not: null}) {
+      sales: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${currencyFilter} attributes: ${attributeFilter}, currentSellOrder_not: null}) {
         tokenId,
-        attributes{
-          key
-          value
+        price: currentPrice,
+        currency: currentCurrency{
+          id
         }
         order: currentSellOrder {
-          price
-          currency {
+          seller{
             id
           }
+          timestamp
+        }
+        attributes{
+          trait_type: key
+          value
         }
       }
-      auctions: nfts(where: {market: "${marketToken}", attributes: ${filter}, currentAuction_not: null}) {
+      auctions: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${currencyFilter} attributes: ${attributeFilter}, currentAuction_not: null}) {
         tokenId
-        attributes{
-          key
-          value
+        price: currentPrice,
+        currency: currentCurrency{
+          id
         }
         order: currentAuction {
           highestBidder
-          price: highestBid
-          currency{
+          seller{
             id
           }
           timestamp
           ended
           endsAt
         }
-      }
-    }
-  `
-};
-
-export const FetchMarketSalesByCurrency = (marketToken, currency) => {
-    return `
-  {
-    markets(where: {token: "${marketToken}"}) {
-      totalAuctions,
-      totalSales,
-      nfts{
-        sellOrders(where: {currency: "${currency}"}){
-          seller{
-            id
-          },
-          price,
-          timestamp,
-          nft{
-            token,
-            tokenId
-          }
+        attributes{
+          trait_type: key
+          value
         }
       }
     }
-  }  
-  `;
+  `
 };

@@ -1,0 +1,202 @@
+{
+  "address": "0xd508B9a202E7192A2F0F7F7Ab5Dc770cC244d9E2",
+  "abi": [{
+      "inputs": [{
+          "internalType": "contract IMarketplace",
+          "name": "_marketplace",
+          "type": "address"
+        },
+        {
+          "internalType": "contract IERC721",
+          "name": "_freys",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [{
+        "internalType": "uint256",
+        "name": "freyId",
+        "type": "uint256"
+      }],
+      "name": "FreyAlreadyRegistered",
+      "type": "error"
+    },
+    {
+      "inputs": [{
+        "internalType": "uint256",
+        "name": "freyId",
+        "type": "uint256"
+      }],
+      "name": "FreyNotRegistered",
+      "type": "error"
+    },
+    {
+      "inputs": [{
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      }],
+      "name": "InvalidCurrency",
+      "type": "error"
+    },
+    {
+      "inputs": [{
+        "internalType": "uint256",
+        "name": "freyId",
+        "type": "uint256"
+      }],
+      "name": "NotFreyOwner",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [{
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "freyId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "currency",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "CollectedFee",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [{
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "currency",
+          "type": "address"
+        }
+      ],
+      "name": "Registered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [{
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "oldCurrency",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newCurrency",
+          "type": "address"
+        }
+      ],
+      "name": "SwitchedCurrency",
+      "type": "event"
+    },
+    {
+      "inputs": [{
+        "internalType": "uint256[]",
+        "name": "freyIds",
+        "type": "uint256[]"
+      }],
+      "name": "collectFees",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{
+        "internalType": "uint256",
+        "name": "freyId",
+        "type": "uint256"
+      }],
+      "name": "getFees",
+      "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      }],
+      "name": "getTotalRegisteredByCurrency",
+      "outputs": [{
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{
+          "internalType": "uint256",
+          "name": "freyId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "currency",
+          "type": "address"
+        }
+      ],
+      "name": "register",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{
+          "internalType": "uint256",
+          "name": "freyId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "currency",
+          "type": "address"
+        }
+      ],
+      "name": "switchCurrency",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}
