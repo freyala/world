@@ -525,18 +525,32 @@
                 </div>
                 <div class="mt-4 flex flex-col w-full items-start justify-start">
                     <div class="w-4/5">
-                        <h2 class="text-xl my-2 opacity-75">Balances</h2>
+                        <h2 class="text-xl my-2 opacity-75">Market Sales</h2>
                     </div>
                     <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
                         <p class='w-2/12'>{{token.key}}</p>
                         <p class='w-2/12 text-white'>{{token.balance}}</p>
-                        <div v-if='token.balance > 0' class="w-6/12 text-right md:text-center mx-2">
-                            <button v-on:click="withdraw(token)" type="button"
-                                class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
-                                <span>Collect</span>
-                            </button>
-                        </div>
+                        <button v-on:click="withdraw(token)" type="button"
+                            class="w-6/12 ml-auto text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                            Collect
+                        </button>
                     </div>
+                </div>
+
+                <div class="mt-4 flex flex-col w-full items-start justify-start">
+                    <div class="w-4/5">
+                        <h2 class="text-xl my-2 opacity-75">Frey Reflection Fee</h2>
+                    </div>
+                    <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                        <p class='w-2/12'>{{token.key}}</p>
+                        <p class='w-2/12 text-white'>{{token.nftBalance}}</p>
+                    </div>
+                </div>
+                <div class="w-full text-start h-9">
+                    <button v-on:click="withdrawAllNftBalance()" type="button"
+                        class="w-6/12 rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                        Collect All
+                    </button>
                 </div>
             </div>
         </window>
@@ -731,50 +745,6 @@
         },
 
         methods: {
-            async verifyTokens() {
-                for (let i = 0; i < this.acceptedTokens.length; i++) {
-                    const balance = await this.contract.getBalance(this.metaMaskAccount, this
-                        .acceptedTokens[i].value) / (10 ** 18);
-                    this.acceptedTokens[i].balance = balance > 0 ? balance : 0;
-
-                    if (this.acceptedTokens[i].value === ONE_TOKEN) continue;
-
-                    let tempContract = new ethers.Contract(this.acceptedTokens[i].value, HRC20.abi, this
-                        .metaMaskWallet.signer);
-                    const allowance = await tempContract.allowance(this.metaMaskAccount, this.contract.address);
-                    const etherAllowance = ethers.utils.formatEther(
-                        allowance._isBigNumber ?
-                        ethers.BigNumber.from(allowance).toString() :
-                        allowance
-                    );
-
-                    this.acceptedTokens[i].approved = etherAllowance > 0;
-                }
-            },
-
-            async setTokenAllowance(token, amount) {
-                let actual = 0;
-                if (amount > 0) {
-                    actual = amount * 10 ** 18;
-                } else {
-                    actual = 0;
-                }
-                try {
-                    const arg = fromExponential(actual);
-
-                    let tempContract = new ethers.Contract(token.value, HRC20.abi, this
-                        .metaMaskWallet.signer);
-                    const tx = await tempContract.approve(
-                        this.contract.address,
-                        arg
-                    );
-                    await tx.wait(1);
-                    token.approved = true;
-                } catch (err) {
-                    console.error(err);
-                }
-            },
-
             goBack() {
                 this.$emit('goBack');
             },
@@ -824,6 +794,13 @@
 
             showPickCurrencyModal() {
                 this.$modal.show('pick-currency');
+            },
+
+            hideSendNftModal() {
+                this.nftTransactionTo = "";
+                this.collectionSelectedToken = undefined;
+                this.$modal.hide('send-nft');
+                this.keys.nftCollection++;
             },
 
             generateMarketFilterQuery() {
@@ -972,39 +949,53 @@
                 }
             },
 
-            resetMarketFilters() {
-                for (let i = 0; i < this.marketSelectedFilters.length; i++) {
-                    this.marketSelectedFilters[i] = '';
-                }
-                this.initiateMarketSearch();
-                this.userTokens = this.initialUserTokens;
-                this.keys.filters++;
-            },
+            async verifyTokens() {
+                for (let i = 0; i < this.acceptedTokens.length; i++) {
+                    const balance = await this.contract.getBalance(this.metaMaskAccount, this
+                        .acceptedTokens[i].value) / (10 ** 18);
+                    this.acceptedTokens[i].balance = balance > 0 ? balance.toFixed(2) : 0;
 
-            applyCollectionFilters() {
-                this.userTokens = [];
+                    const nftBalance = await this.freyRegistryContract.getTotalRegisteredByCurrency(this
+                        .acceptedTokens[0].value);
+                    this.acceptedTokens[i].nftBalance = nftBalance > 0 ? (fromExponential(nftBalance / (10 **
+                        18))) : 0;
 
-                for (let i = 0; i < this.initialUserTokens.length; i++) {
-                    const userToken = this.initialUserTokens[i];
-                    let isMatch = true;
+                    if (this.acceptedTokens[i].value === ONE_TOKEN) continue;
 
-                    for (let j = 0; j < userToken.attributes.length && isMatch; j++) {
-                        if (this.marketSelectedFilters[j] === '') continue;
-                        if (userToken.attributes[j].value !== this.marketSelectedFilters[j]) {
-                            isMatch = false;
-                        }
-                    }
-                    if (isMatch) {
-                        this.userTokens.push(userToken);
-                    }
+                    let tempContract = new ethers.Contract(this.acceptedTokens[i].value, HRC20.abi, this
+                        .metaMaskWallet.signer);
+                    const allowance = await tempContract.allowance(this.metaMaskAccount, this.contract.address);
+                    const etherAllowance = ethers.utils.formatEther(
+                        allowance._isBigNumber ?
+                        ethers.BigNumber.from(allowance).toString() :
+                        allowance
+                    );
+
+                    this.acceptedTokens[i].approved = etherAllowance > 0;
                 }
             },
 
-            hideSendNftModal() {
-                this.nftTransactionTo = "";
-                this.collectionSelectedToken = undefined;
-                this.$modal.hide('send-nft');
-                this.keys.nftCollection++;
+            async setTokenAllowance(token, amount) {
+                let actual = 0;
+                if (amount > 0) {
+                    actual = amount * 10 ** 18;
+                } else {
+                    actual = 0;
+                }
+                try {
+                    const arg = fromExponential(actual);
+
+                    let tempContract = new ethers.Contract(token.value, HRC20.abi, this
+                        .metaMaskWallet.signer);
+                    const tx = await tempContract.approve(
+                        this.contract.address,
+                        arg
+                    );
+                    await tx.wait(1);
+                    token.approved = true;
+                } catch (err) {
+                    console.error(err);
+                }
             },
 
             async sendNft() {
@@ -1156,6 +1147,22 @@
                 }
             },
 
+            async withdrawAllNftBalance() {
+                try {
+                    let nftIds = [];
+                    this.userTokens.forEach(c => nftIds.push(c.tokenId));
+
+                    const tx = await this.freyRegistryContract.collectFees(nftIds, {
+                        gasPrice: 100000000000,
+                        gasLimit: 1000000,
+                    });
+                    this.acceptedTokens.forEach(c => c.nftBalance = 0);
+                    await tx.wait(1);
+                } catch (err) {
+
+                }
+            },
+
             async setMarketApproval(approve) {
                 try {
                     const tx = await this.marketNftContract.setApprovalForAll(this.contract.address, approve);
@@ -1177,6 +1184,34 @@
                 } else {
                     collection.sort((a, b) => (a.tokenId > b.tokenId) ? order : ((b.tokenId > a.tokenId ? -order :
                         0)));
+                }
+            },
+
+            resetMarketFilters() {
+                for (let i = 0; i < this.marketSelectedFilters.length; i++) {
+                    this.marketSelectedFilters[i] = '';
+                }
+                this.initiateMarketSearch();
+                this.userTokens = this.initialUserTokens;
+                this.keys.filters++;
+            },
+
+            applyCollectionFilters() {
+                this.userTokens = [];
+
+                for (let i = 0; i < this.initialUserTokens.length; i++) {
+                    const userToken = this.initialUserTokens[i];
+                    let isMatch = true;
+
+                    for (let j = 0; j < userToken.attributes.length && isMatch; j++) {
+                        if (this.marketSelectedFilters[j] === '') continue;
+                        if (userToken.attributes[j].value !== this.marketSelectedFilters[j]) {
+                            isMatch = false;
+                        }
+                    }
+                    if (isMatch) {
+                        this.userTokens.push(userToken);
+                    }
                 }
             },
 
