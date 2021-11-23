@@ -19,7 +19,7 @@
         </div>
 
         <div class="flex flex-wrap mt-8">
-          <video width="auto" height="auto" controls>
+          <video class="m-auto" width="auto" height="auto" controls>
             <source src="/videos/ALPHA.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
