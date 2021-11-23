@@ -115,7 +115,7 @@
                             class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
                             <span>Buy</span>
                         </button>
-                        <button v-if='item.type === CONSTANTS.AUCTION' v-on:click='buyMarketToken(item)' type="button"
+                        <button v-if='item.type === CONSTANTS.AUCTION' v-on:click='showMakeBidModal(item)' type="button"
                             class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
                             <span>Bid</span>
                         </button>
@@ -285,7 +285,6 @@
                         </button>
                     </div>
 
-
                     <div v-if='collectionSelectedToken.type === CONSTANTS.SALE' class='mt-auto'>
                         <button v-on:click='delistNft()' type="button"
                             class="w-4/12 mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
@@ -389,7 +388,6 @@
             </div>
         </window>
 
-
         <window class='w-10/12' height="auto" width="80%" name="pick-currency">
             <div class="flex flex-wrap p-6 bg-dark h-full">
                 <div class="w-4/5">
@@ -418,7 +416,6 @@
             </div>
         </window>
 
-
         <window class='w-10/12' height="auto" width="80%" name="send-nft">
             <div class="flex flex-wrap p-6 bg-dark h-full">
                 <div class="w-4/5">
@@ -434,6 +431,30 @@
                     <input class='w-full text-black px-2' type="text" v-model='nftTransactionTo' />
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                         <button v-on:click="sendNft()" type="button"
+                            class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                            <span v-if='!loaders.nftSend'>Confirm</span>
+                            <span v-else><i class="fas fa-cog fa-spin"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </window>
+
+        <window class='w-10/12' height="auto" width="80%" name="make-bid">
+            <div class="flex flex-wrap p-6 bg-dark h-full">
+                <div class="w-4/5">
+                    <div class="text-2xl">Make Bid</div>
+                </div>
+                <div class="w-1/5 text-right">
+                    <i @click="$modal.hide('make-bid')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <div class='mt-4 md:text-base text-sm opacity-75'>
+                    <p v-if='marketSelectedToken' class='mt-1'>Bid for #{{marketSelectedToken.tokenId}} to: </p>
+                </div>
+                <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
+                    <input class='w-full text-black px-2' type="text" v-model='marketBidAmount' />
+                    <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
+                        <button v-on:click="bidMarketToken(marketSelectedToken)" type="button"
                             class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                             <span v-if='!loaders.nftSend'>Confirm</span>
                             <span v-else><i class="fas fa-cog fa-spin"></i></span>
@@ -528,6 +549,7 @@
                 marketSales: [],
                 marketAuctions: [],
                 marketTokens: [],
+                marketBidAmount: 0,
                 initialUserTokens: [],
                 userTokens: [],
                 userSales: [],
@@ -636,7 +658,6 @@
                     .metaMaskAccount,
                     this.contract.address);
 
-
                 for (let i = 0; i < this.tokens.length; i++) {
                     const acceptsCurrency = await this.contract.acceptsCurrency(this.tokens[i].value);
                     if (!acceptsCurrency) continue;
@@ -695,7 +716,6 @@
                 this.$emit('goBack');
             },
 
-
             showCollectionCardModal(item) {
                 this.collectionSelectedToken = item;
                 this.bools.collectionCard = true;
@@ -709,6 +729,12 @@
             showMarketCardModal(item) {
                 this.marketSelectedToken = item;
                 this.bools.marketCard = true;
+            },
+
+            showMakeBidModal(item) {
+                this.marketSelectedToken = item;
+                this.marketBidAmount = 0;
+                this.$modal.show('make-bid');
             },
 
             showCreateMarketSaleModal() {
@@ -823,11 +849,13 @@
 
             async fetchMarketSales() {
                 const filters = {
-                    atrributeFilter: this.generateMarketFilterQuery(),
+                    attributeFilter: this.generateMarketFilterQuery(),
                     currency: this.getCurrencyQuery()
                 };
                 const pagination = this.getPaginationInfo();
                 const orderInfo = this.getOrderQuery();
+
+                console.log(FilterQuery.FetchMarketNfts(this.market.token, filters, pagination, orderInfo));
 
                 const result = await this.$http.post(GRAPH_API, {
                     query: FilterQuery.FetchMarketNfts(this.market.token, filters, pagination, orderInfo)
@@ -935,7 +963,6 @@
                 }
             },
 
-
             async registerFrey() {
                 const item = this.collectionSelectedToken;
                 let isFreyRegistered = true;
@@ -967,10 +994,10 @@
             },
 
             async buyMarketToken(token) {
-                const [tokenAddress, tokenId, price, currency] = [this.market.token, token.tokenId, token
-                    .price, token.currency.id
+                const [tokenAddress, tokenId, price, currency] = [this.market.token, token.tokenId,
+                    token.price, token.currency.id
                 ];
-
+                    console.log(tokenAddress, tokenId, currency, price);
                 try {
                     const contractSellOrder = await this.contract.getSellOrder(tokenAddress, tokenId);
 
@@ -983,6 +1010,32 @@
                     if (!acceptedCurrency.approved) throw `${acceptedCurrency.key} is not approved.`;
 
                     const tx = await this.contract.buy(tokenAddress, tokenId, currency, price, {
+                        gasPrice: 100000000000,
+                        gasLimit: 1000000,
+                        value: priceValue
+                    });
+                    await tx.wait(1);
+                } catch (err) {
+                    console.error(err);
+                }
+            },
+
+            async bidMarketToken(token) {
+                const [tokenAddress, tokenId, currency, amount] = [this.market.token, token.tokenId, token.currency.id, this.marketBidAmount];
+                const price = token.price;
+
+                try {
+                    const contractAuction = await this.contract.getAuction(tokenAddress, tokenId);
+
+                    if (!contractAuction) throw "Auction order doesn't exist or ended.";
+
+                    const priceValue = token.currency.id === this.acceptedTokens[0].value ? amount : 0;
+                    const acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
+
+                    if (!acceptedCurrency) throw "Currency not supported";
+                    if (!acceptedCurrency.approved) throw `${acceptedCurrency.key} is not approved.`;
+
+                    const tx = await this.contract.bid(tokenAddress, tokenId, price, {
                         gasPrice: 100000000000,
                         gasLimit: 1000000,
                         value: priceValue
@@ -1051,7 +1104,7 @@
                         0)));
                 }
             },
-            
+
             showCollectionDropwdown(event) {
                 try {
                     const tokenId = event.target.dataset["tokenId"];
