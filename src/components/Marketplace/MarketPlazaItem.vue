@@ -1,5 +1,15 @@
 <template>
     <div v-on:click='onClick()' class='market-item'>
+        <div v-if='busy' style='background-color: rgba(0,0,0,0.5); z-index: 9999'
+            class='rounded-xl flex flex-col justify-center items-center absolute top-0 bottom-0 right-0 left-0 '>
+            <div class='w-16 h-16 opacity-75'>
+                <img class="w-12 h-12 m-auto" src="/images/XYA.png" alt="XYA logo"
+                    style="animation: rotation 2s infinite linear;">
+            </div>
+            <h2 class='text-base mt-4 text-white'>
+                Processing...
+            </h2>
+        </div>
         <slot name='header'></slot>
         <slot name='body'></slot>
         <slot name='footer'></slot>
@@ -15,19 +25,34 @@
             disabled: {
                 type: Boolean,
                 default: false
+            },
+            isBusy: {
+                type: Boolean,
+                default: false
             }
         },
 
         data() {
             return {
-
+                busy: this.isBusy
             };
+        },
+
+        mounted(){
         },
 
         methods: {
             onClick() {
-                if (this.disabled) return;
+                if (this.disabled || this.busy) return;
                 this.$emit('cardClick');
+            }
+        },
+
+        watch:{
+            isBusy() {
+                this.$nextTick(() => {
+                    this.busy = this.isBusy;
+                });
             }
         }
     }

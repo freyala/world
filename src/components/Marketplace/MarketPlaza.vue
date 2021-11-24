@@ -1,7 +1,8 @@
 <template>
     <div class='w-full h-full py-4 flex flex-row mt-2'>
 
-        <div v-if='isMarketBusy' class='fixed top-0 bottom-0 right-0 left-0 flex flex-col justify-center items-center'
+        <div v-if='loaders.application'
+            class='fixed top-0 bottom-0 right-0 left-0 flex flex-col justify-center items-center'
             style='background-color: rgba(0,0,0, 0.5); z-index: 9999'>
             <div class="w-full flex">
                 <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
@@ -37,7 +38,7 @@
                         class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
                         v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
                         <option v-bind:value='""'>None</option>
-                        <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values' :key='itemIndex'>
+                        <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values' :key='itemIndex + 10'>
                             {{ item }}</option>
                     </select>
                 </div>
@@ -87,10 +88,11 @@
             <hr class='m-5' />
 
             <!-- SALES -->
-            <div v-show='marketTab === CONSTANTS.SALES_TAB' class='w-full h-full mx-6 market-plaza'>
+            <div :key='keys.marketSales' v-show='marketTab === CONSTANTS.SALES_TAB'
+                class='w-full h-full mx-6 market-plaza'>
                 <div class='text-xl p-4 opacity-75' v-if='marketTokens.length === 0'>There are no sales.</div>
-                <MarketPlazaItem class='mt-2 mx-4 mb-6 flex flex-col' v-for='(item, index) in marketTokens'
-                    :key='index'>
+                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 mx-4 mb-6 flex flex-col'
+                    v-for='(item, index) in marketTokens' :key='index'>
                     <div v-on:click='showMarketCardModal(item)' class='market-item-header relative' slot='header'>
                         <div
                             class='bg-red shadow-lg absolute rounded-r-xl text-white text-base flex items-center justify-center top-3 left-0 w-6/12 h-6'>
@@ -143,9 +145,11 @@
             </div>
 
             <!-- My Sales -->
-            <div v-show='marketTab === CONSTANTS.USER_TAB' class='w-full h-full mx-6 market-plaza'>
+            <div :key='keys.userSales' v-show='marketTab === CONSTANTS.USER_TAB'
+                class='w-full h-full mx-6 market-plaza'>
                 <div class='text-xl p-4 opacity-75' v-if='userSales.length === 0'>You don't have any sales.</div>
-                <MarketPlazaItem class='mt-2 mx-4 mb-6 flex flex-col' v-for='(item, index) in userSales' :key='index'>
+                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 mx-4 mb-6 flex flex-col'
+                    v-for='(item, index) in userSales' :key='index'>
                     <div v-on:click='showCollectionSaleModal(item)' class='market-item-header relative' slot='header'>
                         <div style='background-color: #8E2D2D'
                             class='absolute rounded-r-xl text-white text-base flex items-center justify-center top-3 left-0 w-6/12 h-6'>
@@ -197,8 +201,9 @@
             <!-- USER COLLECTION -->
             <div :key='keys.nftCollection' class='w-full h-full mx-6 market-plaza'
                 v-show='marketTab === CONSTANTS.COLLECTION_TAB'>
-                <div v-if='userTokens.length === 0'>Your collection is empty.</div>
-                <MarketPlazaItem class='m-2 mx-4 mb-6 flex flex-col' v-for='(item, index) in userTokens' :key='index'>
+                <div class='text-xl p-4 opacity-75' v-if='userTokens.length === 0'>Your collection is empty.</div>
+                <MarketPlazaItem class='m-2 mx-4 mb-6 flex flex-col' v-for='(item, index) in userTokens' :key='index'
+                    :isBusy='item.isBusy'>
                     <div v-on:click='showCollectionCardModal(item)' class='market-item-header' slot='header'>
                         <img v-bind:src='getListingImage(item.tokenId)' />
                     </div>
@@ -469,7 +474,7 @@
                             {{ token.key }}</option>
                     </select>
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
-                        <button v-on:click="registerFrey(collectionSaleToken.tokenId)" type="button"
+                        <button v-on:click="registerFrey(collectionSelectedToken)" type="button"
                             class="w-full md:w-10/12 md:text-base text-sm rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                             <span>Confirm</span>
                         </button>
@@ -517,8 +522,7 @@
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                         <button v-on:click="bidMarketToken(marketSelectedToken, marketBidAmount)" type="button"
                             class="xya-btn mx-2 h-9 flex items-center justify-center">
-                            <span v-if='!loaders.nftSend'>Confirm</span>
-                            <span v-else><i class="fas fa-cog fa-spin"></i></span>
+                            <span>Confirm</span>
                         </button>
                     </div>
                 </div>
@@ -526,7 +530,7 @@
         </window>
 
         <window height='auto' width='80%' name='allowances'>
-            <div class="flex flex-wrap p-6 bg-dark h-full">
+            <div :key='keys.marketAllowances' class="flex flex-wrap p-6 bg-dark h-full">
                 <div class="w-4/5">
                     <div class="text-2xl">Control Panel</div>
                 </div>
@@ -590,7 +594,8 @@
                     <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
                         <p class='w-2/12'>{{token.key}}</p>
                         <p class='w-2/12 text-white'>{{token.nftBalance}}</p>
-                        <button v-if='index === acceptedTokens.length - 1' v-on:click="withdrawFreyFees(token)" type="button"
+                        <button v-if='index === acceptedTokens.length - 1' v-on:click="withdrawFreyFees(token)"
+                            type="button"
                             class="w-6/12 ml-auto text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
                             Collect All
                         </button>
@@ -688,22 +693,15 @@
                 collectionSaleType: 0,
                 keys: {
                     filters: 0,
-                    nftCollection: 0,
-                    feeBalance: 0
+                    nftCollection: 100,
+                    marketSales: 1000,
+                    userSales: 10000,
+                    feeBalance: 0,
+                    marketAllowances: 0,
                 },
                 nftTransactionTo: "",
                 loaders: {
-                    tokenAllowance: false,
-                    nftSend: false,
-                    nftRegister: false,
-                    nftList: false,
-                    nftOpen: false,
-                    nftSell: false,
-                    nftBid: false,
-                    nftBuy: false,
-                    nftDelist: false,
-                    fetchUserNft: false,
-                    fetchMarketNft: false
+                    application: true
                 },
                 bools: {
                     collectionCard: false,
@@ -720,31 +718,36 @@
                         key: "ONE",
                         value: "0x0000000000000000000000000000000000000000",
                         approved: true,
-                        balance: 0
+                        balance: 0,
+                        isBusy: false,
                     },
                     {
                         key: "HOPI",
                         value: "0xd2bee32c075086562268094ac0790a69c70dc58f",
                         approved: false,
-                        balance: 0
+                        balance: 0,
+                        isBusy: false,
                     },
                     {
                         key: "XYA",
                         value: "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4",
                         approved: false,
-                        balance: 0
+                        balance: 0,
+                        isBusy: false,
                     },
                     {
                         key: "YANG",
                         value: "0xe59aa7f9e91b4cc6c25d3542cecb851e0316138c",
                         approved: false,
-                        balance: 0
+                        balance: 0,
+                        isBusy: false,
                     },
                     {
                         key: "YIN",
                         value: "0x340042552d19211795dbe55d84fa2e63bc49b890",
                         approved: false,
-                        balance: 0
+                        balance: 0,
+                        isBusy: false,
                     },
                 ],
                 acceptedTokens: [],
@@ -789,6 +792,7 @@
                 if (this.isFreyMarket) {
                     await this.getFreyFees();
                 }
+                this.loaders.application = false;
             });
         },
 
@@ -798,22 +802,34 @@
             },
 
             async showCollectionCardModal(item) {
-                if (this.isFreyMarket) {
-                    const isRegistered = await this.freyRegistryContract.isRegistered(item.tokenId);
-                    const freyFees = await this.freyRegistryContract.getFreyFees(item.tokenId);
-                }
+                try {
+                    this.loaders.application = true;
+                    if (this.isFreyMarket) {
+                        const isRegistered = await this.freyRegistryContract.isRegistered(item.tokenId);
+                        const freyFees = await this.freyRegistryContract.getFreyFees(item.tokenId);
+                    }
 
-                this.collectionSelectedToken = item;
-                this.bools.collectionCard = true;
+                    this.collectionSelectedToken = item;
+                    this.bools.collectionCard = true;
+                    this.loaders.application = false;
+                } catch (err) {
+                    this.loaders.application = false;
+                }
             },
 
             async showUserProfileModal() {
-                await this.verifyTokens();
-                await this.fetchPendingNfts();
-                if (this.isFreyMarket) {
-                    await this.getFreyFees();
+                try {
+                    this.loaders.application = true;
+                    await this.verifyTokens();
+                    await this.fetchPendingNfts();
+                    if (this.isFreyMarket) {
+                        await this.getFreyFees();
+                    }
+                    this.loaders.application = false;
+                    this.$modal.show("user-profile")
+                } catch (err) {
+                    this.loaders.application = false;
                 }
-                this.$modal.show("user-profile")
             },
 
             showCollectionSaleModal(item) {
@@ -944,6 +960,7 @@
                             `https://frey.freyala.com/meta/list?items=${listOfIds}`);
 
                         this.userTokens = userNfts.data;
+                        this.userTokens.forEach(c => c.isBusy = false);
                         this.initialUserTokens = userNfts.data;
                     });
             },
@@ -972,7 +989,9 @@
                     });
 
                     this.marketTokens = [...marketSales, ...marketAuctions];
-                    this.marketTokens.forEach(c => { c.isBusy = false});
+                    this.marketTokens.forEach(c => {
+                        c.isBusy = false
+                    });
                     this.sortCollectionByField(this.marketTokens, this.marketSortBy);
                 } catch (err) {
 
@@ -986,8 +1005,6 @@
                             .toLowerCase())
                     });
                     this.marketPendingTokens = result.data.data.nfts;
-
-                    console.log(this.marketPendingTokens);
                 } catch (err) {
 
                 }
@@ -1013,7 +1030,7 @@
                 let userSales = this.userSales;
                 try {
                     this.userSales = [];
-                    this.loaders.fetchMarketNft = true;
+                    this.loaders.application = true;
 
                     await this.fetchMarketSales();
                     await this.applyCollectionFilters();
@@ -1026,10 +1043,10 @@
                     this.marketTokens = this.marketTokens.filter(c => c.order.seller.id !== metamaskAccount && !(c
                         .type === this.CONSTANTS.AUCTION && c.order.ended));
 
-                    this.loaders.fetchMarketNft = false;
+                    this.loaders.application = false;
                     this.userSales = [...userSales, ...userAuctions];
                 } catch (err) {
-                    this.loaders.fetchMarketNft = false;
+                    this.loaders.application = false;
                     this.userSales = userSales;
                 }
             },
@@ -1054,6 +1071,7 @@
                         );
 
                         this.acceptedTokens[i].approved = etherAllowance > 0;
+                        this.acceptedTokens[i].isBusy = false;
                     }
                 } catch {
 
@@ -1080,6 +1098,8 @@
             },
 
             async setTokenAllowance(token, amount) {
+                if (token.isBusy) return;
+
                 let actual = 0;
                 if (amount > 0) {
                     actual = amount * 10 ** 18;
@@ -1094,66 +1114,63 @@
                         this.contract.address,
                         arg
                     );
-                    this.loaders.tokenAllowance = true;
+                    token.isBusy = true;
+                    this.keys.marketAllowances++;
                     await tx.wait(1);
+                    token.isBusy = false;
                     token.approved = true;
-                    this.loaders.tokenAllowance = false;
                 } catch (err) {
-                    this.loaders.tokenAllowance = false;
+                    token.isBusy = false;
                 }
             },
 
             async sendNft(item) {
-                if(item.isBusy) return;
-                
+                if (item.isBusy) return;
+
                 const address = this.nftTransactionTo;
                 const id = item.tokenId;
 
                 try {
                     const tx = await this.marketNftContract.transferFrom(this.metaMaskAccount, address, id);
-                    this.loaders.nftSend = true;
+
                     item.isBusy = true;
                     await tx.wait(1);
 
-                    this.loaders.nftSend = false;
                     this.hideSendNftModal();
                     item.isBusy = false;
                     this.userTokens = this.userTokens.filter(c => c.tokenId !== id);
                 } catch (err) {
                     this.hideSendNftModal();
                     item.isBusy = false;
-                    this.loaders.nftSend = false;
                 }
             },
 
-            async registerFrey(freyId) {
-                let isFreyRegistered = true;
-                try {
-                    const fees = await this.freyRegistryContract.getFees(freyId);
-                } catch (err) {
-                    isFreyRegistered = false;
-                }
+            async registerFrey(item) {
+                if (item.isBusy) return;
 
+                const freyRegister = await this.freyRegistryContract.getFrey(item.tokenId);
                 try {
                     let tx = undefined;
-                    if (!isFreyRegistered) {
-                        tx = await this.freyRegistryContract.register(freyId, this.collectionSaleToken, {
+                    if (!freyRegister.isRegistered) {
+                        tx = await this.freyRegistryContract.register(item.tokenId, this.collectionSaleToken, {
                             gasPrice: 100000000000,
                             gasLimit: 3000000,
                         });
                     } else {
-                        tx = await this.freyRegistryContract.switchCurrency(freyId, this
+                        tx = await this.freyRegistryContract.switchCurrency(item.tokenId, this
                             .collectionSaleToken, {
                                 gasPrice: 100000000000,
                                 gasLimit: 3000000,
                             });
                     }
-                    this.loaders.nftRegister = true;
-                    await tx.wait(1);
+
+                    item.isBusy = true;
+                    this.keys.nftCollection++;
                     this.$modal.hide('pick-currency');
-                    this.loaders.nftRegister = false;
+                    await tx.wait(1);
+                    item.isBusy = false;
                 } catch (err) {
-                    this.loaders.nftRegister = false;
+                    item.isBusy = false;
                     this.$modal.hide('pick-currency');
                 }
             },
@@ -1178,15 +1195,16 @@
                         gasLimit: 1000000,
                         value: priceValue
                     });
-                    this.loaders.nftBuy = true;
 
+                    item.isBusy = true;
+                    this.keys.marketSales++;
                     await tx.wait(1);
                     await this.fetchUserNfts();
                     this.marketTokens = this.marketTokens.filter(c => c.tokenId !== item.tokenId);
 
-                    this.loaders.nftBuy = false;
+                    item.isBusy = false
                 } catch (err) {
-                    this.loaders.nftBuy = false;
+                    item.isBusy = false;
                     console.error(err);
                 }
             },
@@ -1212,20 +1230,21 @@
                         value: priceValue
                     });
 
-                    this.loaders.nftBid = true;
+                    item.isBusy = true;
+                    this.keys.marketSales++;
                     await tx.wait(1);
                     item.currentPrice = priceValue;
                     item.order.highestBidder = this.metaMaskAccount.toLowerCase();
-                    this.loaders.nftBid = false;
+                    item.isBusy = false;
                     this.$modal.hide('make-bid');
                 } catch (err) {
-                    this.loaders.nftBid = false;
+                    item.isBusy = false;
                     this.$modal.hide('make-bid');
                 }
             },
 
             async listNft(item) {
-                if(item.isBusy) return;
+                if (item.isBusy) return;
 
                 const [token, tokenId, currency, amount, duration] = [this.market.token, this
                     .collectionSelectedToken.tokenId,
@@ -1237,21 +1256,23 @@
                     if (!this.marketApproved) {
                         await this.setMarketApproval(true);
                     }
-                    const now = Date.now();
+
                     const auctionDuration = duration * 60;
-                    const tx = item.type === this.CONSTANTS.AUCTION ? await this.contract.createAuction(token, tokenId, currency, amount,
+                    const tx = item.type === this.CONSTANTS.AUCTION ? await this.contract.createAuction(token,
+                            tokenId, currency, amount,
                             auctionDuration) :
                         await this.contract.sell(token, tokenId, currency, amount);
 
                     item.isBusy = true;
+
+                    this.$modal.hide("create-listing");
+                    this.bools.collectionCard = false;
+                    this.keys.nftCollection++;
                     await tx.wait(1)
 
                     item.isBusy = false;
                     await this.fetchUserNfts();
                     await this.initiateMarketSearch();
-
-                    this.$modal.hide("create-listing");
-                    this.bools.collectionCard = false;
                 } catch (err) {
                     item.isBusy = false;
                     console.error(err);
@@ -1259,8 +1280,9 @@
             },
 
             async delistNft(item) {
-                if(item.isBusy) return;
-                
+
+                if (item.isBusy) return;
+
                 const [tokenAddress, tokenId] = [this.market.token, item.tokenId];
 
                 try {
@@ -1272,12 +1294,12 @@
                     }
 
                     item.isBusy = true;
+                    this.collectionSelectedToken = undefined;
+                    this.bools.showCollectionCardModal = false;
+                    this.keys.userSales++;
                     await tx.wait(1);
 
                     await this.fetchUserNfts();
-                    this.loaders.nftDelist = false;
-                    this.collectionSelectedToken = undefined;
-                    this.bools.showCollectionCardModal = false;
 
                     item.isBusy = false;
                     this.userSales = this.userSales.filter(c => c.tokenId !== item.tokenId);
@@ -1419,13 +1441,6 @@
 
         computed: {
             ...mapGetters(["metaMaskAccount", "metaMaskWallet"]),
-
-            isMarketBusy() {
-                for (const [key, value] of Object.entries(this.loaders)) {
-                    if (value === true) return true;
-                }
-                return false;
-            }
         }
     }
 </script>
