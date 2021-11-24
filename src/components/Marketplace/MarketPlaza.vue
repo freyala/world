@@ -59,9 +59,9 @@
                     <select :key='marketSelectedCurrency' v-on:change='initiateMarketSearch()' v-model='marketSortBy'
                         class="w-full border rounded-lg border-yellow py-2 px-4 bg-dark">
                         <option v-bind:value='""'>Order By</option>
-                        <option v-if='marketSelectedCurrency !== "All"' value="price-asc">Price ascending
+                        <option v-if='marketSelectedCurrency !== "All"' value="currentPrice-asc">Price ascending
                         </option>
-                        <option v-if='marketSelectedCurrency !== "All"' value="price-desc">Price descending
+                        <option v-if='marketSelectedCurrency !== "All"' value="currentPrice-desc">Price descending
                         </option>
                         <option value="tokenId-asc">ID ascending</option>
                         <option value="tokenId-desc">ID descending</option>
@@ -82,13 +82,20 @@
                 <MarketPlazaItem class='mt-2 mx-4 mb-6 flex flex-col' v-for='(item, index) in marketTokens'
                     :key='index'>
                     <div v-on:click='showMarketCardModal(item)' class='market-item-header relative' slot='header'>
-                        <div style='background-color: #8E2D2D'
-                            class='absolute rounded-r-xl text-white text-base flex items-center justify-center top-3 left-0 w-6/12 h-6'>
+                        <div
+                            class='bg-red shadow-lg absolute rounded-r-xl text-white text-base flex items-center justify-center top-3 left-0 w-6/12 h-6'>
                             <span v-if='item.type === CONSTANTS.AUCTION'>
                                 Auction
                             </span>
                             <span v-else>
                                 SALE
+                            </span>
+                        </div>
+                        <div v-if='item.type === CONSTANTS.AUCTION && item.order.highestBidder'
+                            v-bind:class='{"bg-red": metaMaskAccount.toLowerCase() !== item.order.highestBidder, "bg-green": metaMaskAccount.toLowerCase() === item.order.highestBidder}'
+                            class='absolute shadow-lg rounded-r-xl text-white text-base flex items-center justify-center top-12 left-0 w-3/12 h-6'>
+                            <span class='text-sm'>
+                                ...{{ item.order.highestBidder.slice(item.order.highestBidder.length - 5) }}
                             </span>
                         </div>
                         <img v-bind:src='getListingImage(item.tokenId)' />
@@ -101,7 +108,7 @@
                         </div>
                         <div class='ml-2 w-full ml-2 mr-2 flex'>
                             <div class='w-8/12'>#{{ item.tokenId }}</div>
-                            <div class='w-4/12 text-white'>{{ item.price / (10 ** 18)}}
+                            <div class='w-4/12 text-white'>{{ item.currentPrice / (10 ** 18)}}
                                 {{getCurrencyName(item.currency.id)}}</div>
                         </div>
                         <div v-if='false' class='w-full mt-2 ml-2 mr-2 flex text-white opacity-50'>
@@ -140,6 +147,13 @@
                                 SALE
                             </span>
                         </div>
+                        <div v-if='item.type === CONSTANTS.AUCTION && item.order.highestBidder'
+                            v-bind:class='{"bg-red": metaMaskAccount.toLowerCase() !== item.order.highestBidder, "bg-green": metaMaskAccount.toLowerCase() === item.order.highestBidder}'
+                            class='absolute shadow-lg rounded-r-xl text-white text-base flex items-center justify-center top-12 left-0 w-3/12 h-6'>
+                            <span class='text-sm'>
+                                ...{{ item.order.highestBidder.slice(item.order.highestBidder.length - 5) }}
+                            </span>
+                        </div>
                         <img v-bind:src='getListingImage(item.tokenId)' />
                     </div>
                     <div class='px-1 market-item-body' slot='body'>
@@ -150,7 +164,7 @@
                         </div>
                         <div class='ml-2 w-full ml-2 mr-2 flex'>
                             <div class='w-8/12'>#{{ item.tokenId }}</div>
-                            <div class='w-4/12 text-white'>{{item.price / (10 ** 18)}}
+                            <div class='w-4/12 text-white'>{{item.currentPrice / (10 ** 18)}}
                                 {{getCurrencyName(item.currency.id)}}</div>
                         </div>
                         <div v-if='false' class='w-full mt-2 ml-2 mr-2 flex text-white opacity-50'>
@@ -274,14 +288,19 @@
                     <h2 class='text-xl'>Manage item</h2>
                     <h2 v-if='collectionSelectedToken.type === CONSTANTS.SALE' class='text-base mt-2 opacity-75'>Price
                     </h2>
-                    <h2 v-else class='text-base mt-2 opacity-75'>Highest Bidder: </h2>
+                    <h2 v-else-if='collectionSelectedToken.order.highestBidder' class='text-base mt-2 opacity-75'>
+                        Highest Bidder: </h2>
+                    <h2 class='text-base mt-2 opacity-75' v-else>Initial Bid</h2>
 
                     <div class='flex w-full items-center'>
                         <h2 class='text-xl text-white'>
-                            {{ collectionSelectedToken.price / (10 ** 18) }}
+                            {{ collectionSelectedToken.currentPrice / (10 ** 18) }}
                             {{ getCurrencyName(collectionSelectedToken.currency.id) }}</h2>
-
-                        <button v-on:click='delistNft()' type="button"
+                        <h2 v-if='collectionSelectedToken.order.highestBidder'
+                            class='text-white opacity-50 text-sm mx-3'>{{collectionSelectedToken.order.highestBidder}}
+                        </h2>
+                        <button v-if='collectionSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft()'
+                            type="button"
                             class="w-4/12 ml-auto mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
                             Cancel
                         </button>
@@ -334,7 +353,7 @@
 
                     <div class='flex w-full items-center'>
                         <h2 class='text-xl text-white'>
-                            {{ marketSelectedToken.price / (10 ** 18) }}
+                            {{ marketSelectedToken.currentPrice / (10 ** 18) }}
                             {{ getCurrencyName(marketSelectedToken.currency.id) }}</h2>
 
                         <button v-if='marketSelectedToken.type === CONSTANTS.AUCTION'
@@ -479,7 +498,7 @@
                 <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
                     <input class='w-full text-black px-2' type="text" v-model='marketBidAmount' />
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
-                        <button v-on:click="bidMarketToken(marketSelectedToken)" type="button"
+                        <button v-on:click="bidMarketToken(marketSelectedToken, marketBidAmount)" type="button"
                             class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                             <span v-if='!loaders.nftSend'>Confirm</span>
                             <span v-else><i class="fas fa-cog fa-spin"></i></span>
@@ -749,7 +768,7 @@
                 this.$emit('goBack');
             },
 
-            showCollectionCardModal(item) {
+            async showCollectionCardModal(item) {
                 this.collectionSelectedToken = item;
                 this.bools.collectionCard = true;
             },
@@ -895,8 +914,6 @@
                 const pagination = this.getPaginationInfo();
                 const orderInfo = this.getOrderQuery();
 
-                console.log(FilterQuery.FetchMarketNfts(this.market.token, filters, pagination, orderInfo));
-
                 const result = await this.$http.post(GRAPH_API, {
                     query: FilterQuery.FetchMarketNfts(this.market.token, filters, pagination, orderInfo)
                 });
@@ -907,13 +924,7 @@
                 marketAuctions.forEach(c => c.type = this.CONSTANTS.AUCTION);
 
                 this.marketTokens = [...marketSales, ...marketAuctions];
-                this.sortCollectionByField(this.marketTokens);
-
-                if (this.marketSortBy === '') {
-                    this.marketTokens.sort((a, b) => a.order.timestamp > b.order.timestamp ? -1 : b.order
-                        .timestamp < a
-                        .order.timestamp ? 1 : -1);
-                }
+                this.sortCollectionByField(this.marketTokens, this.marketSortBy);
             },
 
             async fetchMarketAttributes() {
@@ -1029,15 +1040,15 @@
                 try {
                     let tx = undefined;
                     if (!isFreyRegistered) {
-                        tx = await this.freyRegistryContract.register(item.tokenId + "", this.collectionSaleToken, {
+                        tx = await this.freyRegistryContract.register(item.tokenId, this.collectionSaleToken, {
                             gasPrice: 100000000000,
-                            gasLimit: 1000000,
+                            gasLimit: 3000000,
                         });
                     } else {
-                        tx = await this.freyRegistryContract.switchCurrency(item.tokenId + "", this
+                        tx = await this.freyRegistryContract.switchCurrency(item.tokenId, this
                             .collectionSaleToken, {
                                 gasPrice: 100000000000,
-                                gasLimit: 500000,
+                                gasLimit: 3000000,
                             });
                     }
                     await tx.wait(1);
@@ -1049,9 +1060,8 @@
 
             async buyMarketToken(token) {
                 const [tokenAddress, tokenId, price, currency] = [this.market.token, token.tokenId,
-                    token.price, token.currency.id
+                    token.currentPrice, token.currency.id
                 ];
-                console.log(tokenAddress, tokenId, currency, price);
                 try {
                     const contractSellOrder = await this.contract.getSellOrder(tokenAddress, tokenId);
 
@@ -1074,31 +1084,32 @@
                 }
             },
 
-            async bidMarketToken(token) {
-                const [tokenAddress, tokenId, currency, amount] = [this.market.token, token.tokenId, token.currency
-                    .id, this.marketBidAmount
-                ];
-                const price = token.price;
+            async bidMarketToken(token, amount) {
+                const [tokenAddress, tokenId, currency] = [this.market.token, token.tokenId, token.currency.id];
+                const price = fromExponential(amount * (10 ** 18));
 
                 try {
                     const contractAuction = await this.contract.getAuction(tokenAddress, tokenId);
 
                     if (!contractAuction) throw "Auction order doesn't exist or ended.";
 
-                    const priceValue = token.currency.id === this.acceptedTokens[0].value ? amount : 0;
+                    const priceValue = token.currency.id === this.acceptedTokens[0].value ? price : 0;
                     const acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
 
                     if (!acceptedCurrency) throw "Currency not supported";
                     if (!acceptedCurrency.approved) throw `${acceptedCurrency.key} is not approved.`;
 
-                    const tx = await this.contract.bid(tokenAddress, tokenId, price, {
+                    const tx = await this.contract.bid(tokenAddress, tokenId, "" + priceValue, {
                         gasPrice: 100000000000,
-                        gasLimit: 1000000,
+                        gasLimit: 2000000,
                         value: priceValue
                     });
                     await tx.wait(1);
+                    token.currentPrice = priceValue;
+                    token.order.highestBidder = this.metaMaskAccount.toLowerCase();
+                    this.$modal.close('make-bid');
                 } catch (err) {
-                    console.error(err);
+                    this.$modal.close('make-bid');
                 }
             },
 
@@ -1152,14 +1163,13 @@
                     let nftIds = [];
                     this.userTokens.forEach(c => nftIds.push(c.tokenId));
 
-                    const tx = await this.freyRegistryContract.collectFees(nftIds, {
+                    const tx = await this.contract.withdrawReflectionFees(this.acceptedTokens[0].value, {
                         gasPrice: 100000000000,
-                        gasLimit: 1000000,
+                        gasLimit: 2000000,
                     });
                     this.acceptedTokens.forEach(c => c.nftBalance = 0);
                     await tx.wait(1);
                 } catch (err) {
-
                 }
             },
 
@@ -1173,13 +1183,14 @@
                 }
             },
 
-            sortCollectionByField(collection) {
-                const sortBy = this.marketSortBy.split('-');
+            sortCollectionByField(collection, fieldString) {
+                const sortBy = fieldString.split('-');
                 const order = sortBy[1] === 'asc' ? 1 : -1;
 
-                if (sortBy[0] === 'price') {
-                    collection.sort((a, b) => (a.price > b.price) ? order : ((b.price > a
-                        .price ? -order :
+                if (sortBy[0] === 'currentPrice') {
+                    collection.sort((a, b) => (parseInt(a.currentPrice) > parseInt(b.currentPrice)) ? order : ((
+                        parseInt(b.currentPrice) > parseInt(a
+                            .currentPrice) ? -order :
                         0)));
                 } else {
                     collection.sort((a, b) => (a.tokenId > b.tokenId) ? order : ((b.tokenId > a.tokenId ? -order :

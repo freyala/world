@@ -15,9 +15,9 @@
                         </slot>
                     </div>
                 </div>
-                <div class='w-full p-4 h-4/6 flex flex-col'>
-                    <div style='background-color: #151515' v-bind:class='{"mt-4": !expandAttributes}'
-                        class='w-full p-4 flex items-center transition-colors h-10 rounded-b-none rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white'>
+                <div class='w-full p-4 h-auto'>
+                    <div style='background-color: #151515' v-bind:class='{"rounded-b-none": expandAttributes}'
+                        class='w-full p-4 flex items-center transition-colors h-10 rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white'>
                         <div v-on:click='expandAttributes = !expandAttributes'
                             class='w-full flex cursor-pointer'>
                             <h2 class='text-xl'>Attributes</h2>
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div v-if='expandAttributes' style='background-color: #151515'
-                        class='flex flex-wrap px-4 py-4 h-auto w-full'>
+                        class='flex flex-wrap rounded-xl rounded-t-none px-4 py-4 h-auto w-full'>
                         <div class='w-4/12 h-12 flex' v-for='(attribute, index) in item.attributes'
                             :key='index'>
                             <div class='w-9/12'>
@@ -36,28 +36,28 @@
                             </div>
                         </div>
                     </div>
-                    <div style='background-color: #151515'
-                        class='w-full mt-4 p-4 flex items-center transition-colors h-10 rounded-b-none rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white'>
+                    <div style='background-color: #151515' v-bind:class='{"rounded-b-none": expandSales}'
+                        class='w-full mt-4 p-4 flex items-center transition-colors h-10 rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white'>
                         <div v-on:click='expandSales = !expandSales' class='w-full flex cursor-pointer'>
                             <h2 class='text-xl'>Sale History</h2>
                             <span class='ml-auto'>Expand</span>
                         </div>
                     </div>
                     <div v-if='expandSales' style='background-color: #151515'
-                        class='flex flex-wrap px-4 py-4 h-auto w-full'>
+                        class='flex flex-wrap px-4 py-4 h-auto w-full rounded-xl rounded-t-none'>
                         <div class='w-full'>
                             No sales, ser.
                         </div>
                     </div>
-                    <div style='background-color: #151515'
-                        class='w-full p-4 flex items-center mt-4 transition-colors h-10 rounded-b-none rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white'>
+                    <div style='background-color: #151515' v-bind:class='{"rounded-b-none": expandDetails}'
+                        class='w-full p-4 flex items-center mt-4 transition-colors h-10 rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white'>
                         <div v-on:click='expandDetails = !expandDetails' class='w-full flex cursor-pointer'>
                             <h2 class='text-xl'>Details</h2>
                             <span class='ml-auto'>Expand</span>
                         </div>
                     </div>
                     <div v-if='expandDetails' style='background-color: #151515'
-                        class='flex flex-wrap px-4 py-4 h-auto w-full'>
+                        class='flex flex-wrap px-4 py-4 h-auto w-full rounded-xl rounded-t-none'>
                         <div class='w-full'>
                             No details, ser.
                         </div>
