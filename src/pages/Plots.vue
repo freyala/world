@@ -50,7 +50,7 @@
         <div class="w-full md:w-3/4 md:pl-12">
           <div v-if="plotData.length > 0 && plotsMounted" class="w-full flex flex-wrap">
             <div class="flex flex-wrap plot-container">
-              <div v-for="plot in plotData" class="w-1/2 md:w-1/4 lg:w-1/7 relative"
+              <div v-for="plot in plotData" class="w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 2xl:w-1/7 relative"
                    :style="(plot.ownerOf && !myPlots) ? 'border: 2px solid white' : ''">
                 <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
                 <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/soil_type/${plot.soil_type}.png`"
@@ -136,36 +136,150 @@
                     <p>Level: {{ selectedPlotData.level + selectedPlotData.level_buff }}</p>
                     <p>Crime rate: {{ selectedPlotData.crime_rate + selectedPlotData.crime_rate_buff }}</p>
                     <br>
-                    <div
-                        v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
-                      <input class="w-full mb-1 bg-dark border border-bbrown rounded-xl p-2" type="number"
-                             v-model="plotPrice">
-                      <br>
-                      <button @click="approvePlotToSellNow(selectedPlotData.token_id)" class="mx-auto xya-btn w-full mb-2">
-                        {{ loadingApproveSellPlot ? 'APPROVING' : 'APPROVE' }}
-                      </button>
-                      <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)" class="mx-auto xya-btn w-full mb-2">
-                        {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
-                      </button>
 
-                      <br>
-                      <br>
+                    <!-- modal state toggle -->
+<!--                    <div class="w-full flex mb-4">-->
+<!--                      <button @click="changePlotModalViewState('trade')"-->
+<!--                              :class="plotModalState === 'trade' ? 'bg-primary-alt text-brown' : ''"-->
+<!--                              class="w-1/4 mx-auto xya-btn">-->
+<!--                        Trade-->
+<!--                      </button>-->
+<!--                      <button @click="changePlotModalViewState('manage')"-->
+<!--                              :class="plotModalState === 'manage' ? 'bg-primary-alt text-brown' : ''"-->
+<!--                              class="w-1/4 mx-auto xya-btn">-->
+<!--                        Manage-->
+<!--                      </button>-->
+<!--                      <button @click="changePlotModalViewState('utility')"-->
+<!--                              :class="plotModalState === 'utility' ? 'bg-primary-alt text-brown' : ''"-->
+<!--                              class="w-1/4 mx-auto xya-btn">-->
+<!--                        Utility-->
+<!--                      </button>-->
+<!--                    </div>-->
 
-                      <input class="w-full mb-1 bg-dark border border-bbrown rounded-xl p-2" type="text"
-                             placeholder="Address to send plot to..."
-                             v-model="selectedPlotData.sendToAddress">
-                      <br>
-                      <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"
-                              class="mx-auto xya-btn w-full mb-2">
-                        {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
-                      </button>
+                    <div class="pt-4" v-if="plotModalState === 'trade'">
+                      <div
+                          v-if="!selectedPlotData.sales || (selectedPlotData.sales && selectedPlotData.sales.forSale === false)">
+                        <input class="w-full mb-1 bg-dark border border-bbrown rounded-xl p-2" type="number"
+                               v-model="plotPrice">
+                        <br>
+                        <button @click="approvePlotToSellNow(selectedPlotData.token_id)"
+                                class="mx-auto xya-btn w-full mb-2">
+                          {{ loadingApproveSellPlot ? 'APPROVING' : 'APPROVE' }}
+                        </button>
+                        <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)"
+                                class="mx-auto xya-btn w-full mb-2">
+                          {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
+                        </button>
+
+                        <br>
+                        <br>
+
+                        <input class="w-full mb-1 bg-dark border border-bbrown rounded-xl p-2" type="text"
+                               placeholder="Address to send plot to..."
+                               v-model="selectedPlotData.sendToAddress">
+                        <br>
+                        <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"
+                                class="mx-auto xya-btn w-full mb-2">
+                          {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
+                        </button>
+                      </div>
+                      <div v-else>
+                        <button @click="cancelListing(selectedPlotData.token_id)" class="mx-auto xya-btn w-full mb-2">
+                          {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
+                        </button>
+                      </div>
                     </div>
-                    <div v-else>
-                      <button @click="cancelListing(selectedPlotData.token_id)" class="mx-auto xya-btn w-full mb-2">
-                        {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
-                      </button>
-                    </div>
+<!--                    <div class="pt-4" v-if="plotModalState === 'manage'">-->
+<!--                      <div>-->
+<!--                        <div v-if="selectedPlotData.utilityCount === 0">-->
+<!--                          <p>Current upgrade cost: {{ selectedPlotData.currentUpgradeCost.toFixed(1) }} XYA</p>-->
+<!--                          <p>Next upgrade cost: {{ (selectedPlotData.currentUpgradeCost * 1.1).toFixed(1) }} XYA (* 10%)</p>-->
+<!--                          <p v-if="isPlotResetable(selectedPlotData)">Current reset cost: {{ selectedPlotData.currentResetCost }} </p>-->
+<!--                          <button v-if="isPlotResetable(selectedPlotData)" @click="resetPlotAttributes(selectedPlotData)"-->
+<!--                                  class="mx-auto xya-btn">-->
+<!--                            Reset-->
+<!--                          </button>-->
+
+<!--                          <br>-->
+
+<!--                          &lt;!&ndash; fertility &ndash;&gt;-->
+<!--                          <div class="flex">-->
+<!--                            <p class="w-1/3 my-auto">Fertility: {{ selectedPlotData.fertility + selectedPlotData.fertility_buff }}</p>-->
+<!--                            <button @click="downgradePlotAttribute('fertility', selectedPlotData, false)"-->
+<!--                                    class="mx-auto xya-btn w-1/3 mb-1 ml-2">-->
+<!--                              {{ attributeCanBeAltered("fertility", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}-->
+<!--                            </button>-->
+<!--                            <button @click="upgradePlotAttribute('fertility', selectedPlotData, true)"-->
+<!--                                    class="mx-auto xya-btn w-1/3 mb-1 ml-2">-->
+<!--                              {{ attributeCanBeAltered("fertility", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}-->
+<!--                            </button>-->
+<!--                          </div>-->
+
+<!--                          &lt;!&ndash; level &ndash;&gt;-->
+<!--                          <div class="flex">-->
+<!--                            <p class="w-1/3 my-auto">Level: {{ selectedPlotData.level + selectedPlotData.level_buff }}</p>-->
+<!--                            <button @click="downgradePlotAttribute('level', selectedPlotData, false)"-->
+<!--                                    class="mx-auto xya-btn w-1/3 mb-1 ml-2">-->
+<!--                              {{ attributeCanBeAltered("level", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}-->
+<!--                            </button>-->
+<!--                            <button @click="upgradePlotAttribute('level', selectedPlotData, true)"-->
+<!--                                    class="mx-auto xya-btn w-1/3 mb-1 ml-2">-->
+<!--                              {{ attributeCanBeAltered("level", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}-->
+<!--                            </button>-->
+<!--                          </div>-->
+
+<!--                          &lt;!&ndash; crime rate &ndash;&gt;-->
+<!--                          <div class="flex">-->
+<!--                            <p class="w-1/3 my-auto">Crime Rate: {{ selectedPlotData.crime_rate + selectedPlotData.crime_rate_buff }}</p>-->
+<!--                            <button @click="downgradePlotAttribute('crime', selectedPlotData, false)"-->
+<!--                                    class="mx-auto xya-btn w-1/3 mb-1 ml-2">-->
+<!--                              {{ attributeCanBeAltered("crime", selectedPlotData, false) ? 'Downgrade' : 'Already Min.' }}-->
+<!--                            </button>-->
+<!--                            <button @click="upgradePlotAttribute('crime', selectedPlotData, true)"-->
+<!--                                    class="mx-auto xya-btn w-1/3 mb-1 ml-2">-->
+<!--                              {{ attributeCanBeAltered("crime", selectedPlotData, true) ? 'Upgrade' : 'Already Max.' }}-->
+<!--                            </button>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div v-else>-->
+<!--                          <p>The plot is currently being utilised. Please stop all utilisation before altering the attributes.</p>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="pt-4" v-if="plotModalState === 'utility'">-->
+<!--                      <div>-->
+<!--                        &lt;!&ndash; emitter utility option &ndash;&gt;-->
+<!--                        <div>-->
+<!--                          <p>Personal extractor</p>-->
+<!--                          <hr>-->
+<!--                          <br>-->
+<!--                          <small v-if="!selectedPlotData.hasPaidEmittingFee">There is a one time fee to start extracting</small>-->
+<!--                          <br>-->
+<!--                          <small v-if="!selectedPlotData.hasPaidEmittingFee">-->
+<!--                            Cost to extract: {{ costToEmit }} XYA-ONE-->
+<!--                            <a class="underline" href="https://game.defikingdoms.com/#/add/ONE/0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4" target="_blank">(Get XYA-ONE LP)</a>-->
+<!--                          </small>-->
+<!--                          <br>-->
+<!--                          <br>-->
+<!--                          <div v-if="!selectedPlotData.isAllowedToEmit">-->
+<!--                            <div>-->
+<!--                              <button @click="startStopEmitting(selectedPlotData, !selectedPlotData.isEmitting)"-->
+<!--                                      class="mx-auto xya-btn">-->
+<!--                                {{ !selectedPlotData.isEmitting ? "Start Extracting" : "Stop Extracting" }} &lt;!&ndash; DOESNT FLIP WTF???? &ndash;&gt;-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                          <div v-else>-->
+<!--                            <p>Required attributes to start extracting:</p>-->
+<!--                            <p>Fertility >= 6</p>-->
+<!--                            <p>Level >= 5</p>-->
+<!--                            <p>Crime Rate <= 4</p>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
                   </div>
+
                   <div v-if="plotModalReason === 'buy'" class="w-full">
                     <p v-if="selectedPlotData.amountOwnedByPlot">Plot chest: {{
                         selectedPlotData.amountOwnedByPlot.split('.')[0]
@@ -215,9 +329,9 @@
             <div class="m-auto text-center">
               <div class="w-full flex">
                 <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
-                     style="animation: rotation 2s infinite linear" />
+                     style="animation: rotation 2s infinite linear"/>
               </div>
-              <br />
+              <br/>
               <p class="text-2xl">Loading...</p>
             </div>
           </div>
@@ -336,6 +450,7 @@ export default {
       plotPrice: 0,
       plotModalId: 0,
       selectedPlotData: {},
+      plotModalState: 'trade',
       plotModalReason: '',
       error: '',
       loadingBuyPlot: false,
@@ -343,7 +458,17 @@ export default {
       loadingApproveBuyPlot: false,
       loadingApproveSellPlot: false,
       loadingSendPlot: false,
-      loadingCancelPlotListing: false
+      loadingCancelPlotListing: false,
+
+      // emission data
+      fertilityReq: 0,
+      levelReq: 0,
+      crimeRateReq: 0,
+
+      emissionsLeft: 0,
+      emissionsRate: 0,
+      currentTotalEmittingPlots: 0,
+      costToEmit: 0
     }
   },
   async created() {
@@ -539,6 +664,28 @@ export default {
         })
       })
     },
+    async getEmissionsData() {
+      const emissionsLeft = await this.plotContracts.xyaEmitter.emissionsLeft();
+      const emissionsRate = await this.plotContracts.xyaEmitter.emissionRate();
+      const emittingPlotCount = await this.plotContracts.xyaEmitter.currentPlotsEmitting();
+
+      this.emissionsLeft = emissionsLeft;
+      this.emissionsRate = emissionsRate;
+      this.currentTotalEmittingPlots = emittingPlotCount;
+
+      const emitterAttributeRequirements = await this.plotContracts.xyaEmitter.getEmissionRequirements();
+      this.fertilityReq = emitterAttributeRequirements[0];
+      this.levelReq = emitterAttributeRequirements[1];
+      this.crimeRateReq = emitterAttributeRequirements[2];
+    },
+    changePlotModalViewState(state) {
+      if (state !== 'trade' && state !== 'manage' && state !== 'utility') {
+        this.plotModalState = "trade"
+        return
+      }
+
+      this.plotModalState = state
+    },
     modalClose() {
       this.plotModalReason = ''
     },
@@ -687,17 +834,45 @@ export default {
       }
     },
     async visitPlot(data) {
-      let plot = {}
-      if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
-        plot = await this.plotContracts.yin.plots(data.token_id)
-      } else if (plot.neighbourhood === 16 || plot.neighbourhood === 17) {
-        plot = await this.plotContracts.yang.plots(data.token_id)
-      } else {
-        plot = await this.plotContracts.xya.plots(data.token_id)
+      let plotType = 0
+
+      if (data.neighbourhood === 18 || data.neighbourhood === 19) {
+        plotType = 2
+      } else if (data.neighbourhood === 16 || data.neighbourhood === 17) {
+        plotType = 1
       }
-      data.amountOwnedByPlot = ethers.utils.formatEther(plot._amountOwnedByPlot._isBigNumber ? ethers.BigNumber.from(plot._amountOwnedByPlot).toString() : plot._amountOwnedByPlot)
+
+      const plot = await this.plotContract.getPlotData(plotType, data.token_id)
+
+      data.amountOwnedByPlot = ethers.utils.formatEther(plot[6]._isBigNumber ? ethers.BigNumber.from(plot[6]).toString() : plot[6])
+
       this.selectedPlotData = data
+
+      this.selectedPlotData.currentUpgradeCost = ethers.utils.formatEther(await this.plotContract.getCurrentUpgradeCost(plotType, data.token_id))
+      this.selectedPlotData.currentResetCost = ethers.utils.formatEther(await this.plotContract.getCurrentResetCost(plotType, data.token_id))
+
+      const utilityCount = await this.plotContract.getPlotAttribute(plotType, data.token_id, "utility")
+      this.selectedPlotData.utilityCount = parseInt(utilityCount._isBigNumber ? ethers.BigNumber.from(utilityCount).toString() : utilityCount)
+
+      this.selectedPlotData.isEmitting = false
+      if (!this.selectedPlotData.isEmitting) {
+        let isAllowedToEmit = true // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+        const hasPaidFee = false // await this.plotContracts.xyaEmitter.hasPlotPaidOneTimeFee(this.plotType, data.token_id)
+
+        if (!hasPaidFee) {
+          const emittingCost = 0 // await this.plotContracts.xyaEmitter.feeToEmit()
+          this.costToEmit = ethers.utils.formatEther(emittingCost.toString())
+        }
+
+        this.selectedPlotData.hasPaidEmittingFee = hasPaidFee
+        this.selectedPlotData.isAllowedToEmit = isAllowedToEmit
+      } else {
+        this.selectedPlotData.hasPaidEmittingFee = true
+        this.selectedPlotData.isAllowedToEmit = true
+      }
+
       this.plotModalReason = 'visit'
+      this.plotModalState = 'trade'
       this.$modal.show('plot')
     },
     async buyPlot(data) {
@@ -713,6 +888,134 @@ export default {
       this.selectedPlotData = data
       this.plotModalReason = 'buy'
       this.$modal.show('plot')
+    },
+    attributeCanBeAltered(attributeId, plotData, isUpgrading) {
+      let currentTotal = (attributeId === 'fertility' ?
+          plotData.fertility + plotData.fertility_buff : attributeId === 'level' ?
+              plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
+
+      if (isUpgrading) {
+        return (currentTotal < 9)
+      } else {
+        return (currentTotal > 0)
+      }
+    },
+    async downgradePlotAttribute(attributeId, plotData, isUpgrading) {
+      // sanity check we can downgrade before creating the tx
+      if (!this.attributeCanBeAltered(attributeId, plotData, isUpgrading)) {
+        return
+      }
+
+      let currentTotal = (attributeId === 'fertility' ?
+          plotData.fertility + plotData.fertility_buff : attributeId === 'level' ?
+              plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
+
+      let attribVal = (attributeId === 'fertility' ? 0 : attributeId === 'level' ? 1 : 2)
+
+      // downgradePlot(uint8 _plotType, uint256 _plotId, uint8 _attribute, uint256 _currentLevel)
+      //const downgrade = await this.plotContracts.handler.downgradePlot(this.plotType, plotData.token_id, attribVal, currentTotal)
+      //await downgrade.wait(1)
+
+      // todo: refresh the data on screen showing the new stats
+      // await this.plotContracts.handler.getPlotData(this.plotType, plotData.token_id)
+      if (attributeId === 'fertility')
+        plotData.fertility_buff -= 1;
+      else if (attributeId === 'level')
+        plotData.level_buff -= 1;
+      else if (attributeId === 'crime')
+        plotData.crime_rate_buff -= 1;
+
+      plotData.currentUpgradeCost = ethers.utils.formatEther("30000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+      const isAllowedToEmit = true // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+      plotData.isAllowedToEmit = isAllowedToEmit
+    },
+    async upgradePlotAttribute(attributeId, plotData, isUpgrading) {
+      // sanity check we can downgrade before creating the tx
+      if (!this.attributeCanBeAltered(attributeId, plotData, isUpgrading)) {
+        return
+      }
+
+      let plotType = -1
+      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+        plotType = 1
+      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+        plotType = 2
+      } else {
+        plotType = 0
+      }
+
+      let currentTotal = (attributeId === 'fertility' ?
+          plotData.fertility + plotData.fertility_buff : attributeId === 'level' ?
+              plotData.level + plotData.level_buff : plotData.crime_rate + plotData.crime_rate_buff)
+
+      let attribVal = (attributeId === 'fertility' ? 0 : attributeId === 'level' ? 1 : 2)
+
+      // upgradePlot(uint8 _plotType, uint256 _plotId, uint8 _attribute, uint256 _currentLevel)
+      //const upgrade = await this.plotContracts.handler.upgradePlot(this.plotType, plotData.token_id, attribVal, currentTotal)
+      //await upgrade.wait(1)
+
+      // todo: refresh the data on screen showing the new stats
+      // await this.plotContracts.handler.getPlotData(this.plotType, plotData.token_id)
+
+      if (attributeId === 'fertility')
+        plotData.fertility_buff += 1;
+      else if (attributeId === 'level')
+        plotData.level_buff += 1;
+      else if (attributeId === 'crime')
+        plotData.crime_rate_buff += 1;
+
+      plotData.currentUpgradeCost = ethers.utils.formatEther("20000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+      const isAllowedToEmit = true // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+      plotData.isAllowedToEmit = isAllowedToEmit
+    },
+    isPlotResetable(plotData) {
+      return (
+          (plotData.fertility_buff + plotData.fertility) !== plotData.fertility ||
+          (plotData.level_buff + plotData.level) !== plotData.level ||
+          (plotData.crime_rate_buff + plotData.crime_rate) !== plotData.crime_rate
+      );
+    },
+    async resetPlotAttributes(plotData) {
+      // resetPlotToBase(uint8 _plotType, uint256 _plotId)
+      //const resetPlot = await this.plotContracts.handler.resetPlotToBase(this.plotType, plotData.token_id)
+      //await resetPlot.wait(1)
+
+      // todo: refresh the data on screen showing the new stats
+      // await this.plotContracts.handler.getPlotData(this.plotType, plotData.token_id)
+
+      plotData.fertility_buff = 0;
+      plotData.level_buff = 0;
+      plotData.crime_rate_buff = 0;
+      plotData.currentUpgradeCost = ethers.utils.formatEther("40000000000000000000") // await this.plotContracts.handler.getCurrentUpgradeCost(this.plotType, this.plots[index].token_id);
+
+      const isAllowedToEmit = false // await this.plotContracts.xyaEmitter.isAllowedToEmit(this.plotType, data.token_id)
+      plotData.isAllowedToEmit = isAllowedToEmit
+    },
+    getUtilityUiElements(utility) {
+      /*(utility.length > 0 ? " | " : "");
+
+      for (let u = 0; u < utility.length; u++) {
+        if (u === "emittingXya") {
+          toReturn += "E "
+        }
+      }
+*/
+      return "";
+    },
+    startStopEmitting(plotData, isStarting) {
+      console.log(isStarting ? "Starting emissions" : "Stopping emissions")
+
+      // let isEmitting = await this.plotContracts.xyaEmitter.isEmitting(this.plotType, this.plots[index].token_id);
+      if (isStarting) {
+        plotData.isEmitting = true;
+        plotData.utilityCount = 1;
+      } else {
+        plotData.isEmitting = false;
+        plotData.utilityCount = 0;
+      }
+
+      //console.log(this.selectedPlotData)
+      //console.log(plotData)
     }
   }
 }
