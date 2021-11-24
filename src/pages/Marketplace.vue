@@ -2,7 +2,7 @@
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container flex flex-wrap mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-12">
           <h1 class="w-full text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -14,7 +14,7 @@
               <button
                   @click="activeScreen = 'sales'"
                   :class="activeScreen === 'sales' ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                  class="w-1/5 mx-auto h-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 md:mx-2">
+                  class="w-1/5 mx-auto h-full md:w-auto border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 md:mx-2">
                 <small>
                   Home
                 </small>
@@ -23,7 +23,7 @@
               <button
                   @click="activeScreen = 'collection'"
                   :class="activeScreen === 'collection' ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                  class="w-1/5 mx-auto h-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 md:mx-2">
+                  class="w-1/5 mx-auto h-full md:w-auto border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 md:mx-2">
                 <small>
                   My collection
                 </small>
@@ -32,7 +32,7 @@
               <button
                   @click="activeScreen = 'bids'"
                   :class="activeScreen === 'bids' ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                  class="w-1/5 mx-auto h-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 md:mx-2">
+                  class="w-1/5 mx-auto h-full md:w-auto border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 md:mx-2">
                 <small>
                   My bids
                 </small>
@@ -41,7 +41,7 @@
               <button
                   @click="activeScreen = 'offers'"
                   :class="activeScreen === 'offers' ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                  class="w-1/5 mx-auto h-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 md:mx-2">
+                  class="w-1/5 mx-auto h-full md:w-auto border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 md:mx-2">
                 <small>
                   My offers
                 </small>
@@ -50,7 +50,7 @@
           </div>
           <div class="w-full flex mt-4">
             <div class="w-auto flex mx-auto">
-              <select class="border border-yellow py-2 px-4 bg-dark" name="Marketplace" id="marketplace">
+              <select class="border border-bbrown rounded-xl py-2 px-4 bg-dark" name="Marketplace" id="marketplace">
                 <option :value="market.address" v-for="market in markets">{{ market.name }}</option>
               </select>
             </div>
@@ -67,7 +67,7 @@
             <br>
 
             <div class="pr-4">
-              <select class="w-full border border-yellow py-2 px-4 bg-dark" name="Sort by" id="sort-by"
+              <select class="w-full border border-bbrown rounded-xl py-2 px-4 bg-dark" name="Sort by" id="sort-by"
                       v-model="sortByValue" @change="sortBy(sortByValue.split('-'))">
                 <option value="">Sort by...</option>
                 <option value="price-ASC">Price ascending</option>
@@ -232,30 +232,30 @@
           <div class="w-full flex flex-wrap mb-4">
             <div @click="bid.currencyType = 0"
                  :class="bid.currencyType === 0 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               ONE
             </div>
             <div @click="bid.currencyType = 1"
                  :class="bid.currencyType === 1 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               XYA
             </div>
             <div @click="bid.currencyType = 2"
                  :class="bid.currencyType === 2 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               YIN
             </div>
             <div @click="bid.currencyType = 3"
                  :class="bid.currencyType === 3 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               YANG
             </div>
           </div>
 
-          <input type="text" class="w-2/3 border border-yellow bg-dark p-2" v-model="bid.amount">
+          <input type="text" class="w-2/3 border border-bbrown rounded-xl bg-dark p-2" v-model="bid.amount">
 
           <button @click="bidToken()"
-                  class="w-auto h-full md:w-auto border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 md:ml-4">
+                  class="w-auto h-full md:w-auto border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 md:ml-4">
             <small>
               {{ !biddingLoading ? 'Bid!' : 'Bidding...' }}
             </small>
@@ -278,27 +278,27 @@
           <div class="w-full flex">
             <div @click="list.currencyType = 0"
                  :class="list.currencyType === 0 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               ONE
             </div>
             <div @click="list.currencyType = 1"
                  :class="list.currencyType === 1 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               XYA
             </div>
             <div @click="list.currencyType = 2"
                  :class="list.currencyType === 2 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               YIN
             </div>
             <div @click="list.currencyType = 3"
                  :class="list.currencyType === 3 ? 'bg-yellow text-white' : 'bg-dark text-yellow'"
-                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-yellow hover:text-white hover:bg-yellow rounded-none px-4 mx-auto">
+                 class="py-2 text-center cursor-pointer w-full h-full md:w-1/5 border border-bbrown rounded-xl hover:text-white hover:bg-bbrown rounded-none px-4 mx-auto">
               YANG
             </div>
           </div>
 
-          <input type="text" class="w-4/5 border border-yellow bg-dark p-2 mt-4" v-model="list.amount">
+          <input type="text" class="w-4/5 border border-bbrown rounded-xl bg-dark p-2 mt-4" v-model="list.amount">
 
           <button @click="listNFT(listingIdOf)" class="py-2 w-full">{{ !listingLoading ? 'List NFT!' : 'Listing...'}}</button>
         </div>
@@ -316,7 +316,7 @@
             <br>
           </div>
 
-          <input class="border w-full border-yellow bg-dark p-2"
+          <input class="border w-full border-bbrown bg-dark p-2"
                  v-model="sendToAddress" type="text" placeholder="Type address here...">
           <hr>
           <button @click="sendNFT(sendingIdOf)" class="py-2 w-full">{{ !sendingLoading ? 'Send NFT Away!' : 'Sending away!'}}</button>

@@ -16,6 +16,26 @@
               <img class="cursor-pointer absolute" style="left: 41.2226%; top: 56.9306%; width: 10.6vw;"
                    src="/images/map/WallMid.png" alt="WallMid">
 
+              <div @mouseenter="hovering = 'nft'" @mouseleave="hovering = ''">
+                <router-link :to="{ name: 'frey-nft' }">
+                  <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
+
+                       style="left: 32.2172%; top: 25.7847%; width: 6vw;" src="/images/map/Barracks.png"
+                       alt="FreyalaPlots">
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                       style="left: 32.2172%; top: 25.7847%; width: 6vw;">
+                    <div class="relative">
+                      <img class="w-full" src="/images/map/Barracks_MO.png" alt="FreyalaPlots">
+                    </div>
+                  </div>
+                  <p :class="hovering === 'nft' ? 'md:opacity-90' : 'md:opacity-50'"
+                     class="text-center bubble text-white absolute"
+                     style="pointer-events: none; left: 33.3172%; top: 33.7847%;">
+                    Frey Barracks
+                  </p>
+                </router-link>
+              </div>
+
               <div @mouseenter="hovering = 'plots'" @mouseleave="hovering = ''">
                 <router-link :to="{ name: 'plots' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
@@ -30,7 +50,7 @@
                   </div>
                   <p :class="hovering === 'plots' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 38.0172%; top: 42.7847%;">
+                     style="pointer-events: none; left: 38.2172%; top: 42.7847%;">
                     Plots of Land
                   </p>
                 </router-link>
@@ -65,9 +85,9 @@
                       <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">
                     </div>
                   </div>
-                  <p :class="hovering === 'harmons' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'harmons' ? 'md:opacity-100' : 'md:opacity-80'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 82.1172%; top: 51.6319%">
+                     style="pointer-events: none; left: 82.3172%; top: 51.6319%">
                     Tree of Peek
                   </p>
                 </router-link>
@@ -85,8 +105,8 @@
                   </div>
                   <p :class="hovering === 'faucet' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 42.5555%; top: 56.8806%">
-                    Soup Kitchen
+                     style="pointer-events: none; left: 44.0555%; top: 56.8806%">
+                    Faucet
                   </p>
                 </router-link>
               </div>
@@ -103,8 +123,8 @@
                   </div>
                   <p :class="hovering === 'staking' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 70.6156%; top: 54.8111%">
-                    Extraction Site
+                     style="pointer-events: none; left: 71.2156%; top: 54.8111%">
+                    Extractor
                   </p>
                 </router-link>
               </div>
@@ -121,8 +141,8 @@
                   </div>
                   <p :class="hovering === 'casino' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 38.9555%; top: 52.9792%">
-                    Luderion
+                     style="pointer-events: none; left: 38.555%; top: 51.9792%">
+                    Luderion Casino
                   </p>
                 </router-link>
               </div>
@@ -138,9 +158,9 @@
                     </div>
                   </div>
                   <p :class="hovering === 'governance' ? 'md:opacity-90' : 'md:opacity-50'"
-                     style="pointer-events: none; left: 42.0906%; top: 50.1389%;"
+                     style="pointer-events: none; left: 42.7906%; top: 50.1389%;"
                      class="text-center everglen bubble text-white absolute">
-                    Everglen Castle
+                    Governance
                   </p>
                 </router-link>
               </div>
@@ -158,7 +178,7 @@
                   <p :class="hovering === 'jennymines' ? 'md:opacity-90' : 'md:opacity-50'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 81.4281%; top: 34.9611%">
-                    Jenny's Mine
+                    Mine rewards
                   </p>
                 </router-link>
               </div>
@@ -247,6 +267,12 @@
       </div>
 
       <top-bar></top-bar>
+
+      <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
+        <a href="https://docs.freyala.com/freyala" target="_blank">
+          PROJECT INFO
+        </a>
+      </button>
 
       <div id="modals">
         <window name="1" width="80%">

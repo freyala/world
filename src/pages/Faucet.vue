@@ -2,7 +2,7 @@
   <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-primary-alt"
+      <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
@@ -32,7 +32,7 @@
 <!--              <div class="w-full flex flex-wrap" v-if="faucetFetchedData.allowedToWithdraw">-->
 <!--                <div class="w-full">-->
 <!--                  <button type="button"-->
-<!--                          class="w-full rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"-->
+<!--                          class="w-full rounded-none border border-bbrown rounded-xl bg-transparent hover:bg-primary-alt hover:text-brown px-4 py-2 min-h-12"-->
 <!--                          @click="requestTokens()">-->
 <!--                    Request a portion! <i v-if="faucetLoading.dripping" class="fas fa-cog fa-spin"></i>-->
 <!--                  </button>-->
