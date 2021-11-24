@@ -177,7 +177,7 @@
                             class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
                             Details
                         </button>
-                        <button v-if='item.type === CONSTANTS.SALE' v-on:click='delistNft()'
+                        <button v-on:click='delistNft(item)'
                             class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
                             Cancel
                         </button>
@@ -299,7 +299,7 @@
                         <h2 v-if='collectionSelectedToken.order.highestBidder'
                             class='text-white opacity-50 text-sm mx-3'>{{collectionSelectedToken.order.highestBidder}}
                         </h2>
-                        <button v-if='collectionSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft()'
+                        <button v-if='collectionSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft(item)'
                             type="button"
                             class="w-4/12 ml-auto mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
                             Cancel
@@ -413,9 +413,12 @@
                     <p class='mt-1 text-xl'>Duration
                     </p>
                 </div>
-                <div v-if='collectionSaleType === CONSTANTS.AUCTION' class="mt-1 mb-4 flex w-full p-1">
-                    <input class='w-full rounded text-black px-2 h-9 shadow-xl border border-primary-alt' type="number"
-                        v-model='collectionSaleDuration' />
+                <div v-if='collectionSaleType === CONSTANTS.AUCTION' class="mt-1 mb-4 flex h-12 w-full p-1">
+                    <select v-model='collectionSaleDuration'
+                        class="w-full border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        <option v-for='index in 7' :key='index' v-bind:value='index'>{{index}} <span
+                                v-if='index === 1'>Day</span><span v-else>Days</span></option>
+                    </select>
                 </div>
 
                 <div class='w-full flex justify-space h-12 p-1 text-base'>
@@ -517,6 +520,16 @@
                     <i @click="$modal.hide('allowances')" class="fas fa-times cursor-pointer text-xl"></i>
                 </div>
                 <div class="mt-4 flex flex-col w-full items-start justify-start">
+                    <div class='flex w-full flex-row my-2'>
+                        <p class='w-2/12'>Market Contract</p>
+                        <div class="w-6/12 text-right md:text-center mx-2">
+                            <button v-on:click="setMarketApproval(!marketApproved ? 999999999 : 0)" type="button"
+                                class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                                <span v-if='!marketApproved'>Enable</span>
+                                <span v-else>Disable</span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="w-4/5">
                         <h2 class="text-xl my-2 opacity-75">Market Tokens</h2>
                     </div>
@@ -639,7 +652,7 @@
                 userSales: [],
                 marketSelectedToken: undefined,
                 collectionSaleToken: undefined,
-                collectionSaleDuration: 0,
+                collectionSaleDuration: 1,
                 collectionSelectedToken: undefined,
                 collectionOperations: [],
                 collectionSaleAmount: 0,
@@ -760,6 +773,7 @@
                 await this.fetchMarketAttributes();
                 await this.initiateMarketSearch();
                 await this.fetchUserNfts();
+
             });
         },
 
@@ -793,7 +807,7 @@
                 this.collectionSaleAmount = 0;
                 this.collectionSaleToken = this.acceptedTokens[0].value;
                 this.collectionSaleDate = 0;
-                this.collectionSaleDuration = 0;
+                this.collectionSaleDuration = 1;
                 this.collectionSaleType = this.CONSTANTS.SALE;
                 this.$modal.show("create-listing");
             },
@@ -802,7 +816,7 @@
                 this.collectionSaleAmount = 0;
                 this.collectionSaleToken = this.acceptedTokens[0].value;
                 this.collectionSaleDate = 0;
-                this.collectionSaleDuration = 0;
+                this.collectionSaleDuration = 1;
                 this.collectionSaleType = this.CONSTANTS.AUCTION;
                 this.$modal.show("create-listing");
             },
@@ -854,17 +868,13 @@
                 const order = item.order;
                 if (order.ended) return "ENDED";
 
-                const blocks = item.order.endsAt - this.blockNumber;
-
+                const endsAt = Date(order.endsAt * 1000);
                 const dateNow = Date.now();
-                const endDate = new Date(dateNow + parseInt(blocks * 2));
+                const endDate = order.endsAt - dateNow;
 
-                const diffMilis = Math.abs(endDate - dateNow);
-                const diffMins = Math.ceil(diffMilis / 1000 / 60);
-                const diffHours = Math.ceil(diffMins / 60);
-                const diffDays = Math.ceil(diffHours / 24);
+                console.log(order.endsAt);
 
-                return diffDays + " Day(s), " + diffHours % 24 + " Hour(s), " + diffMins % 60 + " Minute(s)";
+                return Date(endDate);
             },
 
             getPaginationInfo() {
@@ -1124,23 +1134,32 @@
                     if (!this.marketApproved) {
                         await this.setMarketApproval(true);
                     }
-
+                    const now = Date.now();
+                    const auctionDuration = duration * 3600;
                     const tx = isAuction ? await this.contract.createAuction(token, tokenId, currency, amount,
-                            duration) :
+                            auctionDuration) :
                         await this.contract.sell(token, tokenId, currency, amount);
                     await tx.wait(1)
 
                     await this.fetchUserNfts();
                     this.$modal.show("create-listing");
                     this.bools.collectionCard = false;
-                } catch (err) {}
+                } catch (err) {
+                    console.error(err);
+                }
             },
 
-            async delistNft() {
-                const [token, tokenId] = [this.market.token, this.collectionSelectedToken.tokenId];
+            async delistNft(token) {
+                const [tokenAddress, tokenId] = [this.market.token, token.tokenId];
 
                 try {
-                    const tx = await this.contract.cancelSell(token, tokenId);
+                    let tx = undefined;
+                    if(token.type === this.CONSTANTS.AUCTION){
+                        tx = await this.contract.endAuction(tokenAddress, tokenId);
+                    }
+                    else{
+                        tx = await this.contract.cancelSell(tokenAddress, tokenId);
+                    }
                     await tx.wait(1);
 
                     await this.fetchUserNfts();
@@ -1169,8 +1188,7 @@
                     });
                     this.acceptedTokens.forEach(c => c.nftBalance = 0);
                     await tx.wait(1);
-                } catch (err) {
-                }
+                } catch (err) {}
             },
 
             async setMarketApproval(approve) {
