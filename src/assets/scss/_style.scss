@@ -213,3 +213,11 @@ body {
 .xya-btn:hover span {
   background: transparent;
 }
+
+.plot-container {
+  @screen md {
+    max-height: 60vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+}

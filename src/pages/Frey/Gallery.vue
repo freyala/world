@@ -4,99 +4,91 @@
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
+        <div class="container mx-auto text-center py-16">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             All citizens
           </h1>
+          <div class="w-full text-center mx-auto">
+            <div class="inline" v-if="currentPage > 5">
+              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: 1 } }">
+                <i class="fas fa-angle-double-left"></i>
+              </router-link>
+            </div>
 
-          <div class="flex">
-            <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-nft' }">
-                <button class="xya-btn mx-auto">
-                  Get Frey
-                </button>
+            <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage - 1 } }"
+                         v-if="currentPage > 1">
+              <i class="fas fa-angle-left"></i>
+            </router-link>
+
+            <div class="inline" v-if="currentPage > 5">
+              ...
+            </div>
+
+            <div class="inline" :key="`page-top-${page}`" v-for="page in pages">
+              <router-link class="text-lg px-1" :to="{ name: 'frey-gallery', query: { page: page } }"
+                           v-if="page > (currentPage - 5) && page < (currentPage + 5)">
+                {{ page }}
               </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-collection' }">
-                <button class="xya-btn mx-auto">
-                  Your Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-gallery' }">
-                <button class="xya-btn mx-auto">
-                  All Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-attributes' }">
-                <button class="xya-btn mx-auto">
-                  All Attributes
-                </button>
+            </div>
+
+            <div class="inline" v-if="currentPage < pages && pages > 5">
+              ...
+            </div>
+
+            <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage + 1 } }"
+                         v-if="currentPage < pages">
+              <i class="fas fa-angle-right"></i>
+            </router-link>
+
+            <div class="inline" v-if="currentPage < pages && pages > 5">
+              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: pages } }">
+                <i class="fas fa-angle-double-right"></i>
               </router-link>
             </div>
           </div>
+
         </div>
       </section>
-      <div v-if="!loading" id="gallery" class="p-4 md:p-8">
-        <div class="w-full p-4 md:p-8">
-          <router-link :to="{ name: 'world-map' }">
-            <i class="fas fa-long-arrow-alt-left"></i> Back
-          </router-link>
+      <div v-if="!loading" id="gallery" class="flex flex-wrap p-4 md:p-8">
+        <div class="w-full md:w-1/4 mb-12">
+          <div class="flex flex-wrap w-full mx-auto">
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'world-map' }">
+              <button class="mx-auto xya-btn">
+                <i class="fas fa-long-arrow-alt-left"></i> Back to world
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-nft' }">
+              <button class="mx-auto xya-btn">
+                Get Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-collection' }">
+              <button class="mx-auto xya-btn">
+                Your Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-gallery' }">
+              <button class="mx-auto xya-btn">
+                All Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-attributes' }">
+              <button class="mx-auto xya-btn">
+                All Attributes
+              </button>
+            </router-link>
+          </div>
         </div>
 
-        <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
-
-<!--        <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">-->
-        <!--          <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full" type="number"-->
-        <!--                 placeholder="Search Frey" v-model="search">-->
-        <!--        </div>-->
-
-        <div v-if="search === ''">
-          <div class="minted-frey py-4 flex flex-wrap" v-if="frey.length < (showMax - (showMin - 1))">
+        <div class="w-full md:w-3/4 md:pl-12">
+          <div class="minted-frey flex flex-wrap" v-if="frey.length < (showMax - (showMin - 1))">
             <div class="text-center">
               <h1 class="text-xl">
                 Fetching citizens...
               </h1>
             </div>
           </div>
-          <div class="minted-frey py-4 flex flex-wrap" v-else>
-            <div class="w-full text-center mx-auto">
-              <div class="inline" v-if="currentPage > 5">
-                <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: 1 } }">
-                  <i class="fas fa-angle-double-left"></i>
-                </router-link>
-              </div>
-
-              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage - 1 } }"
-                           v-if="currentPage > 1">
-                <i class="fas fa-angle-left"></i>
-              </router-link>
-
-              <div class="inline" v-if="currentPage > 5">
-                ...
-              </div>
-
-              <div class="inline" :key="`page-top-${page}`" v-for="page in pages">
-                <router-link class="text-lg px-1" :to="{ name: 'frey-gallery', query: { page: page } }"
-                             v-if="page > (currentPage - 5) && page < (currentPage + 5)">
-                  {{ page }}
-                </router-link>
-              </div>
-
-              <div class="inline" v-if="currentPage < pages && pages > 5">
-                ...
-              </div>
-
-              <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: currentPage + 1 } }"
-                           v-if="currentPage < pages">
-                <i class="fas fa-angle-right"></i>
-              </router-link>
-
-              <div class="inline" v-if="currentPage < pages && pages > 5">
-                <router-link class="px-1" :to="{ name: 'frey-gallery', query: { page: pages } }">
-                  <i class="fas fa-angle-double-right"></i>
-                </router-link>
-              </div>
-            </div>
-
+          <div class="minted-frey flex flex-wrap" v-else>
             <div class="w-full lg:w-1/2 xl:w-1/3 2xl:w-1/4" :key="mint.tokenId" v-for="(mint, index) in frey">
               <div class="p-2 relative">
                 <div class="absolute cursor-pointer bg-dark top-0 left-0 h-full w-full opacity-0 hover:opacity-90" @click="showAttributes(index)">
@@ -159,33 +151,6 @@
             </div>
           </div>
         </div>
-
-        <div v-else>
-          <div class="w-full xl:w-2/3 mx-auto" :key="mint.tokenId" v-for="mint in foundFrey">
-            <div class="p-2 relative flex flex-wrap">
-              <div class="absolute cursor-pointer bg-dark top-0 left-0 h-full w-full opacity-0 hover:opacity-90" @click="showAttributes(index)">
-                <div class="flex w-full h-full">
-                  <p class="m-auto text-2xl">
-                    Show attributes
-                  </p>
-                </div>
-              </div>
-
-              <img class="w-full lg:w-1/2" v-lazy="mint.image" alt="Frey image">
-              <div style="top: 15px; left: 15px"
-                   class="absolute bg-white py-2 px-4 rounded-full text-sm uppercase text-dark"
-                   v-if="mint.tokenId <= 542">
-                <strong>Pre sale Frey!</strong>
-              </div>
-              <div class="w-full lg:w-1/2 lg:pl-8 my-auto">
-                <p class="py-3 text-xl">
-                  {{ mint.name }} <br>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <div v-else class="p-4 md:p-8 relative mt-12">

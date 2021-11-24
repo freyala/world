@@ -5,84 +5,88 @@
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
+        <div class="container mx-auto text-center py-16">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Become a citizen!
           </h1>
-
-          <div class="flex">
-            <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-nft' }">
-                <button class="xya-btn mx-auto">
-                  Get Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-collection' }">
-                <button class="xya-btn mx-auto">
-                  Your Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-gallery' }">
-                <button class="xya-btn mx-auto">
-                  All Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-attributes' }">
-                <button class="xya-btn mx-auto">
-                  All Attributes
-                </button>
-              </router-link>
-            </div>
-          </div>
         </div>
       </section>
       <div v-if="freyMounted" id="home" class="flex flex-wrap p-4 md:p-8">
-        <div class="w-full p-4 md:p-8">
-          <router-link :to="{ name: 'world-map' }">
-            <i class="fas fa-long-arrow-alt-left"></i> Back
-          </router-link>
-        </div>
-        <div class="w-full mx-auto 2xl:my-0 text-center">
-          <img class="mx-auto w-64 md:w-96 mb-12" src="/images/LOADING.png" alt="Mint a Frey">
-
-          <div v-if="minting">
-            <p class="mt-6 text-center text-2xl md:text-4xl">
-              <strong>
-                Minting...
-              </strong>
-            </p>
+        <div class="w-full md:w-1/4 mb-12">
+          <div class="flex flex-wrap w-full mx-auto">
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'world-map' }">
+              <button class="mx-auto xya-btn">
+                <i class="fas fa-long-arrow-alt-left"></i> Back to world
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-nft' }">
+              <button class="mx-auto xya-btn">
+                Get Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-collection' }">
+              <button class="mx-auto xya-btn">
+                Your Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-gallery' }">
+              <button class="mx-auto xya-btn">
+                All Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-attributes' }">
+              <button class="mx-auto xya-btn">
+                All Attributes
+              </button>
+            </router-link>
           </div>
-          <div v-else class="flex">
-            <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto py-4 mb-8">
-              <button @click="mint(1)" class="w-full mb-2 md:w-1/4 mx-auto xya-btn">
-                Mint 1
-              </button>
-              <button @click="mint(3)" class="w-full mb-2 md:w-1/4 mx-auto xya-btn">
-                Mint 3
-              </button>
-              <button @click="mint(5)" class="w-full mb-2 md:w-1/4 mx-auto xya-btn">
-                Mint 5
-              </button>
+        </div>
+        <div class="w-full md:w-3/4 md:pl-12">
+          <div class="flex flex-wrap 2xl:my-0 text-center">
+            <div class="w-full xl:w-1/4 xl:mb-12 flex">
+              <img class="mx-auto" src="/images/LOADING.png" alt="Mint a Frey">
+            </div>
+            <div class="w-full xl:w-3/4 xl:pl-24">
+              <div v-if="minting">
+                <p class="mt-6 text-center text-2xl md:text-4xl">
+                  <strong>
+                    Minting...
+                  </strong>
+                </p>
+              </div>
+              <div v-else class="flex my-auto">
+                <div class="flex flex-wrap w-full mx-auto py-4 mb-8">
+                  <button @click="mint(1)" class="w-full mb-2 mx-auto xya-btn">
+                    Mint 1
+                  </button>
+                  <button @click="mint(3)" class="w-full mb-2 mx-auto xya-btn">
+                    Mint 3
+                  </button>
+                  <button @click="mint(5)" class="w-full mb-2 mx-auto xya-btn">
+                    Mint 5
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center mt-4">
+              <p style="color: red">{{ error }}</p>
             </div>
           </div>
 
-          <div class="text-center mt-4">
-            <p style="color: red">{{ error }}</p>
-          </div>
-        </div>
-
-        <div class="w-full md:w-4/5 mx-auto flex flex-wrap mt-8 xl:mt-0">
-          <h2 class="w-full text-3xl md:text-5xl mb-6 text-center">
-            Last Frey entered
-          </h2>
-          <div class="w-full flex flex-wrap md:w-1/3" :key="mint.tokenId" v-for="mint in last">
-            <div class="w-1/3 md:w-full">
-              <img v-lazy="mint.image" alt="Frey image" class="pr-4 pb-4">
-            </div>
-            <div class="w-2/3 w-1/3 md:w-full my-auto pl-2">
-              <p class="py-3 text-xl">
-                <strong>{{ mint.name }}</strong> <br>
-              </p>
+          <div class="w-full mx-auto flex flex-wrap mt-8 xl:mt-0">
+            <h2 class="w-full text-3xl md:text-5xl mb-6 text-center">
+              Last Frey entered
+            </h2>
+            <div class="w-full flex flex-wrap md:w-1/3" :key="mint.tokenId" v-for="mint in last">
+              <div class="w-1/3 md:w-full">
+                <img v-lazy="mint.image" alt="Frey image" class="pr-4 pb-4">
+              </div>
+              <div class="w-2/3 w-1/3 md:w-full my-auto pl-2">
+                <p class="py-3 text-xl">
+                  <strong>{{ mint.name }}</strong> <br>
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -1,66 +1,70 @@
 <template>
-  <section id="frey-container" style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
+  <section id="frey-container"
+           style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
+        <div class="container mx-auto text-center py-16">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Attributes
           </h1>
-
-          <div class="flex">
-            <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-nft' }">
-                <button class="xya-btn mx-auto">
-                  Get Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-collection' }">
-                <button class="xya-btn mx-auto">
-                  Your Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-gallery' }">
-                <button class="xya-btn mx-auto">
-                  All Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-attributes' }">
-                <button class="xya-btn mx-auto">
-                  All Attributes
-                </button>
-              </router-link>
-            </div>
-          </div>
         </div>
       </section>
 
       <div class="flex flex-wrap p-4 md:p-8">
-        <div class="w-full p-4 md:p-8">
-          <router-link :to="{ name: 'world-map' }">
-            <i class="fas fa-long-arrow-alt-left"></i> Back
-          </router-link>
-        </div>
-        <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">
-          <input class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full border border-bbrown rounded-xl" type="text"
-                 placeholder="Search attribute" v-model="search">
+        <div class="w-full md:w-1/4 mb-12">
+          <div class="flex flex-wrap w-full mx-auto">
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'world-map' }">
+              <button class="mx-auto xya-btn">
+                <i class="fas fa-long-arrow-alt-left"></i> Back to world
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-nft' }">
+              <button class="mx-auto xya-btn">
+                Get Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-collection' }">
+              <button class="mx-auto xya-btn">
+                Your Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-gallery' }">
+              <button class="mx-auto xya-btn">
+                All Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-attributes' }">
+              <button class="mx-auto xya-btn">
+                All Attributes
+              </button>
+            </router-link>
+          </div>
         </div>
 
-        <div class="w-full flex flex-wrap text-center">
-      <span class="w-full" :key="key + value" v-for="(key, value) in attributes">
-        <strong v-if="search === ''" class="text-xl">
-          {{ value }}
-        </strong>
-        <br v-if="search === ''">
-        <span :key="keys + values" v-for="(keys, values) in key">
-          <div :class="`${search === '' ? '' : 'underline strong text-lg'}`"
-               v-if="search === '' || values.toLowerCase().includes(search.toLowerCase())">{{ values }} ({{
-              keys
-            }}) </div>
-        </span>
-        <br>
-      </span>
+        <div class="w-full flex flex-wrap md:w-3/4 md:pl-12">
+          <div class="mb-4 w-full md:w-3/5 lg:w-1/3 mx-auto">
+            <input
+                class="py-2 dark:bg-white text-center bg-dark text-white dark:text-dark w-full border border-bbrown rounded-xl"
+                type="text"
+                placeholder="Search attribute" v-model="search">
+          </div>
+          <div class="w-full flex flex-wrap text-center">
+            <span class="w-full" :key="key + value" v-for="(key, value) in attributes">
+              <strong v-if="search === ''" class="text-xl">
+                {{ value }}
+              </strong>
+              <br v-if="search === ''">
+              <span :key="keys + values" v-for="(keys, values) in key">
+                <div :class="`${search === '' ? '' : 'underline strong text-lg'}`"
+                     v-if="search === '' || values.toLowerCase().includes(search.toLowerCase())">{{ values }} ({{
+                    keys
+                  }}) </div>
+              </span>
+              <br>
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -4,45 +4,46 @@
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
       <section id="section-i-1" class="border-b-4 border-bbrown"
                style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
+        <div class="container mx-auto text-center py-16">
           <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
             Your Family
           </h1>
-
-          <div class="flex">
-            <div class="flex flex-wrap w-full 2xl:w-2/3 mx-auto mt-4 px-4 md:px-0">
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-nft' }">
-                <button class="xya-btn mx-auto">
-                  Get Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-collection' }">
-                <button class="xya-btn mx-auto">
-                  Your Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-gallery' }">
-                <button class="xya-btn mx-auto">
-                  All Frey
-                </button>
-              </router-link>
-              <router-link class="flex w-full md:w-1/5 mx-auto mb-1" :to="{ name: 'frey-attributes' }">
-                <button class="xya-btn mx-auto">
-                  All Attributes
-                </button>
-              </router-link>
-            </div>
-          </div>
         </div>
       </section>
-      <div v-if="!loading" class="minted-frey py-8 px-4 flex flex-wrap">
-        <div class="w-full p-4 md:p-8">
-          <router-link :to="{ name: 'world-map' }">
-            <i class="fas fa-long-arrow-alt-left"></i> Back
-          </router-link>
+      <div v-if="!loading" id="gallery" class="flex flex-wrap p-4 md:p-8">
+        <div class="w-full md:w-1/4 mb-12">
+          <div class="flex flex-wrap w-full mx-auto">
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'world-map' }">
+              <button class="mx-auto xya-btn">
+                <i class="fas fa-long-arrow-alt-left"></i> Back to world
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-nft' }">
+              <button class="mx-auto xya-btn">
+                Get Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-collection' }">
+              <button class="mx-auto xya-btn">
+                Your Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-gallery' }">
+              <button class="mx-auto xya-btn">
+                All Frey
+              </button>
+            </router-link>
+            <router-link class="w-full mx-auto mb-2" :to="{ name: 'frey-attributes' }">
+              <button class="mx-auto xya-btn">
+                All Attributes
+              </button>
+            </router-link>
+          </div>
         </div>
-        <div class="w-full lg:w-1/2 xl:w-1/3 2xl:w-1/4" :key="mint.tokenId" v-for="(mint, index) in yourFrey">
-          <div class="p-2 relative">
+
+        <div class="w-full flex flex-wrap md:w-3/4 md:pl-12">
+          <div class="w-full lg:w-1/2 xl:w-1/3 2xl:w-1/4" :key="mint.tokenId" v-for="(mint, index) in yourFrey">
+          <div class="pr-2 pb-2 relative">
             <div class="absolute cursor-pointer bg-dark top-0 left-0 h-full w-full opacity-0 hover:opacity-90" @click="showAttributes(index)">
               <div class="flex w-full h-full">
                 <p class="m-auto text-2xl">
@@ -65,6 +66,7 @@
             <button v-else @click="sendFrey(mint.tokenId, mint.sendToAddress)" class="w-full my-2 mx-auto xya-btn">Send {{ mint.name }} Away!
             </button>
           </div>
+        </div>
         </div>
       </div>
 

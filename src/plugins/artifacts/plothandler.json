@@ -1,0 +1,1153 @@
+{
+  "address": "0x465ed0B4A3e9e730E466366cF62c176652D4DC4A",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_xya",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_freyalaAddr",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_yinAddr",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_yangAddr",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        }
+      ],
+      "name": "AddressNotWhitelistedForAttributes",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        }
+      ],
+      "name": "AddressNotWhitelistedForWithdraw",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "attribute",
+          "type": "uint8"
+        }
+      ],
+      "name": "AttributeAlreadyMaxLevel",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "attribute",
+          "type": "uint8"
+        }
+      ],
+      "name": "AttributeAlreadyMinLevel",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "attribType",
+          "type": "uint8"
+        }
+      ],
+      "name": "AttributeTypeIsNotLegal",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        }
+      ],
+      "name": "CallerDoesNotOwnThePlot",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "attribute",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentLevel",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "specifiedLevel",
+          "type": "uint256"
+        }
+      ],
+      "name": "CurrentLevelDidNotMatch",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlotAlreadyRegistered",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "requiredFunds",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentFunds",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlotDoesNotHaveEnoughFunds",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "utilityCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlotIsBeingUtilised",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlotNotRegisterd",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        }
+      ],
+      "name": "PlotTypeIsNotLegal",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "AddressAddedToWhitelist",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "AddressRemovedFromWhitelist",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountAdded",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "totalAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "FundsAddedToPlot",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountWithdrawn",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "totalAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "FundsWithdrawnFromPlot",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "downgradedTrait",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "traitLevel",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "costOfNextUpgrade",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "completedUpgrades",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlotDowngraded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "importedBy",
+          "type": "address"
+        }
+      ],
+      "name": "PlotRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "costOfNextUpgrade",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "completedUpgrades",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlotReset",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "plotType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "plotId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "upgradedTrait",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "traitLevel",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "costOfNextUpgrade",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "completedUpgrades",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlotUpgraded",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "balance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositToPlot",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_attribute",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_currentLevel",
+          "type": "uint256"
+        }
+      ],
+      "name": "downgradePlot",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        }
+      ],
+      "name": "getAllRegisteredPlots",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCurrentPlotOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCurrentResetCost",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCurrentUpgradeCost",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPlotAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_attribute",
+          "type": "string"
+        }
+      ],
+      "name": "getPlotAttribute",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPlotBaseData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPlotData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_plotIds",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "getPlotDataMultiple",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "getTokensOwnedByOwner",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        }
+      ],
+      "name": "getTotalSupplyOfPlots",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "isAddressWhitelisted",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "isPlotRegistered",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_fromId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_toId",
+          "type": "uint256"
+        }
+      ],
+      "name": "massRegister",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_newNumber",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerSetPlotNumber",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerPlot",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "registeredPlotCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        }
+      ],
+      "name": "resetPlotToBase",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowed",
+          "type": "bool"
+        }
+      ],
+      "name": "setAddressAllowedToEditAttributes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowed",
+          "type": "bool"
+        }
+      ],
+      "name": "setAddressAllowedToWithdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_attribute",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "_increment",
+          "type": "bool"
+        }
+      ],
+      "name": "setPlotAttribute",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_plotType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_plotId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_attribute",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_currentLevel",
+          "type": "uint256"
+        }
+      ],
+      "name": "upgradePlot",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}
