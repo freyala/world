@@ -1,247 +1,6 @@
 {
     "address": "0x75fA2f21b8d5AE8caB6D76B17092919331CD0B98",
     "abi": [{
-            "inputs": [{
-                "internalType": "address",
-                "name": "_reflectionFeesCollector",
-                "type": "address"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "AuctionAlreadyCreated",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "endedAt",
-                    "type": "uint256"
-                }
-            ],
-            "name": "AuctionAlreadyEnded",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "duration",
-                "type": "uint256"
-            }],
-            "name": "AuctionInvalidDuration",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "endsAt",
-                    "type": "uint256"
-                }
-            ],
-            "name": "AuctionStillInProgress",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "currency",
-                "type": "address"
-            }],
-            "name": "CurrencyAlreadyAdded",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "InvalidAuction",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "bidder",
-                "type": "address"
-            }],
-            "name": "InvalidBidder",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "currency",
-                "type": "address"
-            }],
-            "name": "InvalidCurrency",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            }],
-            "name": "InvalidMarket",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "bid",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "highestBid",
-                    "type": "uint256"
-                }
-            ],
-            "name": "LowBid",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "value",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "price",
-                    "type": "uint256"
-                }
-            ],
-            "name": "LowValue",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            }],
-            "name": "MarketAlreadyCreated",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            }],
-            "name": "MarketInactive",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "NotAvailableForSale",
-            "type": "error"
-        },
-        {
-            "inputs": [],
-            "name": "NotNftOwner",
-            "type": "error"
-        },
-        {
-            "inputs": [],
-            "name": "OnlyReflectionFeeCollector",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "seller",
-                "type": "address"
-            }],
-            "name": "OnlySeller",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "SellOrderAlreadyCreated",
-            "type": "error"
-        },
-        {
             "anonymous": false,
             "inputs": [{
                     "indexed": true,
@@ -329,6 +88,30 @@
                 }
             ],
             "name": "AuctionEnd",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "token",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "tokenId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "initialBid",
+                    "type": "uint256"
+                }
+            ],
+            "name": "AuctionInitialBidUpdated",
             "type": "event"
         },
         {
@@ -442,24 +225,6 @@
                 }
             ],
             "name": "MarketStateChanged",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [{
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "previousOwner",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "newOwner",
-                    "type": "address"
-                }
-            ],
-            "name": "OwnershipTransferred",
             "type": "event"
         },
         {
@@ -603,7 +368,7 @@
         {
             "inputs": [{
                 "internalType": "address",
-                "name": "currency",
+                "name": "curreny",
                 "type": "address"
             }],
             "name": "acceptsCurrency",
@@ -838,7 +603,7 @@
                 },
                 {
                     "internalType": "address",
-                    "name": "currency",
+                    "name": "curency",
                     "type": "address"
                 }
             ],
@@ -1023,48 +788,6 @@
             "type": "function"
         },
         {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "bytes",
-                    "name": "",
-                    "type": "bytes"
-                }
-            ],
-            "name": "onERC721Received",
-            "outputs": [{
-                "internalType": "bytes4",
-                "name": "",
-                "type": "bytes4"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [{
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
             "inputs": [],
             "name": "reflectionFeesCollector",
             "outputs": [{
@@ -1073,13 +796,6 @@
                 "type": "address"
             }],
             "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
@@ -1144,28 +860,6 @@
                 }
             ],
             "name": "setMarketState",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "_reflectionFeesCollector",
-                "type": "address"
-            }],
-            "name": "setReflectionFeesCollector",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }],
-            "name": "transferOwnership",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

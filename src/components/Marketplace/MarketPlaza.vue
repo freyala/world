@@ -1,5 +1,15 @@
 <template>
     <div class='w-full h-full py-4 flex flex-row mt-2'>
+
+        <div v-if='isMarketBusy' class='fixed top-0 bottom-0 right-0 left-0 flex flex-col justify-center items-center'
+            style='background-color: rgba(0,0,0, 0.5); z-index: 9999'>
+            <div class="w-full flex">
+                <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
+                    style="animation: rotation 2s infinite linear;">
+            </div>
+            <h2 class='text-white text-2xl'>Loading...</h2>
+        </div>
+
         <div v-on:click='goBack()' class="absolute top-0 left-0 p-4 cursor-pointer">
             <i class="fas fa-long-arrow-alt-left"></i> Back to markets
         </div>
@@ -117,16 +127,15 @@
                         </div>
                     </div>
                     <div slot='footer' class='market-item-footer p-2 mt-auto flex justify-evenly'>
-                        <button type="button"
-                            class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
+                        <button type="button" class="xya-btn mx-2">
                             Details
                         </button>
                         <button v-if='item.type === CONSTANTS.SALE' v-on:click='buyMarketToken(item)' type="button"
-                            class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
+                            class="xya-btn mx-2">
                             <span>Buy</span>
                         </button>
                         <button v-if='item.type === CONSTANTS.AUCTION' v-on:click='showMakeBidModal(item)' type="button"
-                            class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
+                            class="xya-btn mx-2">
                             <span>Bid</span>
                         </button>
                     </div>
@@ -173,12 +182,10 @@
                         </div>
                     </div>
                     <div slot='footer' class='relative market-item-footer p-2 mt-auto flex justify-evenly'>
-                        <button v-on:click='showCollectionSaleModal(item)'
-                            class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
+                        <button v-on:click='showCollectionSaleModal(item)' class="xya-btn mx-2">
                             Details
                         </button>
-                        <button v-on:click='delistNft(item)'
-                            class="w-full mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-12">
+                        <button v-on:click='delistNft(item)' class="xya-btn mx-2">
                             Cancel
                         </button>
                     </div>
@@ -203,13 +210,11 @@
                         </div>
                     </div>
                     <div slot='footer' class='relative market-item-footer p-2 mt-auto flex justify-evenly'>
-                        <button v-on:click='showCollectionCardModal(item)' type="button"
-                            class="w-6/12 mx-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-9">
+                        <button v-on:click='showCollectionCardModal(item)' type="button" class="xya-btn mx-2">
                             Details
                         </button>
                         <button id='collectionMenuButton' v-bind:data-token-id='item.tokenId'
-                            v-on:click='showCollectionDropwdown' type="button"
-                            class="w-6/12 z-20 mx-2 rounded-lg border bg-transparent hover:text-white hover:border hover:border-primary-alt p-2 min-h-12">
+                            v-on:click='showCollectionDropwdown' type="button" class="xya-btn mx-2">
                             <span class='pointer-events-none'>More</span>
                         </button>
                     </div>
@@ -229,7 +234,7 @@
         </div>
 
         <!--Collection Card Modal-->
-        <MarketModal v-if='bools.collectionCard' v-on:closeModal='bools.collectionCard = false'
+        <MarketModal v-if='bools.collectionCard && collectionSelectedToken' v-on:closeModal='bools.collectionCard = false'
             :item='collectionSelectedToken' :image='getListingImage(collectionSelectedToken.tokenId)'>
             <template slot='header-content'>
 
@@ -268,7 +273,7 @@
         </MarketModal>
 
         <!--My Sale Card Modal-->
-        <MarketModal v-if='bools.collectionSale' v-on:closeModal='bools.collectionSale = false'
+        <MarketModal v-if='bools.collectionSale && collectionSelectedToken' v-on:closeModal='bools.collectionSale = false'
             :item='collectionSelectedToken' :image='getListingImage(collectionSelectedToken.tokenId)'>
             <template slot='header-content'>
 
@@ -299,9 +304,8 @@
                         <h2 v-if='collectionSelectedToken.order.highestBidder'
                             class='text-white opacity-50 text-sm mx-3'>{{collectionSelectedToken.order.highestBidder}}
                         </h2>
-                        <button v-if='collectionSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft(item)'
-                            type="button"
-                            class="w-4/12 ml-auto mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                        <button v-if='collectionSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft(collectionSelectedToken)'
+                            type="button" class="xya-btn ml-auto w-4/12">
                             Cancel
                         </button>
                     </div>
@@ -322,7 +326,7 @@
                             Auction Ended
                         </h2>
                         <button v-on:click='withdrawNft(collectionSelectedToken)' type="button"
-                            class="w-4/12 ml-auto mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                            class="xya-btn ml-auto w-4/12">
                             Withdraw
                         </button>
                     </div>
@@ -351,21 +355,25 @@
                     </h2>
                     <h2 v-else class='text-base mt-2 opacity-75'>Highest Bidder: </h2>
 
+                    <h2 v-if='marketSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
+                        In:
+                    </h2>
+                    <h2 v-else-if='marketSelectedToken.order.highestBidder' class='text-base mt-2 opacity-75'>
+                        Highest Bidder: </h2>
+                    <h2 class='text-base mt-2 opacity-75' v-else>Initial Bid</h2>
+
                     <div class='flex w-full items-center'>
                         <h2 class='text-xl text-white'>
                             {{ marketSelectedToken.currentPrice / (10 ** 18) }}
                             {{ getCurrencyName(marketSelectedToken.currency.id) }}</h2>
-
-                        <button v-if='marketSelectedToken.type === CONSTANTS.AUCTION'
-                            v-on:click='showMakeBidModal(marketSelectedToken)' type="button"
-                            class="w-4/12 ml-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
-                            Bid
+                        <h2 v-if='marketSelectedToken.order.highestBidder' class='text-white opacity-50 text-sm mx-3'>
+                            {{marketSelectedToken.order.highestBidder}}
+                        </h2>
+                        <button v-if='marketSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft(item)'
+                            type="button" class="xya-btn ml-auto w-4/12">
+                            Cancel
                         </button>
                     </div>
-
-                    <h2 v-if='marketSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
-                        In:
-                    </h2>
 
                     <div v-if='marketSelectedToken.type === CONSTANTS.AUCTION && !marketSelectedToken.order.ended'
                         class='mt-auto flex flex-row items-center w-full'>
@@ -383,7 +391,7 @@
         </MarketModal>
 
         <!--Create Sale Modal-->
-        <window v-if='bools.collectionCard' name="create-listing" width='80%' height='auto'>
+        <window v-if='bools.collectionCard && collectionSelectedToken' name="create-listing" width='80%' height='auto'>
             <div class="flex flex-wrap flex-col p-6 bg-dark h-full">
                 <div class='w-full flex'>
                     <div class="w-4/5">
@@ -455,8 +463,7 @@
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                         <button v-on:click="registerFrey()" type="button"
                             class="w-full md:w-10/12 md:text-base text-sm rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
-                            <span v-if='!loaders.nftRegister'>Confirm</span>
-                            <span v-else><i class="fas fa-cog fa-spin"></i></span>
+                            <span>Confirm</span>
                         </button>
                     </div>
                 </div>
@@ -479,8 +486,7 @@
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                         <button v-on:click="sendNft()" type="button"
                             class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
-                            <span v-if='!loaders.nftSend'>Confirm</span>
-                            <span v-else><i class="fas fa-cog fa-spin"></i></span>
+                            <span>Confirm</span>
                         </button>
                     </div>
                 </div>
@@ -495,14 +501,14 @@
                 <div class="w-1/5 text-right">
                     <i @click="$modal.hide('make-bid')" class="fas fa-times cursor-pointer text-xl"></i>
                 </div>
-                <div class='mt-4 md:text-base text-sm opacity-75'>
-                    <p v-if='marketSelectedToken' class='mt-1'>Bid for #{{marketSelectedToken.tokenId}} to: </p>
+                <div class='mt-2 md:text-base text-sm opacity-75'>
+                    <p v-if='marketSelectedToken' class='mt-1'>Bid for #{{marketSelectedToken.tokenId}} : </p>
                 </div>
                 <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
-                    <input class='w-full text-black px-2' type="text" v-model='marketBidAmount' />
+                    <input class='w-full text-black px-2 h-9 rounded-xl' type="text" v-model='marketBidAmount' />
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                         <button v-on:click="bidMarketToken(marketSelectedToken, marketBidAmount)" type="button"
-                            class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                            class="xya-btn mx-2 h-9 flex items-center justify-center">
                             <span v-if='!loaders.nftSend'>Confirm</span>
                             <span v-else><i class="fas fa-cog fa-spin"></i></span>
                         </button>
@@ -635,7 +641,6 @@
             return {
                 marketApproved: false,
                 freyRegistryContract: undefined,
-                marketRegisterContract: undefined,
                 marketTab: 3,
                 marketPage: 0,
                 marketPerPage: 100,
@@ -663,12 +668,16 @@
                     nftCollection: 0
                 },
                 nftTransactionTo: "",
-                nftTransactionFrom: "",
                 loaders: {
+                    tokenAllowance: false,
                     nftSend: false,
                     nftRegister: false,
                     nftList: false,
+                    nftOpen: false,
+                    nftSell: false,
                     nftBid: false,
+                    nftBuy: false,
+                    nftDelist: false,
                     fetchUserNft: false,
                     fetchMarketNft: false
                 },
@@ -683,7 +692,6 @@
                     cardSales: false,
                     cardDetails: false
                 },
-                blockNumber: 0,
                 tokens: [{
                         key: "ONE",
                         value: "0x0000000000000000000000000000000000000000",
@@ -731,26 +739,6 @@
         },
 
         async mounted() {
-            const promise = new Promise(async (resolve, reject) => {
-                const hmyNet = "https://api.s0.b.hmny.io";
-                const body =
-                    '{"jsonrpc":"2.0","method":"hmyv2_blockNumber","params":[],"id":1}';
-
-                const response = await fetch(hmyNet, {
-                    method: "POST",
-                    mode: "cors",
-                    cache: "no-cache",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: body,
-                });
-
-                const data = await response.json();
-                this.blockNumber = data.result;
-                resolve();
-            });
-
             this.marketNftContract = new ethers.Contract(this.market.token, HRC721.abi, this.metaMaskWallet.signer);
             this.freyRegistryContract = new ethers.Contract(FreyRegistry.address, FreyRegistry.abi, this
                 .metaMaskWallet.signer);
@@ -767,13 +755,10 @@
                     this.acceptedTokens.push(this.tokens[i]);
                 }
 
-                this.collectionSaleToken = this.acceptedTokens[0].value;
                 await this.verifyTokens();
-
                 await this.fetchMarketAttributes();
                 await this.initiateMarketSearch();
                 await this.fetchUserNfts();
-
             });
         },
 
@@ -917,35 +902,44 @@
             },
 
             async fetchMarketSales() {
-                const filters = {
-                    attributeFilter: this.generateMarketFilterQuery(),
-                    currency: this.getCurrencyQuery()
-                };
-                const pagination = this.getPaginationInfo();
-                const orderInfo = this.getOrderQuery();
+                try {
+                    const filters = {
+                        attributeFilter: this.generateMarketFilterQuery(),
+                        currency: this.getCurrencyQuery()
+                    };
+                    const pagination = this.getPaginationInfo();
+                    const orderInfo = this.getOrderQuery();
 
-                const result = await this.$http.post(GRAPH_API, {
-                    query: FilterQuery.FetchMarketNfts(this.market.token, filters, pagination, orderInfo)
-                });
+                    const result = await this.$http.post(GRAPH_API, {
+                        query: FilterQuery.FetchMarketNfts(this.market.token, filters, pagination,
+                            orderInfo)
+                    });
 
-                const marketSales = result.data.data.sales;
-                marketSales.forEach(c => c.type = this.CONSTANTS.SALE);
-                const marketAuctions = result.data.data.auctions;
-                marketAuctions.forEach(c => c.type = this.CONSTANTS.AUCTION);
+                    const marketSales = result.data.data.sales;
+                    marketSales.forEach(c => c.type = this.CONSTANTS.SALE);
+                    const marketAuctions = result.data.data.auctions;
+                    marketAuctions.forEach(c => c.type = this.CONSTANTS.AUCTION);
 
-                this.marketTokens = [...marketSales, ...marketAuctions];
-                this.sortCollectionByField(this.marketTokens, this.marketSortBy);
+                    this.marketTokens = [...marketSales, ...marketAuctions];
+                    this.sortCollectionByField(this.marketTokens, this.marketSortBy);
+                } catch (err) {
+
+                }
             },
 
             async fetchMarketAttributes() {
-                const result = await this.$http.post(GRAPH_API, {
-                    query: AttributeQuery.FetchMarketAttributes(this.market.token)
-                });
+                try {
+                    const result = await this.$http.post(GRAPH_API, {
+                        query: AttributeQuery.FetchMarketAttributes(this.market.token)
+                    });
 
-                this.marketAttributes = result.data.data.markets[0].attributes;
+                    this.marketAttributes = result.data.data.markets[0].attributes;
 
-                for (let i = 0; i < this.marketAttributes.length; i++) {
-                    this.marketSelectedFilters.push("");
+                    for (let i = 0; i < this.marketAttributes.length; i++) {
+                        this.marketSelectedFilters.push("");
+                    }
+                } catch (err) {
+
                 }
             },
 
@@ -953,6 +947,8 @@
                 let userSales = this.userSales;
                 try {
                     this.userSales = [];
+                    this.loaders.fetchMarketNft = true;
+
                     await this.fetchMarketSales();
                     await this.applyCollectionFilters();
                     const metamaskAccount = this.metaMaskAccount.toLowerCase();
@@ -963,36 +959,41 @@
                         .type === this.CONSTANTS.AUCTION);
                     this.marketTokens = this.marketTokens.filter(c => c.order.seller.id !== metamaskAccount);
 
+                    this.loaders.fetchMarketNft = false;
                     this.userSales = [...userSales, ...userAuctions];
                 } catch (err) {
-                    console.error(err);
+                    this.loaders.fetchMarketNft = false;
                     this.userSales = userSales;
                 }
             },
 
             async verifyTokens() {
-                for (let i = 0; i < this.acceptedTokens.length; i++) {
-                    const balance = await this.contract.getBalance(this.metaMaskAccount, this
-                        .acceptedTokens[i].value) / (10 ** 18);
-                    this.acceptedTokens[i].balance = balance > 0 ? balance.toFixed(2) : 0;
+                try {
+                    for (let i = 0; i < this.acceptedTokens.length; i++) {
+                        const balance = await this.contract.getBalance(this.metaMaskAccount, this
+                            .acceptedTokens[i].value) / (10 ** 18);
+                        this.acceptedTokens[i].balance = balance > 0 ? balance.toFixed(2) : 0;
 
-                    const nftBalance = await this.freyRegistryContract.getTotalRegisteredByCurrency(this
-                        .acceptedTokens[0].value);
-                    this.acceptedTokens[i].nftBalance = nftBalance > 0 ? (fromExponential(nftBalance / (10 **
-                        18))) : 0;
+                        const nftBalance = await this.freyRegistryContract.getTotalRegisteredByCurrency(this
+                            .acceptedTokens[0].value);
+                        this.acceptedTokens[i].nftBalance = nftBalance > 0 ? (fromExponential(nftBalance / (10 **
+                            18))) : 0;
 
-                    if (this.acceptedTokens[i].value === ONE_TOKEN) continue;
+                        if (this.acceptedTokens[i].value === ONE_TOKEN) continue;
 
-                    let tempContract = new ethers.Contract(this.acceptedTokens[i].value, HRC20.abi, this
-                        .metaMaskWallet.signer);
-                    const allowance = await tempContract.allowance(this.metaMaskAccount, this.contract.address);
-                    const etherAllowance = ethers.utils.formatEther(
-                        allowance._isBigNumber ?
-                        ethers.BigNumber.from(allowance).toString() :
-                        allowance
-                    );
+                        let tempContract = new ethers.Contract(this.acceptedTokens[i].value, HRC20.abi, this
+                            .metaMaskWallet.signer);
+                        const allowance = await tempContract.allowance(this.metaMaskAccount, this.contract.address);
+                        const etherAllowance = ethers.utils.formatEther(
+                            allowance._isBigNumber ?
+                            ethers.BigNumber.from(allowance).toString() :
+                            allowance
+                        );
 
-                    this.acceptedTokens[i].approved = etherAllowance > 0;
+                        this.acceptedTokens[i].approved = etherAllowance > 0;
+                    }
+                } catch {
+
                 }
             },
 
@@ -1005,17 +1006,18 @@
                 }
                 try {
                     const arg = fromExponential(actual);
-
                     let tempContract = new ethers.Contract(token.value, HRC20.abi, this
                         .metaMaskWallet.signer);
                     const tx = await tempContract.approve(
                         this.contract.address,
                         arg
                     );
+                    this.loaders.tokenAllowance = true;
                     await tx.wait(1);
                     token.approved = true;
+                    this.loaders.tokenAllowance = false;
                 } catch (err) {
-                    console.error(err);
+                    this.loaders.tokenAllowance = false;
                 }
             },
 
@@ -1024,9 +1026,8 @@
                 const id = this.collectionSelectedToken.tokenId;
 
                 try {
-                    this.loaders.nftSend = true;
-
                     const tx = await this.marketNftContract.transferFrom(this.metaMaskAccount, address, id);
+                    this.loaders.nftSend = true;
                     await tx.wait(1);
 
                     this.loaders.nftSend = false;
@@ -1061,9 +1062,12 @@
                                 gasLimit: 3000000,
                             });
                     }
+                    this.loaders.nftRegister = true;
                     await tx.wait(1);
                     this.$modal.hide('pick-currency');
+                    this.loaders.nftRegister = false;
                 } catch (err) {
+                    this.loaders.nftRegister = false;
                     this.$modal.hide('pick-currency');
                 }
             },
@@ -1088,8 +1092,15 @@
                         gasLimit: 1000000,
                         value: priceValue
                     });
+                    this.loaders.nftBuy = true;
+
                     await tx.wait(1);
+                    await this.fetchUserNfts();
+                    this.marketTokens = this.marketTokens.filter(c => c.tokenId !== token.tokenId);
+
+                    this.loaders.nftBuy = false;
                 } catch (err) {
+                    this.loaders.nftBuy = false;
                     console.error(err);
                 }
             },
@@ -1109,16 +1120,20 @@
                     if (!acceptedCurrency) throw "Currency not supported";
                     if (!acceptedCurrency.approved) throw `${acceptedCurrency.key} is not approved.`;
 
-                    const tx = await this.contract.bid(tokenAddress, tokenId, "" + priceValue, {
+                    const tx = await this.contract.bid(tokenAddress, tokenId, "" + price, {
                         gasPrice: 100000000000,
                         gasLimit: 2000000,
                         value: priceValue
                     });
+                    
+                    this.loaders.nftBid = true;
                     await tx.wait(1);
                     token.currentPrice = priceValue;
                     token.order.highestBidder = this.metaMaskAccount.toLowerCase();
+                    this.loaders.nftBid = false;
                     this.$modal.close('make-bid');
                 } catch (err) {
+                    this.loaders.nftBid = false;
                     this.$modal.close('make-bid');
                 }
             },
@@ -1135,16 +1150,22 @@
                         await this.setMarketApproval(true);
                     }
                     const now = Date.now();
-                    const auctionDuration = duration * 3600;
+                    const auctionDuration = duration * 60;
                     const tx = isAuction ? await this.contract.createAuction(token, tokenId, currency, amount,
                             auctionDuration) :
                         await this.contract.sell(token, tokenId, currency, amount);
+                    
+                    this.loaders.nftList = true;
                     await tx.wait(1)
 
                     await this.fetchUserNfts();
+                    await this.initiateMarketSearch();
+
+                    this.loaders.nftList = false;
                     this.$modal.show("create-listing");
                     this.bools.collectionCard = false;
                 } catch (err) {
+                    this.loaders.nftList = false;
                     console.error(err);
                 }
             },
@@ -1154,17 +1175,24 @@
 
                 try {
                     let tx = undefined;
-                    if(token.type === this.CONSTANTS.AUCTION){
+                    if (token.type === this.CONSTANTS.AUCTION) {
                         tx = await this.contract.endAuction(tokenAddress, tokenId);
-                    }
-                    else{
+                    } else {
                         tx = await this.contract.cancelSell(tokenAddress, tokenId);
                     }
+
+                    this.loaders.nftDelist = true;
                     await tx.wait(1);
+                    this.collectionSelectedToken = undefined;
+                    this.bools.showCollectionCardModal = false;
 
                     await this.fetchUserNfts();
-                    this.collectionSale = false;
-                } catch (err) {}
+                    this.loaders.nftDelist = false;
+                    this.userSales = this.userSales.filter(c => c.tokenId !== token.tokenId);
+                    this.bools.collectionSale = false;
+                } catch (err) {
+                    this.loaders.nftDelist = false;
+                }
             },
 
             async withdraw(token) {
@@ -1285,6 +1313,12 @@
         computed: {
             ...mapGetters(["metaMaskAccount", "metaMaskWallet"]),
 
+            isMarketBusy() {
+                for (const [key, value] of Object.entries(this.loaders)) {
+                    if (value === true) return true;
+                }
+                return false;
+            }
         }
     }
 </script>

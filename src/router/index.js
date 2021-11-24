@@ -11,7 +11,7 @@ import Blackjack from "../pages/Casino/Blackjack/Index";
 import Casino from "../pages/Casino/Index";
 
 import Harmons from "../pages/Harmons/Index";
-import Marketplace from "../pages/Marketplace";
+import Marketplace from "../pages/Marketplace/Marketplace";
 
 import FreyNFT from "../pages/Frey/Home";
 import FreyCollection from "../pages/Frey/Collection";
@@ -29,98 +29,8 @@ import Plots from "../pages/Plots";
 Vue.use(Router)
 
 export default new Router({
-
     mode: 'hash',
     routes: [{
-            path: '/',
-            name: 'marketplace',
-            component: Marketplace
-        },
-        {
-            path: '/',
-            name: 'world-map',
-            component: WorldMap
-        },
-        {
-            path: '/login',
-            name: 'login',
-            component: Login
-        },
-        {
-            path: '/casino/coinflip',
-            name: 'coinflip',
-            component: Coinflip
-        },
-        {
-            path: '/casino/roulette/low',
-            name: 'roulette-low',
-            component: RouletteLow
-        },
-        {
-            path: '/casino/roulette/medium',
-            name: 'roulette-medium',
-            component: RouletteMedium
-        },
-        {
-            path: '/casino/roulette/high',
-            name: 'roulette-high',
-            component: RouletteHigh
-        },
-        {
-            path: '/casino/slots',
-            name: 'slots',
-            component: Slots
-        },
-        {
-            path: '/casino/blackjack',
-            name: 'blackjack',
-            component: Blackjack
-        },
-        {
-            path: '/casino',
-            name: 'casino',
-            component: Casino
-        },
-        {
-            path: '/sneak-peek',
-            name: 'sneak-peek',
-            component: Harmons
-        },
-        {
-            path: '/delegating',
-            name: 'delegating',
-            component: Delegating
-        },
-        {
-            path: '/faucet',
-            name: 'faucet',
-            component: Faucet
-        },
-        {
-            path: '/governance',
-            name: 'governance',
-            component: Governance
-        },
-        {
-            path: '/jenny-mines',
-            name: 'jennymines',
-            component: JennyMines
-        },
-        {
-            path: '/staking',
-            name: 'staking',
-            component: Staking
-        },
-        {
-            path: '/plots/:neighbourhood',
-            name: 'plots',
-            component: Plots
-        },
-        {
-            path: '*',
-            redirect: '/'
-        },
-        {
             path: '/',
             name: 'world-map',
             component: WorldMap
