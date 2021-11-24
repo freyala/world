@@ -12,28 +12,13 @@ export const ApplyMarketFilters = (filter) => {
     `;
 };
 
-export const FetchMarketSales = (marketToken) => {
+export const FetchPendingNfts = (market, user) => {
     return `
     {
-      sellOrders(where: {market: "${marketToken}"}) {
-        seller {
-          id
-        }
-        price
-        timestamp
-        currency {
-          id
-        }
-        nft {
-          token
-          tokenId,
-          attributes{
-            key,
-            value
-          }
-        }
+      nfts(where: {market: "${market}", currentOwner: "${user}", currentOwner_not: null}){
+        tokenId
       }
-    }    
+    } 
     `;
 };
 

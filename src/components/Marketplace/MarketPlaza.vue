@@ -77,7 +77,7 @@
                         <option value="tokenId-desc">ID descending</option>
                     </select>
                 </div>
-                <div class='w-auto flex ml-5 items-center cursor-pointer' v-on:click='$modal.show("user-profile")'>
+                <div class='w-auto flex ml-5 items-center cursor-pointer' v-on:click='showUserProfileModal()'>
                     <span><i class="fas fa-user text-xl hover:text-white"></i></span>
                 </div>
                 <div class='w-auto flex ml-5 items-center cursor-pointer' v-on:click='$modal.show("allowances")'>
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                     <div slot='footer' class='market-item-footer p-2 mt-auto flex justify-evenly'>
-                        <button type="button" class="xya-btn mx-2">
+                        <button v-on:click='showCollectionSaleModal(item)' type="button" class="xya-btn mx-2">
                             Details
                         </button>
                         <button v-if='item.type === CONSTANTS.SALE' v-on:click='buyMarketToken(item)' type="button"
@@ -186,7 +186,8 @@
                             Details
                         </button>
                         <button v-on:click='delistNft(item)' class="xya-btn mx-2">
-                            Cancel
+                            <span v-if='item.type === CONSTANTS.SALE'>Cancel</span>
+                            <span v-else>END</span>
                         </button>
                     </div>
                 </MarketPlazaItem>
@@ -214,7 +215,7 @@
                             Details
                         </button>
                         <button id='collectionMenuButton' v-bind:data-token-id='item.tokenId'
-                            v-on:click='showCollectionDropwdown' type="button" class="xya-btn mx-2">
+                            v-on:click='showCollectionDropdown' type="button" class="xya-btn mx-2">
                             <span class='pointer-events-none'>More</span>
                         </button>
                     </div>
@@ -234,8 +235,9 @@
         </div>
 
         <!--Collection Card Modal-->
-        <MarketModal v-if='bools.collectionCard && collectionSelectedToken' v-on:closeModal='bools.collectionCard = false'
-            :item='collectionSelectedToken' :image='getListingImage(collectionSelectedToken.tokenId)'>
+        <MarketModal v-if='bools.collectionCard && collectionSelectedToken'
+            v-on:closeModal='bools.collectionCard = false' :item='collectionSelectedToken'
+            :image='getListingImage(collectionSelectedToken.tokenId)'>
             <template slot='header-content'>
 
                 <div class='w-full h-3/6'>
@@ -256,7 +258,7 @@
                         <span title='Collect' class='cursor-pointer ml-2 hover:text-white'><i
                                 class="fas fa-percent"></i></span>
                     </div>
-                    <h2 class='text-base text-white opacity-50'>Owned by: You</h2>
+                    <h2 class='text-base text-white opacity-50'>Frey Fees: </h2>
                 </div>
                 <div class='w-full flex flex-col rounded-xl h-3/6'>
                     <h2 class='text-xl'>List item for sale</h2>
@@ -273,11 +275,12 @@
         </MarketModal>
 
         <!--My Sale Card Modal-->
-        <MarketModal v-if='bools.collectionSale && collectionSelectedToken' v-on:closeModal='bools.collectionSale = false'
-            :item='collectionSelectedToken' :image='getListingImage(collectionSelectedToken.tokenId)'>
+        <MarketModal v-if='bools.collectionSale && collectionSelectedToken'
+            v-on:closeModal='bools.collectionSale = false' :item='collectionSelectedToken'
+            :image='getListingImage(collectionSelectedToken.tokenId)'>
             <template slot='header-content'>
 
-                <div class='w-full h-3/6'>
+                <div class='w-full h-2/6'>
                     <div class='w-full flex h-8'>
                         <h2 class='text-xl opacity-75'>{{ market.collectionName }}</h2>
                         <i v-on:click='bools.collectionSale = false'
@@ -289,31 +292,29 @@
                     </div>
                     <h2 class='text-base text-white opacity-50'>Owned by: You</h2>
                 </div>
-                <div class='w-full flex flex-col rounded-xl h-3/6'>
-                    <h2 class='text-xl'>Manage item</h2>
-                    <h2 v-if='collectionSelectedToken.type === CONSTANTS.SALE' class='text-base mt-2 opacity-75'>Price
+                <div class='w-full flex flex-col rounded-xl h-4/6'>
+                    <h2 class='text-xl mt-auto'>Manage item</h2>
+                    <h2 v-if='collectionSelectedToken.type === CONSTANTS.SALE' class='text-base mt-3 opacity-75'>Price
                     </h2>
-                    <h2 v-else-if='collectionSelectedToken.order.highestBidder' class='text-base mt-2 opacity-75'>
-                        Highest Bidder: </h2>
+                    <h2 v-else-if='collectionSelectedToken.order.highestBidder' class='text-base mt-3 opacity-75'>
+                        Highest Bidder: <span
+                            class='text-sm text-white opacity-75'>{{collectionSelectedToken.order.highestBidder}}</span>
+                    </h2>
                     <h2 class='text-base mt-2 opacity-75' v-else>Initial Bid</h2>
 
                     <div class='flex w-full items-center'>
-                        <h2 class='text-xl text-white'>
+                        <h2 class='text-xl mt-2 text-white'>
                             {{ collectionSelectedToken.currentPrice / (10 ** 18) }}
                             {{ getCurrencyName(collectionSelectedToken.currency.id) }}</h2>
-                        <h2 v-if='collectionSelectedToken.order.highestBidder'
-                            class='text-white opacity-50 text-sm mx-3'>{{collectionSelectedToken.order.highestBidder}}
-                        </h2>
-                        <button v-if='collectionSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft(collectionSelectedToken)'
-                            type="button" class="xya-btn ml-auto w-4/12">
+                        <button v-if='collectionSelectedToken.type === CONSTANTS.SALE'
+                            v-on:click='delistNft(collectionSelectedToken)' type="button"
+                            class="xya-btn ml-auto h-12 w-4/12">
                             Cancel
                         </button>
                     </div>
-
                     <h2 v-if='collectionSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
                         In:
                     </h2>
-
                     <div v-if='collectionSelectedToken.type === CONSTANTS.AUCTION && !collectionSelectedToken.order.ended'
                         class='mt-auto flex flex-row items-center w-full'>
                         <h2 class='text-xl text-white'>
@@ -321,13 +322,13 @@
                         </h2>
                     </div>
                     <div v-else-if='collectionSelectedToken.type === CONSTANTS.AUCTION'
-                        class='mt-auto flex flex-row items-center w-full'>
-                        <h2 class='text-xl text-white'>
+                        class='flex flex-row items-start w-full'>
+                        <h2 class='text-xl mt-2 text-white'>
                             Auction Ended
                         </h2>
-                        <button v-on:click='withdrawNft(collectionSelectedToken)' type="button"
-                            class="xya-btn ml-auto w-4/12">
-                            Withdraw
+                        <button v-on:click='delistNft(collectionSelectedToken)' type="button"
+                            class="xya-btn ml-auto h-12 w-4/12">
+                            End Auction
                         </button>
                     </div>
                 </div>
@@ -339,7 +340,7 @@
         <MarketModal v-if='bools.marketCard' v-on:closeModal='bools.marketCard = false' :item='marketSelectedToken'
             :image='getListingImage(marketSelectedToken.tokenId)'>
             <template slot='header-content'>
-                <div class='w-full h-3/6'>
+                <div class='w-full h-2/6'>
                     <div class='w-full flex h-8'>
                         <h2 class='text-xl opacity-75'>{{ market.collectionName }}</h2>
                         <i v-on:click='bools.marketCard = false'
@@ -349,18 +350,14 @@
                         #{{ marketSelectedToken.tokenId }}</h2>
                     <h2 class='text-base text-white opacity-50'>Owned by: {{ marketSelectedToken.order.seller.id }}</h2>
                 </div>
-                <div class='w-full flex flex-col rounded-xl h-3/6'>
-                    <h2 class='text-xl'>Manage item</h2>
+                <div class='w-full h-4/6 flex flex-col rounded-xl mt-auto'>
+                    <h2 class='mt-auto text-xl'>Manage item</h2>
                     <h2 v-if='marketSelectedToken.type === CONSTANTS.SALE' class='text-base mt-2 opacity-75'>Price
-                    </h2>
-                    <h2 v-else class='text-base mt-2 opacity-75'>Highest Bidder: </h2>
-
-                    <h2 v-if='marketSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
-                        In:
                     </h2>
                     <h2 v-else-if='marketSelectedToken.order.highestBidder' class='text-base mt-2 opacity-75'>
                         Highest Bidder: </h2>
-                    <h2 class='text-base mt-2 opacity-75' v-else>Initial Bid</h2>
+                    <h2 class='text-base mt-2 opacity-75' v-else>Initial
+                        Bid</h2>
 
                     <div class='flex w-full items-center'>
                         <h2 class='text-xl text-white'>
@@ -369,11 +366,21 @@
                         <h2 v-if='marketSelectedToken.order.highestBidder' class='text-white opacity-50 text-sm mx-3'>
                             {{marketSelectedToken.order.highestBidder}}
                         </h2>
-                        <button v-if='marketSelectedToken.type === CONSTANTS.SALE' v-on:click='delistNft(item)'
-                            type="button" class="xya-btn ml-auto w-4/12">
-                            Cancel
+                        <button v-if='marketSelectedToken.type === CONSTANTS.SALE'
+                            v-on:click='buyMarketToken(marketSelectedToken)' type="button"
+                            class="xya-btn ml-auto w-4/12 mx-2">
+                            <span>Buy</span>
+                        </button>
+                        <button v-if='marketSelectedToken.type === CONSTANTS.AUCTION'
+                            v-on:click='showMakeBidModal(marketSelectedToken)' type="button"
+                            class="xya-btn ml-auto w-4/12 mx-2">
+                            <span>Bid</span>
                         </button>
                     </div>
+
+                    <h2 v-if='marketSelectedToken.type === CONSTANTS.AUCTION' class='text-base mt-2 opacity-75'>Ends
+                        In:
+                    </h2>
 
                     <div v-if='marketSelectedToken.type === CONSTANTS.AUCTION && !marketSelectedToken.order.ended'
                         class='mt-auto flex flex-row items-center w-full'>
@@ -381,7 +388,8 @@
                             {{ getAuctionEndDate(marketSelectedToken) }}
                         </h2>
                     </div>
-                    <div v-else class='mt-auto flex flex-row items-center w-full'>
+                    <div v-else-if='marketSelectedToken.type === CONSTANTS.AUCTION'
+                        class='mt-4 flex flex-row items-center w-full'>
                         <h2 class='text-xl text-white'>
                             Auction Ended
                         </h2>
@@ -435,7 +443,7 @@
                         class="w-4/12 mx-6 mt-auto rounded-lg hover:border hover:border-primary-alt bg-transparent hover:text-white">
                         Cancel
                     </button>
-                    <button v-on:click="listNft(collectionSaleType === CONSTANTS.AUCTION)"
+                    <button v-on:click="listNft(collectionSelectedToken)"
                         class="w-4/12 mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
                         Confirm
                     </button>
@@ -461,7 +469,7 @@
                             {{ token.key }}</option>
                     </select>
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
-                        <button v-on:click="registerFrey()" type="button"
+                        <button v-on:click="registerFrey(collectionSaleToken.tokenId)" type="button"
                             class="w-full md:w-10/12 md:text-base text-sm rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                             <span>Confirm</span>
                         </button>
@@ -484,7 +492,7 @@
                 <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
                     <input class='w-full text-black px-2' type="text" v-model='nftTransactionTo' />
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
-                        <button v-on:click="sendNft()" type="button"
+                        <button v-on:click="sendNft(collectionSelectedToken)" type="button"
                             class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                             <span>Confirm</span>
                         </button>
@@ -554,7 +562,7 @@
         </window>
 
         <window height='auto' width='80%' name='user-profile'>
-            <div class="flex flex-wrap p-6 bg-dark h-full">
+            <div :key='keys.feeBalance' class="flex flex-wrap p-6 bg-dark h-full">
                 <div class="w-4/5">
                     <div class="text-2xl">User Profile</div>
                 </div>
@@ -575,20 +583,33 @@
                     </div>
                 </div>
 
-                <div class="mt-4 flex flex-col w-full items-start justify-start">
+                <div v-if='isFreyMarket' class="mt-4 flex flex-col w-full items-start justify-start">
                     <div class="w-4/5">
                         <h2 class="text-xl my-2 opacity-75">Frey Reflection Fee</h2>
                     </div>
                     <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
                         <p class='w-2/12'>{{token.key}}</p>
                         <p class='w-2/12 text-white'>{{token.nftBalance}}</p>
+                        <button v-if='index === acceptedTokens.length - 1' v-on:click="withdrawFreyFees(token)" type="button"
+                            class="w-6/12 ml-auto text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                            Collect All
+                        </button>
                     </div>
                 </div>
-                <div class="w-full text-start h-9">
-                    <button v-on:click="withdrawAllNftBalance()" type="button"
-                        class="w-6/12 rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
-                        Collect All
-                    </button>
+
+                <div class="w-4/5 mt-4">
+                    <h2 class="text-xl opacity-75">Claim NFT's</h2>
+                </div>
+                <div class="mt-4 w-full flex flex-wrap">
+                    <h2 v-if='marketPendingTokens.length === 0'>You have no Nft's to claim.</h2>
+                    <div class='flex cursor-pointer justify-evenly mx-4 ' v-for='(token, index) in marketPendingTokens'
+                        :key='index'>
+                        <div class='flex flex-col text-center'>
+                            <img v-on:click='withdrawNft(token.tokenId)' class='rounded-xl' width='64px' height="64px"
+                                v-bind:src='getListingImage(token.tokenId)' />
+                            <h2>#{{token.tokenId}}</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
         </window>
@@ -640,6 +661,7 @@
         data() {
             return {
                 marketApproved: false,
+                isFreyMarket: false,
                 freyRegistryContract: undefined,
                 marketTab: 3,
                 marketPage: 0,
@@ -652,6 +674,7 @@
                 marketAuctions: [],
                 marketTokens: [],
                 marketBidAmount: 0,
+                marketPendingTokens: [],
                 initialUserTokens: [],
                 userTokens: [],
                 userSales: [],
@@ -665,7 +688,8 @@
                 collectionSaleType: 0,
                 keys: {
                     filters: 0,
-                    nftCollection: 0
+                    nftCollection: 0,
+                    feeBalance: 0
                 },
                 nftTransactionTo: "",
                 loaders: {
@@ -742,6 +766,7 @@
             this.marketNftContract = new ethers.Contract(this.market.token, HRC721.abi, this.metaMaskWallet.signer);
             this.freyRegistryContract = new ethers.Contract(FreyRegistry.address, FreyRegistry.abi, this
                 .metaMaskWallet.signer);
+            this.isFreyMarket = this.market.token === "0x3c8a8a7b7d0fea5078fb37c69e42b85d8fc6a063";
 
             this.$nextTick(async () => {
                 this.marketApproved = await this.marketNftContract.isApprovedForAll(this
@@ -759,6 +784,11 @@
                 await this.fetchMarketAttributes();
                 await this.initiateMarketSearch();
                 await this.fetchUserNfts();
+                await this.fetchPendingNfts();
+
+                if (this.isFreyMarket) {
+                    await this.getFreyFees();
+                }
             });
         },
 
@@ -768,8 +798,22 @@
             },
 
             async showCollectionCardModal(item) {
+                if (this.isFreyMarket) {
+                    const isRegistered = await this.freyRegistryContract.isRegistered(item.tokenId);
+                    const freyFees = await this.freyRegistryContract.getFreyFees(item.tokenId);
+                }
+
                 this.collectionSelectedToken = item;
                 this.bools.collectionCard = true;
+            },
+
+            async showUserProfileModal() {
+                await this.verifyTokens();
+                await this.fetchPendingNfts();
+                if (this.isFreyMarket) {
+                    await this.getFreyFees();
+                }
+                this.$modal.show("user-profile")
             },
 
             showCollectionSaleModal(item) {
@@ -853,11 +897,14 @@
                 const order = item.order;
                 if (order.ended) return "ENDED";
 
-                const endsAt = Date(order.endsAt * 1000);
                 const dateNow = Date.now();
-                const endDate = order.endsAt - dateNow;
+                const endDate = order.endsAt * 1000 - dateNow;
 
-                console.log(order.endsAt);
+                let minutes = endDate / 1000 / 60;
+                let hours = minutes / 60;
+                let days = hours / 24;
+
+                console.log(days, " , ", hours, " , ", minutes);
 
                 return Date(endDate);
             },
@@ -909,19 +956,38 @@
                     };
                     const pagination = this.getPaginationInfo();
                     const orderInfo = this.getOrderQuery();
-
                     const result = await this.$http.post(GRAPH_API, {
                         query: FilterQuery.FetchMarketNfts(this.market.token, filters, pagination,
                             orderInfo)
                     });
 
+                    const timeStampNow = Date.now();
+
                     const marketSales = result.data.data.sales;
                     marketSales.forEach(c => c.type = this.CONSTANTS.SALE);
                     const marketAuctions = result.data.data.auctions;
-                    marketAuctions.forEach(c => c.type = this.CONSTANTS.AUCTION);
+                    marketAuctions.forEach(c => {
+                        c.type = this.CONSTANTS.AUCTION;
+                        c.order.ended = c.order.endsAt * 1000 - timeStampNow < 0
+                    });
 
                     this.marketTokens = [...marketSales, ...marketAuctions];
+                    this.marketTokens.forEach(c => { c.isBusy = false});
                     this.sortCollectionByField(this.marketTokens, this.marketSortBy);
+                } catch (err) {
+
+                }
+            },
+
+            async fetchPendingNfts() {
+                try {
+                    const result = await this.$http.post(GRAPH_API, {
+                        query: FilterQuery.FetchPendingNfts(this.market.token, this.metaMaskAccount
+                            .toLowerCase())
+                    });
+                    this.marketPendingTokens = result.data.data.nfts;
+
+                    console.log(this.marketPendingTokens);
                 } catch (err) {
 
                 }
@@ -957,7 +1023,8 @@
                         .type === this.CONSTANTS.SALE);
                     const userAuctions = this.marketTokens.filter(c => c.order.seller.id === metamaskAccount && c
                         .type === this.CONSTANTS.AUCTION);
-                    this.marketTokens = this.marketTokens.filter(c => c.order.seller.id !== metamaskAccount);
+                    this.marketTokens = this.marketTokens.filter(c => c.order.seller.id !== metamaskAccount && !(c
+                        .type === this.CONSTANTS.AUCTION && c.order.ended));
 
                     this.loaders.fetchMarketNft = false;
                     this.userSales = [...userSales, ...userAuctions];
@@ -973,11 +1040,7 @@
                         const balance = await this.contract.getBalance(this.metaMaskAccount, this
                             .acceptedTokens[i].value) / (10 ** 18);
                         this.acceptedTokens[i].balance = balance > 0 ? balance.toFixed(2) : 0;
-
-                        const nftBalance = await this.freyRegistryContract.getTotalRegisteredByCurrency(this
-                            .acceptedTokens[0].value);
-                        this.acceptedTokens[i].nftBalance = nftBalance > 0 ? (fromExponential(nftBalance / (10 **
-                            18))) : 0;
+                        this.acceptedTokens[i].nftBalance = 0;
 
                         if (this.acceptedTokens[i].value === ONE_TOKEN) continue;
 
@@ -995,6 +1058,25 @@
                 } catch {
 
                 }
+            },
+
+            async getFreyFees() {
+                const freyIds = [];
+                this.userTokens.forEach(c => freyIds.push(c.tokenId));
+
+                const freyFees = await this.freyRegistryContract.getFreysFees(freyIds);
+
+                freyFees.forEach(freyFee => {
+                    const currency = freyFee[0].toLowerCase();
+                    const fee = 1 * fromExponential(freyFee[1] / (10 ** 18));
+
+                    let acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
+
+                    if (!acceptedCurrency) return;
+                    acceptedCurrency.nftBalance += fee;
+                });
+
+                this.keys.feeBalance++;
             },
 
             async setTokenAllowance(token, amount) {
@@ -1021,29 +1103,33 @@
                 }
             },
 
-            async sendNft() {
+            async sendNft(item) {
+                if(item.isBusy) return;
+                
                 const address = this.nftTransactionTo;
-                const id = this.collectionSelectedToken.tokenId;
+                const id = item.tokenId;
 
                 try {
                     const tx = await this.marketNftContract.transferFrom(this.metaMaskAccount, address, id);
                     this.loaders.nftSend = true;
+                    item.isBusy = true;
                     await tx.wait(1);
 
                     this.loaders.nftSend = false;
                     this.hideSendNftModal();
+                    item.isBusy = false;
                     this.userTokens = this.userTokens.filter(c => c.tokenId !== id);
                 } catch (err) {
                     this.hideSendNftModal();
+                    item.isBusy = false;
                     this.loaders.nftSend = false;
                 }
             },
 
-            async registerFrey() {
-                const item = this.collectionSelectedToken;
+            async registerFrey(freyId) {
                 let isFreyRegistered = true;
                 try {
-                    const fees = await this.freyRegistryContract.getFees(item.tokenId);
+                    const fees = await this.freyRegistryContract.getFees(freyId);
                 } catch (err) {
                     isFreyRegistered = false;
                 }
@@ -1051,12 +1137,12 @@
                 try {
                     let tx = undefined;
                     if (!isFreyRegistered) {
-                        tx = await this.freyRegistryContract.register(item.tokenId, this.collectionSaleToken, {
+                        tx = await this.freyRegistryContract.register(freyId, this.collectionSaleToken, {
                             gasPrice: 100000000000,
                             gasLimit: 3000000,
                         });
                     } else {
-                        tx = await this.freyRegistryContract.switchCurrency(item.tokenId, this
+                        tx = await this.freyRegistryContract.switchCurrency(freyId, this
                             .collectionSaleToken, {
                                 gasPrice: 100000000000,
                                 gasLimit: 3000000,
@@ -1072,16 +1158,16 @@
                 }
             },
 
-            async buyMarketToken(token) {
-                const [tokenAddress, tokenId, price, currency] = [this.market.token, token.tokenId,
-                    token.currentPrice, token.currency.id
+            async buyMarketToken(item) {
+                const [tokenAddress, tokenId, price, currency] = [this.market.token, item.tokenId,
+                    item.currentPrice, item.currency.id
                 ];
                 try {
                     const contractSellOrder = await this.contract.getSellOrder(tokenAddress, tokenId);
 
                     if (!contractSellOrder) throw "Sell order doesn't exist or expired.";
 
-                    const priceValue = token.currency.id === this.acceptedTokens[0].value ? price : 0;
+                    const priceValue = item.currency.id === this.acceptedTokens[0].value ? price : 0;
                     const acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
 
                     if (!acceptedCurrency) throw "Currency not supported";
@@ -1096,7 +1182,7 @@
 
                     await tx.wait(1);
                     await this.fetchUserNfts();
-                    this.marketTokens = this.marketTokens.filter(c => c.tokenId !== token.tokenId);
+                    this.marketTokens = this.marketTokens.filter(c => c.tokenId !== item.tokenId);
 
                     this.loaders.nftBuy = false;
                 } catch (err) {
@@ -1105,8 +1191,8 @@
                 }
             },
 
-            async bidMarketToken(token, amount) {
-                const [tokenAddress, tokenId, currency] = [this.market.token, token.tokenId, token.currency.id];
+            async bidMarketToken(item, amount) {
+                const [tokenAddress, tokenId, currency] = [this.market.token, item.tokenId, item.currency.id];
                 const price = fromExponential(amount * (10 ** 18));
 
                 try {
@@ -1114,7 +1200,7 @@
 
                     if (!contractAuction) throw "Auction order doesn't exist or ended.";
 
-                    const priceValue = token.currency.id === this.acceptedTokens[0].value ? price : 0;
+                    const priceValue = item.currency.id === this.acceptedTokens[0].value ? price : 0;
                     const acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
 
                     if (!acceptedCurrency) throw "Currency not supported";
@@ -1125,20 +1211,22 @@
                         gasLimit: 2000000,
                         value: priceValue
                     });
-                    
+
                     this.loaders.nftBid = true;
                     await tx.wait(1);
-                    token.currentPrice = priceValue;
-                    token.order.highestBidder = this.metaMaskAccount.toLowerCase();
+                    item.currentPrice = priceValue;
+                    item.order.highestBidder = this.metaMaskAccount.toLowerCase();
                     this.loaders.nftBid = false;
-                    this.$modal.close('make-bid');
+                    this.$modal.hide('make-bid');
                 } catch (err) {
                     this.loaders.nftBid = false;
-                    this.$modal.close('make-bid');
+                    this.$modal.hide('make-bid');
                 }
             },
 
-            async listNft(isAuction = false) {
+            async listNft(item) {
+                if(item.isBusy) return;
+
                 const [token, tokenId, currency, amount, duration] = [this.market.token, this
                     .collectionSelectedToken.tokenId,
                     this.collectionSaleToken, "" + fromExponential(this.collectionSaleAmount * (10 ** 18)), this
@@ -1151,47 +1239,51 @@
                     }
                     const now = Date.now();
                     const auctionDuration = duration * 60;
-                    const tx = isAuction ? await this.contract.createAuction(token, tokenId, currency, amount,
+                    const tx = item.type === this.CONSTANTS.AUCTION ? await this.contract.createAuction(token, tokenId, currency, amount,
                             auctionDuration) :
                         await this.contract.sell(token, tokenId, currency, amount);
-                    
-                    this.loaders.nftList = true;
+
+                    item.isBusy = true;
                     await tx.wait(1)
 
+                    item.isBusy = false;
                     await this.fetchUserNfts();
                     await this.initiateMarketSearch();
 
-                    this.loaders.nftList = false;
-                    this.$modal.show("create-listing");
+                    this.$modal.hide("create-listing");
                     this.bools.collectionCard = false;
                 } catch (err) {
-                    this.loaders.nftList = false;
+                    item.isBusy = false;
                     console.error(err);
                 }
             },
 
-            async delistNft(token) {
-                const [tokenAddress, tokenId] = [this.market.token, token.tokenId];
+            async delistNft(item) {
+                if(item.isBusy) return;
+                
+                const [tokenAddress, tokenId] = [this.market.token, item.tokenId];
 
                 try {
                     let tx = undefined;
-                    if (token.type === this.CONSTANTS.AUCTION) {
+                    if (item.type === this.CONSTANTS.AUCTION) {
                         tx = await this.contract.endAuction(tokenAddress, tokenId);
                     } else {
                         tx = await this.contract.cancelSell(tokenAddress, tokenId);
                     }
 
-                    this.loaders.nftDelist = true;
+                    item.isBusy = true;
                     await tx.wait(1);
-                    this.collectionSelectedToken = undefined;
-                    this.bools.showCollectionCardModal = false;
 
                     await this.fetchUserNfts();
                     this.loaders.nftDelist = false;
-                    this.userSales = this.userSales.filter(c => c.tokenId !== token.tokenId);
+                    this.collectionSelectedToken = undefined;
+                    this.bools.showCollectionCardModal = false;
+
+                    item.isBusy = false;
+                    this.userSales = this.userSales.filter(c => c.tokenId !== item.tokenId);
                     this.bools.collectionSale = false;
                 } catch (err) {
-                    this.loaders.nftDelist = false;
+                    item.isBusy = false;
                 }
             },
 
@@ -1205,18 +1297,33 @@
                 }
             },
 
-            async withdrawAllNftBalance() {
+            async withdrawNft(tokenId) {
                 try {
-                    let nftIds = [];
-                    this.userTokens.forEach(c => nftIds.push(c.tokenId));
-
-                    const tx = await this.contract.withdrawReflectionFees(this.acceptedTokens[0].value, {
+                    const tx = await this.contract.withdrawNft(this.market.token, tokenId, {
                         gasPrice: 100000000000,
-                        gasLimit: 2000000,
+                        gasLimit: 1000000,
                     });
-                    this.acceptedTokens.forEach(c => c.nftBalance = 0);
                     await tx.wait(1);
-                } catch (err) {}
+                    this.marketPendingTokens.filter(c => c.tokenId !== tokenId);
+                } catch (err) {
+                    console.error(err);
+                }
+            },
+
+            async withdrawFreyFees(token) {
+                try {
+                    let freyIds = [];
+                    this.userTokens.forEach(c => freyIds.push(c.tokenId));
+
+                    const tx = await this.freyRegistryContract.collectFees(freyIds, {
+                        gasPrice: 100000000000,
+                        gasLimit: 1000000,
+                    });
+                    token.nftBalance = 0;
+                    await tx.wait(1);
+                } catch (err) {
+                    console.error(err);
+                }
             },
 
             async setMarketApproval(approve) {
@@ -1272,7 +1379,7 @@
                 }
             },
 
-            showCollectionDropwdown(event) {
+            showCollectionDropdown(event) {
                 try {
                     const tokenId = event.target.dataset["tokenId"];
                     const selectedCard = this.userTokens.filter(c => c.tokenId == tokenId)[0];

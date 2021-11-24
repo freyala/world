@@ -1,5 +1,5 @@
 {
-    "address": "0x75fA2f21b8d5AE8caB6D76B17092919331CD0B98",
+    "address": "0x9d854de439Ca8D048Daa91468848fF83937045b7",
     "abi": [{
             "anonymous": false,
             "inputs": [{
@@ -860,6 +860,28 @@
                 }
             ],
             "name": "setMarketState",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "token",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "tokenId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "initialBid",
+                    "type": "uint256"
+                }
+            ],
+            "name": "updateAuctionInitialBid",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
