@@ -267,12 +267,10 @@
                 </div>
                 <div class='w-full flex flex-col rounded-xl h-3/6'>
                     <h2 class='text-xl'>List item for sale</h2>
-                    <button v-on:click='showCreateMarketSaleModal()' type="button"
-                        class="w-4/12 mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                    <button v-on:click='showCreateMarketSaleModal()' type="button" class="w-4/12 mt-auto xya-btn">
                         Fixed Price
                     </button>
-                    <button v-on:click='showCreateMarketAuctionModal()' type="button"
-                        class="w-4/12 mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                    <button v-on:click='showCreateMarketAuctionModal()' type="button" class="w-4/12 mt-auto xya-btn">
                         Auction
                     </button>
                 </div>
@@ -321,7 +319,7 @@
                         In:
                     </h2>
                     <div v-if='collectionSelectedToken.type === CONSTANTS.AUCTION && !collectionSelectedToken.order.ended'
-                        class='mt-auto flex flex-row items-center w-full'>
+                        class='mt-2 flex flex-row items-center w-full'>
                         <h2 class='text-xl text-white'>
                             {{ getAuctionEndDate(collectionSelectedToken) }}
                         </h2>
@@ -437,8 +435,18 @@
                 <div v-if='collectionSaleType === CONSTANTS.AUCTION' class="mt-1 mb-4 flex h-12 w-full p-1">
                     <select v-model='collectionSaleDuration'
                         class="w-full border rounded-lg border-yellow py-2 px-4 bg-dark">
-                        <option v-for='index in 7' :key='index' v-bind:value='index'>{{index}} <span
-                                v-if='index === 1'>Day</span><span v-else>Days</span></option>
+                        <option :disabled='index < 5 && collectionSaleDurationType === "minute"'
+                            v-for='index in collectionDurationIntervalLimit' :key='index' v-bind:value='index'>{{index}}
+                            {{collectionSaleDurationType}}<span v-if='index > 1'>s</span>
+                        </option>
+                    </select>
+                    <select v-on:change='getIntervalLimit(collectionSaleDurationType)'
+                        v-model='collectionSaleDurationType'
+                        class="w-6/12 ml-2 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        <option value='minute'> Minute </option>
+                        <option value='hour'> Hour </option>
+                        <option value='day'> Day </option>
+
                     </select>
                 </div>
 
@@ -448,7 +456,7 @@
                         class="w-4/12 mx-6 mt-auto rounded-lg hover:border hover:border-primary-alt bg-transparent hover:text-white">
                         Cancel
                     </button>
-                    <button v-on:click="listNft(collectionSelectedToken)"
+                    <button v-on:click="listNft(collectionSelectedToken, collectionSaleType)"
                         class="w-4/12 mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
                         Confirm
                     </button>
@@ -685,7 +693,9 @@
                 userSales: [],
                 marketSelectedToken: undefined,
                 collectionSaleToken: undefined,
-                collectionSaleDuration: 1,
+                collectionSaleDuration: 5,
+                collectionDurationIntervalLimit: 60,
+                collectionSaleDurationType: 'minute',
                 collectionSelectedToken: undefined,
                 collectionOperations: [],
                 collectionSaleAmount: 0,
@@ -852,7 +862,7 @@
                 this.collectionSaleAmount = 0;
                 this.collectionSaleToken = this.acceptedTokens[0].value;
                 this.collectionSaleDate = 0;
-                this.collectionSaleDuration = 1;
+                this.collectionSaleDuration = 5;
                 this.collectionSaleType = this.CONSTANTS.SALE;
                 this.$modal.show("create-listing");
             },
@@ -861,7 +871,7 @@
                 this.collectionSaleAmount = 0;
                 this.collectionSaleToken = this.acceptedTokens[0].value;
                 this.collectionSaleDate = 0;
-                this.collectionSaleDuration = 1;
+                this.collectionSaleDuration = 5;
                 this.collectionSaleType = this.CONSTANTS.AUCTION;
                 this.$modal.show("create-listing");
             },
@@ -909,20 +919,42 @@
                 return currency.key;
             },
 
+            getIntervalLimit(type) {
+                if (type === 'minute') {
+                    this.collectionSaleDuration = 5;
+                    this.collectionDurationIntervalLimit = 59;
+                } else if (type === 'hour') {
+                    this.collectionSaleDuration = 1;
+                    this.collectionDurationIntervalLimit = 23;
+                } else {
+                    this.collectionSaleDuration = 1;
+                    this.collectionDurationIntervalLimit = 7;
+                }
+
+            },
+
             getAuctionEndDate(item) {
                 const order = item.order;
-                if (order.ended) return "ENDED";
+                if (order.ended) return "Ended";
 
                 const dateNow = Date.now();
                 const endDate = order.endsAt * 1000 - dateNow;
 
-                let minutes = endDate / 1000 / 60;
-                let hours = minutes / 60;
-                let days = hours / 24;
+                const seconds = endDate / 1000;
+                const minutes = parseInt(seconds / 60);
+                const hours = parseInt(seconds / 3600);
+                const days = parseInt(seconds / 3600 / 24);
 
-                console.log(days, " , ", hours, " , ", minutes);
+                if(hours === 0 && days === 0 && minutes === 0) {
+                    item.order.ended = true;
+                    return "Ended";
+                }
+                if(hours === 0 && days === 0 && minutes <= 1) return "Less than 1 minute";
 
-                return Date(endDate);
+                let date = days > 0 ? `${days} day(s), ` : "";
+                date += hours > 0 ? `${hours % 24} hour(s), `: "";
+                date += minutes > 0 ? `${minutes % 60} minute(s) `: "";
+                return date;
             },
 
             getPaginationInfo() {
@@ -948,21 +980,27 @@
             },
 
             async fetchUserNfts() {
-                const nfts = await this.marketNftContract.tokensOfOwner(this.metaMaskAccount);
+                try {
+                    const nfts = await this.marketNftContract.tokensOfOwner(this.metaMaskAccount);
 
-                let ids = await nfts.map(async (frey) => {
-                    return frey._isBigNumber ? ethers.BigNumber.from(frey._hex).toString() : frey._hex
-                });
-
-                await Promise.all(ids)
-                    .then(async (listOfIds) => {
-                        const userNfts = await this.$http.get(
-                            `https://frey.freyala.com/meta/list?items=${listOfIds}`);
-
-                        this.userTokens = userNfts.data;
-                        this.userTokens.forEach(c => c.isBusy = false);
-                        this.initialUserTokens = userNfts.data;
+                    let ids = await nfts.map(async (frey) => {
+                        return frey._isBigNumber ? ethers.BigNumber.from(frey._hex).toString() : frey
+                            ._hex
                     });
+
+                    await Promise.all(ids)
+                        .then(async (listOfIds) => {
+                            const userNfts = await this.$http.get(
+                                `https://frey.freyala.com/meta/list?items=${listOfIds}`);
+
+                            this.userTokens = userNfts.data;
+                            this.userTokens.forEach(c => c.isBusy = false);
+                            this.initialUserTokens = userNfts.data;
+                        });
+                    this.keys.nftCollection++;
+                } catch (err) {
+                    console.error(err);
+                }
             },
 
             async fetchMarketSales() {
@@ -1232,22 +1270,22 @@
 
                     item.isBusy = true;
                     this.keys.marketSales++;
+                    this.$modal.hide('make-bid');
+                    this.bools.marketCard = false;
                     await tx.wait(1);
                     item.currentPrice = priceValue;
                     item.order.highestBidder = this.metaMaskAccount.toLowerCase();
                     item.isBusy = false;
-                    this.$modal.hide('make-bid');
                 } catch (err) {
                     item.isBusy = false;
-                    this.$modal.hide('make-bid');
+                    this.keys.marketSales++;
                 }
             },
 
-            async listNft(item) {
+            async listNft(item, type) {
                 if (item.isBusy) return;
 
-                const [token, tokenId, currency, amount, duration] = [this.market.token, this
-                    .collectionSelectedToken.tokenId,
+                const [token, tokenId, currency, amount, duration] = [this.market.token, item.tokenId,
                     this.collectionSaleToken, "" + fromExponential(this.collectionSaleAmount * (10 ** 18)), this
                     .collectionSaleDuration
                 ];
@@ -1257,8 +1295,9 @@
                         await this.setMarketApproval(true);
                     }
 
-                    const auctionDuration = duration * 60;
-                    const tx = item.type === this.CONSTANTS.AUCTION ? await this.contract.createAuction(token,
+                    const auctionDuration = this.collectionSaleDurationType === 'minute' ? duration * 60 : this
+                        .collectionSaleDurationType === 'hour' ? duration * 3600 : duration * 3600 * 24;
+                    const tx = type === this.CONSTANTS.AUCTION ? await this.contract.createAuction(token,
                             tokenId, currency, amount,
                             auctionDuration) :
                         await this.contract.sell(token, tokenId, currency, amount);
@@ -1271,11 +1310,13 @@
                     await tx.wait(1)
 
                     item.isBusy = false;
-                    await this.fetchUserNfts();
+                    //await this.fetchUserNfts();
+                    this.initialUserTokens = this.initialUserTokens.filter(c => c.tokenId != item.tokenId);
                     await this.initiateMarketSearch();
+                    this.keys.nftCollection++;
                 } catch (err) {
                     item.isBusy = false;
-                    console.error(err);
+                    this.keys.nftCollection++;
                 }
             },
 
@@ -1299,13 +1340,13 @@
                     this.keys.userSales++;
                     await tx.wait(1);
 
-                    await this.fetchUserNfts();
-
+                    //await this.fetchUserNfts();
                     item.isBusy = false;
                     this.userSales = this.userSales.filter(c => c.tokenId !== item.tokenId);
                     this.bools.collectionSale = false;
                 } catch (err) {
                     item.isBusy = false;
+                    this.keys.userSales++;
                 }
             },
 
