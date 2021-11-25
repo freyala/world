@@ -11,21 +11,21 @@
             <h2 class='text-white text-2xl'>Loading...</h2>
         </div>
 
-        <div class="absolute top-0 left-0 flex items-center pt-1 md:px-10 md:py-4 px-8 md:shadow-none shadow-lg cursor-pointer w-full">
-                <div v-on:click='goBack()' class='lg:hidden xl:block hidden '>
-                    <i class="fas fa-long-arrow-alt-left"></i> Back to markets
-                </div>
-                <div class='lg:block xl:hidden block '>
-                    <i class="fas fa-long-arrow-alt-right"></i> Filter
-                </div>
-                <div class='ml-auto block xl:hidden flex ml-5 items-center cursor-pointer'
-                    v-on:click='showUserProfileModal()'>
-                    <span><i class="fas fa-user text-xl hover:text-white"></i></span>
-                </div>
-                <div class='block xl:hidden flex ml-5 items-center cursor-pointer'
-                    v-on:click='$modal.show("allowances")'>
-                    <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
-                </div>
+        <div
+            class="absolute top-0 left-0 flex items-center pt-1 md:px-10 md:py-4 px-8 md:shadow-none shadow-lg cursor-pointer w-full">
+            <div v-on:click='goBack()' class='lg:hidden xl:block hidden '>
+                <i class="fas fa-long-arrow-alt-left"></i> Back to markets
+            </div>
+            <div class='lg:block xl:hidden block cursor-pointer'  v-on:click='bools.responsiveFilters = !bools.responsiveFilters'>
+                <i v-bind:class='{"fa-long-arrow-alt-right": !bools.responsiveFilters, "fa-long-arrow-alt-left": bools.responsiveFilters}' class="fas "></i> Filter
+            </div>
+            <div class='ml-auto block xl:hidden flex ml-5 items-center cursor-pointer'
+                v-on:click='showUserProfileModal()'>
+                <span><i class="fas fa-user text-xl hover:text-white"></i></span>
+            </div>
+            <div class='block xl:hidden flex ml-5 items-center cursor-pointer' v-on:click='$modal.show("allowances")'>
+                <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
+            </div>
         </div>
         <div class='2xl:w-3/12 w-4/12 xl:block hidden h-full 2xl:text-base md:text-sm rounded-lg relative bg-light'
             style='height: calc(60vh - 80px);'>
@@ -56,9 +56,48 @@
                             {{ item }}</option>
                     </select>
                 </div>
-
             </div>
         </div>
+
+
+        <transition name='filters'>
+            <div v-show='bools.responsiveFilters' class='md:left-0 md:right-60 md:bottom-0 md:top-0 left-0 top-0 bottom-0 right-0 xl:hidden absolute top-12 h-full 2xl:text-base md:text-sm rounded-lg bg-light z-50'
+                style='height:calc(100% - 10vw); box-shadow: 12px 0px 6px rgba(0,0,0,0.5)'>
+                <div class='text-center flex flex-col justify-center items-center mt-4 pb-4 shadow-xl'
+                    style='height: 80px;'>
+                    <div class='w-full flex flex-row justify-center text-xl px-6 mb-4'>
+                        <h2>Filter</h2>
+                        <i class="fas fa-times cursor-pointer ml-auto text-xl" v-on:click='bools.responsiveFilters = false'></i>
+                    </div>
+                    <div class='w-9/12 mx-auto flex h-full'>
+                        <button v-on:click='resetMarketFilters()' type="button"
+                            class="w-9/12 mx-2 rounded-lg hover:text-white px-0 py-0 min-h-9">
+                            Reset
+                        </button>
+                        <button v-on:click='initiateMarketSearch()' type="button"
+                            class="w-9/12 mr-2 rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-0 py-0 min-h-9">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+                <div :key='keys.filters' class="text-center overflow-y-auto h-full flex flex-col mt-4 bg-light">
+                    <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
+                        <div class='mb-1'>
+                            {{ attribute.key }}
+                        </div>
+                        <select v-model='marketSelectedFilters[index]'
+                            class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
+                            v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
+                            <option v-bind:value='""'>None</option>
+                            <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values'
+                                :key='itemIndex + 10'>
+                                {{ item }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </transition>
+
         <div class='xl:w-9/12 w-full' style='height: 60vh; overflow-y: auto; overflow-x:hidden'>
             <div class='w-11/12 flex justify-evenly md:flex-row flex-col mx-10 select-none'>
                 <h2 v-on:click='marketTab = CONSTANTS.SALES_TAB'
@@ -107,7 +146,8 @@
             <!-- SALES -->
             <div :key='keys.marketSales' v-show='marketTab === CONSTANTS.SALES_TAB'
                 class='w-full h-full md:mx-6 mx-auto flex xl:justify-start justify-center flex-wrap'>
-                <div class='text-xl md:p-4 p-0 md:w-6/12 w-8/12 opacity-75' v-if='marketTokens.length === 0'>There are no sales.</div>
+                <div class='text-xl md:p-4 p-0 md:w-6/12 w-8/12 opacity-75' v-if='marketTokens.length === 0'>There are
+                    no sales.</div>
                 <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 md:mx-2 mb-6 flex flex-col'
                     v-for='(item, index) in marketTokens' :key='index'>
                     <div v-on:click='showMarketCardModal(item)' class='market-item-header relative' slot='header'>
@@ -213,7 +253,6 @@
                     </div>
                 </MarketPlazaItem>
             </div>
-
 
             <!-- USER COLLECTION -->
             <div class='w-full h-full md:mx-6 mx-auto flex xl:justify-start justify-center flex-wrap'
@@ -325,7 +364,7 @@
                                 #{{ collectionSelectedNFT.tokenId }}</h2>
 
                         </div>
-                                                <h2 class='text-base text-white opacity-50 mt-1 md:my-1'>Owned by: You</h2>
+                        <h2 class='text-base text-white opacity-50 mt-1 md:my-1'>Owned by: You</h2>
                     </div>
                     <div class='w-full flex md:flex-nowrap flex-wrap md:flex-col flex-row rounded-xl md:h-4/6'>
                         <h2 class='text-xl mt-auto hidden md:block'>Manage item</h2>
@@ -601,11 +640,12 @@
                             </button>
                         </div>
                     </div>
-                    <hr class='w-full my-2'/>
+                    <hr class='w-full my-2' />
                     <div class="w-4/5">
                         <h2 class="text-lg md:text-xl my-2">Market Tokens</h2>
                     </div>
-                    <div class='flex w-full items-center flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                    <div class='flex w-full items-center flex-row my-2' v-for='(token, index) in acceptedTokens'
+                        :key='index'>
                         <p class='w-6/12'>{{token.key}}</p>
                         <div v-if='index > 0' class="w-6/12 text-right md:text-center mx-2">
                             <button v-on:click="setTokenAllowance(token, !token.approved ? 999999999 : 0)" type="button"
@@ -631,11 +671,11 @@
                     <div class="w-4/5">
                         <h2 class="md:text-xl text-base my-2 opacity-75">Market Sales</h2>
                     </div>
-                    <div class='flex w-full flex-row items-center my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                    <div class='flex w-full flex-row items-center my-2' v-for='(token, index) in acceptedTokens'
+                        :key='index'>
                         <p class='w-2/12 md:mr-0 mr-2'>{{token.key}}</p>
                         <p class='w-2/12 text-white'>{{token.balance}}</p>
-                        <button v-on:click="withdraw(token)" type="button"
-                            class="w-6/12 ml-auto xya-btn">
+                        <button v-on:click="withdraw(token)" type="button" class="w-6/12 ml-auto xya-btn">
                             Collect
                         </button>
                     </div>
@@ -645,12 +685,12 @@
                     <div class="w-4/5">
                         <h2 class="md:text-xl text-base my-2 opacity-75">Frey Reflection Fee</h2>
                     </div>
-                    <div class='flex w-full items-center flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                    <div class='flex w-full items-center flex-row my-2' v-for='(token, index) in acceptedTokens'
+                        :key='index'>
                         <p class='w-2/12 md:mr-0 mr-2'>{{token.key}}</p>
                         <p class='w-2/12 text-white'>{{token.NFTBalance}}</p>
                         <button v-if='index === acceptedTokens.length - 1' v-on:click="withdrawFreyFees(token)"
-                            type="button"
-                            class="w-6/12 ml-auto xya-btn">
+                            type="button" class="w-6/12 ml-auto xya-btn">
                             Collect
                         </button>
                     </div>
@@ -761,6 +801,7 @@
                     application: true
                 },
                 bools: {
+                    responsiveFilters: false,
                     collectionCard: false,
                     collectionSale: false,
                     collectionMakeSale: false,
@@ -1504,9 +1545,9 @@
                 };
             },
 
-            getAccountStamp(account){
-                if(account === this.metaMaskAccount.toLowerCase()) return 'You';
-                if(!account) return '';
+            getAccountStamp(account) {
+                if (account === this.metaMaskAccount.toLowerCase()) return 'You';
+                if (!account) return '';
                 return "..." + account.slice(account.length - 5);
             },
 
@@ -1673,5 +1714,18 @@
     .market-modal-enter,
     .market-modal-leave-to {
         opacity: 0;
+    }
+
+    .filters-enter-active,
+    .filters-leave-active {
+        opacity: 1;
+        transform: translateX(0px);
+        transition: all 0.25s;
+    }
+
+    .filters-enter,
+    .filters-leave-to {
+        opacity: 0;
+        transform: translateX(-300px);
     }
 </style>
