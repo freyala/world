@@ -1,5 +1,5 @@
 <template>
-    <div class='w-full h-full py-4 flex flex-row mt-2'>
+    <div class='w-full h-full py-4 flex flex-row mt-2' style='max-height: 55vh'>
 
         <div v-if='loaders.application'
             class='fixed top-0 bottom-0 right-0 left-0 flex flex-col justify-center items-center'
@@ -11,10 +11,26 @@
             <h2 class='text-white text-2xl'>Loading...</h2>
         </div>
 
-        <div v-on:click='goBack()' class="absolute top-0 left-0 p-4 cursor-pointer">
-            <i class="fas fa-long-arrow-alt-left"></i> Back to markets
+        <div class="absolute top-0 left-0 p-4 cursor-pointer w-full">
+            <div class='flex justify-start w-full'>
+                <div v-on:click='goBack()' class='lg:hidden xl:block hidden '>
+                    <i class="fas fa-long-arrow-alt-left"></i> Back to markets
+                </div>
+                <div class='lg:block xl:hidden block '>
+                    <i class="fas fa-long-arrow-alt-right"></i> Filter
+                </div>
+                <div class='ml-auto block xl:hidden flex ml-5 items-center cursor-pointer'
+                    v-on:click='showUserProfileModal()'>
+                    <span><i class="fas fa-user text-xl hover:text-white"></i></span>
+                </div>
+                <div class='block xl:hidden flex ml-5 items-center cursor-pointer'
+                    v-on:click='$modal.show("allowances")'>
+                    <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
+                </div>
+            </div>
         </div>
-        <div class='w-3/12 h-full rounded-lg relative bg-light' style='height: calc(60vh - 80px);'>
+        <div class='w-3/12 xl:block hidden h-full 2xl:text-base md:text-sm rounded-lg relative bg-light'
+            style='height: calc(60vh - 80px);'>
             <div class='text-center flex flex-col justify-center items-center mt-4 pb-4 shadow-xl'
                 style='height: 80px;'>
                 <div class='w-full text-center text-xl mb-4'>Filter</div>
@@ -45,30 +61,30 @@
 
             </div>
         </div>
-        <div class='p-4 w-9/12' style='height: 60vh; overflow-y: auto; overflow-x:hidden'>
-            <div class='w-11/12 flex mx-10 flex select-none'>
+        <div class='xl:w-9/12 lg:w-full' style='height: 60vh; overflow-y: auto; overflow-x:hidden'>
+            <div class='w-11/12 flex justify-evenly flex-row mx-10 select-none'>
                 <h2 v-on:click='marketTab = CONSTANTS.SALES_TAB'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.SALES_TAB}'
-                    class='text-2xl mt-1 mr-8 cursor-pointer'>Sales</h2>
+                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer'>Sales</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.USER_TAB'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.USER_TAB}'
-                    class='text-2xl mt-1 mr-8 cursor-pointer'>My Sales
+                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer'>My Sales
                     ({{ userSales.length }})</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.COLLECTION_TAB'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.COLLECTION_TAB}'
-                    class='text-2xl mt-1 mr-8 cursor-pointer'>My Collection
+                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer'>My Collection
                     ({{ userTokens.length }})</h2>
-                <div class='ml-auto mr-4 w-1/12 flex'>
+                <div class='2xl:ml-auto xl:ml-4 lg:ml-2 mxl:r-4 lg:mr-2 w-1/12 flex'>
                     <select v-on:change='initiateMarketSearch()' v-model='marketSelectedCurrency'
-                        class="w-full border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        class="w-full border rounded-lg 2xl:text-base md:text-sm border-yellow py-2 2xl:px-4 xl:px-1 lg:px-0 bg-dark">
                         <option value='All'>All</option>
                         <option v-for='(currency, index) in acceptedTokens' :key='index' v-bind:value='currency.value'>
                             {{currency.key}}</option>
                     </select>
                 </div>
-                <div class='w-3/12 flex'>
+                <div class='2xl:w-3/12 w-2/12 flex'>
                     <select :key='marketSelectedCurrency' v-on:change='initiateMarketSearch()' v-model='marketSortBy'
-                        class="w-full border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        class="w-full border rounded-lg 2xl:text-base md:text-sm border-yellow py-2 xl:px-4 md:px-1 bg-dark">
                         <option v-bind:value='""'>Order By</option>
                         <option v-if='marketSelectedCurrency !== "All"' value="currentPrice-asc">Price ascending
                         </option>
@@ -78,10 +94,12 @@
                         <option value="tokenId-desc">ID descending</option>
                     </select>
                 </div>
-                <div class='w-auto flex ml-5 items-center cursor-pointer' v-on:click='showUserProfileModal()'>
+                <div class='w-auto hidden xl:block flex ml-5 items-center cursor-pointer'
+                    v-on:click='showUserProfileModal()'>
                     <span><i class="fas fa-user text-xl hover:text-white"></i></span>
                 </div>
-                <div class='w-auto flex ml-5 items-center cursor-pointer' v-on:click='$modal.show("allowances")'>
+                <div class='w-auto hidden xl:block flex ml-5 items-center cursor-pointer'
+                    v-on:click='$modal.show("allowances")'>
                     <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
                 </div>
             </div>
@@ -89,9 +107,9 @@
 
             <!-- SALES -->
             <div :key='keys.marketSales' v-show='marketTab === CONSTANTS.SALES_TAB'
-                class='w-full h-full mx-6 market-plaza'>
+               class='w-full h-full mx-6 flex xl:justify-start justify-center flex-wrap'>
                 <div class='text-xl p-4 opacity-75' v-if='marketTokens.length === 0'>There are no sales.</div>
-                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 mx-4 mb-6 flex flex-col'
+                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2  2xl:mx-4 md:mx-2 mb-6 flex flex-col'
                     v-for='(item, index) in marketTokens' :key='index'>
                     <div v-on:click='showMarketCardModal(item)' class='market-item-header relative' slot='header'>
                         <div
@@ -146,9 +164,9 @@
 
             <!-- My Sales -->
             <div :key='keys.userSales' v-show='marketTab === CONSTANTS.USER_TAB'
-                class='w-full h-full mx-6 market-plaza'>
+                class='w-full h-full mx-6 flex xl:justify-start justify-center flex-wrap'>
                 <div class='text-xl p-4 opacity-75' v-if='userSales.length === 0'>You don't have any sales.</div>
-                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 mx-4 mb-6 flex flex-col'
+                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 md:mx-2 mb-6 flex flex-col'
                     v-for='(item, index) in userSales' :key='index'>
                     <div v-on:click='showCollectionSaleModal(item)' class='market-item-header relative' slot='header'>
                         <div style='background-color: #8E2D2D'
@@ -199,19 +217,11 @@
 
 
             <!-- USER COLLECTION -->
-            <div class='w-full h-full mx-6 market-plaza' v-show='marketTab === CONSTANTS.COLLECTION_TAB'>
+            <div class='w-full h-full mx-6 flex xl:justify-start justify-center flex-wrap'
+                v-show='marketTab === CONSTANTS.COLLECTION_TAB'>
                 <div class='text-xl p-4 opacity-75' v-if='userTokens.length === 0'>Your collection is empty.</div>
-                <div class='m-2 mx-4 mb-6 flex flex-col market-item' v-for='(item, index) in userTokens' :key='index'>
-                    <div v-if='item.isBusy' style='background-color: rgba(0,0,0,0.5); z-index: 9999'
-                        class='rounded-xl flex flex-col justify-center items-center absolute top-0 bottom-0 right-0 left-0 '>
-                        <div class='w-16 h-16 opacity-75'>
-                            <img class="w-12 h-12 m-auto" src="/images/XYA.png" alt="XYA logo"
-                                style="animation: rotation 2s infinite linear;">
-                        </div>
-                        <h2 class='text-base mt-4 text-white'>
-                            Processing...
-                        </h2>
-                    </div>
+                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 md:mx-2 mb-6 flex flex-col'
+                    v-for='(item, index) in userTokens' :key='index'>
                     <div v-on:click='showCollectionCardModal(item)' class='market-item-header' slot='header'>
                         <img v-bind:src='getListingImage(item.tokenId)' />
                     </div>
@@ -233,7 +243,7 @@
                             <span class='pointer-events-none'>More</span>
                         </button>
                     </div>
-                </div>
+                </MarketPlazaItem>
             </div>
         </div>
 
@@ -1538,7 +1548,7 @@
     .market-plaza {
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        justify-content: start;
     }
 
     .item-info-enter-active,
@@ -1550,66 +1560,5 @@
     .item-info-enter,
     .item-info-leave-to {
         left: -2000px;
-    }
-
-    .market-item {
-        position: relative;
-        width: 20vw;
-        height: 40vh;
-
-        max-height: 375px;
-        max-width: 250px;
-        box-shadow: 0 5px 10px rgba(#000, .8);
-        transform-origin: center top;
-        transform-style: preserve-3d;
-        transform: translateZ(0);
-        overflow: hidden;
-        transition: .3s;
-        border-radius: 6px;
-        cursor: pointer;
-        box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
-    }
-
-    .market-item-header {
-        width: 100%;
-        height: 62.5%;
-    }
-
-    .market-item:after {
-        position: absolute;
-        content: '';
-        z-index: 1;
-        width: 200%;
-        height: 100%;
-        top: -90%;
-        left: -20px;
-        opacity: .1;
-        transform: rotate(45deg);
-        transition: .3s;
-        background: linear-gradient(to top, transparent, rgb(197, 255, 214) 15%, rgba(255, 255, 255, 0.15));
-        user-select: none;
-        pointer-events: none;
-    }
-
-    .market-item:hover:after {
-        transform: rotate(25deg);
-        top: -40%;
-        opacity: .15;
-    }
-
-    .market-item:hover {
-        box-shadow: 0px 0px 36px rgba(0, 0, 0, 0.55);
-        transform: translateY(-3px) rotateX(5deg);
-    }
-
-    .market-item img {
-        border-radius: 12px;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-    }
-
-    .market-item:hover .caption {
-        transform: none;
     }
 </style>

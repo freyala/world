@@ -61,8 +61,8 @@
 <style>
     .market-item {
         position: relative;
-        width: 20vw;
-        height: 40vh;
+        width: 250px;
+        height: 375px;
 
         max-height: 375px;
         max-width: 250px;
