@@ -103,8 +103,8 @@
         position: fixed;
         top: 15%;
         bottom: 15%;
-        left: 25%;
-        right: 25%;
+        left: 27.5%;
+        right: 27.5%;
     }
 
         @media only screen and (max-width: 1024px){
@@ -112,8 +112,8 @@
             position: fixed;
             top: 15%;
             bottom: 15%;
-            left: 10%;
-            right: 10%;
+            left: 15%;
+            right: 15%;
         }
     }
 
