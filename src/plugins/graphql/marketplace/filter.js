@@ -12,17 +12,18 @@ export const ApplyMarketFilters = (filter) => {
     `;
 };
 
-export const FetchPendingNfts = (market, user) => {
+export const FetchPendingNFTs = (market, user) => {
     return `
     {
       nfts(where: {market: "${market}", currentOwner: "${user}", currentOwner_not: null}){
         tokenId
+        image
       }
     } 
     `;
 };
 
-export const FetchMarketNfts = (marketToken, filters, pagination = undefined, orderInfo = undefined) => {
+export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, orderInfo = undefined) => {
     const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection},`;
 
     const paginationQuery = !pagination ? '' : `first: ${paginationInfo.perPage}, skip: ${paginationInfo.page * paginationInfo.perPage},`;
@@ -36,6 +37,7 @@ export const FetchMarketNfts = (marketToken, filters, pagination = undefined, or
       sales: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${currencyFilter} attributes: ${attributeFilter}, currentSellOrder_not: null}) {
         tokenId,
         currentPrice
+        image
         currency: currentCurrency{
           id
         }
@@ -53,6 +55,7 @@ export const FetchMarketNfts = (marketToken, filters, pagination = undefined, or
       auctions: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${currencyFilter} attributes: ${attributeFilter}, currentAuction_not: null}) {
         tokenId
         currentPrice
+        image
         currency: currentCurrency{
           id
         }

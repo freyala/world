@@ -2,8 +2,7 @@
     <div>
         <div v-on:click='closeModal()' class='fixed top-0 bottom-0 right-0 left-0'
             style='background-color: rgba(0,0,0,0.5); z-index: z-50;'></div>
-        <transition name="details">
-            <div class='fixed bg-light rounded-2xl h-auto shadow-xl details-modal overflow-y-auto'
+            <div v-if='true' class='fixed bg-light rounded-2xl h-auto shadow-xl details-modal overflow-y-auto'
                 style='border: 1px solid rgba(84, 182, 122, 1); z-index: 100'>
                 <div class='w-full h-3/6 flex z-5'>
                     <div class='w-4/12 p-4 flex h-full'>
@@ -64,7 +63,6 @@
                     </div>
                 </div>
             </div>
-        </transition>
     </div>
 </template>
 
@@ -99,7 +97,3 @@
         }
     }
 </script>
-
-<style>
-
-</style>

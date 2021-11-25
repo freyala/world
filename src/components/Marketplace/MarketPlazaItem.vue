@@ -38,8 +38,7 @@
             };
         },
 
-        mounted(){
-        },
+        mounted() {},
 
         methods: {
             onClick() {
@@ -48,7 +47,7 @@
             }
         },
 
-        watch:{
+        watch: {
             isBusy() {
                 this.$nextTick(() => {
                     this.busy = this.isBusy;
