@@ -46,7 +46,7 @@
                     <div v-if='expandSales' style='background-color: #151515'
                         class='flex flex-wrap px-4 py-4 h-auto w-full rounded-xl rounded-t-none'>
                         <div class='w-full'>
-                            No sales, ser.
+                           Coming Soon...
                         </div>
                     </div>
                     <div style='background-color: #151515' v-bind:class='{"rounded-b-none": expandDetails}'
@@ -59,7 +59,7 @@
                     <div v-if='expandDetails' style='background-color: #151515'
                         class='flex flex-wrap px-4 py-4 h-auto w-full rounded-xl rounded-t-none'>
                         <div class='w-full'>
-                            No details, ser.
+                            Coming Soon...
                         </div>
                     </div>
                 </div>

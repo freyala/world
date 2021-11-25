@@ -132,7 +132,7 @@
                         <button v-on:click='showCollectionSaleModal(item)' type="button" class="xya-btn mx-2">
                             Details
                         </button>
-                        <button v-if='item.type === CONSTANTS.SALE' v-on:click='buyMarketToken(item)' type="button"
+                        <button v-if='item.type === CONSTANTS.SALE' v-on:click='buyMarketNft(item)' type="button"
                             class="xya-btn mx-2">
                             <span>Buy</span>
                         </button>
@@ -379,7 +379,7 @@
                             {{marketSelectedToken.order.highestBidder}}
                         </h2>
                         <button v-if='marketSelectedToken.type === CONSTANTS.SALE'
-                            v-on:click='buyMarketToken(marketSelectedToken)' type="button"
+                            v-on:click='buyMarketNft(marketSelectedToken)' type="button"
                             class="xya-btn ml-auto w-4/12 mx-2">
                             <span>Buy</span>
                         </button>
@@ -537,7 +537,7 @@
                 <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
                     <input class='w-full text-black px-2 h-9 rounded-xl' type="text" v-model='marketBidAmount' />
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
-                        <button v-on:click="bidMarketToken(marketSelectedToken, marketBidAmount)" type="button"
+                        <button v-on:click="bidMarketNft(marketSelectedToken, marketBidAmount)" type="button"
                             class="xya-btn mx-2 h-9 flex items-center justify-center">
                             <span>Confirm</span>
                         </button>
@@ -1222,7 +1222,7 @@
                 this.triggerListReactivity(this.userTokens);
             },
 
-            async buyMarketToken(item) {
+            async buyMarketNft(item) {
                 const [tokenAddress, tokenId, price, currency] = [this.market.token, item.tokenId,
                     item.currentPrice, item.currency.id
                 ];
@@ -1257,7 +1257,7 @@
                 this.triggerListReactivity(this.marketTokens);
             },
 
-            async bidMarketToken(item, amount) {
+            async bidMarketNft(item, amount) {
                 const [tokenAddress, tokenId, currency] = [this.market.token, item.tokenId, item.currency.id];
                 const price = fromExponential(amount * (10 ** 18));
 
@@ -1449,11 +1449,6 @@
                         this.userTokens.push(userToken);
                     }
                 }
-            },
-
-            isItemBusy(item) {
-                console.log(item);
-                return item.isBusy;
             },
 
             showCollectionDropdown(event) {
