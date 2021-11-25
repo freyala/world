@@ -837,9 +837,9 @@ export default {
       let plotType = 0
 
       if (data.neighbourhood === 18 || data.neighbourhood === 19) {
-        plotType = 2
-      } else if (data.neighbourhood === 16 || data.neighbourhood === 17) {
         plotType = 1
+      } else if (data.neighbourhood === 16 || data.neighbourhood === 17) {
+        plotType = 2
       }
 
       const plot = await this.plotContract.getPlotData(plotType, data.token_id)
