@@ -11,8 +11,7 @@
             <h2 class='text-white text-2xl'>Loading...</h2>
         </div>
 
-        <div class="absolute top-0 left-0 p-4 cursor-pointer w-full">
-            <div class='flex justify-start w-full'>
+        <div class="absolute top-0 left-0 flex items-center pt-1 md:px-10 md:py-4 px-8 md:shadow-none shadow-lg cursor-pointer w-full">
                 <div v-on:click='goBack()' class='lg:hidden xl:block hidden '>
                     <i class="fas fa-long-arrow-alt-left"></i> Back to markets
                 </div>
@@ -27,9 +26,8 @@
                     v-on:click='$modal.show("allowances")'>
                     <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
                 </div>
-            </div>
         </div>
-        <div class='w-3/12 xl:block hidden h-full 2xl:text-base md:text-sm rounded-lg relative bg-light'
+        <div class='2xl:w-3/12 w-4/12 xl:block hidden h-full 2xl:text-base md:text-sm rounded-lg relative bg-light'
             style='height: calc(60vh - 80px);'>
             <div class='text-center flex flex-col justify-center items-center mt-4 pb-4 shadow-xl'
                 style='height: 80px;'>
@@ -61,20 +59,21 @@
 
             </div>
         </div>
-        <div class='xl:w-9/12 lg:w-full' style='height: 60vh; overflow-y: auto; overflow-x:hidden'>
-            <div class='w-11/12 flex justify-evenly flex-row mx-10 select-none'>
+        <div class='xl:w-9/12 w-full' style='height: 60vh; overflow-y: auto; overflow-x:hidden'>
+            <div class='w-11/12 flex justify-evenly md:flex-row flex-col mx-10 select-none'>
                 <h2 v-on:click='marketTab = CONSTANTS.SALES_TAB'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.SALES_TAB}'
-                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer'>Sales</h2>
+                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer md:mb-0 mb-3'>Sales</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.USER_TAB'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.USER_TAB}'
-                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer'>My Sales
+                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer md:mb-0 mb-3'>My Sales
                     ({{ userSales.length }})</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.COLLECTION_TAB'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.COLLECTION_TAB}'
-                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer'>My Collection
+                    class='2xl:text-xl lg:text-lg mt-1 mr-8 cursor-pointer md:mb-0 mb-3'>My Collection
                     ({{ userTokens.length }})</h2>
-                <div class='2xl:ml-auto xl:ml-4 lg:ml-2 mxl:r-4 lg:mr-2 w-1/12 flex'>
+
+                <div class='2xl:ml-auto xl:ml-4 lg:ml-2 mxl:r-4 lg:mr-2 md:w-1/12 w-10/12 md:mb-0 mb-3 flex'>
                     <select v-on:change='initiateMarketSearch()' v-model='marketSelectedCurrency'
                         class="w-full border rounded-lg 2xl:text-base md:text-sm border-yellow py-2 2xl:px-4 xl:px-1 lg:px-0 bg-dark">
                         <option value='All'>All</option>
@@ -82,7 +81,7 @@
                             {{currency.key}}</option>
                     </select>
                 </div>
-                <div class='2xl:w-3/12 w-2/12 flex'>
+                <div class='2xl:w-3/12 md:w-2/12 w-10/12 flex'>
                     <select :key='marketSelectedCurrency' v-on:change='initiateMarketSearch()' v-model='marketSortBy'
                         class="w-full border rounded-lg 2xl:text-base md:text-sm border-yellow py-2 xl:px-4 md:px-1 bg-dark">
                         <option v-bind:value='""'>Order By</option>
@@ -107,9 +106,9 @@
 
             <!-- SALES -->
             <div :key='keys.marketSales' v-show='marketTab === CONSTANTS.SALES_TAB'
-                class='w-full h-full mx-6 flex xl:justify-start justify-center flex-wrap'>
-                <div class='text-xl p-4 opacity-75' v-if='marketTokens.length === 0'>There are no sales.</div>
-                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2  2xl:mx-4 md:mx-2 mb-6 flex flex-col'
+                class='w-full h-full md:mx-6 mx-auto flex xl:justify-start justify-center flex-wrap'>
+                <div class='text-xl md:p-4 p-0 md:w-6/12 w-8/12 opacity-75' v-if='marketTokens.length === 0'>There are no sales.</div>
+                <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 md:mx-2 mb-6 flex flex-col'
                     v-for='(item, index) in marketTokens' :key='index'>
                     <div v-on:click='showMarketCardModal(item)' class='market-item-header relative' slot='header'>
                         <div
@@ -164,7 +163,7 @@
 
             <!-- My Sales -->
             <div :key='keys.userSales' v-show='marketTab === CONSTANTS.USER_TAB'
-                class='w-full h-full mx-6 flex xl:justify-start justify-center flex-wrap'>
+                class='w-full h-full md:mx-6 mx-auto flex xl:justify-start justify-center flex-wrap'>
                 <div class='text-xl p-4 opacity-75' v-if='userSales.length === 0'>You don't have any sales.</div>
                 <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 md:mx-2 mb-6 flex flex-col'
                     v-for='(item, index) in userSales' :key='index'>
@@ -217,7 +216,7 @@
 
 
             <!-- USER COLLECTION -->
-            <div class='w-full h-full mx-6 flex xl:justify-start justify-center flex-wrap'
+            <div class='w-full h-full md:mx-6 mx-auto flex xl:justify-start justify-center flex-wrap'
                 v-show='marketTab === CONSTANTS.COLLECTION_TAB'>
                 <div class='text-xl p-4 opacity-75' v-if='userTokens.length === 0'>Your collection is empty.</div>
                 <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 md:mx-2 mb-6 flex flex-col'
@@ -265,9 +264,12 @@
                 :image='collectionSelectedNFT.image'>
                 <template slot='header-content'>
 
-                    <div class='w-full h-3/6'>
-                        <div class='w-full flex items-center h-8'>
-                            <h2 class='text-xl opacity-75'>{{ market.collectionName }}</h2>
+                    <div class='w-full md:h-3/6 h-2/6'>
+                        <div class='w-full flex items-center md:h-8 h-0'>
+                            <h2 class='text-xl hidden md:block opacity-75'>{{ market.collectionName }}</h2>
+
+                            <h2 v-if='collectionSelectedNFT' class='md:hidden block text-xl mb-1'>{{ market.tokenName }}
+                                #{{ collectionSelectedNFT.tokenId }}</h2>
 
                             <span v-on:click='showSendNFTModal()' title='Send' data-tooltip-target="tooltip-send"
                                 data-tooltip-placement="left" class='cursor-pointer mx-2 ml-auto hover:text-white'><i
@@ -282,16 +284,17 @@
                             </span>
                         </div>
                         <div class='w-full flex items-center'>
-                            <h2 v-if='collectionSelectedNFT' class='text-4xl mb-1'>{{ market.tokenName }}
+                            <h2 v-if='collectionSelectedNFT' class='text-4xl hidden md:block mb-1'>
+                                {{ market.tokenName }}
                                 #{{ collectionSelectedNFT.tokenId }}</h2>
 
                         </div>
-                        <h2 class='text-base text-white opacity-50'>Frey Fees: </h2>
+                        <h2 class='text-base text-white opacity-50 md:block hidden'>Frey Fees: </h2>
                     </div>
-                    <div class='w-full flex flex-col rounded-xl h-3/6'>
-                        <h2 class='text-xl'>List item for sale</h2>
-                        <button v-on:click='showCreateMarketSaleModal()' type="button" class="w-4/12 mt-auto xya-btn">
-                            Fixed Price
+                    <div class='w-full flex flex-row md:flex-row my-2 md:my-0 rounded-xl h-3/6'>
+                        <button v-on:click='showCreateMarketSaleModal()' type="button"
+                            class="w-4/12 ml-auto mx-2 mt-auto xya-btn">
+                            Sale
                         </button>
                         <button v-on:click='showCreateMarketAuctionModal()' type="button"
                             class="w-4/12 mt-auto xya-btn">
@@ -309,35 +312,39 @@
                 :image='collectionSelectedNFT.image'>
                 <template slot='header-content'>
 
-                    <div class='w-full h-2/6'>
-                        <div class='w-full flex h-8'>
-                            <h2 class='text-xl opacity-75'>{{ market.collectionName }}</h2>
+                    <div class='w-full md:h-2/6 h-auto'>
+                        <div class='w-full flex items-center md:h-8 h-0'>
+                            <h2 class='text-xl block md:block opacity-75'>{{ market.collectionName }}</h2>
+
                             <i v-on:click='bools.collectionSale = false'
                                 class="fas ml-auto fa-times cursor-pointer text-xl"></i>
                         </div>
                         <div class='w-full flex items-center'>
-                            <h2 v-if='collectionSelectedNFT' class='text-4xl mb-1'>{{ market.tokenName }}
+                            <h2 v-if='collectionSelectedNFT' class='md:text-4xl text-xl block mt-5 md:mt-2 mb-1'>
+                                {{ market.tokenName }}
                                 #{{ collectionSelectedNFT.tokenId }}</h2>
+
                         </div>
-                        <h2 class='text-base text-white opacity-50'>Owned by: You</h2>
+                                                <h2 class='text-base text-white opacity-50 mt-1 md:my-1'>Owned by: You</h2>
                     </div>
-                    <div class='w-full flex flex-col rounded-xl h-4/6'>
-                        <h2 class='text-xl mt-auto'>Manage item</h2>
+                    <div class='w-full flex md:flex-nowrap flex-wrap md:flex-col flex-row rounded-xl md:h-4/6'>
+                        <h2 class='text-xl mt-auto hidden md:block'>Manage item</h2>
                         <h2 v-if='collectionSelectedNFT.type === CONSTANTS.SALE' class='text-base mt-3 opacity-75'>Price
                         </h2>
-                        <h2 v-else-if='collectionSelectedNFT.order.highestBidder' class='text-base mt-3 opacity-75'>
+                        <h2 v-else-if='collectionSelectedNFT.order.highestBidder || collectionSelectedNFT.order.ended'
+                            class='text-base mt-3 opacity-75'>
                             Highest Bidder: <span
-                                class='text-sm text-white opacity-75'>{{collectionSelectedNFT.order.highestBidder}}</span>
+                                class='text-sm text-white opacity-75'>{{ getAccountStamp(collectionSelectedNFT.order.highestBidder)}}</span>
                         </h2>
                         <h2 class='text-base mt-2 opacity-75' v-else>Initial Bid</h2>
 
-                        <div class='flex w-full items-center'>
-                            <h2 class='text-xl mt-2 text-white'>
+                        <div class='flex flex-row md:flex-row w-full md:items-center mt-0 md:mt-0 items-center'>
+                            <h2 class='text-xl text-white'>
                                 {{ collectionSelectedNFT.currentPrice / (10 ** 18) }}
                                 {{ getCurrencyName(collectionSelectedNFT.currency.id) }}</h2>
                             <button v-if='collectionSelectedNFT.type === CONSTANTS.SALE'
                                 v-on:click='delistNFT(collectionSelectedNFT)' type="button"
-                                class="xya-btn ml-auto h-12 w-4/12">
+                                class="xya-btn md:ml-auto ml-auto h-12 w-6/12 md:w-4/12 mt-2 md:mt-0">
                                 Cancel
                             </button>
                         </div>
@@ -352,13 +359,13 @@
                             </h2>
                         </div>
                         <div v-else-if='collectionSelectedNFT.type === CONSTANTS.AUCTION'
-                            class='flex flex-row items-start w-full'>
-                            <h2 class='text-xl mt-2 text-white'>
+                            class='flex flex-row md:flex-row w-full mt-2 md:mt-0'>
+                            <h2 class='text-lg md:text-xl mt-2 text-white'>
                                 Auction Ended
                             </h2>
                             <button v-on:click='delistNFT(collectionSelectedNFT)' type="button"
-                                class="xya-btn ml-auto h-12 w-4/12">
-                                End Auction
+                                class="xya-btn md:ml-auto ml-auto h-12 w-4/12 md:w-4/12 mt-2 md:mt-0">
+                                End
                             </button>
                         </div>
                     </div>
@@ -380,8 +387,10 @@
                         </div>
                         <h2 v-if='marketSelectedNFT' class='text-4xl mb-1'>{{ market.tokenName }}
                             #{{ marketSelectedNFT.tokenId }}</h2>
-                        <h2 class='text-base text-white opacity-50'>Owned by: {{ marketSelectedNFT.order.seller.id }}
+                        <h2 class='text-base text-white opacity-50 md:mb-1 mb-2'>Owned by:
+                            {{ getAccountStamp(marketSelectedNFT.order.seller.id) }}
                         </h2>
+
                     </div>
                     <div class='w-full h-4/6 flex flex-col rounded-xl mt-auto'>
                         <h2 class='mt-auto text-xl'>Manage item</h2>
@@ -396,8 +405,13 @@
                             <h2 class='text-xl text-white'>
                                 {{ marketSelectedNFT.currentPrice / (10 ** 18) }}
                                 {{ getCurrencyName(marketSelectedNFT.currency.id) }}</h2>
-                            <h2 v-if='marketSelectedNFT.order.highestBidder' class='text-white opacity-50 text-sm mx-3'>
-                                {{marketSelectedNFT.order.highestBidder}}
+                            <h2 v-if='marketSelectedNFT.order.highestBidder'
+                                class='text-white opacity-50 text-sm mx-3 hidden lg:block'>
+                                {{getAccountStamp(marketSelectedNFT.order.highestBidder)}}
+                            </h2>
+                            <h2 v-if='marketSelectedNFT.order.highestBidder'
+                                class='text-white opacity-50 text-sm mx-3 block lg:hidden'>
+                                {{getAccountStamp(marketSelectedNFT.order.highestBidder)}}
                             </h2>
                             <button v-if='marketSelectedNFT.type === CONSTANTS.SALE'
                                 v-on:click='buyMarketNFT(marketSelectedNFT)' type="button"
@@ -577,24 +591,25 @@
                     <i @click="$modal.hide('allowances')" class="fas fa-times cursor-pointer text-xl"></i>
                 </div>
                 <div class="mt-4 flex flex-col w-full items-start justify-start">
-                    <div class='flex w-full flex-row my-2'>
-                        <p class='w-2/12'>Market Contract</p>
-                        <div class="w-6/12 text-right md:text-center mx-2">
+                    <div class='flex w-full flex-col md:flex-row my-2'>
+                        <p class='text-lg md:text-xl md:w-6/12 w-full mb-2 md:mb-0'>Market Contract</p>
+                        <div class="w-6/12 text-right md:text-center">
                             <button v-on:click="setMarketApproval(!marketApproved ? 999999999 : 0)" type="button"
-                                class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                                class="w-full xya-btn">
                                 <span v-if='!marketApproved'>Enable</span>
                                 <span v-else>Disable</span>
                             </button>
                         </div>
                     </div>
+                    <hr class='w-full my-2'/>
                     <div class="w-4/5">
-                        <h2 class="text-xl my-2 opacity-75">Market Tokens</h2>
+                        <h2 class="text-lg md:text-xl my-2">Market Tokens</h2>
                     </div>
-                    <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
-                        <p class='w-2/12'>{{token.key}}</p>
+                    <div class='flex w-full items-center flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                        <p class='w-6/12'>{{token.key}}</p>
                         <div v-if='index > 0' class="w-6/12 text-right md:text-center mx-2">
                             <button v-on:click="setTokenAllowance(token, !token.approved ? 999999999 : 0)" type="button"
-                                class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                                class="w-full ml-auto xya-btn">
                                 <span v-if='!token.approved'>Enable</span>
                                 <span v-else>Disable</span>
                             </button>
@@ -605,7 +620,7 @@
         </window>
 
         <window height='auto' width='80%' name='user-profile'>
-            <div :key='keys.feeBalance' class="flex flex-wrap p-6 bg-dark h-full">
+            <div :key='keys.feeBalance' class="flex flex-wrap p-6 md:text-base text-xs bg-dark h-full">
                 <div class="w-4/5">
                     <div class="text-2xl">User Profile</div>
                 </div>
@@ -614,13 +629,13 @@
                 </div>
                 <div class="mt-4 flex flex-col w-full items-start justify-start">
                     <div class="w-4/5">
-                        <h2 class="text-xl my-2 opacity-75">Market Sales</h2>
+                        <h2 class="md:text-xl text-base my-2 opacity-75">Market Sales</h2>
                     </div>
-                    <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
-                        <p class='w-2/12'>{{token.key}}</p>
+                    <div class='flex w-full flex-row items-center my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                        <p class='w-2/12 md:mr-0 mr-2'>{{token.key}}</p>
                         <p class='w-2/12 text-white'>{{token.balance}}</p>
                         <button v-on:click="withdraw(token)" type="button"
-                            class="w-6/12 ml-auto text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                            class="w-6/12 ml-auto xya-btn">
                             Collect
                         </button>
                     </div>
@@ -628,21 +643,21 @@
 
                 <div v-if='isFreyMarket' class="mt-4 flex flex-col w-full items-start justify-start">
                     <div class="w-4/5">
-                        <h2 class="text-xl my-2 opacity-75">Frey Reflection Fee</h2>
+                        <h2 class="md:text-xl text-base my-2 opacity-75">Frey Reflection Fee</h2>
                     </div>
-                    <div class='flex w-full flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
-                        <p class='w-2/12'>{{token.key}}</p>
+                    <div class='flex w-full items-center flex-row my-2' v-for='(token, index) in acceptedTokens' :key='index'>
+                        <p class='w-2/12 md:mr-0 mr-2'>{{token.key}}</p>
                         <p class='w-2/12 text-white'>{{token.NFTBalance}}</p>
                         <button v-if='index === acceptedTokens.length - 1' v-on:click="withdrawFreyFees(token)"
                             type="button"
-                            class="w-6/12 ml-auto text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
-                            Collect All
+                            class="w-6/12 ml-auto xya-btn">
+                            Collect
                         </button>
                     </div>
                 </div>
 
                 <div class="w-4/5 mt-4">
-                    <h2 class="text-xl opacity-75">Claim NFT's</h2>
+                    <h2 class="md:text-xl text-base opacity-75">Claim NFT's</h2>
                 </div>
                 <div class="mt-4 w-full flex flex-wrap">
                     <h2 v-if='marketPendingTokens.length === 0'>You have no NFT's to claim.</h2>
@@ -1489,6 +1504,12 @@
                 };
             },
 
+            getAccountStamp(account){
+                if(account === this.metaMaskAccount.toLowerCase()) return 'You';
+                if(!account) return '';
+                return "..." + account.slice(account.length - 5);
+            },
+
             getOrderQuery() {
                 if (this.marketSortBy === '') return undefined;
                 const order = this.marketSortBy.split('-');
@@ -1611,14 +1632,6 @@
 </script>
 
 <style>
-    .details-modal {
-        position: fixed;
-        top: 15%;
-        bottom: 15%;
-        left: 25%;
-        right: 25%;
-    }
-
     .bg-light {
         background-color: #212121;
     }
