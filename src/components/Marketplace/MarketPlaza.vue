@@ -140,7 +140,7 @@
 
         <div class='xl:w-9/12 w-full h-full min-h-100 flex flex-col overflow-x-hidden sm:overflow-y-hidden overflow-y-scroll'>
             <div
-                class='w-full mx-auto flex justify-evenly md:flex-row flex-col p-4 xl:ml-0 md:ml-4 ml-0 select-none text-center shadow-xl'>
+                class='w-full mx-auto flex md:justify-end justify-evenly md:flex-row flex-col p-4 xl:ml-0 md:ml-4 ml-0 select-none text-center shadow-xl'>
                 <h2 v-on:click='bools.responsiveFilters = !bools.responsiveFilters'
                     class='2xl:text-xl xl:hidden block opacity-25 z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 hover:opacity-100 cursor-pointer md:mb-0 mb-3 md:w-4/12 w-full xya-btn'>
                     Filter</h2>
