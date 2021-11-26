@@ -138,12 +138,11 @@
             </div>
         </transition>
 
-        <div class='xl:w-9/12 w-full h-full min-h-100 flex flex-col overflow-x-hidden'>
+        <div class='xl:w-9/12 w-full h-full min-h-100 flex flex-col overflow-x-hidden sm:overflow-y-hidden overflow-y-scroll'>
             <div
                 class='w-full mx-auto flex justify-evenly md:flex-row flex-col p-4 xl:ml-0 md:ml-4 ml-0 select-none text-center shadow-xl'>
                 <h2 v-on:click='bools.responsiveFilters = !bools.responsiveFilters'
-                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.SALES_TAB}'
-                    class='2xl:text-xl xl:hidden block z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 hover:opacity-100 cursor-pointer md:mb-0 mb-3 md:w-4/12 w-full xya-btn'>
+                    class='2xl:text-xl xl:hidden block opacity-25 z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 hover:opacity-100 cursor-pointer md:mb-0 mb-3 md:w-4/12 w-full xya-btn'>
                     Filter</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.SALES_TAB'
                     v-bind:class='{"opacity-25": marketTab !== CONSTANTS.SALES_TAB}'
@@ -161,10 +160,10 @@
                     ({{ userTokens.length }})</h2>
             </div>
 
-            <div class='h-5/6 2xl:mx-8 xl:mx-6 md:mx-8 py-4' style='overflow-y: scroll; overflow-x:hidden;'>
+            <div class='h-5/6 2xl:mx-8 xl:mx-6 md:mx-8 py-4 sm:overflow-y-scroll'>
                 <!-- SALES -->
                 <div :key='keys.marketSales' v-show='marketTab === CONSTANTS.SALES_TAB'
-                    class='w-full h-full mx-auto flex xl:justify-start justify-center flex-wrap'>
+                    class='w-full h-full mx-auto flex xl:justify-start justify-center flex-wrap overflow-x-hidden'>
                     <div class='text-xl md:p-4 p-0 md:w-6/12 w-8/12 opacity-75' v-if='marketTokens.length === 0'>There
                         are
                         no sales.</div>
