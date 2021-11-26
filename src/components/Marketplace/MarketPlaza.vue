@@ -142,21 +142,21 @@
             <div
                 class='w-full mx-auto flex justify-evenly md:flex-row flex-col p-4 xl:ml-0 md:ml-4 ml-0 select-none text-center shadow-xl'>
                 <h2 v-on:click='bools.responsiveFilters = !bools.responsiveFilters'
-                    v-bind:class='{"opacity-50": marketTab !== CONSTANTS.SALES_TAB}'
-                    class='2xl:text-xl xl:hidden block z-0 lg:text-lg text-xl mt-1 mr-8 cursor-pointer md:mb-0 mb-3 md:w-4/12 w-full xya-btn'>
+                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.SALES_TAB}'
+                    class='2xl:text-xl xl:hidden block z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 hover:opacity-100 cursor-pointer md:mb-0 mb-3 md:w-4/12 w-full xya-btn'>
                     Filter</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.SALES_TAB'
-                    v-bind:class='{"opacity-50": marketTab !== CONSTANTS.SALES_TAB}'
-                    class='2xl:text-xl z-0 lg:text-lg text-xl mt-1 mr-8 cursor-pointer md:mb-0 mb-3 md:w-3/12 w-full xya-btn'>
+                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.SALES_TAB}'
+                    class='2xl:text-xl z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 cursor-pointer hover:opacity-100 md:mb-0 mb-3 md:w-3/12 w-full xya-btn'>
                     Sales</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.USER_TAB'
-                    v-bind:class='{"opacity-50": marketTab !== CONSTANTS.USER_TAB}'
-                    class='2xl:text-xl z-0 lg:text-lg text-xl mt-1 mr-8 cursor-pointer md:mb-0 mb-3 md:w-3/12 w-full xya-btn'>
+                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.USER_TAB}'
+                    class='2xl:text-xl z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 cursor-pointer hover:opacity-100 md:mb-0 mb-3 md:w-3/12 w-full xya-btn'>
                     My Sales
                     ({{ userSales.length }})</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.COLLECTION_TAB'
-                    v-bind:class='{"opacity-50": marketTab !== CONSTANTS.COLLECTION_TAB}'
-                    class='2xl:text-xl z-0 lg:text-lg text-xl mt-1 mr-8 cursor-pointer md:mb-0 md:w-3/12 w-full mb-3 xya-btn'>
+                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.COLLECTION_TAB}'
+                    class='2xl:text-xl z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 cursor-pointer hover:opacity-100 md:mb-0 md:w-3/12 w-full mb-3 xya-btn'>
                     My NFT's
                     ({{ userTokens.length }})</h2>
             </div>
