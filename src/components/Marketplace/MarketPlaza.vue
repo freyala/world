@@ -12,23 +12,50 @@
         </div>
 
 
-        <div class='2xl:w-3/12 xl:block h-auto hidden 2xl:text-base md:text-sm rounded-lg relative bg-light'>
+        <div
+            class='2xl:w-3/12 xl:block h-auto flex flex-col hidden 2xl:text-base md:text-sm rounded-lg relative bg-light'>
             <div class='text-center flex flex-col justify-center items-center mt-4 pb-4 shadow-lg'
-                style='height: 80px;'>
-                <div class='w-full text-center text-xl mb-4'>Filter</div>
+                style='height: 67px;'>
                 <div class='w-9/12 mx-auto flex h-full'>
                     <button v-on:click='resetMarketFilters()' type="button"
                         class="w-9/12 mx-2 rounded-lg hover:text-white px-0 py-0 min-h-9">
-                        Reset
+                        Refresh
                     </button>
                     <button v-on:click='initiateMarketSearch()' type="button"
-                        class="w-9/12 mr-2 xya-btn h-9 z-0 flex items-center justify-center">
-                        Apply
+                        class="w-full mr-2 xya-btn z-0 flex items-center justify-center">
+                        Apply Filters
                     </button>
                 </div>
             </div>
-            <div :key='keys.filters' class="text-center overflow-y-auto flex py-4 mx-2 flex-col bg-light"
+            <div :key='keys.filters' class="overflow-y-auto text-center flex py-4 mx-2 my-4 flex-col bg-light"
                 style='height: calc(100% - 120px)'>
+                <div class='w-full mb-2'>
+                    <div class='mb-1'>
+                        Currency
+                    </div>
+                    <select v-on:change='initiateMarketSearch()' v-model='marketSelectedCurrency'
+                        class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        <option value='All'>All</option>
+                        <option v-for='(currency, index) in acceptedTokens' :key='index' v-bind:value='currency.value'>
+                            {{currency.key}}</option>
+                    </select>
+                </div>
+                <div class='mb-1'>
+                    Order
+                </div>
+                <div class='w-full mb-2'>
+                    <select :key='marketSelectedCurrency' v-on:change='initiateMarketSearch()' v-model='marketSortBy'
+                        class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        <option v-bind:value='""'>Order By</option>
+                        <option v-if='marketSelectedCurrency !== "All"' value="currentPrice-asc">Price ascending
+                        </option>
+                        <option v-if='marketSelectedCurrency !== "All"' value="currentPrice-desc">Price descending
+                        </option>
+                        <option value="tokenId-asc">ID ascending</option>
+                        <option value="tokenId-desc">ID descending</option>
+                    </select>
+                </div>
+                <hr class='w-9/12 opacity-75 mx-auto my-6'>
                 <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
                     <div class='mb-1'>
                         {{ attribute.key }}
@@ -66,6 +93,34 @@
                 </div>
                 <div :key='keys.filters' class="text-center overflow-y-auto flex py-4 mx-2 flex-col bg-light"
                     style='height: calc(100% - 120px)'>
+                    <div class='w-full mb-2'>
+                        <div class='w-full mb-2'>
+                            <div class='mb-1'>
+                                Currency
+                            </div>
+                            <select v-on:change='initiateMarketSearch()' v-model='marketSelectedCurrency'
+                                class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                                <option value='All'>All</option>
+                                <option v-for='(currency, index) in acceptedTokens' :key='index'
+                                    v-bind:value='currency.value'>
+                                    {{currency.key}}</option>
+                            </select>
+                        </div>
+                                            <div class='mb-1'>
+                        Order
+                    </div>
+                        <select :key='marketSelectedCurrency' v-on:change='initiateMarketSearch()'
+                            v-model='marketSortBy' class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                            <option v-bind:value='""'>Order By</option>
+                            <option v-if='marketSelectedCurrency !== "All"' value="currentPrice-asc">Price ascending
+                            </option>
+                            <option v-if='marketSelectedCurrency !== "All"' value="currentPrice-desc">Price descending
+                            </option>
+                            <option value="tokenId-asc">ID ascending</option>
+                            <option value="tokenId-desc">ID descending</option>
+                        </select>
+                    </div>
+                    <hr class='w-9/12 opacity-75 mx-auto my-6'>
                     <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
                         <div class='mb-1'>
                             {{ attribute.key }}
@@ -85,10 +140,10 @@
 
         <div class='xl:w-9/12 w-full h-full min-h-100 flex flex-col overflow-x-hidden'>
             <div
-                class='w-full mx-auto flex justify-center md:flex-row flex-col p-4 xl:ml-0 md:ml-4 ml-0 select-none text-center shadow-xl'>
+                class='w-full mx-auto flex justify-evenly md:flex-row flex-col p-4 xl:ml-0 md:ml-4 ml-0 select-none text-center shadow-xl'>
                 <h2 v-on:click='bools.responsiveFilters = !bools.responsiveFilters'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.SALES_TAB}'
-                    class='2xl:text-xl xl:hidden block z-0 lg:text-lg text-xl mt-1 mr-8 cursor-pointer md:mb-0 mb-3 md:w-3/12 w-full xya-btn'>
+                    class='2xl:text-xl xl:hidden block z-0 lg:text-lg text-xl mt-1 mr-8 cursor-pointer md:mb-0 mb-3 md:w-4/12 w-full xya-btn'>
                     Filter</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.SALES_TAB'
                     v-bind:class='{"opacity-50": marketTab !== CONSTANTS.SALES_TAB}'
@@ -137,12 +192,13 @@
                         <div class='px-1 market-item-body' slot='body'>
                             <div class='mt-2 w-full ml-2 mr-2 flex opacity-50'>
                                 <div class='w-8/12'> {{market.collectionName}} </div>
-                                <div v-if='item.type === CONSTANTS.SALE' class='w-4/12'>Price</div>
-                                <div v-else class='w-7/12'>Highest Bid</div>
+                                <div v-if='item.type === CONSTANTS.SALE' class='w-full text-right mr-4'>Price</div>
+                                <div v-else class='w-full text-right mr-4'>Highest Bid</div>
                             </div>
                             <div class='ml-2 w-full ml-2 mr-2 flex'>
                                 <div class='w-8/12'>#{{ item.tokenId }}</div>
-                                <div class='w-4/12 text-white'>{{ item.currentPrice / (10 ** 18)}}
+                                <div class='w-full text-right mr-4 text-white text-white'>
+                                    {{ (item.currentPrice / (10 ** 18)).toFixed(1) }}
                                     {{getCurrencyName(item.currency.id)}}</div>
                             </div>
                             <div v-if='false' class='w-full mt-2 ml-2 mr-2 flex text-white opacity-50'>
@@ -151,15 +207,15 @@
                             </div>
                         </div>
                         <div slot='footer' class='market-item-footer p-2 mt-auto flex justify-evenly'>
-                            <button v-on:click='showCollectionSaleModal(item)' type="button" class="xya-btn mx-2">
+                            <button v-on:click='showMarketCardModal(item)' type="button" class="xya-btn mx-2">
                                 Details
                             </button>
                             <button v-if='item.type === CONSTANTS.SALE' v-on:click='buyMarketNFT(item)' type="button"
                                 class="xya-btn mx-2">
                                 <span>Buy</span>
                             </button>
-                            <button v-if='item.type === CONSTANTS.AUCTION' v-on:click='showMakeBidModal(item)'
-                                type="button" class="xya-btn mx-2">
+                            <button v-if='item.type === CONSTANTS.AUCTION && !item.ended'
+                                v-on:click='showMakeBidModal(item)' type="button" class="xya-btn mx-2">
                                 <span>Bid</span>
                             </button>
                         </div>
@@ -196,11 +252,12 @@
                             <div class='mt-2 w-full ml-2 mr-2 flex opacity-50'>
                                 <div class='w-8/12'> {{market.collectionName}} </div>
                                 <div v-if='item.type === CONSTANTS.SALE' class='w-4/12'>Price</div>
-                                <div v-else class='w-7/12'>Highest Bid</div>
+                                <div v-else class='w-full text-right mr-4'>Highest Bid</div>
                             </div>
                             <div class='ml-2 w-full ml-2 mr-2 flex'>
-                                <div class='w-8/12'>#{{ item.tokenId }}</div>
-                                <div class='w-4/12 text-white'>{{item.currentPrice / (10 ** 18)}}
+                                <div class='w-6/12'>#{{ item.tokenId }}</div>
+                                <div class='w-full text-right mr-4 text-white'>
+                                    {{ (item.currentPrice / (10 ** 18)).toFixed(1) }}
                                     {{getCurrencyName(item.currency.id)}}</div>
                             </div>
                             <div v-if='false' class='w-full mt-2 ml-2 mr-2 flex text-white opacity-50'>
@@ -254,7 +311,7 @@
 
         <div id='collectionMenu' v-show='bools.collectionMenu' ref='collectionMenu'
             class='fixed border shadow-xl px-6 py-2 text-center bg-light rounded-lg cursor-pointer'>
-            <div v-on:click='showPickCurrencyModal()' class='my-4 hover:text-white'>
+            <div v-if='isFreyMarket' v-on:click='showPickCurrencyModal()' class='my-4 hover:text-white'>
                 Register
             </div>
             <div v-on:click='showSendNFTModal()' class='my-4 hover:text-white'>
@@ -281,29 +338,27 @@
                                     class="fas fa-share-square"></i></span>
                             <span v-if='isFreyMarket' v-on:click='showPickCurrencyModal()' title='Register'
                                 class='cursor-pointer mx-2 hover:text-white'><i class="fas fa-check"></i></span>
-                            <span v-if='isFreyMarket' title='Collect' class='cursor-pointer ml-2 hover:text-white'><i
-                                    class="fas fa-percent"></i></span>
                             <span v-on:click='bools.collectionCard = false'
                                 class="fas mx-2 text-xl ml-4 fa-times cursor-pointer text-xl hover:text-white">
 
                             </span>
                         </div>
                         <div class='w-full flex items-center'>
-                            <h2 v-if='collectionSelectedNFT' class='text-4xl hidden md:block mb-1'>
+                            <h2 v-if='collectionSelectedNFT' class='md:text-2xl lg:text-3xl text-xl hidden md:block mb-1'>
                                 {{ market.tokenName }}
                                 #{{ collectionSelectedNFT.tokenId }}</h2>
 
                         </div>
-                        <h2 class='text-base text-white opacity-50 md:block hidden'>Frey Fees:
-                            {{ collectionSelectedNFTFees }}</h2>
+                        <h2 class='md:text-sm text-sm md:mt-0 md:mb-0 md:mt-0 mb-4 mt-4'><span class='text-white opacity-50'>Frey Fees:</span>
+                            <strong class='text-white'> {{ collectionSelectedNFTFees }}</strong></h2>
                     </div>
-                    <div class='w-full flex flex-row md:flex-row my-2 md:my-0 rounded-xl h-3/6'>
+                    <div class='w-full flex flex-row md:flex-row md:my-0 rounded-xl h-3/6'>
                         <button v-on:click='showCreateMarketSaleModal()' type="button"
-                            class="w-4/12 ml-auto mx-2 mt-auto xya-btn">
+                            class="w-full md:ml-auto mr-2 mt-auto xya-btn">
                             Sale
                         </button>
                         <button v-on:click='showCreateMarketAuctionModal()' type="button"
-                            class="w-4/12 mt-auto xya-btn">
+                            class="w-full md:ml-0 mt-auto xya-btn">
                             Auction
                         </button>
                     </div>
@@ -459,33 +514,33 @@
                     <div class="w-4/5">
                         <div v-if='collectionSaleType === CONSTANTS.SALE' class="text-2xl">List
                             #{{collectionSelectedNFT.tokenId}} for sale</div>
-                        <div v-else class="text-2xl">Create auction for #{{collectionSelectedNFT.tokenId}}</div>
+                        <div v-else class="md:text-2xl text-lg">Create auction for #{{collectionSelectedNFT.tokenId}}</div>
                     </div>
                     <div class="w-1/5 text-right">
                         <i @click="$modal.hide('create-listing')" class="fas fa-times cursor-pointer text-xl"></i>
                     </div>
                 </div>
-                <div class='mt-1 p-1'>
-                    <p class='mt-1 text-xl'>Price
+                <div class='mt-3'>
+                    <p class='mt-1 md:text-xl text-base'>Price
                     </p>
                 </div>
-                <div class="mt-1 mb-4 flex w-full p-1">
-                    <input class='w-full rounded text-black px-2 h-9 shadow-xl border border-primary-alt' type="number"
+                <div class="mt-2 mb-4 flex w-full">
+                    <input class='w-full rounded-lg text-black px-2 h-9 shadow-xl border border-primary-alt' type="number"
                         v-model='collectionSaleAmount' />
 
                     <select v-model='collectionSaleToken'
-                        class="w-6/12 border rounded-lg border-yellow ml-4 px-4 bg-dark">
+                        class="w-6/12 border rounded-lg rounded-base border-yellow ml-4 px-4 bg-dark">
                         <option v-for='(token, index) in acceptedTokens' v-bind:value="token.value" :key='index'>
                             {{ token.key }}</option>
                     </select>
                 </div>
-                <div v-if='collectionSaleType === CONSTANTS.AUCTION' class='mt-1 p-1'>
-                    <p class='mt-1 text-xl'>Duration
+                <div v-if='collectionSaleType === CONSTANTS.AUCTION' class='mt-1'>
+                    <p class='mt-1 md:text-xl text-base'>Duration
                     </p>
                 </div>
-                <div v-if='collectionSaleType === CONSTANTS.AUCTION' class="mt-1 mb-4 flex h-12 w-full p-1">
+                <div v-if='collectionSaleType === CONSTANTS.AUCTION' class="mt-1 mb-4 flex h-12 w-full px-0 py-1">
                     <select v-model='collectionSaleDuration'
-                        class="w-full border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        class="w-full border rounded-lg border-yellow mr-2 py-2 px-2 bg-dark text-sm md:text-base">
                         <option :disabled='index < 5 && collectionSaleDurationType === "minute"'
                             v-for='index in collectionDurationIntervalLimit' :key='index' v-bind:value='index'>{{index}}
                             {{collectionSaleDurationType}}<span v-if='index > 1'>s</span>
@@ -493,7 +548,7 @@
                     </select>
                     <select v-on:change='getIntervalLimit(collectionSaleDurationType)'
                         v-model='collectionSaleDurationType'
-                        class="w-6/12 ml-2 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        class="w-6/12 border rounded-lg border-yellow ml-2 py-2 px-2 bg-dark text-xs md:text-base">
                         <option value='minute'> Minute </option>
                         <option value='hour'> Hour </option>
                         <option value='day'> Day </option>
@@ -501,14 +556,14 @@
                     </select>
                 </div>
 
-                <div class='w-full flex justify-space h-12 p-1 text-base'>
+                <div class='w-full flex justify-space h-12 p-1 mt-4 text-base'>
                     <div class='w-6/12'></div>
                     <button v-on:click="$modal.hide('create-listing')"
-                        class="w-4/12 mx-6 mt-auto rounded-lg hover:border hover:border-primary-alt bg-transparent hover:text-white">
+                        class="w-4/12 mx-6 mt-auto rounded-lg hover:border hover:border-primary-alt bg-transparent hover:text-white md:text-xl text-base">
                         Cancel
                     </button>
                     <button v-on:click="listNFT(collectionSelectedNFT, collectionSaleType)"
-                        class="w-4/12 mt-auto rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white">
+                        class="w-6/12 mt-auto xya-btn md:text-xl text-base">
                         Confirm
                     </button>
                 </div>
@@ -597,7 +652,7 @@
                     <i @click="$modal.hide('allowances')" class="fas fa-times cursor-pointer text-xl"></i>
                 </div>
                 <div class="mt-4 flex flex-col w-full items-start justify-start">
-                    <div class='flex w-full flex-col md:flex-row my-2'>
+                    <div class='flex w-full flex-col md:flex-row my-2 items-center'>
                         <p class='text-lg md:text-xl md:w-6/12 w-full mb-2 md:mb-0'>Market Contract</p>
                         <div class="w-6/12 text-right md:text-center">
                             <button v-on:click="setMarketApproval(!marketApproved ? 999999999 : 0)" type="button"
@@ -607,7 +662,7 @@
                             </button>
                         </div>
                     </div>
-                    <hr class='w-full my-2' />
+                    <hr class='w-9/12 mx-auto my-4 opacity-75' />
                     <div class="w-4/5">
                         <h2 class="text-lg md:text-xl my-2">Market Tokens</h2>
                     </div>
@@ -875,14 +930,14 @@
                         this.acceptedTokens.push(this.tokens[i]);
                     }
 
+                    this.collectionSaleToken = this.acceptedTokens[0].value;
+
 
                     await this.verifyTokens();
                     await this.fetchMarketAttributes();
                     await this.initiateMarketSearch();
                     await this.fetchUserNFTs();
                     await this.fetchPendingNFTs();
-
-                    console.log(this.userSales);
 
                     if (this.isFreyMarket) {
                         await this.getFreyFees();
@@ -906,7 +961,7 @@
                         }
                     }
                 } catch (err) {
-                    this.collectionSelectedNFTFees = "";
+                    this.collectionSelectedNFTFees = "Not Registered";
                     this.loaders.application = false;
                 }
 
@@ -939,9 +994,27 @@
                 this.bools.collectionSale = true;
             },
 
-            showMarketCardModal(item) {
-                this.marketSelectedNFT = item;
-                this.bools.marketCard = true;
+            async showMarketCardModal(item) {
+                try {
+                    if (item.type === this.CONSTANTS.AUCTION) {
+                        const contractAuction = await this.contract.getAuction(this.market.token, item.tokenId);
+                        if (!contractAuction) {
+                            throw "Auction expired or doesn't exist";
+                        }
+                    } else {
+                        const contractSellOrder = await this.contract.getSellOrder(this.market.token, item.tokenId);
+                        if (!contractSellOrder) {
+                            throw "Sell order expired or doesn't exist";
+                        }
+                    }
+
+                    this.marketSelectedNFT = item;
+                    this.bools.marketCard = true;
+                } catch (err) {
+                    this.marketTokens = this.marketTokens.filter(c => c.tokenId !== item.tokenId);
+                    this.triggerListReactivity(this.marketTokens);
+                    this.handleError(err);
+                }
             },
 
             showMakeBidModal(item) {
@@ -1003,7 +1076,6 @@
                         });
                     this.keys.NFTCollection++;
                 } catch (err) {
-                    console.log(err);
                 }
             },
 
@@ -1036,7 +1108,7 @@
                     });
                     this.sortCollectionByField(this.marketTokens, this.marketSortBy);
                 } catch (err) {
-                    console.log(err);
+
                 }
             },
 
@@ -1122,22 +1194,36 @@
 
             async getFreyFees() {
                 const freyIds = [];
-                this.userTokens.forEach(c => freyIds.push(c.tokenId));
 
-                const freyFees = await this.freyRegistryContract.getFreysFees(freyIds);
+                try {
+                    this.userTokens.forEach(c => freyIds.push(c.tokenId));
 
-                freyFees.forEach(freyFee => {
-                    const currency = freyFee[0].toLowerCase();
-                    const fee = 1 * fromExponential(freyFee[1] / (10 ** 18));
+                    const registeredFreys = await this.freyRegistryContract.getFreys(freyIds);
+                    const registeredFreyIds = [];
 
-                    let acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
+                    registeredFreys.forEach((c, index) => {
+                        if(c.isRegistered === true){
+                            registeredFreyIds.push(freyIds[index]);
+                        }
+                    });
 
-                    if (!acceptedCurrency) return;
-                    acceptedCurrency.NFTBalance += fee;
-                });
-                this.acceptedTokens.forEach(c => c.NFTBalance = c.NFTBalance.toFixed(2));
+                    const freyFees = await this.freyRegistryContract.getFreysFees(registeredFreyIds);
 
-                this.keys.feeBalance++;
+                    freyFees.forEach(freyFee => {
+                        const currency = freyFee[0].toLowerCase();
+                        const fee = 1 * fromExponential(freyFee[1] / (10 ** 18));
+
+                        let acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
+
+                        if (!acceptedCurrency) return;
+                        acceptedCurrency.NFTBalance += fee;
+                    });
+                    this.acceptedTokens.forEach(c => c.NFTBalance = c.NFTBalance.toFixed(2));
+
+                    this.keys.feeBalance++;
+                } catch (err) {
+
+                }
             },
 
             async setTokenAllowance(token, amount) {
@@ -1239,7 +1325,10 @@
                 try {
                     const contractSellOrder = await this.contract.getSellOrder(tokenAddress, tokenId);
 
-                    if (!contractSellOrder) throw "Sell order doesn't exist or expired.";
+                    if (!contractSellOrder) {
+                        this.marketTokens = this.marketTokens.filter(c => c.tokenId !== item.tokenId);
+                        throw "Sell order doesn't exist or expired.";
+                    }
 
                     const priceValue = item.currency.id === this.acceptedTokens[0].value ? price : 0;
                     const acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
@@ -1277,10 +1366,15 @@
                 const [tokenAddress, tokenId, currency] = [this.market.token, item.tokenId, item.currency.id];
                 const price = fromExponential(amount * (10 ** 18));
 
+                const contractAuction = await this.contract.getAuction(tokenAddress, tokenId);
                 try {
-                    const contractAuction = await this.contract.getAuction(tokenAddress, tokenId);
-
-                    if (!contractAuction) throw "Auction order doesn't exist or ended.";
+                    if (!contractAuction || contractAuction.ended) {
+                        item.order.ended = true;
+                        this.marketTokens = this.marketTokens.filter(c => c.tokenId !== item.tokenId);
+                        this.$modal.hide('make-bid');
+                        this.bools.marketCard = false;
+                        throw "Auction order doesn't exist or ended.";
+                    }
 
                     const priceValue = item.currency.id === this.acceptedTokens[0].value ? price : 0;
                     const acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
@@ -1301,7 +1395,7 @@
                     this.triggerListReactivity(this.marketTokens);
                     await tx.wait(1);
 
-                    item.currentPrice = priceValue;
+                    item.currentPrice = price;
                     item.order.highestBidder = this.metaMaskAccount.toLowerCase();
                     item.isBusy = false;
                     this.$toast.success('Bid order successful');
@@ -1366,6 +1460,12 @@
                 try {
                     let tx = undefined;
                     if (item.type === this.CONSTANTS.AUCTION) {
+                        const contractAuction = await this.contract.getAuction(tokenAddress, tokenId);
+
+                        if(this.getAuctionEndDate(item) !== "Ended") {
+                            throw "Auction is still ongoing";
+                        }
+
                         tx = await this.contract.endAuction(tokenAddress, tokenId);
                     } else {
                         tx = await this.contract.cancelSell(tokenAddress, tokenId);
@@ -1507,7 +1607,7 @@
                 const hours = parseInt(seconds / 3600);
                 const days = parseInt(seconds / 3600 / 24);
 
-                if (hours === 0 && days === 0 && minutes === 0) {
+                if (hours < 0 && days < 0 && minutes < 0 && seconds < 0) {
                     item.order.ended = true;
                     return "Ended";
                 }

@@ -25,7 +25,7 @@
                     </div>
                     <div v-if='expandAttributes' style='background-color: #151515'
                         class='flex flex-wrap flex-col md:flex-row rounded-xl rounded-t-none px-4 py-4 h-auto w-full'>
-                        <div class='md:w-4/12 w-full h-9 md:h-12 flex md:text-base text-sm md:justify-start justify-evenly md:text-left text-center' v-for='(attribute, index) in item.attributes'
+                        <div class='md:w-6/12 w-full h-9 md:h-12 flex md:text-base text-sm md:justify-start justify-evenly md:text-left text-center' v-for='(attribute, index) in item.attributes'
                             :key='index'>
                             <div class='w-9/12'>
                                 {{ attribute.trait_type }}:
