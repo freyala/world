@@ -56,16 +56,16 @@
                             class="w-9/12 mx-2 rounded-lg hover:text-white px-0 py-0 min-h-9">
                             Reset
                         </button>
-                    <button v-on:click='initiateMarketSearch()' type="button"
-                        class="w-9/12 mr-2 xya-btn h-9 z-0 flex items-center justify-center">
-                        Apply
-                    </button>
+                        <button v-on:click='initiateMarketSearch()' type="button"
+                            class="w-9/12 mr-2 xya-btn h-9 z-0 flex items-center justify-center">
+                            Apply
+                        </button>
                         <i class="fas w-3/12 fa-times cursor-pointer ml-auto text-xl"
                             v-on:click='bools.responsiveFilters = false'></i>
                     </div>
                 </div>
                 <div :key='keys.filters' class="text-center overflow-y-auto flex py-4 mx-2 flex-col bg-light"
-                style='height: calc(100% - 120px)'>
+                    style='height: calc(100% - 120px)'>
                     <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
                         <div class='mb-1'>
                             {{ attribute.key }}
@@ -254,7 +254,6 @@
 
         <div id='collectionMenu' v-show='bools.collectionMenu' ref='collectionMenu'
             class='fixed border shadow-xl px-6 py-2 text-center bg-light rounded-lg cursor-pointer'>
-            <div class='my-4 hover:text-white'>Collect</div>
             <div v-on:click='showPickCurrencyModal()' class='my-4 hover:text-white'>
                 Register
             </div>
@@ -295,7 +294,8 @@
                                 #{{ collectionSelectedNFT.tokenId }}</h2>
 
                         </div>
-                        <h2 class='text-base text-white opacity-50 md:block hidden'>Frey Fees: </h2>
+                        <h2 class='text-base text-white opacity-50 md:block hidden'>Frey Fees:
+                            {{ collectionSelectedNFTFees }}</h2>
                     </div>
                     <div class='w-full flex flex-row md:flex-row my-2 md:my-0 rounded-xl h-3/6'>
                         <button v-on:click='showCreateMarketSaleModal()' type="button"
@@ -750,6 +750,7 @@
                 collectionDurationIntervalLimit: 60,
                 collectionSaleDurationType: 'minute',
                 collectionSelectedNFT: undefined,
+                collectionSelectedNFTFees: "",
                 collectionOperations: [],
                 collectionSaleAmount: 0,
                 collectionSaleDate: 0,
@@ -894,15 +895,24 @@
                     this.loaders.application = true;
                     if (this.isFreyMarket) {
                         const isRegistered = await this.freyRegistryContract.isRegistered(item.tokenId);
-                        const freyFees = await this.freyRegistryContract.getFreyFees(item.tokenId);
+                        this.collectionSelectedNFTFees = "";
+                        if (isRegistered) {
+                            const fees = await this.freyRegistryContract.getFreyFees(item.tokenId);
+                            const currency = fees[0].toLowerCase();
+                            const acceptedCurrency = this.acceptedTokens.filter(c => c.value.toLowerCase() ===
+                                currency)[0];
+                            this.collectionSelectedNFTFees = (fees[1] / (10 ** 18)).toFixed(2) + " " + (
+                                acceptedCurrency ? acceptedCurrency.key : "");
+                        }
                     }
-
-                    this.collectionSelectedNFT = item;
-                    this.bools.collectionCard = true;
-                    this.loaders.application = false;
                 } catch (err) {
+                    this.collectionSelectedNFTFees = "";
                     this.loaders.application = false;
                 }
+
+                this.collectionSelectedNFT = item;
+                this.bools.collectionCard = true;
+                this.loaders.application = false;
             },
 
             async showUserProfileModal() {
@@ -1125,6 +1135,7 @@
                     if (!acceptedCurrency) return;
                     acceptedCurrency.NFTBalance += fee;
                 });
+                this.acceptedTokens.forEach(c => c.NFTBalance = c.NFTBalance.toFixed(2));
 
                 this.keys.feeBalance++;
             },
@@ -1592,8 +1603,8 @@
 
                     const buttonPosition = event.target.getBoundingClientRect();
 
-                    dropdown.style.top = (buttonPosition.top - 160) + 'px';
-                    dropdown.style.left = (buttonPosition.left) + 'px';
+                    dropdown.style.top = (buttonPosition.top - 120) + 'px';
+                    dropdown.style.left = (buttonPosition.left - 12) + 'px';
 
                     const onClick = (event) => {
                         if (event.target.id === 'collectionMenuButton') return;
@@ -1645,7 +1656,7 @@
 
 <style>
     .bg-light {
-        background-color: #202020;
+        background-color: #222222;
     }
 
     .bg-hover {
