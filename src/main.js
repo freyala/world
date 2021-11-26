@@ -20,7 +20,7 @@ import Toast from "vue-toastification"
 Vue.use(panZoom, { componentName: 'world' });
 Vue.use(VShowSlide)
 Vue.use(VModal, { componentName: 'window' })
-Vue.use(Toast, { timeout: 2000 });
+Vue.use(Toast, { timeout: 3000 });
 
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false

@@ -187,7 +187,7 @@
                                     ...{{ item.order.highestBidder.slice(item.order.highestBidder.length - 5) }}
                                 </span>
                             </div>
-                            <img v-bind:src='item.image' />
+                            <img loading='lazy' v-bind:src='getNftImage(item)' />
                         </div>
                         <div class='px-1 market-item-body' slot='body'>
                             <div class='mt-2 w-full ml-2 mr-2 flex opacity-50'>
@@ -246,7 +246,7 @@
                                     ...{{ item.order.highestBidder.slice(item.order.highestBidder.length - 5) }}
                                 </span>
                             </div>
-                            <img v-bind:src='item.image' />
+                            <img loading='lazy' v-bind:src='getNftImage(item)' />
                         </div>
                         <div class='px-1 market-item-body' slot='body'>
                             <div class='mt-2 w-full ml-2 mr-2 flex opacity-50'>
@@ -284,7 +284,7 @@
                     <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 xl:m-2 md:mx-4 mb-6 flex flex-col'
                         v-for='(item, index) in userTokens' :key='index'>
                         <div v-on:click='showCollectionCardModal(item)' class='market-item-header' slot='header'>
-                            <img v-bind:src='item.image' />
+                            <img loading='lazy' v-bind:src='getNftImage(item)' />
                         </div>
                         <div class='px-1 market-item-body' slot='body'>
 
@@ -309,7 +309,7 @@
             </div>
         </div>
 
-        <div id='collectionMenu' v-show='bools.collectionMenu' ref='collectionMenu'
+        <div id='collectionMenu' style='min-width: 128px' v-show='bools.collectionMenu' ref='collectionMenu'
             class='fixed border shadow-xl px-6 py-2 text-center bg-light rounded-lg cursor-pointer'>
             <div v-if='isFreyMarket' v-on:click='showPickCurrencyModal()' class='my-4 hover:text-white'>
                 Register
@@ -323,7 +323,7 @@
         <transition name="market-modal">
             <MarketModal v-if='bools.collectionCard && collectionSelectedNFT'
                 v-on:closeModal='bools.collectionCard = false' :item='collectionSelectedNFT'
-                :image='collectionSelectedNFT.image'>
+                :image='getNftImage(collectionSelectedNFT)'>
                 <template slot='header-content'>
 
                     <div class='w-full md:h-3/6 h-2/6'>
@@ -350,11 +350,13 @@
                                 #{{ collectionSelectedNFT.tokenId }}</h2>
 
                         </div>
-                        <h2 class='md:text-sm text-sm md:mt-0 md:mb-0 md:mt-0 mb-4 mt-4'><span
+                        <h2 v-if='collectionSelectedNFT' class='md:text-lg text-sm md:block hidden mb-1'>{{ collectionSelectedNFT.description }}
+                        </h2>
+                        <h2 v-if='isFreyMarket' class='md:text-sm text-sm md:mt-2 md:mb-0 md:mt-0 mb-4 mt-4'><span
                                 class='text-white opacity-50'>Frey Fees:</span>
                             <strong class='text-white'> {{ collectionSelectedNFTFees }}</strong></h2>
                     </div>
-                    <div class='w-full flex flex-row md:flex-row md:my-0 rounded-xl h-3/6'>
+                    <div class='w-full flex flex-row md:flex-row md:my-0 md:mt-0 mt-2 rounded-xl h-3/6'>
                         <button v-on:click='showCreateMarketSaleModal()' type="button"
                             class="w-full md:ml-auto mr-2 mt-auto xya-btn">
                             Sale
@@ -372,7 +374,7 @@
             <!--My Sale Card Modal-->
             <MarketModal v-if='bools.collectionSale && collectionSelectedNFT'
                 v-on:closeModal='bools.collectionSale = false' :item='collectionSelectedNFT'
-                :image='collectionSelectedNFT.image'>
+                :image='getNftImage(collectionSelectedNFT)'>
                 <template slot='header-content'>
 
                     <div class='w-full md:h-2/6 h-auto'>
@@ -391,6 +393,8 @@
                         <h2 class='text-base text-white opacity-50 mt-1 md:my-1'>Owned by: You</h2>
                     </div>
                     <div class='w-full flex md:flex-nowrap flex-wrap md:flex-col flex-row rounded-xl md:h-4/6'>
+                        <h2 v-if='collectionSelectedNFT' class='text-xl mb-1'>{{ collectionSelectedNFT.description }}
+                        </h2>
                         <h2 class='text-xl mt-auto hidden md:block'>Manage item</h2>
                         <h2 v-if='collectionSelectedNFT.type === CONSTANTS.SALE' class='text-base mt-3 opacity-75'>Price
                         </h2>
@@ -440,7 +444,7 @@
         <transition name="market-modal">
             <!--Market Card Modal-->
             <MarketModal v-if='bools.marketCard && marketSelectedNFT' v-on:closeModal='bools.marketCard = false'
-                :item='marketSelectedNFT' :image='marketSelectedNFT.image'>
+                :item='marketSelectedNFT' :image='getNftImage(marketSelectedNFT)'>
                 <template slot='header-content'>
                     <div class='w-full h-2/6'>
                         <div class='w-full flex h-8'>
@@ -456,6 +460,7 @@
 
                     </div>
                     <div class='w-full h-4/6 flex flex-col rounded-xl mt-auto'>
+                        <h2 v-if='marketSelectedNFT' class='text-xl mb-1'>{{ marketSelectedNFT.description }}</h2>
                         <h2 class='mt-auto text-xl'>Manage item</h2>
                         <h2 v-if='marketSelectedNFT.type === CONSTANTS.SALE' class='text-base mt-2 opacity-75'>Price
                         </h2>
@@ -684,6 +689,83 @@
             </div>
         </window>
 
+        <window height='auto' width='80%' name='market-tutorial'>
+            <div id='tutorial' class="flex flex-wrap p-6 bg-dark h-full">
+                <div class="w-4/5">
+                    <div class="text-2xl">Tutorial</div>
+                </div>
+                <div class="w-1/5 text-right">
+                    <i @click="$modal.hide('market-tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <div class="mt-4 flex flex-col w-full" style='min-height: 220px'>
+                    <template v-if="tutorial.page === 0">
+                        <p class="text-xl mb-2">Sell Orders</p>
+                        <p class='txt-tutorial md:text-base text-sm'>
+                            Pick any NFT from your collection, set its price and list it on the market.
+                        </p>
+                        <br>
+                        <p class='txt-tutorial md:text-base text-sm'>Once somebody purchases your NFT, you will receive
+                            the tokens after a small fee is deducted
+                            from its sale price.</p>
+                        <br>
+                        <p>
+                            Sell orders can be cancelled at any time.
+                        </p>
+                    </template>
+
+                    <template v-if="tutorial.page === 1">
+                        <p class="text-xl mb-2">Auctions</p>
+                        <p class='txt-tutorial md:text-base text-sm mb-2'>
+                            Pick any NFT from your collection, set its price and list it on the market for any duration
+                            between 5 minutes to 7 days.
+                        </p>
+                        <p>
+                            While the auction is ongoing, you cannot retract the NFT.
+                        </p>
+                        <br>
+                        <p class='txt-tutorial'>
+                            Once the auction expires, you need to end it manually in order to receive your tokens.
+                        </p>
+                        <p class='mt-2'>The NFT will be transferred to the highest bidder after the owner ends the
+                            auction.</p>
+                        <br>
+                    </template>
+
+                    <template v-if="tutorial.page === 2">
+                        <p class="text-xl mb-2">Frey Reflection Fee</p>
+                        <p class='txt-tutorial md:text-base text-sm'>In order to be eligible for reflection fees, you
+                            need to register each Frey in your collection to a specific token.
+                        </p>
+                        <br>
+                        <p class='txt-tutorial md:text-base text-sm'>Once registered, your Frey will earn rewards for
+                            each market transaction made with the token
+                            selected.</p>
+                        <br>
+                    </template>
+
+                    <template v-if="tutorial.page === 3">
+                        <p class="text-xl mb-2">User Profile</p>
+                        <p class='txt-tutorial md:text-base text-sm'>
+                            To prevent abuse, tokens and NFTs will not be transferred directly into your wallet.
+                        </p>
+                        <br>
+                        <p class='txt-tutorial md:text-base text-sm'>
+                            Instead, they are stored inside the contract and you can withdraw them at any time
+                            by opening the User Panel window. <span><i
+                                    class="ml-4 fas fa-user text-xl hover:text-white"></i></span>
+                        </p>
+                        <br>
+                    </template>
+                </div>
+                <div class='w-full flex justify-center cursor-pointer select-none mt-5'>
+                    <span><a v-bind:class='{"opacity-50": tutorial.page - 1 < 0}'
+                            v-on:click='tutorial.page = Math.max(0, tutorial.page - 1)' class="mr-5">Previous</a>
+                        <a v-bind:class='{"opacity-50": tutorial.page + 1 > tutorial.pages}'
+                            v-on:click='tutorial.page = Math.min(tutorial.pages, tutorial.page + 1)'>Next</a></span>
+                </div>
+            </div>
+        </window>
+
         <window height='auto' width='80%' name='user-profile'>
             <div :key='keys.feeBalance' class="flex flex-wrap p-6 md:text-base text-xs bg-dark h-full">
                 <div class="w-4/5">
@@ -729,8 +811,8 @@
                     <div class='flex cursor-pointer justify-evenly mx-4 ' v-for='(token, index) in marketPendingTokens'
                         :key='index'>
                         <div class='flex flex-col text-center'>
-                            <img v-on:click='withdrawNFT(token.tokenId)' class='rounded-xl' width='64px' height="64px"
-                                v-bind:src='token.image' />
+                            <img loading='lazy' v-on:click='withdrawNFT(token.tokenId)' class='rounded-xl' width='64px'
+                                height="64px" v-bind:src='getNftImage(token)' />
                             <h2>#{{token.tokenId}}</h2>
                         </div>
                     </div>
@@ -741,10 +823,6 @@
 </template>
 
 <script>
-    const GRAPH_API = "https://marketplace-api.freyala.com/graphql/";
-    const ONE_TOKEN = "0x0000000000000000000000000000000000000000";
-    const FREYS = "https://frey.freyala.com/images/";
-
     import MarketPlazaItem from './MarketPlazaItem';
     import MarketModal from './MarketModal';
     import HRC721 from '../../plugins/artifacts/HRC721.json';
@@ -753,14 +831,13 @@
     import fromExponential from "from-exponential";
 
     import {
-        mapGetters,
-        mapActions
+        mapGetters
     } from "vuex";
     import {
         ethers
     } from "ethers";
 
-    import * as FilterQuery from "../../plugins/graphql/marketplace/filter";
+    import * as MarketRepository from "../../plugins/graphql/marketplace/filter";
     import * as AttributeQuery from "../../plugins/graphql/marketplace/attributes";
 
     export default {
@@ -855,13 +932,28 @@
                     COLLECTION_TAB: 0,
                     USER_TAB: 1,
                     AUCTIONS_TAB: 2,
-                    SALES_TAB: 3
+                    SALES_TAB: 3,
+
+                    //
+                    GRAPH_API: "https://marketplace-api.freyala.com/graphql/",
+                    ONE_TOKEN: "0x0000000000000000000000000000000000000000"
+                },
+                tutorial: {
+                    page: 0,
+                    pages: 3
                 }
             };
         },
 
         async mounted() {
             await this.initializeMarketPlaza();
+            if (this.isFreyMarket) {
+                const showTutorial = await localStorage.getItem('market-tutorial');
+                if (!showTutorial) {
+                    await localStorage.setItem('market-tutorial', "true");
+                    this.showTutorial();
+                }
+            }
         },
 
         watch: {
@@ -882,7 +974,7 @@
                     .signer);
                 this.freyRegistryContract = new ethers.Contract(FreyRegistry.address, FreyRegistry.abi, this
                     .metaMaskWallet.signer);
-                this.isFreyMarket = this.market.token === "0x3c8a8a7b7d0fea5078fb37c69e42b85d8fc6a063";
+                this.isFreyMarket = this.market.tokenName === "The Frey";
 
                 this.$nextTick(async () => {
                     this.loaders.application = true;
@@ -921,6 +1013,11 @@
                 });
             },
 
+            showTutorial(){
+                this.tutorial.page = 0;
+                this.$modal.show('market-tutorial');
+            },
+
             async showCollectionCardModal(item) {
                 try {
                     this.loaders.application = true;
@@ -935,6 +1032,7 @@
                             this.collectionSelectedNFTFees = (fees[1] / (10 ** 18)).toFixed(2) + " " + (
                                 acceptedCurrency ? acceptedCurrency.key : "");
                         }
+                        this.collectionSelectedNFTFees = "Not Registered";
                     }
                 } catch (err) {
                     this.collectionSelectedNFTFees = "Not Registered";
@@ -1044,7 +1142,17 @@
                     await Promise.all(ids)
                         .then(async (listOfIds) => {
                             const userNFTs = await this.$http.get(
-                                `https://frey.freyala.com/meta/list?items=${listOfIds}`);
+                                `${this.market.metadata}${listOfIds}`);
+
+                            userNFTs.data.forEach(c => {
+                                if (c.id !== undefined) {
+                                    c.tokenId = c.id;
+                                }
+
+                                if (this.market.tokenName === "CryptoPig") {
+                                    c.description = c.rarity;
+                                }
+                            })
 
                             this.userTokens = userNFTs.data;
                             this.userTokens.forEach(c => c.isBusy = false);
@@ -1056,8 +1164,8 @@
 
             async fetchMarketTokens() {
                 try {
-                    const result = await this.$http.post(GRAPH_API, {
-                        query: FilterQuery.FetchMarketTokens()
+                    const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
+                        query: MarketRepository.FetchMarketTokens()
                     });
 
                     this.tokens = this.tokens.filter(c => c.key === "ONE");
@@ -1065,7 +1173,7 @@
                     const tokens = result.data.data.currencies;
 
                     for (let i = 0; i < tokens.length; i++) {
-                        if (tokens[i].id === ONE_TOKEN) continue;
+                        if (tokens[i].id === this.CONSTANTS.ONE_TOKEN) continue;
                         const tokenContract = await new ethers.Contract(tokens[i].id, HRC20.abi, this
                             .metaMaskWallet.signer);
                         const tokenName = await tokenContract.name();
@@ -1078,10 +1186,6 @@
                             isBusy: false
                         });
                     }
-
-                    console.log(tokens);
-
-
                 } catch (err) {
                     console.error(err);
                 }
@@ -1095,8 +1199,8 @@
                     };
                     const pagination = this.getPaginationInfo();
                     const orderInfo = this.getOrderQuery();
-                    const result = await this.$http.post(GRAPH_API, {
-                        query: FilterQuery.FetchMarketNFTs(this.market.token, filters, pagination,
+                    const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
+                        query: MarketRepository.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
                     });
 
@@ -1122,8 +1226,8 @@
 
             async fetchPendingNFTs() {
                 try {
-                    const result = await this.$http.post(GRAPH_API, {
-                        query: FilterQuery.FetchPendingNFTs(this.market.token, this.metaMaskAccount
+                    const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
+                        query: MarketRepository.FetchPendingNFTs(this.market.token, this.metaMaskAccount
                             .toLowerCase())
                     });
                     this.marketPendingTokens = result.data.data.nfts;
@@ -1134,7 +1238,7 @@
 
             async fetchMarketAttributes() {
                 try {
-                    const result = await this.$http.post(GRAPH_API, {
+                    const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
                         query: AttributeQuery.FetchMarketAttributes(this.market.token)
                     });
 
@@ -1181,7 +1285,7 @@
                         this.acceptedTokens[i].balance = balance > 0 ? balance.toFixed(2) : 0;
                         this.acceptedTokens[i].NFTBalance = 0;
 
-                        if (this.acceptedTokens[i].value === ONE_TOKEN) continue;
+                        if (this.acceptedTokens[i].value === this.CONSTANTS.ONE_TOKEN) continue;
 
                         let tempContract = new ethers.Contract(this.acceptedTokens[i].value, HRC20.abi, this
                             .metaMaskWallet.signer);
@@ -1343,7 +1447,12 @@
                     const acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
 
                     if (!acceptedCurrency) throw "Currency not supported";
-                    if (!acceptedCurrency.approved) throw `${acceptedCurrency.key} is not approved.`;
+                    if (!acceptedCurrency.approved) {
+                        this.marketSelectedNFT = undefined;
+                        this.bools.marketCard = false;
+                        this.$modal.show('allowances');
+                        throw `${acceptedCurrency.key} is not approved.`;
+                    }
 
                     const tx = await this.contract.buy(tokenAddress, tokenId, currency, price, {
                         value: priceValue
@@ -1574,10 +1683,6 @@
                 return strQuery;
             },
 
-            getListingImage(id) {
-                return FREYS + id + ".png";
-            },
-
             getCurrencyName(id) {
                 const currency = this.acceptedTokens.filter(c => c.value === id)[0];
                 if (!currency) return "";
@@ -1596,6 +1701,13 @@
                     this.collectionDurationIntervalLimit = 7;
                 }
 
+            },
+
+            getNftImage(item) {
+                if (this.market.thumbnail === 'none') {
+                    return item.image;
+                }
+                return this.market.thumbnail + item.tokenId;
             },
 
             getAuctionEndDate(item) {
@@ -1706,8 +1818,10 @@
 
                     const buttonPosition = event.target.getBoundingClientRect();
 
-                    dropdown.style.top = (buttonPosition.top - 120) + 'px';
-                    dropdown.style.left = (buttonPosition.left - 12) + 'px';
+                    const tempOffset = this.isFreyMarket ? 120 : 80;
+
+                    dropdown.style.top = (buttonPosition.top - tempOffset) + 'px';
+                    dropdown.style.left = (buttonPosition.left - 10) + 'px';
 
                     const onClick = (event) => {
                         if (event.target.id === 'collectionMenuButton') return;
@@ -1812,5 +1926,29 @@
     .filters-leave-to {
         opacity: 0;
         transform: translateX(-300px);
+    }
+
+    #tutorial p>span {
+        font-weight: bold;
+        color: #8cd1a6 !important;
+    }
+
+    #tutorial a:hover {
+        color: #8cd1a6;
+    }
+
+    .inner-shadow {
+        -moz-box-shadow: inset 0 0 12px var(--var-shadow-color);
+        -webkit-box-shadow: inset 0 0 12px var(--var-shadow-color);
+        box-shadow: inset 0 0 12px var(--var-shadow-color);
+    }
+
+    .txt-hilight {
+        font-weight: bold;
+        color: #8cd1a6 !important;
+    }
+
+    .txt-tutorial {
+        color: rgba(255, 255, 255, 0.75);
     }
 </style>

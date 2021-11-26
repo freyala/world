@@ -3,15 +3,17 @@
         "tokenName": "The Frey",
         "image": "https://frey.freyala.com/images/3820.png",
         "status": "OPEN",
-        "token": "0x3c8a8a7b7d0fea5078fb37c69e42b85d8fc6a063",
-        "imageUrl": "https://frey.freyala.com/meta/list?items="
+        "token": "0xd9d6b8c7f63cc2f5d5df5f3a77b2f596a66230d2",
+        "metadata": "https://frey.freyala.com/meta/list?items=",
+        "thumbnail": "none"
     },
     {
-        "collectionName": "Harmoonies",
-        "tokenName": "Harmoonie",
-        "image": "https://api.harmoonies.one/thumbnails/2134",
+        "collectionName": "Crypto Pigs",
+        "tokenName": "CryptoPig",
+        "image": "https://ipfs.io/ipfs/QmaacTD6EMZvJVkcVjNrzob58srQ88dxoSGNANDNeY6SY6",
         "status": "OPEN",
-        "token": "0x8EA0b71eB3AF2f6Be08fF43D354D4215D0ab397a",
-        "imageUrl": "https://api.harmoonies.one/thumbnails/"
+        "token": "0xe5fd335819edb8da8395f8ec48beca747a0790ab",
+        "metadata": "https://api.cryptopigs.one/meta/list?items=",
+        "thumbnail": "none"
     }
 ]

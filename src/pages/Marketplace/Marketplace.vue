@@ -13,12 +13,17 @@
                 class="fas fa-long-arrow-alt-left cursor-pointer md:text-4xl text-2xl hover:text-white"></i></span>
             Marketplace
           </h1>
-          <div class='flex flex-row items-center justify-center mt-3' v-if='isMarketOpen'>
+          <div title='User Panel' class='flex flex-row items-center justify-center mt-3' v-if='isMarketOpen'>
             <div v-on:click='showUserMarketProfile()' class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-user text-xl hover:text-white"></i></span>
             </div>
-            <div v-on:click='showMarketAllowances()' class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+            <div title='Control Panel' v-on:click='showMarketAllowances()'
+              class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
+            </div>
+            <div title='Tutorial' v-on:click='showMarketTutorial()'
+              class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+              <span><i class="fas fa-question-circle text-xl hover:text-white"></i></span>
             </div>
           </div>
         </div>
@@ -57,8 +62,8 @@
             </div>
           </div>
         </div>
-        <MarketPlaza class='h-6/6' ref='marketPlaza' v-else :contract='marketContract' v-on:goBack='isMarketOpen = false'
-          :market='selectedMarket'>
+        <MarketPlaza class='h-6/6' ref='marketPlaza' v-else :contract='marketContract'
+          v-on:goBack='isMarketOpen = false' :market='selectedMarket'>
 
         </MarketPlaza>
       </div>
@@ -140,6 +145,10 @@
 
       showMarketAllowances() {
         this.$refs.marketPlaza.showMarketAllowances();
+      },
+
+      showMarketTutorial() {
+        this.$refs.marketPlaza.showTutorial();
       }
     }
   }
