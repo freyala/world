@@ -1,13 +1,9 @@
-export const ApplyMarketFilters = (filter) => {
+export const FetchMarketTokens = () => {
     return `
     {
-        nfts: nfts(where: {attributes: ${filter}}) {
-          id
-          attributes {
-            key
-            value
-          }
-        }
+      currencies {
+        id
+      }
     }
     `;
 };

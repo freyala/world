@@ -20,18 +20,38 @@
                 <router-link :to="{ name: 'frey-nft' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
 
-                       style="left: 32.2172%; top: 25.7847%; width: 6vw;" src="/images/map/Barracks.png"
+                       style="left: 61.90625%; top: 27.395833333333336%; width: 6vw;" src="/images/map/Barracks.png"
                        alt="FreyalaPlots">
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
-                       style="left: 32.2172%; top: 25.7847%; width: 6vw;">
+                       style="left: 61.90625%; top: 27.395833333333336%; width: 6vw;">
                     <div class="relative">
                       <img class="w-full" src="/images/map/Barracks_MO.png" alt="FreyalaPlots">
                     </div>
                   </div>
-                  <p :class="hovering === 'nft' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'nft' ? 'md:opacity-90' : 'md:opacity-70'"
                      class="text-center bubble text-white absolute"
-                     style="pointer-events: none; left: 33.3172%; top: 33.7847%;">
+                     style="pointer-events: none; left: 62.90625%; top: 35.005833333333336%;">
                     Frey Barracks
+                  </p>
+                </router-link>
+              </div>
+
+              <div @mouseenter="hovering = 'marketplace'" @mouseleave="hovering = ''">
+                <router-link :to="{ name: 'marketplace' }">
+                  <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
+
+                       style="left: 47.90625%; top: 49.895833333333336%; width: 5vw;" src="/images/map/Auction.png"
+                       alt="FreyalaPlots">
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                       style="left: 47.90625%; top: 49.895833333333336%; width: 5vw;">
+                    <div class="relative">
+                      <img class="w-full" src="/images/map/Auction_MO.png" alt="FreyalaPlots">
+                    </div>
+                  </div>
+                  <p :class="hovering === 'marketplace' ? 'md:opacity-90' : 'md:opacity-70'"
+                     class="text-center bubble text-white absolute"
+                     style="pointer-events: none; left: 48.70625%; top: 56.05833333333336%;">
+                    Marketplace
                   </p>
                 </router-link>
               </div>
@@ -48,7 +68,7 @@
                       <img class="w-full" src="/images/map/FreyalaPlots_MO.png" alt="FreyalaPlots">
                     </div>
                   </div>
-                  <p :class="hovering === 'plots' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'plots' ? 'md:opacity-90' : 'md:opacity-70'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 38.2172%; top: 42.7847%;">
                     Plots of Land
@@ -67,7 +87,7 @@
                       <img class="w-full" src="/images/map/Beacon_MO.png" alt="Beacon">
                     </div>
                   </div>
-                  <p :class="hovering === 'delegate' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'delegate' ? 'md:opacity-90' : 'md:opacity-70'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 30.1719%; top: 46.839%;">
                     Beacon of Light
@@ -94,7 +114,7 @@
               </div>
 
               <div @mouseenter="hovering = 'faucet'" @mouseleave="hovering = ''">
-                <router-link :to="{ name: 'marketplace' }">
+                <router-link :to="{ name: 'faucet' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
                        style="left: 42.3555%; top: 51.1806%; width: 5vw;" src="/images/map/Soup.png" alt="Soup">
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
@@ -103,7 +123,7 @@
                       <img class="w-full" src="/images/map/Soup_MO.png" alt="FreyalaTree">
                     </div>
                   </div>
-                  <p :class="hovering === 'faucet' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'faucet' ? 'md:opacity-90' : 'md:opacity-70'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 44.0555%; top: 56.8806%">
                     Faucet
@@ -121,7 +141,7 @@
                       <img class="w-full" src="/images/map/Drill_MO.png" alt="FreyalaTree">
                     </div>
                   </div>
-                  <p :class="hovering === 'staking' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'staking' ? 'md:opacity-90' : 'md:opacity-70'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 71.2156%; top: 54.8111%">
                     Extractor
@@ -139,7 +159,7 @@
                       <img class="w-full" src="/images/map/Casino_MO.png" alt="Casino">
                     </div>
                   </div>
-                  <p :class="hovering === 'casino' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'casino' ? 'md:opacity-90' : 'md:opacity-70'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 38.555%; top: 51.9792%">
                     Luderion Casino
@@ -157,7 +177,7 @@
                       <img class="w-full" src="/images/map/Palace_MO.png" alt="Palace">
                     </div>
                   </div>
-                  <p :class="hovering === 'governance' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'governance' ? 'md:opacity-90' : 'md:opacity-70'"
                      style="pointer-events: none; left: 42.7906%; top: 50.1389%;"
                      class="text-center everglen bubble text-white absolute">
                     Governance
@@ -175,7 +195,7 @@
                       <img class="w-full" src="/images/map/Mine_MO.png" alt="Mine">
                     </div>
                   </div>
-                  <p :class="hovering === 'jennymines' ? 'md:opacity-90' : 'md:opacity-50'"
+                  <p :class="hovering === 'jennymines' ? 'md:opacity-90' : 'md:opacity-70'"
                      class="text-center bubble text-white absolute"
                      style="pointer-events: none; left: 81.4281%; top: 34.9611%">
                     Mine rewards

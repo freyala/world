@@ -3,7 +3,6 @@
         "tokenName": "The Frey",
         "image": "https://frey.freyala.com/images/3820.png",
         "status": "OPEN",
-        "address": "0x9d854de439Ca8D048Daa91468848fF83937045b7",
         "token": "0x3c8a8a7b7d0fea5078fb37c69e42b85d8fc6a063",
         "imageUrl": "https://frey.freyala.com/meta/list?items="
     },
@@ -12,7 +11,6 @@
         "tokenName": "Harmoonie",
         "image": "https://api.harmoonies.one/thumbnails/2134",
         "status": "OPEN",
-        "address": "0x9d854de439Ca8D048Daa91468848fF83937045b7",
         "token": "0x8EA0b71eB3AF2f6Be08fF43D354D4215D0ab397a",
         "imageUrl": "https://api.harmoonies.one/thumbnails/"
     }
