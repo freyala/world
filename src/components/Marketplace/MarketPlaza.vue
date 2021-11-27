@@ -1087,8 +1087,9 @@
                                 currency)[0];
                             this.collectionSelectedNFTFees = (fees[1] / (10 ** 18)).toFixed(2) + " " + (
                                 acceptedCurrency ? acceptedCurrency.key : "");
+                        } else {
+                            this.collectionSelectedNFTFees = "Not Registered";
                         }
-                        this.collectionSelectedNFTFees = "Not Registered";
                     }
                 } catch (err) {
                     this.collectionSelectedNFTFees = "Not Registered";
