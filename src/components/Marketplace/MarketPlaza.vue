@@ -19,16 +19,32 @@
                 <div class='w-9/12 mx-auto flex h-full'>
                     <button v-on:click='resetMarketFilters()' type="button"
                         class="w-9/12 mx-2 rounded-lg hover:text-white px-0 py-0 min-h-9">
-                        Refresh
+                        Reset
                     </button>
                     <button v-on:click='initiateMarketSearch()' type="button"
                         class="w-full mr-2 xya-btn z-0 flex items-center justify-center">
-                        Apply Filters
+                        Apply
                     </button>
                 </div>
             </div>
             <div :key='keys.filters' class="overflow-y-auto text-center flex py-4 mx-2 my-4 flex-col bg-light"
                 style='height: calc(100% - 120px)'>
+                <div class='w-full mb-2'>
+                    <div class='mb-1'>
+                        Search by #
+                    </div>
+                    <div class='flex w-9/12 mx-auto'>
+                        <select v-model='marketIdQueryComparator'
+                            class="w-9/12 border rounded-lg border-yellow text-sm py-2 px-4 bg-dark">
+                            <option value='tokenId'>Equal</option>
+                            <option value='tokenId_lte'>Lesser Than</option>
+                            <option value='tokenId_gte'>Greater Than</option>
+                        </select>
+                        <input v-model='marketIdQuery' type='number'
+                            class='w-6/12 ml-4 border rounded-lg border-yellow py-2 px-4 bg-dark' />
+                    </div>
+                </div>
+
                 <div class='w-full mb-2'>
                     <div class='mb-1'>
                         Currency
@@ -93,6 +109,21 @@
                 </div>
                 <div :key='keys.filters' class="text-center overflow-y-auto flex py-4 mx-2 flex-col bg-light"
                     style='height: calc(100% - 120px)'>
+                    <div class='w-full mb-2'>
+                        <div class='mb-1'>
+                            Search by #
+                        </div>
+                        <div class='flex w-9/12 mx-auto'>
+                            <select v-model='marketIdQueryComparator'
+                                class="w-9/12 border rounded-lg border-yellow text-sm py-2 px-4 bg-dark">
+                                <option value='tokenId'>Equal</option>
+                                <option value='tokenId_lte'>Lesser Than</option>
+                                <option value='tokenId_gte'>Greater Than</option>
+                            </select>
+                            <input v-model='marketIdQuery' type='number'
+                                class='w-6/12 ml-4 border rounded-lg border-yellow py-2 px-4 bg-dark' />
+                        </div>
+                    </div>
                     <div class='w-full mb-2'>
                         <div class='w-full mb-2'>
                             <div class='mb-1'>
@@ -180,6 +211,12 @@
                                     SALE
                                 </span>
                             </div>
+                            <div style="bottom: 15px; right: 0px"
+                                class="absolute bg-white py-1 px-4 rounded-l-xl text-sm uppercase text-dark"
+                                v-if="isFreyMarket && item.tokenId <= 542">
+                                <strong>Pre sale Frey</strong>
+                            </div>
+
                             <div v-if='item.type === CONSTANTS.AUCTION && item.order.highestBidder'
                                 v-bind:class='{"bg-red": metaMaskAccount.toLowerCase() !== item.order.highestBidder, "bg-green": metaMaskAccount.toLowerCase() === item.order.highestBidder}'
                                 class='absolute shadow-lg rounded-r-xl text-white text-base flex items-center justify-center top-12 left-0 w-3/12 h-6'>
@@ -239,6 +276,11 @@
                                     SALE
                                 </span>
                             </div>
+                            <div style="bottom: 15px; right: 0px"
+                                class="absolute bg-white py-1 px-4 rounded-l-xl text-sm uppercase text-dark"
+                                v-if="isFreyMarket && item.tokenId <= 542">
+                                <strong>Pre sale Frey</strong>
+                            </div>
                             <div v-if='item.type === CONSTANTS.AUCTION && item.order.highestBidder'
                                 v-bind:class='{"bg-red": metaMaskAccount.toLowerCase() !== item.order.highestBidder, "bg-green": metaMaskAccount.toLowerCase() === item.order.highestBidder}'
                                 class='absolute shadow-lg rounded-r-xl text-white text-base flex items-center justify-center top-12 left-0 w-3/12 h-6'>
@@ -283,7 +325,13 @@
                     <div class='text-xl p-4 opacity-75' v-if='userTokens.length === 0'>Your collection is empty.</div>
                     <MarketPlazaItem :isBusy='item.isBusy' class='mt-2 2xl:mx-4 xl:m-2 md:mx-4 mb-6 flex flex-col'
                         v-for='(item, index) in userTokens' :key='index'>
-                        <div v-on:click='showCollectionCardModal(item)' class='market-item-header' slot='header'>
+                        <div v-on:click='showCollectionCardModal(item)' class='market-item-header relative'
+                            slot='header'>
+                            <div style="bottom: 15px; right: 0px"
+                                class="absolute bg-white py-1 px-4 rounded-l-xl text-sm uppercase text-dark"
+                                v-if="isFreyMarket && item.tokenId <= 542">
+                                <strong>Pre sale Frey</strong>
+                            </div>
                             <img loading='lazy' v-bind:src='getNftImage(item)' />
                         </div>
                         <div class='px-1 market-item-body' slot='body'>
@@ -871,6 +919,8 @@
                 marketPerPage: 100,
                 marketSortBy: "",
                 marketSelectedCurrency: "All",
+                marketIdQuery: 0,
+                marketIdQueryComparator: "tokenId",
                 marketAttributes: [],
                 marketSelectedFilters: [],
                 marketSales: [],
@@ -1192,20 +1242,21 @@
                             isBusy: false
                         });
                     }
-                } catch (err) {
-                }
+                } catch (err) {}
             },
 
             async fetchMarketSales() {
                 try {
                     const filters = {
                         attributeFilter: this.generateMarketFilterQuery(),
-                        currency: this.getCurrencyQuery()
+                        currency: this.getCurrencyQuery(),
+                        tokenId: this.getTokenIdQuery(),
+                        tokenIdComparator: this.marketIdQueryComparator
                     };
+
                     const pagination = this.getPaginationInfo();
                     const orderInfo = this.getOrderQuery();
-                    console.log(MarketRepository.FetchMarketNFTs(this.market.token, filters, pagination,
-                        orderInfo));
+
                     const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
                         query: MarketRepository.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
@@ -1776,6 +1827,11 @@
                 return this.marketSelectedCurrency;
             },
 
+            getTokenIdQuery() {
+                if (this.marketIdQuery === 0 || !this.marketIdQuery) return undefined;
+                return this.marketIdQuery;
+            },
+
             sortCollectionByField(collection, fieldString) {
                 const sortBy = fieldString.split('-');
                 const order = sortBy[1] === 'asc' ? 1 : -1;
@@ -1795,8 +1851,12 @@
                 for (let i = 0; i < this.marketSelectedFilters.length; i++) {
                     this.marketSelectedFilters[i] = '';
                 }
-                this.initiateMarketSearch();
                 this.userTokens = this.initialUserTokens;
+                this.marketIdQuery = 0;
+                this.marketIdQueryComparator = 'tokenId';
+                this.marketSelectedCurrency = 'All';
+                this.marketSortBy = '';
+                this.initiateMarketSearch();
                 this.keys.filters++;
             },
 

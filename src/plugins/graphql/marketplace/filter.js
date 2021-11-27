@@ -19,6 +19,54 @@ export const FetchPendingNFTs = (market, user) => {
     `;
 };
 
+export const FetchMarkstNFTs = () => {
+    return `
+    query 
+   nfts($market: String!, $tokenId: BigInt, $attributes: [AttributeInput!], $orderBy: Nft_orderBy, $orderDirection: OrderDirection){    
+    
+    sales: nfts(orderBy: $orderBy, orderDirection: $orderDirection, where: {tokenId: $tokenId, market: $market,  attributes: $attributes, currentSellOrder_not: null}) {
+      tokenId,
+      currentPrice
+      image
+      currency: currentCurrency{
+        id
+      }
+      order: currentSellOrder {
+        seller{
+          id
+        }
+        timestamp
+      }
+      attributes{
+        trait_type: key
+        value
+      }
+    }
+    auctions: nfts(orderBy: $orderBy, orderDirection: $orderDirection, where: {tokenId: $tokenId, market: $market,  attributes: $attributes, currentAuction_not: null}) {
+      tokenId
+      currentPrice
+      image
+      currency: currentCurrency{
+        id
+      }
+      order: currentAuction {
+        highestBidder
+        seller{
+          id
+        }
+        timestamp
+        ended
+        endsAt
+      }
+      attributes{
+        trait_type: key
+        value
+      }
+    }
+  }
+`
+};
+
 export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, orderInfo = undefined) => {
     const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection},`;
 
@@ -28,9 +76,11 @@ export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, or
 
     const currencyFilter = filters && filters.currency ? 'currentCurrency: "' + filters.currency + '", ' : "";
 
+    const tokenId = filters && filters.tokenId > 0 ? `${filters.tokenIdComparator}: ` + filters.tokenId + ', ' : "";
+
     return `
     {
-      sales: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${currencyFilter} attributes: ${attributeFilter}, currentSellOrder_not: null}) {
+      sales: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${tokenId} ${currencyFilter} attributes: ${attributeFilter}, currentSellOrder_not: null}) {
         tokenId,
         currentPrice
         image
