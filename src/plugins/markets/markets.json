@@ -1,0 +1,19 @@
+[{
+        "collectionName": "The Frey's",
+        "tokenName": "The Frey",
+        "image": "https://frey.freyala.com/images/3820.png",
+        "status": "OPEN",
+        "token": "0xd9d6b8c7f63cc2f5d5df5f3a77b2f596a66230d2",
+        "metadata": "https://frey.freyala.com/meta/list?items=",
+        "thumbnail": "none"
+    },
+    {
+        "collectionName": "Crypto Pigs",
+        "tokenName": "CryptoPig",
+        "image": "https://ipfs.io/ipfs/QmaacTD6EMZvJVkcVjNrzob58srQ88dxoSGNANDNeY6SY6",
+        "status": "OPEN",
+        "token": "0xe5fd335819edb8da8395f8ec48beca747a0790ab",
+        "metadata": "https://api.cryptopigs.one/meta/list?items=",
+        "thumbnail": "none"
+    }
+]
