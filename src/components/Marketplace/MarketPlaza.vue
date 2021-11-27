@@ -138,23 +138,24 @@
             </div>
         </transition>
 
-        <div class='xl:w-9/12 w-full h-full min-h-100 flex flex-col overflow-x-hidden sm:overflow-y-hidden overflow-y-scroll'>
+        <div
+            class='xl:w-9/12 w-full h-full min-h-100 flex flex-col overflow-x-hidden sm:overflow-y-hidden overflow-y-scroll'>
             <div
                 class='w-full mx-auto flex md:justify-end justify-evenly md:flex-row flex-col p-4 xl:ml-0 md:ml-4 ml-0 select-none text-center shadow-xl'>
                 <h2 v-on:click='bools.responsiveFilters = !bools.responsiveFilters'
                     class='2xl:text-xl xl:hidden block opacity-25 z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 hover:opacity-100 cursor-pointer md:mb-0 mb-3 md:w-4/12 w-full xya-btn'>
                     Filter</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.SALES_TAB'
-                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.SALES_TAB}'
+                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.SALES_TAB, "text-white": marketTab === CONSTANTS.SALES_TAB}'
                     class='2xl:text-xl z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 cursor-pointer hover:opacity-100 md:mb-0 mb-3 md:w-3/12 w-full xya-btn'>
                     Sales</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.USER_TAB'
-                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.USER_TAB}'
+                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.USER_TAB, "text-white": marketTab === CONSTANTS.USER_TAB}'
                     class='2xl:text-xl z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 cursor-pointer hover:opacity-100 md:mb-0 mb-3 md:w-3/12 w-full xya-btn'>
                     My Sales
                     ({{ userSales.length }})</h2>
                 <h2 v-on:click='marketTab = CONSTANTS.COLLECTION_TAB'
-                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.COLLECTION_TAB}'
+                    v-bind:class='{"opacity-25": marketTab !== CONSTANTS.COLLECTION_TAB, "text-white": marketTab === CONSTANTS.COLLECTION_TAB}'
                     class='2xl:text-xl z-0 lg:text-lg md:text-base text-xl mt-1 mr-8 cursor-pointer hover:opacity-100 md:mb-0 md:w-3/12 w-full mb-3 xya-btn'>
                     My NFT's
                     ({{ userTokens.length }})</h2>
@@ -349,7 +350,8 @@
                                 #{{ collectionSelectedNFT.tokenId }}</h2>
 
                         </div>
-                        <h2 v-if='collectionSelectedNFT' class='md:text-lg text-sm md:block hidden mb-1'>{{ collectionSelectedNFT.description }}
+                        <h2 v-if='collectionSelectedNFT' class='md:text-lg text-sm md:block hidden mb-1'>
+                            {{ collectionSelectedNFT.description }}
                         </h2>
                         <h2 v-if='isFreyMarket' class='md:text-sm text-sm md:mt-2 md:mb-0 md:mt-0 mb-4 mt-4'><span
                                 class='text-white opacity-50'>Frey Fees:</span>
@@ -863,6 +865,7 @@
                 marketApproved: false,
                 isFreyMarket: false,
                 freyRegistryContract: undefined,
+
                 marketTab: 3,
                 marketPage: 0,
                 marketPerPage: 100,
@@ -875,6 +878,7 @@
                 marketTokens: [],
                 marketBidAmount: 0,
                 marketPendingTokens: [],
+
                 initialUserTokens: [],
                 userTokens: [],
                 userSales: [],
@@ -889,6 +893,7 @@
                 collectionSaleAmount: 0,
                 collectionSaleDate: 0,
                 collectionSaleType: 0,
+
                 keys: {
                     filters: 0,
                     NFTCollection: 100,
@@ -898,10 +903,12 @@
                     marketAllowances: 0,
                     application: 0
                 },
+
                 NFTTransactionTo: "",
                 loaders: {
                     application: true
                 },
+
                 bools: {
                     responsiveFilters: false,
                     collectionCard: false,
@@ -914,6 +921,7 @@
                     cardSales: false,
                     cardDetails: false
                 },
+
                 tokens: [{
                     key: "ONE",
                     value: "0x0000000000000000000000000000000000000000",
@@ -921,22 +929,22 @@
                     balance: 0,
                     isBusy: false,
                 }],
+
                 acceptedTokens: [],
+
                 CONSTANTS: {
-                    //LISTING TYPE
                     SALE: 0,
                     AUCTION: 1,
 
-                    //MARKET TABS
                     COLLECTION_TAB: 0,
                     USER_TAB: 1,
                     AUCTIONS_TAB: 2,
                     SALES_TAB: 3,
 
-                    //
                     GRAPH_API: "https://marketplace-api.freyala.com/graphql/",
                     ONE_TOKEN: "0x0000000000000000000000000000000000000000"
                 },
+
                 tutorial: {
                     page: 0,
                     pages: 3
@@ -999,7 +1007,6 @@
 
                     this.collectionSaleToken = this.acceptedTokens[0].value;
 
-
                     await this.verifyTokens();
                     await this.fetchMarketAttributes();
                     await this.initiateMarketSearch();
@@ -1012,7 +1019,7 @@
                 });
             },
 
-            showTutorial(){
+            showTutorial() {
                 this.tutorial.page = 0;
                 this.$modal.show('market-tutorial');
             },
@@ -1175,7 +1182,7 @@
                         if (tokens[i].id === this.CONSTANTS.ONE_TOKEN) continue;
                         const tokenContract = await new ethers.Contract(tokens[i].id, HRC20.abi, this
                             .metaMaskWallet.signer);
-                        const tokenName = await tokenContract.name();
+                        const tokenName = await tokenContract.symbol();
 
                         this.tokens.push({
                             key: tokenName,
@@ -1186,7 +1193,6 @@
                         });
                     }
                 } catch (err) {
-                    console.error(err);
                 }
             },
 
@@ -1198,6 +1204,8 @@
                     };
                     const pagination = this.getPaginationInfo();
                     const orderInfo = this.getOrderQuery();
+                    console.log(MarketRepository.FetchMarketNFTs(this.market.token, filters, pagination,
+                        orderInfo));
                     const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
                         query: MarketRepository.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
@@ -1613,7 +1621,9 @@
                         gasPrice: 100000000000,
                         gasLimit: 1000000,
                     });
+
                     await tx.wait(1);
+
                     this.marketPendingTokens = this.marketPendingTokens.filter(c => c.tokenId !== tokenId);
                     this.keys.feeBalance++;
                     await this.fetchUserNFTs();
@@ -1628,7 +1638,9 @@
                     const tx = await this.contract.withdraw(token.value);
                     this.keys.feeBalance++;
                     token.isBusy = true;
+
                     await tx.wait(1);
+
                     token.balance = 0;
                     this.$toast.success('Withdraw successful');
                 } catch (err) {
@@ -1643,6 +1655,7 @@
                     const freyIds = await this.getRegisteredFreysIds();
 
                     const tx = await this.freyRegistryContract.collectFees(freyIds);
+
                     await tx.wait(1);
 
                     this.acceptedTokens.forEach(c => c.NFTBalance = 0);
@@ -1656,7 +1669,9 @@
             async setMarketApproval(approve) {
                 try {
                     const tx = await this.marketNFTContract.setApprovalForAll(this.contract.address, approve);
+
                     await tx.wait(1);
+
                     this.marketApproved = approve;
                     this.$toast.success(approve ? 'Market contract approved' : 'Market contract disabled');
                 } catch (err) {
