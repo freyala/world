@@ -45,7 +45,7 @@ export default {
     .card {
         position: relative;
         width: 220px;
-        height: 280px;
+        height: 240px;
         box-shadow: 0 5px 10px rgba(#000, .8);
         transform-origin: center top;
         transform-style: preserve-3d;

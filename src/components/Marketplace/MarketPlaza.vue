@@ -815,7 +815,7 @@
             </div>
         </window>
 
-        <window height='auto' width='80%' name='user-profile'>
+        <window height='60%' width='80%' name='user-profile'>
             <div :key='keys.feeBalance' class="flex flex-wrap p-6 md:text-base text-xs bg-dark h-full">
                 <div class="w-4/5">
                     <div class="text-2xl">User Profile</div>
