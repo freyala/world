@@ -195,7 +195,7 @@
             <div class='h-5/6 2xl:mx-8 xl:mx-6 md:mx-8 py-4 sm:overflow-y-scroll'>
                 <!-- SALES -->
                 <div :key='keys.marketSales' v-show='marketTab === CONSTANTS.SALES_TAB'
-                    class='w-full h-full mx-auto flex xl:justify-start justify-center flex-wrap overflow-x-hidden'>
+                    class='w-full h-full mx-auto flex xl:justify-start justify-center flex-wrap'>
                     <div class='text-xl md:p-4 p-0 md:w-6/12 w-8/12 opacity-75' v-if='marketTokens.length === 0'>There
                         are
                         no sales.</div>
@@ -214,7 +214,7 @@
                             <div style="bottom: 15px; right: 0px"
                                 class="absolute bg-white py-1 px-4 rounded-l-xl text-sm uppercase text-dark"
                                 v-if="isFreyMarket && item.tokenId <= 542">
-                                <strong>Pre sale Frey</strong>
+                                <strong>Presale Frey</strong>
                             </div>
 
                             <div v-if='item.type === CONSTANTS.AUCTION && item.order.highestBidder'
@@ -279,7 +279,7 @@
                             <div style="bottom: 15px; right: 0px"
                                 class="absolute bg-white py-1 px-4 rounded-l-xl text-sm uppercase text-dark"
                                 v-if="isFreyMarket && item.tokenId <= 542">
-                                <strong>Pre sale Frey</strong>
+                                <strong>Presale Frey</strong>
                             </div>
                             <div v-if='item.type === CONSTANTS.AUCTION && item.order.highestBidder'
                                 v-bind:class='{"bg-red": metaMaskAccount.toLowerCase() !== item.order.highestBidder, "bg-green": metaMaskAccount.toLowerCase() === item.order.highestBidder}'
@@ -330,7 +330,7 @@
                             <div style="bottom: 15px; right: 0px"
                                 class="absolute bg-white py-1 px-4 rounded-l-xl text-sm uppercase text-dark"
                                 v-if="isFreyMarket && item.tokenId <= 542">
-                                <strong>Pre sale Frey</strong>
+                                <strong>Presale Frey</strong>
                             </div>
                             <img loading='lazy' v-bind:src='getNftImage(item)' />
                         </div>
@@ -501,7 +501,7 @@
                             <i v-on:click='bools.marketCard = false'
                                 class="fas ml-auto fa-times cursor-pointer text-xl"></i>
                         </div>
-                        <h2 v-if='marketSelectedNFT' class='text-4xl mb-1'>{{ market.tokenName }}
+                        <h2 v-if='marketSelectedNFT' class='text-2xl mb-1'>{{ market.tokenName }}
                             #{{ marketSelectedNFT.tokenId }}</h2>
                         <h2 class='text-base text-white opacity-50 md:mb-1 mb-2'>Owned by:
                             {{ getAccountStamp(marketSelectedNFT.order.seller.id) }}
@@ -1033,6 +1033,7 @@
                     .metaMaskWallet.signer);
                 this.isFreyMarket = this.market.tokenName === "The Frey";
 
+
                 this.$nextTick(async () => {
                     this.loaders.application = true;
                     this.initialUserTokens = [];
@@ -1389,14 +1390,14 @@
 
                     freyFees.forEach(freyFee => {
                         const currency = freyFee[0].toLowerCase();
-                        const fee = 1 * fromExponential(freyFee[1] / (10 ** 18));
+                        const fee = 1 * freyFee[1];
 
                         let acceptedCurrency = this.acceptedTokens.filter(c => c.value === currency)[0];
 
                         if (!acceptedCurrency) return;
                         acceptedCurrency.NFTBalance += fee;
                     });
-                    this.acceptedTokens.forEach(c => c.NFTBalance = c.NFTBalance.toFixed(2));
+                    this.acceptedTokens.forEach(c => c.NFTBalance = c.NFTBalance / (10 ** 18));
 
                     this.keys.feeBalance++;
                 } catch (err) {
@@ -1843,7 +1844,7 @@
                             .currentPrice) ? -order :
                         0)));
                 } else {
-                    collection.sort((a, b) => (a.tokenId > b.tokenId) ? order : ((b.tokenId > a.tokenId ? -order :
+                    collection.sort((a, b) => (parseInt(a.tokenId) > parseInt(b.tokenId)) ? order : ((parseInt(b.tokenId) > parseInt(a.tokenId) ? -order :
                         0)));
                 }
             },

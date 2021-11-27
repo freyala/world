@@ -134,7 +134,6 @@
 
     methods: {
       openMarket(market) {
-        console.log(market);
         this.isMarketOpen = true;
         this.selectedMarket = market;
       },

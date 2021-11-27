@@ -102,7 +102,7 @@
                 <div style="top: 15px; left: 15px"
                      class="absolute bg-white py-2 px-4 rounded-full text-sm uppercase text-dark"
                      v-if="mint.tokenId <= 542">
-                  <strong>Pre sale Frey!</strong>
+                  <strong>Presale Frey!</strong>
                 </div>
 
                 <p class="py-3 text-xl">
