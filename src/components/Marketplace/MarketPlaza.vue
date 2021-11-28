@@ -1064,6 +1064,11 @@
                     await this.fetchUserNFTs();
                     await this.fetchPendingNFTs();
 
+                    /*for(let i = 0; i < this.acceptedTokens.length; i++){
+                         console.log(`Registered for ${this.acceptedTokens[i].key}`, await this
+                            .freyRegistryContract.getTotalRegisteredByCurrency(this.acceptedTokens[i].value) * 1);
+                    }*/
+
                     if (this.isFreyMarket) {
                         await this.getFreyFees();
                     }
@@ -1844,7 +1849,8 @@
                             .currentPrice) ? -order :
                         0)));
                 } else {
-                    collection.sort((a, b) => (parseInt(a.tokenId) > parseInt(b.tokenId)) ? order : ((parseInt(b.tokenId) > parseInt(a.tokenId) ? -order :
+                    collection.sort((a, b) => (parseInt(a.tokenId) > parseInt(b.tokenId)) ? order : ((parseInt(b
+                            .tokenId) > parseInt(a.tokenId) ? -order :
                         0)));
                 }
             },

@@ -80,7 +80,7 @@ export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, or
 
     return `
     {
-      sales: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${tokenId} ${currencyFilter} attributes: ${attributeFilter}, currentSellOrder_not: null}) {
+      sales: nfts(first:300, ${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${tokenId} ${currencyFilter} attributes: ${attributeFilter}, currentSellOrder_not: null}) {
         tokenId,
         currentPrice
         image
@@ -98,7 +98,7 @@ export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, or
           value
         }
       }
-      auctions: nfts(${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${tokenId} ${currencyFilter} attributes: ${attributeFilter}, currentAuction_not: null}) {
+      auctions: nfts(first:300, ${sortQuery}${paginationQuery} where: {market: "${marketToken}", ${tokenId} ${currencyFilter} attributes: ${attributeFilter}, currentAuction_not: null}) {
         tokenId
         currentPrice
         image
