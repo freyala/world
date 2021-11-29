@@ -162,11 +162,11 @@
                         <input class="w-full mb-1 bg-dark border border-bbrown rounded-xl p-2" type="number"
                                v-model="plotPrice">
                         <br>
-                        <button @click="approvePlotToSellNow(selectedPlotData.token_id)"
+                        <button @click="approvePlotToSellNow(selectedPlotData.token_id, selectedPlotData.neighbourhood)"
                                 class="mx-auto xya-btn w-full mb-2">
                           {{ loadingApproveSellPlot ? 'APPROVING' : 'APPROVE' }}
                         </button>
-                        <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id)"
+                        <button @click="sellPlotNow(plotPrice, selectedPlotData.token_id, selectedPlotData.neighbourhood)"
                                 class="mx-auto xya-btn w-full mb-2">
                           {{ loadingSellPlot ? 'SELLING' : 'SELL' }}
                         </button>
@@ -178,13 +178,13 @@
                                placeholder="Address to send plot to..."
                                v-model="selectedPlotData.sendToAddress">
                         <br>
-                        <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id)"
+                        <button @click="sendPlotNow(selectedPlotData.sendToAddress, selectedPlotData.token_id, selectedPlotData.neighbourhood)"
                                 class="mx-auto xya-btn w-full mb-2">
                           {{ loadingSendPlot ? 'SENDING' : 'SEND' }}
                         </button>
                       </div>
                       <div v-else>
-                        <button @click="cancelListing(selectedPlotData.token_id)" class="mx-auto xya-btn w-full mb-2">
+                        <button @click="cancelListing(selectedPlotData.token_id, selectedPlotData.neighbourhood)" class="mx-auto xya-btn w-full mb-2">
                           {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
                         </button>
                       </div>
@@ -299,10 +299,10 @@
 
                     <br>
 
-                    <button @click="approvePlotNow(selectedPlotData.sales.price)" class="mx-auto xya-btn w-full mb-2">
+                    <button @click="approvePlotNow(selectedPlotData.sales.price, selectedPlotData.neighbourhood)" class="mx-auto xya-btn w-full mb-2">
                       {{ loadingApproveBuyPlot ? 'APPROVING' : 'APPROVE' }}
                     </button>
-                    <button @click="buyPlotNow(selectedPlotData.sales.price, selectedPlotData.token_id)"
+                    <button @click="buyPlotNow(selectedPlotData.sales.price, selectedPlotData.token_id, selectedPlotData.neighbourhood)"
                             class="mx-auto xya-btn w-full mb-2">
                       {{ loadingBuyPlot ? 'BUYING' : 'BUY' }}
                     </button>
@@ -549,9 +549,9 @@ export default {
         }
 
         if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
-          singlePlotData.plot_type = 2
-        } else if (plot.neighbourhood === 16 || plot.neighbourhood === 17) {
           singlePlotData.plot_type = 1
+        } else if (plot.neighbourhood === 16 || plot.neighbourhood === 17) {
+          singlePlotData.plot_type = 2
         } else {
           singlePlotData.plot_type = 0
         }
@@ -625,9 +625,9 @@ export default {
         }
 
         if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
-          singlePlotData.plot_type = 2
-        } else if (plot.neighbourhood === 16 || plot.neighbourhood === 17) {
           singlePlotData.plot_type = 1
+        } else if (plot.neighbourhood === 16 || plot.neighbourhood === 17) {
+          singlePlotData.plot_type = 2
         } else {
           singlePlotData.plot_type = 0
         }
@@ -689,15 +689,15 @@ export default {
     modalClose() {
       this.plotModalReason = ''
     },
-    async sendPlotNow(address, id) {
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+    async sendPlotNow(address, id, neighbourhood) {
+      if (neighbourhood === 18 || neighbourhood === 19) {
         this.loadingSendPlot = true
         const send = await this.plotContracts.yin.transferFrom(this.metaMaskAccount, address, id)
         await send.wait(1)
         this.loadingSendPlot = false
 
         window.location.reload(1)
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+      } else if (neighbourhood === 16 || neighbourhood === 17) {
         this.loadingSendPlot = true
         const send = await this.plotContracts.yang.transferFrom(this.metaMaskAccount, address, id)
         await send.wait(1)
@@ -713,15 +713,15 @@ export default {
         window.location.reload(1)
       }
     },
-    async cancelListing(id) {
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+    async cancelListing(id, neighbourhood) {
+      if (neighbourhood === 18 || neighbourhood === 19) {
         this.loadingCancelPlotListing = true
         const cancel = await this.marketContracts.yin.cancelListing(id)
         await cancel.wait(1)
         this.loadingCancelPlotListing = false
 
         window.location.reload(1)
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+      } else if (neighbourhood === 16 || neighbourhood === 17) {
         this.loadingCancelPlotListing = true
         const cancel = await this.marketContracts.yang.cancelListing(id)
         await cancel.wait(1)
@@ -737,14 +737,14 @@ export default {
         window.location.reload(1)
       }
     },
-    async approvePlotToSellNow(id) {
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+    async approvePlotToSellNow(id, neighbourhood) {
+      if (neighbourhood === 18 || neighbourhood === 19) {
         this.loadingApproveSellPlot = true
         this.plotYinFreyalaContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
         const approve = await this.plotYinFreyalaContract.approve(PlotsYinMarket.address, id)
         await approve.wait(1)
         this.loadingApproveSellPlot = false
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+      } else if (neighbourhood === 16 || neighbourhood === 17) {
         this.loadingApproveSellPlot = true
         this.plotYangFreyalaContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
         const approve = await this.plotYangFreyalaContract.approve(PlotsYangMarket.address, id)
@@ -758,8 +758,8 @@ export default {
         this.loadingApproveSellPlot = false
       }
     },
-    async sellPlotNow(amount, id) {
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+    async sellPlotNow(amount, id, neighbourhood) {
+      if (neighbourhood === 18 || neighbourhood === 19) {
         this.loadingSellPlot = true
         const actual = amount * (10 ** 18)
         const arg = fromExponential(actual)
@@ -768,7 +768,7 @@ export default {
         this.loadingSellPlot = false
 
         window.location.reload(1)
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+      } else if (neighbourhood === 16 || neighbourhood === 17) {
         this.loadingSellPlot = true
         const actual = amount * (10 ** 18)
         const arg = fromExponential(actual)
@@ -788,14 +788,14 @@ export default {
         window.location.reload(1)
       }
     },
-    async approvePlotNow(amount) {
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+    async approvePlotNow(amount, neighbourhood) {
+      if (neighbourhood === 18 || neighbourhood === 19) {
         this.loadingApproveBuyPlot = true
         const mainYinContract = new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer)
         const approve = await mainYinContract.approve(PlotsYinMarket.address, amount)
         await approve.wait(1)
         this.loadingApproveBuyPlot = false
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+      } else if (neighbourhood === 16 || neighbourhood === 17) {
         this.loadingApproveBuyPlot = true
         const mainYangContract = new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer)
         const approve = await mainYangContract.approve(PlotsYangMarket.address, amount)
@@ -809,15 +809,15 @@ export default {
         this.loadingApproveBuyPlot = false
       }
     },
-    async buyPlotNow(amount, id) {
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+    async buyPlotNow(amount, id, neighbourhood) {
+      if (neighbourhood === 18 || neighbourhood === 19) {
         this.loadingBuyPlot = true
         const sales = await this.marketContracts.yin.buy(amount, id)
         await sales.wait(1)
         this.loadingBuyPlot = false
 
         window.location.reload(1)
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+      } else if (neighbourhood === 16 || neighbourhood === 17) {
         this.loadingBuyPlot = true
         const sales = await this.marketContracts.yang.buy(amount, id)
         await sales.wait(1)
@@ -936,9 +936,9 @@ export default {
       }
 
       let plotType = -1
-      if (this.neighbourhood === 18 || this.neighbourhood === 19) {
+      if (neighbourhood === 18 || neighbourhood === 19) {
         plotType = 1
-      } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
+      } else if (neighbourhood === 16 || neighbourhood === 17) {
         plotType = 2
       } else {
         plotType = 0
