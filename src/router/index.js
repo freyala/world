@@ -26,6 +26,7 @@ import Governance from "../pages/Governance";
 import JennyMines from "../pages/JennyMines";
 import Staking from "../pages/Staking";
 import Plots from "../pages/Plots";
+import Boss from "../pages/Boss";
 
 Vue.use(Router)
 
@@ -76,6 +77,11 @@ export default new Router({
             path: '/frey/collection',
             name: 'frey-collection',
             component: FreyCollection
+        },
+        {
+          path: '/boss/:id',
+          name: 'boss',
+          component: Boss
         },
         {
             path: '/casino/coinflip',

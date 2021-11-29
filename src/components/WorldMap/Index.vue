@@ -7,7 +7,13 @@
 
           <!--          ICONS-->
           <div class="absolute w-full h-full" style="top: -1.5vw; left: -1.75vw;">
-            <div class="relative w-full h-full">
+            <div class="relative w-full h-full">          
+          <!-- START TODO: IMPLEMENT BOSS CORRECTLY -->        
+              <router-link to="/boss/273" style="position: absolute; left: 49.8312%; top: 30%;">
+
+              <img class="cursor-pointer" style="width: 10vw;" src="https://frey.freyala.com/images/273.png" alt="WallTop">
+            </router-link>
+          <!-- END TODO: IMPLEMENT BOSS CORRECTLY -->
               <img class="cursor-pointer absolute" style="left: 58.1063%; top: 8.9681%; width: 17vw"
                    src="/images/map/WallTop.png" alt="WallTop">
               <img class="cursor-pointer absolute" style="left: 49.8312%; top: 62.0653%; width: 8vw;"
