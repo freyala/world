@@ -1318,6 +1318,8 @@
             },
 
             async initiateMarketSearch() {
+                this.marketTokens = []
+
                 let userSales = this.userSales;
                 try {
                     this.userSales = [];
