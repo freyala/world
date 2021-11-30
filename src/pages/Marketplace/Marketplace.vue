@@ -13,16 +13,36 @@
                 class="fas fa-long-arrow-alt-left cursor-pointer md:text-4xl text-2xl hover:text-white"></i></span>
             Marketplace
           </h1>
-          <div title='User Panel' class='flex flex-row items-center justify-center mt-3' v-if='isMarketOpen'>
-            <div v-on:click='showUserMarketProfile()' class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+          <div class='flex flex-row text-2xl items-center relative justify-center mt-2' v-if='isMarketOpen'>
+            <hr class='w-4/10 opacity-25 absolute z-0'>
+            <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
+              <h2 class='text-white bold'>{{marketInfo.items}}</h2>
+              <h2 class='text-sm'>Items</h2>
+            </div>
+            <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
+              <h2 class='text-white bold'>{{marketInfo.volume}}</h2>
+              <h2 class='text-sm'>Volume</h2>
+
+            </div>
+            <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
+              <h2 class='text-white bold'>{{marketInfo.floor}}</h2>
+              <h2 class='text-sm'>Floor</h2>
+            </div>
+          </div>
+          <div title='User Panel' class='flex flex-row items-center justify-center mt-1' v-if='isMarketOpen'>
+            <div v-on:click='showUserMarketProfile()' class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-user text-xl hover:text-white"></i></span>
             </div>
             <div title='Control Panel' v-on:click='showMarketAllowances()'
-              class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+              class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
             </div>
+            <div title='Market Stats' v-on:click='showMarketStats()'
+              class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
+              <span><i class="fas fa-book text-xl hover:text-white"></i></span>
+            </div>
             <div title='Tutorial' v-on:click='showMarketTutorial()'
-              class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+              class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-question-circle text-xl hover:text-white"></i></span>
             </div>
           </div>
@@ -103,6 +123,11 @@
         marketContract: undefined,
         selectedMarket: undefined,
         isMarketOpen: false,
+        marketInfo: {
+          volume: 0,
+          items: 0,
+          floor: 0
+        }
       }
     },
 
@@ -148,6 +173,10 @@
 
       showMarketTutorial() {
         this.$refs.marketPlaza.showTutorial();
+      },
+
+      showMarketStats() {
+
       }
     }
   }

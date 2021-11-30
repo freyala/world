@@ -192,7 +192,7 @@
                     ({{ userTokens.length }})</h2>
             </div>
 
-            <div class='h-5/6 2xl:mx-8 xl:mx-6 md:mx-8 py-4 sm:overflow-y-scroll'>
+            <div ref='container' class='h-5/6 2xl:mx-8 xl:mx-6 md:mx-8 py-4 sm:overflow-y-scroll'>
                 <!-- SALES -->
                 <div :key='keys.marketSales' v-show='marketTab === CONSTANTS.SALES_TAB'
                     class='w-full h-full mx-auto flex xl:justify-start justify-center flex-wrap'>
@@ -915,8 +915,8 @@
                 freyRegistryContract: undefined,
 
                 marketTab: 3,
-                marketPage: 0,
-                marketPerPage: 100,
+                marketPage: 1,
+                marketPerPage: 25,
                 marketSortBy: "",
                 marketSelectedCurrency: "All",
                 marketIdQuery: 0,
@@ -956,7 +956,8 @@
 
                 NFTTransactionTo: "",
                 loaders: {
-                    application: true
+                    application: true,
+                    fetchSales: false,
                 },
 
                 bools: {
@@ -1011,6 +1012,20 @@
                     this.showTutorial();
                 }
             }
+
+            this.$refs.container.addEventListener('scroll', (e) => {
+                if (this.loaders.fetchSales) return;
+                const element = e.target;
+                let scrollTop = element.scrollTop;
+                let scrollHeight = element.scrollHeight;
+                let offsetHeight = element.offsetHeight;
+
+                let contentHeight = scrollHeight - offsetHeight;
+                if (contentHeight - 300 <= scrollTop) {
+                    this.marketPage++;
+                    this.fetchMarketSales();
+                }
+            });
         },
 
         watch: {
@@ -1097,6 +1112,7 @@
                             this.collectionSelectedNFTFees = "Not Registered";
                         }
                     }
+                    await this.populateNFTData(item);
                 } catch (err) {
                     this.collectionSelectedNFTFees = "Not Registered";
                     this.loaders.application = false;
@@ -1126,9 +1142,16 @@
                 this.$modal.show("allowances");
             },
 
-            showCollectionSaleModal(item) {
-                this.collectionSelectedNFT = item;
-                this.bools.collectionSale = true;
+            async showCollectionSaleModal(item) {
+                try {
+                    await this.populateNFTData(item);
+                    this.collectionSelectedNFT = item;
+                    this.bools.collectionSale = true;
+                } catch (err) {
+                    this.userSales = this.userSales.filter(c => c.tokenId !== item.tokenId);
+                    this.triggerListReactivity(this.userSales);
+                    this.handleError(err);
+                }
             },
 
             async showMarketCardModal(item) {
@@ -1145,6 +1168,7 @@
                         }
                     }
 
+                    await this.populateNFTData(item);
                     this.marketSelectedNFT = item;
                     this.bools.marketCard = true;
                 } catch (err) {
@@ -1152,6 +1176,21 @@
                     this.triggerListReactivity(this.marketTokens);
                     this.handleError(err);
                 }
+            },
+
+            async populateNFTData(item) {
+                const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
+                    query: MarketRepository.FetchNFTData(this.market.token, item.tokenId)
+                });
+
+                const marketData = result.data.data.nfts[0];
+
+                if (!marketData) return;
+                item.attributes = marketData.attributes;
+                item.saleHistory = marketData.sales;
+                item.bidHistory = marketData.auctions;
+
+                console.log(item);
             },
 
             showMakeBidModal(item) {
@@ -1208,10 +1247,6 @@
                                 `${this.market.metadata}${listOfIds}`);
 
                             userNFTs.data.forEach(c => {
-                                if (c.id !== undefined) {
-                                    c.tokenId = c.id;
-                                }
-
                                 if (this.market.tokenName === "CryptoPig") {
                                     c.description = c.rarity;
                                 }
@@ -1254,6 +1289,7 @@
 
             async fetchMarketSales() {
                 try {
+                    this.loaders.fetchSales = true;
                     const filters = {
                         attributeFilter: this.generateMarketFilterQuery(),
                         currency: this.getCurrencyQuery(),
@@ -1268,7 +1304,6 @@
                         query: MarketRepository.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
                     });
-
                     const timeStampNow = Date.now();
 
                     const marketSales = result.data.data.sales;
@@ -1279,11 +1314,47 @@
                         c.order.ended = c.order.endsAt * 1000 - timeStampNow < 0
                     });
 
-                    this.marketTokens = [...marketSales, ...marketAuctions];
+                    const newTokens = [...marketSales, ...marketAuctions];
+                    this.sortCollectionByField(newTokens, this.marketSortBy);
+
+                    this.marketTokens = [...this.marketTokens, ...newTokens];
                     this.marketTokens.forEach(c => {
                         c.isBusy = false
                     });
-                    this.sortCollectionByField(this.marketTokens, this.marketSortBy);
+                    setTimeout(() => this.loaders.fetchSales = false, 1000);
+                } catch (err) {
+                     setTimeout(() => this.loaders.fetchSales = false, 1000);
+                }
+            },
+
+            async fetchUserSales() {
+                try {
+                    this.userSales = [];
+
+                    const filters = {
+                        attributeFilter: this.generateMarketFilterQuery(),
+                        currency: this.getCurrencyQuery(),
+                        tokenId: this.getTokenIdQuery(),
+                        tokenIdComparator: this.marketIdQueryComparator
+                    };
+
+                    const orderInfo = this.getOrderQuery();
+
+                    const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
+                        query: MarketRepository.FetchUserSales(this.market.token, filters, orderInfo)
+                    });
+
+                    console.log(result);
+
+                    const metamaskAccount = this.metaMaskAccount.toLowerCase();
+
+                    const userSales = this.marketTokens.filter(c => c.order.seller.id === metamaskAccount && c
+                        .type === this.CONSTANTS.SALE);
+                    const userAuctions = this.marketTokens.filter(c => c.order.seller.id === metamaskAccount && c
+                        .type === this.CONSTANTS.AUCTION);
+
+                    this.userSales = [...userSales, ...userAuctions];
+                    this.sortCollectionByField(userSales, this.marketSortBy);
                 } catch (err) {
 
                 }
@@ -1318,29 +1389,25 @@
             },
 
             async initiateMarketSearch() {
-                this.marketTokens = []
+                this.marketTokens = [];
+                this.marketPage = 1;
 
-                let userSales = this.userSales;
                 try {
                     this.userSales = [];
                     this.loaders.application = true;
 
                     await this.fetchMarketSales();
+                    await this.fetchUserSales();
                     await this.applyCollectionFilters();
                     const metamaskAccount = this.metaMaskAccount.toLowerCase();
 
-                    const userSales = this.marketTokens.filter(c => c.order.seller.id === metamaskAccount && c
-                        .type === this.CONSTANTS.SALE);
-                    const userAuctions = this.marketTokens.filter(c => c.order.seller.id === metamaskAccount && c
-                        .type === this.CONSTANTS.AUCTION);
                     this.marketTokens = this.marketTokens.filter(c => c.order.seller.id !== metamaskAccount && !(c
                         .type === this.CONSTANTS.AUCTION && c.order.ended));
 
                     this.loaders.application = false;
-                    this.userSales = [...userSales, ...userAuctions];
+
                 } catch (err) {
                     this.loaders.application = false;
-                    this.userSales = userSales;
                 }
             },
 
@@ -1809,7 +1876,6 @@
             },
 
             getPaginationInfo() {
-                return undefined;
                 return {
                     perPage: this.marketPerPage,
                     page: this.marketPage
@@ -1866,6 +1932,7 @@
                 this.marketIdQueryComparator = 'tokenId';
                 this.marketSelectedCurrency = 'All';
                 this.marketSortBy = '';
+                this.marketPage = 1;
                 this.initiateMarketSearch();
                 this.keys.filters++;
             },
@@ -1992,11 +2059,13 @@
     .market-modal-leave-active {
         opacity: 1;
         transition: all .25s;
+        z-index: 1000;
     }
 
     .market-modal-enter,
     .market-modal-leave-to {
         opacity: 0;
+        z-index: 1000;
     }
 
     .filters-enter-active,
