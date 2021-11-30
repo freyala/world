@@ -103,7 +103,7 @@
                       }}
                     </div>
                   </div>
-                  <div @click="buyPlot(plot)" class="m-auto text-center" v-else-if="plot.sales && plot.sales.forSale">
+                  <div @click="buyPlot(plot)" class="m-auto text-center" v-else-if="plot.sales && plot.sales.forSale && (plot.sales.seller === plot.plotOwner)">
                     FOR SALE
                     <br>
                     {{
@@ -184,6 +184,9 @@
                         </button>
                       </div>
                       <div v-else>
+                        <p class="text-center" v-if="selectedPlotData.sales.seller !== selectedPlotData.plotOwner">
+                          This plot was already listed when you received it. Please unlist before continueing.
+                        </p>
                         <button @click="cancelListing(selectedPlotData.token_id, selectedPlotData.neighbourhood)" class="mx-auto xya-btn w-full mb-2">
                           {{ loadingCancelPlotListing ? 'CANCELLING' : 'CANCEL LISTING' }}
                         </button>
@@ -571,6 +574,8 @@ export default {
           singlePlotData.sales.buyer = sales[1]
           singlePlotData.sales.price = ethers.BigNumber.from(sales[3]).toString()
           singlePlotData.sales.forSale = sales[4]
+
+          singlePlotData.plotOwner = await this.plotContracts[singlePlotData.plot_type === 0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' : 'yang'].ownerOf(plot.ID)
         }
 
         tempPlotData.push(singlePlotData)
@@ -621,6 +626,7 @@ export default {
           level_buff: plot.level,
           plot_type: 0,
           crime_rate_buff: plot.crimeRate,
+          plotOwner: '',
           ownerOf: false
         }
 
@@ -647,6 +653,8 @@ export default {
           singlePlotData.sales.buyer = sales[1]
           singlePlotData.sales.price = ethers.BigNumber.from(sales[3]).toString()
           singlePlotData.sales.forSale = sales[4]
+
+          singlePlotData.plotOwner = await this.plotContracts[singlePlotData.plot_type === 0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' : 'yang'].ownerOf(plot.ID)
         }
 
         for (let i = 0; i < plotOwner.length; i++) {
