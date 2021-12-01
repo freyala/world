@@ -51,22 +51,24 @@
                         No sales have been registered for this item.
                     </div>
                     <div v-if='item.saleHistory.length > 0'
-                        class='flex w-full px-2 py-1 md:text-left text-center items-center md:text-xl text-base justify-evenly'>
+                        class='flex w-full px-2 py-1 md:text-left text-center items-center md:text-xl sm:text-base text-xs justify-evenly'>
                         <div class='w-full'>
                             Seller
                         </div>
                         <div class='w-full'>
-                            Bidder
+                            Buyer
                         </div>
                         <div class='w-full'>
-                            Bid
+                            Price
                         </div>
                         <div class='w-full'>
                             Date
                         </div>
                     </div>
-                    <div class='flex w-full md:text-left text-center text-sm md:text-base items-center flex-col'>
-                        <div v-for='sale in item.saleHistory' :key='sale.timestamp' class='flex w-full py-2 px-4 items-center justify-evenly'>
+                    <div
+                        class='flex w-full md:text-left text-center sm:text-sm text-xs md:text-base items-center flex-col'>
+                        <div v-for='sale in item.saleHistory' :key='sale.timestamp'
+                            class='flex w-full py-2 px-4 items-center justify-evenly'>
                             <div class='w-full text-white opacity-75'>
                                 {{ getUserId(sale.seller.id) }}
                             </div>
@@ -74,10 +76,10 @@
                                 {{ getUserId(sale.buyer.id) }}
                             </div>
                             <div class='w-full text-white'>
-                                {{ sale.price }}
+                                {{ (sale.price / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(item.currency.id) }}
                             </div>
                             <div class='w-full ml-2 text-white opacity-75'>
-                                {{ sale.timestamp }}
+                                {{ getDate(sale.timestamp) }}
                             </div>
                         </div>
                     </div>
@@ -96,7 +98,7 @@
                             item.</template>
                     </div>
                     <div v-if='item.bidHistory.length > 0'
-                        class='flex w-full px-2 py-1 md:text-left text-center items-center md:text-xl text-base justify-evenly'>
+                        class='flex w-full px-2 py-1 md:text-left sm:text-base text-xs text-center items-center md:text-xl justify-evenly'>
                         <div class='w-full'>
                             Seller
                         </div>
@@ -110,8 +112,9 @@
                             Date
                         </div>
                     </div>
-                    <div class='flex w-full md:text-left text-center text-sm md:text-base items-center flex-col'>
-                        <div v-for='sale in item.bidHistory' :key='sale.timestamp' class='flex w-full py-2 px-4 items-center justify-evenly'>
+                    <div class='flex w-full md:text-left text-center sm:text-sm text-xs md:text-base items-center flex-col'>
+                        <div v-for='sale in item.bidHistory' :key='sale.timestamp'
+                            class='flex w-full py-2 px-4 items-center justify-evenly'>
                             <div class='w-full text-white opacity-75'>
                                 {{ getUserId(sale.seller.id) }}
                             </div>
@@ -119,10 +122,10 @@
                                 {{ getUserId(sale.highestBidder.id) }}
                             </div>
                             <div class='w-full text-white'>
-                                {{ sale.highestBid }}
+                                {{ (sale.highestBid / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(item.currency.id) }}
                             </div>
                             <div class='w-full ml-2 text-white opacity-75'>
-                                {{ sale.timestamp }}
+                                {{ getDate(sale.timestamp) }}
                             </div>
                         </div>
                     </div>
@@ -145,6 +148,10 @@
                 type: String,
                 default: ''
             },
+            tokens: {
+                type: Array,
+                default: []
+            }
         },
         data() {
             return {
@@ -165,6 +172,20 @@
             getUserId(id) {
                 if (!id) return '';
                 return '...' + id.slice(id.length - 5);
+            },
+
+            getTokenSymbol(id){
+                const token = this.tokens.filter(c => c.value === id)[0];
+                if(!token) return '';
+                return token.key;
+            },
+
+            getDate(timestamp) {
+                const date = new Date(timestamp * 1000);
+                var year = date.getFullYear();
+                var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                var day = ("0" + date.getDate()).slice(-2);
+                return month + '/' + day + '/' + year;
             }
         }
     }

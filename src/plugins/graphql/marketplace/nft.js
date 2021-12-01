@@ -1,13 +1,3 @@
-export const FetchMarketTokens = () => {
-    return `
-    {
-      currencies {
-        id
-      }
-    }
-    `;
-};
-
 export const FetchPendingNFTs = (market, user) => {
     return `
     {
@@ -17,6 +7,43 @@ export const FetchPendingNFTs = (market, user) => {
       }
     } 
     `;
+};
+
+
+export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, orderInfo = undefined) => {
+
+    const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection},`;
+    const paginationQuery = !pagination ? '' : `first: ${pagination.perPage}, skip: ${Math.max(pagination.perPage, (pagination.page - 1) * pagination.perPage)}`;
+
+    const byAttributes = filters && filters.attributeFilter ? filters.attributeFilter : "[]";
+    const byCurrency = filters && filters.currency ? 'currency: "' + filters.currency + '", ' : "";
+    const byId = filters && filters.tokenId > 0 ? `${filters.tokenIdComparator}: ` + filters.tokenId + ', ' : "";
+    const bySeller = filters && filters.seller ? `seller: "${filters.seller}", ` : "";
+
+    return `
+  {
+    listings(${sortQuery}where: {ended: false, market: "${marketToken}", ${bySeller} ${byId} ${byCurrency} attributes: ${byAttributes}}${paginationQuery}) {
+      id
+      nft {
+        image
+      }
+      seller {
+        id: address
+      }
+      price
+      currency {
+        id: address
+      }
+      ... on Auction {
+        timestamp
+        endsAt
+        highestBid
+        highestBidder
+      }
+      type: __typename
+    }
+  }
+  `
 };
 
 export const FetchNFTData = (market, tokenId) => {
@@ -50,7 +77,7 @@ export const FetchNFTData = (market, tokenId) => {
 };
 
 export const FetchUserSales = (marketToken, filters, orderInfo = undefined) => {
-    const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection},`;
+    const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection}`;
 
     const byAttributes = filters && filters.attributeFilter ? filters.attributeFilter : "[]";
     const byCurrency = filters && filters.currency ? 'currentCurrency: "' + filters.currency + '", ' : "";
@@ -92,48 +119,3 @@ export const FetchUserSales = (marketToken, filters, orderInfo = undefined) => {
   }
   `
 }
-
-export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, orderInfo = undefined) => {
-    const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection},`;
-    const paginationQuery = !pagination ? '' : `first: ${pagination.perPage}, skip: ${(pagination.page - 1) * pagination.perPage},`;
-
-    const byAttributes = filters && filters.attributeFilter ? filters.attributeFilter : "[]";
-    const byCurrency = filters && filters.currency ? 'currentCurrency: "' + filters.currency + '", ' : "";
-    const byId = filters && filters.tokenId > 0 ? `${filters.tokenIdComparator}: ` + filters.tokenId + ', ' : "";
-
-    return `
-    {
-      sales: nfts(${sortQuery}where: {market: "${marketToken}", ${byId} ${byCurrency} attributes: ${byAttributes}, currentSellOrder_not: null}${paginationQuery}) {
-        tokenId,
-        currentPrice
-        image
-        currency: currentCurrency{
-          id
-        }
-        order: currentSellOrder {
-          seller{
-            id
-          }
-          timestamp
-        }
-      }
-      auctions: nfts(${sortQuery} where: {market: "${marketToken}", ${byId} ${byCurrency} attributes: ${byAttributes}, currentAuction_not: null}${paginationQuery}) {
-        tokenId
-        currentPrice
-        image
-        currency: currentCurrency{
-          id
-        }
-        order: currentAuction {
-          highestBidder
-          seller{
-            id
-          }
-          timestamp
-          ended
-          endsAt
-        }
-      }
-    }
-  `
-};
