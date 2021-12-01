@@ -13,7 +13,7 @@ export const FetchPendingNFTs = (market, user) => {
 export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, orderInfo = undefined) => {
 
     const sortQuery = !orderInfo ? '' : `orderBy: ${orderInfo.orderBy}, orderDirection: ${orderInfo.orderDirection},`;
-    const paginationQuery = !pagination ? '' : `first: ${pagination.perPage}, skip: ${Math.max(pagination.perPage, (pagination.page - 1) * pagination.perPage)}`;
+    const paginationQuery = !pagination ? '' : `first: ${pagination.page  * pagination.perPage + pagination.perPage}, skip: ${pagination.page * pagination.perPage}`;
 
     const byAttributes = filters && filters.attributeFilter ? filters.attributeFilter : "[]";
     const byCurrency = filters && filters.currency ? 'currency: "' + filters.currency + '", ' : "";

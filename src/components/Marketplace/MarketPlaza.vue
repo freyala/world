@@ -1066,12 +1066,9 @@
                 if (contentHeight - 200 <= scrollTop) {
                     try {
                         this.loaders.application = true;
-                        const totalSales = this.marketTokens.length;
+                        this.marketPage++;
                         await this.fetchMarketSales();
                         this.loaders.application = false;
-                        if (this.marketTokens.length > totalSales) {
-                            this.marketPage++;
-                        }
                     } catch (err) {
                         this.loaders.application = false;
                     }
@@ -1463,7 +1460,6 @@
                     });
                     setTimeout(() => this.loaders.fetchSales = false, 1000);
                 } catch (err) {
-                    console.error(err);
                     setTimeout(() => this.loaders.fetchSales = false, 1000);
                 }
             },
