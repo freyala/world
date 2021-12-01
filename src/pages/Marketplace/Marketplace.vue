@@ -9,20 +9,41 @@
         style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
         <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-3xl md:text-5xl text-primary-alt font-semibold">
-            <span v-if='isMarketOpen'><i v-on:click='isMarketOpen = false'
+            <span v-if='isMarketOpen'><i v-on:click='destroyMarketPlaza()'
                 class="fas fa-long-arrow-alt-left cursor-pointer md:text-4xl text-2xl hover:text-white"></i></span>
             Marketplace
           </h1>
-          <div title='User Panel' class='flex flex-row items-center justify-center mt-3' v-if='isMarketOpen'>
-            <div v-on:click='showUserMarketProfile()' class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+          <div :key='isMarketOpen' class='flex flex-row text-2xl items-center relative justify-center mt-2'
+            v-if='isMarketOpen'>
+            <hr class='w-4/10 opacity-25 absolute z-0'>
+            <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
+              <h2 class='text-white bold'>{{getFancyNumber(marketStats.items)}}</h2>
+              <h2 class='text-sm'>Items</h2>
+            </div>
+            <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
+              <h2 class='text-white bold'>{{getFancyNumber(marketStats.volume)}}</h2>
+              <h2 class='text-sm'>Volume</h2>
+
+            </div>
+            <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
+              <h2 class='text-white bold'>{{getFancyNumber(marketStats.floor)}}</h2>
+              <h2 class='text-sm'>Floor</h2>
+            </div>
+          </div>
+          <div title='User Panel' class='flex flex-row items-center justify-center mt-1' v-if='isMarketOpen'>
+            <div v-on:click='showUserMarketProfile()' class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-user text-xl hover:text-white"></i></span>
             </div>
             <div title='Control Panel' v-on:click='showMarketAllowances()'
-              class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+              class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-cog text-xl hover:text-white"></i></span>
             </div>
+            <div title='Market Stats' v-on:click='showMarketStats()'
+              class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
+              <span><i class="fas fa-book text-xl hover:text-white"></i></span>
+            </div>
             <div title='Tutorial' v-on:click='showMarketTutorial()'
-              class='w-auto flex ml-5 xl:mt-2 mt-0 items-center cursor-pointer'>
+              class='w-auto flex mx-3 xl:mt-2 mt-0 items-center cursor-pointer'>
               <span><i class="fas fa-question-circle text-xl hover:text-white"></i></span>
             </div>
           </div>
@@ -62,8 +83,8 @@
             </div>
           </div>
         </div>
-        <MarketPlaza class='h-6/6' ref='marketPlaza' v-else :contract='marketContract'
-          v-on:goBack='isMarketOpen = false' :market='selectedMarket'>
+        <MarketPlaza v-on:updateStats='updateMarketStats($event)' class='h-6/6' ref='marketPlaza' v-else
+          :contract='marketContract' v-on:goBack='destroyMarketPlaza()' :market='selectedMarket'>
 
         </MarketPlaza>
       </div>
@@ -103,6 +124,11 @@
         marketContract: undefined,
         selectedMarket: undefined,
         isMarketOpen: false,
+        marketStats: {
+          volume: 0,
+          items: 0,
+          floor: 0
+        }
       }
     },
 
@@ -114,6 +140,18 @@
       );
 
       this.markets = Markets;
+
+      this.$nextTick(() => {
+        if (this.$route.query.market) {
+          const market = this.$route.query.market;
+
+          const marketPlaza = this.markets.filter(c => c.token.toLowerCase() === market.toLowerCase())[0];
+
+          if (!marketPlaza) return;
+          this.isMarketOpen = true;
+          this.selectedMarket = marketPlaza;
+        };
+      });
     },
 
     computed: {
@@ -130,12 +168,19 @@
       closedMarkets() {
         return this.markets.filter(c => c.status === 'CLOSED');
       },
+
     },
 
     methods: {
       openMarket(market) {
         this.isMarketOpen = true;
         this.selectedMarket = market;
+        const query = {
+          market: market.token
+        }
+        this.$router.push({
+          query
+        });
       },
 
       showUserMarketProfile() {
@@ -148,11 +193,68 @@
 
       showMarketTutorial() {
         this.$refs.marketPlaza.showTutorial();
+      },
+
+      showMarketStats() {
+        this.$refs.marketPlaza.showMarketStats();
+      },
+
+      updateMarketStats(marketStats) {
+        if (!this.isMarketOpen) return;
+        this.marketStats = marketStats;
+      },
+
+      destroyMarketPlaza() {
+        this.isMarketOpen = false;
+        this.marketStats = {
+          volume: 0,
+          items: 0,
+          floor: 0
+        };
+        this.$router.push({});
+      },
+
+      getFancyNumber(input) {
+        const lookup = [{
+            value: 1,
+            symbol: ""
+          },
+          {
+            value: 1e3,
+            symbol: "k"
+          },
+          {
+            value: 1e6,
+            symbol: "M"
+          },
+          {
+            value: 1e9,
+            symbol: "G"
+          },
+          {
+            value: 1e12,
+            symbol: "T"
+          },
+          {
+            value: 1e15,
+            symbol: "P"
+          },
+          {
+            value: 1e18,
+            symbol: "E"
+          }
+        ];
+        const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+        var item = lookup.slice().reverse().find(function (item) {
+          return input >= item.value;
+        });
+        return item ? (input / item.value).toFixed(1).replace(rx, "$1") + item.symbol : "0";
       }
     }
   }
 </script>
-<div class='absolute top-4 left-0 w-full z-0' style='height: 1px; border: 1px solid white;'></div>
+
+
 <style>
   .market-underline {
     position: absolute;

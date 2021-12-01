@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-on:click='closeModal()' class='fixed top-0 bottom-0 right-0 left-0'
-            style='background-color: rgba(0,0,0,0.5); z-index: z-50;'></div>
+            style='background-color: rgba(0,0,0,0.5); z-index: 50;'></div>
         <div class='fixed bg-light rounded-2xl h-auto shadow-xl details-modal flex flex-col overflow-y-auto'
             style='border: 1px solid rgba(84, 182, 122, 1); z-index: 100'>
             <div class='w-full h-auto md:h-3/6 flex md:flex-row flex-col z-5'>
@@ -46,22 +46,88 @@
                     </div>
                 </div>
                 <div v-if='expandSales' style='background-color: #151515'
-                    class='flex flex-wrap px-4 py-4 h-auto w-full rounded-xl rounded-t-none'>
-                    <div class='w-full'>
-                        Coming Soon...
+                    class='flex flex-wrap px-4 py-2 h-auto w-full rounded-xl rounded-t-none'>
+                    <div v-if='item.saleHistory.length === 0' class='w-full'>
+                        No sales have been registered for this item.
+                    </div>
+                    <div v-if='item.saleHistory.length > 0'
+                        class='flex w-full px-2 py-1 md:text-left text-center items-center md:text-xl sm:text-base text-xs justify-evenly'>
+                        <div class='w-full'>
+                            Seller
+                        </div>
+                        <div class='w-full'>
+                            Buyer
+                        </div>
+                        <div class='w-full'>
+                            Price
+                        </div>
+                        <div class='w-full'>
+                            Date
+                        </div>
+                    </div>
+                    <div
+                        class='flex w-full md:text-left text-center sm:text-sm text-xs md:text-base items-center flex-col'>
+                        <div v-for='sale in item.saleHistory' :key='sale.timestamp'
+                            class='flex w-full py-2 px-4 items-center justify-evenly'>
+                            <div class='w-full text-white opacity-75'>
+                                {{ getUserId(sale.seller.id) }}
+                            </div>
+                            <div class='w-full text-white opacity-75'>
+                                {{ getUserId(sale.buyer.id) }}
+                            </div>
+                            <div class='w-full text-white'>
+                                {{ (sale.price / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(item.currency.id) }}
+                            </div>
+                            <div class='w-full ml-2 text-white opacity-75'>
+                                {{ getDate(sale.timestamp) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div style='background-color: #151515' v-bind:class='{"rounded-b-none": expandDetails}'
                     class='w-full p-4 flex items-center mt-4 transition-colors h-10 rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white'>
                     <div v-on:click='expandDetails = !expandDetails' class='w-full flex cursor-pointer'>
-                        <h2 class='md:text-xl text-base'>Details</h2>
+                        <h2 class='md:text-xl text-base'>Auctions</h2>
                         <span class='ml-auto md:text-base text-sm mt-1 md:mt-0'>Expand</span>
                     </div>
                 </div>
                 <div v-if='expandDetails' style='background-color: #151515'
                     class='flex flex-wrap px-4 py-4 h-auto w-full rounded-xl rounded-t-none'>
                     <div class='w-full'>
-                        Coming Soon...
+                        <template v-if='item.bidHistory.length === 0'>No auctions have been registered for this
+                            item.</template>
+                    </div>
+                    <div v-if='item.bidHistory.length > 0'
+                        class='flex w-full px-2 py-1 md:text-left sm:text-base text-xs text-center items-center md:text-xl justify-evenly'>
+                        <div class='w-full'>
+                            Seller
+                        </div>
+                        <div class='w-full'>
+                            Bidder
+                        </div>
+                        <div class='w-full'>
+                            Bid
+                        </div>
+                        <div class='w-full'>
+                            Date
+                        </div>
+                    </div>
+                    <div class='flex w-full md:text-left text-center sm:text-sm text-xs md:text-base items-center flex-col'>
+                        <div v-for='sale in item.bidHistory' :key='sale.timestamp'
+                            class='flex w-full py-2 px-4 items-center justify-evenly'>
+                            <div class='w-full text-white opacity-75'>
+                                {{ getUserId(sale.seller.id) }}
+                            </div>
+                            <div class='w-full text-white opacity-75'>
+                                {{ getUserId(sale.highestBidder.id) }}
+                            </div>
+                            <div class='w-full text-white'>
+                                {{ (sale.highestBid / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(item.currency.id) }}
+                            </div>
+                            <div class='w-full ml-2 text-white opacity-75'>
+                                {{ getDate(sale.timestamp) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,6 +148,10 @@
                 type: String,
                 default: ''
             },
+            tokens: {
+                type: Array,
+                default: []
+            }
         },
         data() {
             return {
@@ -94,8 +164,28 @@
             onClick() {
                 this.$emit('cardClick');
             },
+
             closeModal() {
                 this.$emit('closeModal');
+            },
+
+            getUserId(id) {
+                if (!id) return '';
+                return '...' + id.slice(id.length - 5);
+            },
+
+            getTokenSymbol(id){
+                const token = this.tokens.filter(c => c.value === id)[0];
+                if(!token) return '';
+                return token.key;
+            },
+
+            getDate(timestamp) {
+                const date = new Date(timestamp * 1000);
+                var year = date.getFullYear();
+                var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                var day = ("0" + date.getDate()).slice(-2);
+                return month + '/' + day + '/' + year;
             }
         }
     }
