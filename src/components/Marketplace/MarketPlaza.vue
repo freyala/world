@@ -429,7 +429,7 @@
                         <div class='w-full flex items-center md:h-8 h-0'>
                             <h2 class='text-xl block md:block opacity-75'>{{ market.collectionName }}</h2>
 
-                            <span v-on:click='getShareURL(marketSelectedNFT)' title='Send'
+                            <span v-on:click='getShareURL()' title='Send'
                                 class='cursor-pointer mx-2 ml-auto hover:text-white'><i
                                     class="fas fa-share-square"></i></span>
                             <i v-on:click='closeMySaleModal()' class="fas fa-times mx-2 cursor-pointer text-xl"></i>
@@ -500,7 +500,7 @@
                     <div class='w-full h-2/6'>
                         <div class='w-full flex h-8'>
                             <h2 class='text-xl opacity-75'>{{ market.collectionName }}</h2>
-                            <span v-on:click='getShareURL(marketSelectedNFT)' title='Share'
+                            <span v-on:click='getShareURL()' title='Share'
                                 class='cursor-pointer mx-2 ml-auto hover:text-white'><i
                                     class="fas fa-share-square"></i></span>
                             <i v-on:click='closeMarketCardModal()' class="fas fa-times mx-2 cursor-pointer text-xl"></i>
@@ -1983,9 +1983,9 @@
                 return this.market.thumbnail + item.tokenId;
             },
 
-            getShareURL(item) {
-                navigator.clipboard.writeText(`${window.location.href}&tokenId=${item.tokenId}`);
-                this.$toast.info('Share link copied to the clipboard.');
+            getShareURL() {
+                navigator.clipboard.writeText(`${window.location.href}`);
+                this.$toast.info('Link copied to the clipboard.');
             },
 
             getAuctionEndDate(item) {
