@@ -40,7 +40,7 @@
                             <option value='tokenId_lte'>Lesser Than</option>
                             <option value='tokenId_gte'>Greater Than</option>
                         </select>
-                        <input v-model='marketIdQuery' type='number'
+                        <input v-model='marketIdQuery' v-bind:class='{"text-white": marketIdQuery > 0}' type='number'
                             class='w-6/12 ml-4 border rounded-lg border-yellow py-2 px-4 bg-dark' />
                     </div>
                 </div>
@@ -1103,6 +1103,13 @@
                     .metaMaskWallet.signer);
                 this.isFreyMarket = this.market.tokenName === "The Frey";
 
+                let showNFTCard = false;
+
+                if (this.$route.query.tokenId) {
+                    this.marketIdQuery = this.$route.query.tokenId;
+                    showNFTCard = true;
+                }
+
                 this.$nextTick(async () => {
                     this.loaders.application = true;
                     this.initialUserTokens = [];
@@ -1131,12 +1138,9 @@
                     await this.fetchMarketAttributes();
                     await this.initiateMarketSearch();
 
-                    if (this.$route.query.tokenId) {
-                        const tokenId = this.$route.query.tokenId;
-                        const item = this.marketTokens.filter(c => c.tokenId === tokenId)[0];
-
-                        if (item) {
-                            this.showMarketCardModal(item);
+                    if (showNFTCard) {
+                        if (this.marketTokens.length > 0) {
+                            this.showMarketCardModal(this.marketTokens[0]);
                         } else {
                             this.getQuery({
                                 market: this.market.token
@@ -1231,8 +1235,7 @@
                     this.collectionSelectedNFT = item;
                     this.bools.collectionSale = true;
                     this.getQuery({
-                        market: this.market.token,
-                        tokenId: item.tokenId
+                        market: this.market.token
                     });
                 } catch (err) {
                     this.userSales = this.userSales.filter(c => c.tokenId !== item.tokenId);
@@ -1485,6 +1488,10 @@
                     });
 
                     this.userSales = [...result.data.data.listings];
+                    this.userSales.forEach(c => {
+                        c.isBusy = false,
+                        c.ended = this.getAuctionEndDate(c) === 'Ended'
+                    });
                     this.sortCollectionByField(userSales, this.marketSortBy);
                 } catch (err) {
 
@@ -1989,18 +1996,17 @@
             },
 
             getAuctionEndDate(item) {
-                const order = item;
-                if (order.ended) return "Ended";
+                if (item.ended) return "Ended";
 
                 const dateNow = Date.now();
-                const endDate = order.endsAt * 1000 - dateNow;
+                const endDate = item.endsAt * 1000 - dateNow;
 
                 const seconds = endDate / 1000;
                 const minutes = parseInt(seconds / 60);
                 const hours = parseInt(seconds / 3600);
                 const days = parseInt(seconds / 3600 / 24);
 
-                if (hours < 0 && days < 0 && minutes < 0 && seconds < 0) {
+                if (hours <= 0 && days <= 0 && minutes <= 0 && seconds <= 0) {
                     item.ended = true;
                     return "Ended";
                 }
