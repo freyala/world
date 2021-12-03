@@ -1,0 +1,49 @@
+<svg id="Battle_Button__active" data-name="Battle Button _active" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="949" height="206" viewBox="0 0 949 206">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #5776d3;
+        filter: url(#filter);
+      }
+
+      .cls-2 {
+        font-size: 30px;
+        fill: #3c2f35;
+        font-family: "Maven Pro";
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .cls-2, .cls-3 {
+        text-anchor: middle;
+      }
+
+      .cls-3 {
+        font-size: 72px;
+        font-family: Chango;
+      }
+
+      .cls-3, .cls-4 {
+        fill: #feeef2;
+      }
+
+      .cls-4 {
+        fill-rule: evenodd;
+      }
+    </style>
+    <filter id="filter" x="0" y="0" width="949" height="206" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="5" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="3.873"/>
+      <feFlood result="flood" flood-color="#3c2f35" flood-opacity="0.2"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+      <feImage preserveAspectRatio="none" x="14" y="9" width="920" height="177" result="image" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iOTIwIiBoZWlnaHQ9IjE3NyIgdmlld0JveD0iMCAwIDkyMCAxNzciPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuY2xzLTEgewogICAgICAgIG9wYWNpdHk6IDAuNTsKICAgICAgICBmaWxsOiB1cmwoI2xpbmVhci1ncmFkaWVudCk7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImxpbmVhci1ncmFkaWVudCIgeDE9IjQ2MCIgeDI9IjQ2MCIgeTI9IjE3NyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjI1MSIgc3RvcC1jb2xvcj0iI2RkZThlYSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuNTAyIiBzdG9wLWNvbG9yPSIjZjliYWQyIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y3YTdjNSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iOTIwIiBoZWlnaHQ9IjE3NyIvPgo8L3N2Zz4K"/>
+      <feComposite result="composite-2" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend-2" mode="multiply" in2="blend"/>
+    </filter>
+  </defs>
+  <rect class="cls-1" x="14" y="9" width="920" height="177" rx="20" ry="20"/>
+  <text id="YOUR_NOBLE_SOW_IS_READY" data-name="YOUR NOBLE SOW IS READY" class="cls-2" x="419.391" y="143.022">YOUR NOBLE SOW IS READY</text>
+  <text id="Battle_" data-name="Battle!" class="cls-3" x="377.228" y="106.102">Battle!</text>
+  <path id="Rectangle_14_copy" data-name="Rectangle 14 copy" class="cls-4" d="M231.9,1458.26a2.919,2.919,0,0,1-.777,1.39l-26.338,26.34-8.657-8.65,24.532-24.54h-4.379a0.994,0.994,0,0,0-.386.08l-0.523.53a0.951,0.951,0,0,0-.084.36v-0.28l-21.5,21.5-5.657-5.65L214.47,1443a2.963,2.963,0,0,1,2.775-.8,3.03,3.03,0,0,1,1.047-.2h11.333a3,3,0,0,1,3,3v11.33A2.967,2.967,0,0,1,231.9,1458.26Zm-6.865,40.58a2.984,2.984,0,0,1,4.242,0l1.414,1.41a3,3,0,0,1,0,4.24l-11.913,11.92,12.939,12.93a3.01,3.01,0,0,1,0,4.25l-1.415,1.41a3,3,0,0,1-4.242,0l-12.939-12.94L202.186,1533a3,3,0,0,1-4.242,0l-1.415-1.41a3.01,3.01,0,0,1,0-4.25l5.33-5.32L139.5,1459.65a2.919,2.919,0,0,1-.777-1.39,2.967,2.967,0,0,1-.721-1.93V1445a3,3,0,0,1,3-3h11.333a3.03,3.03,0,0,1,1.047.2,2.963,2.963,0,0,1,2.775.8l62.361,62.36Zm-69.706-45.35v0.28a0.951,0.951,0,0,0-.084-0.36l-0.523-.53a0.994,0.994,0,0,0-.386-0.08h-4.38l60.556,60.56,2.343-2.34Zm-3.49,62.92-11.914-11.92a3,3,0,0,1,0-4.24l1.415-1.41a2.984,2.984,0,0,1,4.242,0l6.523,6.52,13.911-13.91,5.656,5.66-13.91,13.91,2.343,2.34,13.911-13.91,8.656,8.66-13.91,13.91,5.33,5.32a3.01,3.01,0,0,1,0,4.25l-1.415,1.41a3,3,0,0,1-4.242,0L157.5,1522.06,144.561,1535a3,3,0,0,1-4.242,0l-1.415-1.41a3.01,3.01,0,0,1,0-4.25Z" transform="translate(-66 -1395)"/>
+</svg>

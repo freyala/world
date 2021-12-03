@@ -1,0 +1,74 @@
+<svg id="Background" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8 {
+        fill-rule: evenodd;
+      }
+
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: #f16097;
+        filter: url(#filter);
+      }
+
+      .cls-3 {
+        fill: #f477a6;
+      }
+
+      .cls-3, .cls-6 {
+        opacity: 0.5;
+      }
+
+      .cls-4 {
+        fill: #a93e66;
+      }
+
+      .cls-5 {
+        fill: #b6436e;
+      }
+
+      .cls-6 {
+        fill: #ca5883;
+      }
+
+      .cls-7 {
+        fill: #c84a79;
+      }
+
+      .cls-8 {
+        fill: #fff;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="541.015" y1="796" x2="541.015" y2="-5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="0.337" stop-color="#fff"/>
+      <stop offset="0.746" stop-color="#feeef2"/>
+      <stop offset="1" stop-color="#feeef2"/>
+    </linearGradient>
+    <filter id="filter" x="-102" y="622.531" width="1506" height="1329.469" filterUnits="userSpaceOnUse">
+      <feImage preserveAspectRatio="none" x="-102" y="622.531" width="1506" height="1329.469" result="image" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTUwNiIgaGVpZ2h0PSIxMzI5LjQ2OSIgdmlld0JveD0iMCAwIDE1MDYgMTMyOS40NjkiPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuY2xzLTEgewogICAgICAgIG9wYWNpdHk6IDAuNTsKICAgICAgICBmaWxsOiB1cmwoI2xpbmVhci1ncmFkaWVudCk7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImxpbmVhci1ncmFkaWVudCIgeDE9IjExMzYuNzg1IiB4Mj0iMzY5LjIxNSIgeTI9IjEzMjkuNDY5IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzhkODY4OSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmYiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IGNsYXNzPSJjbHMtMSIgd2lkdGg9IjE1MDYiIGhlaWdodD0iMTMyOS40NjkiLz4KPC9zdmc+Cg=="/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" mode="multiply" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Static_Background" data-name="Static Background">
+    <path id="Rectangle_5_copy" data-name="Rectangle 5 copy" class="cls-1" d="M1085.02-5H-3.015V796L-3,696H1085l0.02,100V-5h0Z"/>
+    <path id="Rectangle_5_copy_2" data-name="Rectangle 5 copy 2" class="cls-2" d="M-38,653s428.237-30.469,633.8-30.469C804.242,622.531,1404,662,1404,662l-54,1290-415.861-10.21H-102Z"/>
+    <g id="Farm">
+      <path class="cls-3" d="M993.271,653.259s-119.679,10.782-153.1,26.955-106.74,47.44-153.1,56.066-212.4,28.032-265.234,47.44-81.942,42.049-81.942,42.049l439.9,2.157s62.535-37.737,79.786-62.535,47.44-59.3,62.535-70.083,101.349-39.893,105.659-39.893S993.271,653.259,993.271,653.259Z"/>
+      <path id="Shape_2_copy" data-name="Shape 2 copy" class="cls-4" d="M971.707,617.679l82.483-8.087,30.73-29.111-79.25,4.852Z"/>
+      <path id="Shape_1_copy" data-name="Shape 1 copy" class="cls-4" d="M1111.04,648.107l0.6-38.286-29.56-27.64-72.55,4.666-3.55,45.665,32.18,24.434Z"/>
+      <path class="cls-5" d="M983.151,652.16l-0.428-39.815,26.707-25.621,29.14,31.18-0.18,38.771Z"/>
+      <path id="Shape_1_copy_2" data-name="Shape 1 copy 2" class="cls-6" d="M991.325,654.117L991.044,622.7l36.726,1.992-0.18,32.425Z"/>
+      <path class="cls-7" d="M1038.02,621.992l82.48-8.087-35.58-33.424-79.25,4.852Z"/>
+    </g>
+  </g>
+  <g id="Clouds">
+    <path class="cls-8" d="M426.447,359.517l0,0.009H123.757l0-.017A78.811,78.811,0,0,1,85.5,349.081H48a54.847,54.847,0,1,1,6.775-106.01,79.277,79.277,0,0,1,103.973-34.565,89.524,89.524,0,0,1,177.6,12.091,70.418,70.418,0,0,1,86.917,77.321c0.925-.083,1.859-0.132,2.806-0.132A30.867,30.867,0,0,1,426.447,359.517Z"/>
+    <path id="Ellipse_646_copy" data-name="Ellipse 646 copy" class="cls-8" d="M741.793,204.676a37.222,37.222,0,0,1-6.954-.66h-26.6a60.144,60.144,0,0,1-25.164,6.99l-0.012.092H477.842l0.007-.017a20.927,20.927,0,0,1,.667-41.842c0.642,0,1.276.034,1.9,0.09a47.769,47.769,0,0,1,58.935-52.42,60.681,60.681,0,0,1,116.195-22,60.567,60.567,0,0,1,81.518,35.7A37.181,37.181,0,1,1,741.793,204.676Z"/>
+    <path id="Ellipse_646_copy_4" data-name="Ellipse 646 copy 4" class="cls-8" d="M994.8,415.739a33.425,33.425,0,0,1-5.873-.524H966.655a54.85,54.85,0,0,1-14.4,4.727l-0.115.889H789.392l0.01-.026a16.589,16.589,0,0,1,.525-33.17c0.509,0,1.011.032,1.509,0.077A37.9,37.9,0,0,1,838.471,346.2a44.523,44.523,0,0,1,74.37-27.318,55.2,55.2,0,0,1,82.227,30.042A33.406,33.406,0,0,1,994.8,415.739Z"/>
+  </g>
+</svg>
