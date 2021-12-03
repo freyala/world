@@ -839,8 +839,10 @@
             </div>
         </window>
 
-        <window height='60%' width='80%' name='user-profile'>
-            <div :key='keys.feeBalance' class="flex flex-wrap p-6 md:text-base text-xs bg-dark h-full">
+        <window height='50%' width='80%' name='user-profile'>
+            <div :key='keys.feeBalance'
+                class="flex flex-wrap p-6 md:text-base text-xs bg-dark sm:overflow-y-hidden overflow-y-scroll"
+                style='max-height: 80vh'>
                 <div class="w-4/5">
                     <div class="text-2xl">User Profile</div>
                 </div>
@@ -851,12 +853,12 @@
                     <div class="w-4/5">
                         <h2 class="md:text-xl text-base my-2 opacity-75">Market Sales</h2>
                     </div>
-                    <div class='flex w-full flex-row items-center my-2' v-for='(token, index) in acceptedTokens'
+                    <div class='flex w-full flex-row items-center my-1' v-for='(token, index) in acceptedTokens'
                         :key='index'>
                         <p class='w-4/12 md:mr-0 mr-2'>{{token.key}}</p>
                         <p class='w-4/12 text-white'>{{token.balance}}</p>
                         <button v-on:click="withdraw(token)" type="button"
-                            class="w-4/12 ml-auto xya-btn text-xs md:text-lg">
+                            class="w-4/12 ml-auto xya-btn text-xs md:px-0 px-2 py-2 my-1 md:text-base">
                             Collect
                         </button>
                     </div>
@@ -864,14 +866,14 @@
 
                 <div v-if='isFreyMarket' class="mt-4 flex flex-col w-full items-start justify-start">
                     <div class="w-4/5">
-                        <h2 class="md:text-xl text-base my-2 opacity-75">Frey Reflection Fee</h2>
+                        <h2 class="md:text-xl text-sm my-2 opacity-75">Frey Reflection Fee</h2>
                     </div>
                     <div class='flex w-full items-center flex-row my-2' v-for='(token, index) in acceptedTokens'
                         :key='index'>
                         <p class='w-4/12 md:mr-0 mr-2'>{{token.key}}</p>
                         <p v-if='token.NFTBalance' class='w-4/12 text-white'>{{token.NFTBalance.toFixed(6)}}</p>
                         <button v-if='index === acceptedTokens.length - 1' v-on:click="withdrawFreyFees(token)"
-                            type="button" class="w-4/12 text-xs md:text-lg ml-auto xya-btn">
+                            type="button" class="w-4/12 ml-auto xya-btn text-xs py-2 my-1 md:text-base">
                             Collect All
                         </button>
                     </div>
@@ -1490,7 +1492,7 @@
                     this.userSales = [...result.data.data.listings];
                     this.userSales.forEach(c => {
                         c.isBusy = false,
-                        c.ended = this.getAuctionEndDate(c) === 'Ended'
+                            c.ended = this.getAuctionEndDate(c) === 'Ended'
                     });
                     this.sortCollectionByField(userSales, this.marketSortBy);
                 } catch (err) {

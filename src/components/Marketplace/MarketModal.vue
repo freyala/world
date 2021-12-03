@@ -76,7 +76,7 @@
                                 {{ getUserId(sale.buyer.id) }}
                             </div>
                             <div class='w-full text-white'>
-                                {{ (sale.price / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(item.currency.id) }}
+                                {{ (sale.price / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(sale.currency.id) }}
                             </div>
                             <div class='w-full ml-2 text-white opacity-75'>
                                 {{ getDate(sale.timestamp) }}
@@ -122,7 +122,7 @@
                                 {{ getUserId(sale.highestBidder.id) }}
                             </div>
                             <div class='w-full text-white'>
-                                {{ (sale.highestBid / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(item.currency.id) }}
+                                {{ (sale.highestBid / 10 ** 18).toFixed(2) }} {{ getTokenSymbol(sale.currency.id) }}
                             </div>
                             <div class='w-full ml-2 text-white opacity-75'>
                                 {{ getDate(sale.timestamp) }}

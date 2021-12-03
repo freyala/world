@@ -57,6 +57,9 @@ export const FetchNFTData = (market, tokenId) => {
       sales(where:{buyer_not:null}){
         price
         timestamp
+        currency{
+          id
+        }
         buyer{
           id
         }
@@ -68,6 +71,9 @@ export const FetchNFTData = (market, tokenId) => {
         highestBidder
         highestBid
         timestamp
+        currency{
+          id
+        }
         seller{
           id
         }
