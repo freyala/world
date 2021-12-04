@@ -539,7 +539,8 @@
                                 class="xya-btn ml-auto w-4/12 mx-2">
                                 <span>Buy</span>
                             </button>
-                            <button v-if='marketSelectedNFT.type === CONSTANTS.AUCTION && getAuctionEndDate(marketSelectedNFT) !== "Ended"' 
+                            <button
+                                v-if='marketSelectedNFT.type === CONSTANTS.AUCTION && getAuctionEndDate(marketSelectedNFT) !== "Ended"'
                                 v-on:click='showMakeBidModal(marketSelectedNFT)' type="button"
                                 class="xya-btn ml-auto w-4/12 mx-2">
                                 <span>Bid</span>
@@ -561,7 +562,8 @@
                             <h2 class='text-xl text-white'>
                                 Auction Ended
                             </h2>
-                            <button v-if='marketSelectedNFT.highestBidder === metaMaskAccount.toLowerCase()' v-on:click='delistNFT(marketSelectedNFT)' type="button"
+                            <button v-if='marketSelectedNFT.highestBidder === metaMaskAccount.toLowerCase()'
+                                v-on:click='delistNFT(marketSelectedNFT)' type="button"
                                 class="xya-btn md:ml-auto ml-auto h-12 w-4/12 md:w-4/12 mt-2 md:mt-0">
                                 End
                             </button>
@@ -1362,6 +1364,9 @@
                                 `${this.market.metadata}${listOfIds}`);
 
                             userNFTs.data.forEach(c => {
+                                if (c.id !== undefined) {
+                                    c.tokenId = c.id;
+                                }
                                 if (this.market.tokenName === "CryptoPig") {
                                     c.description = c.rarity;
                                     c.tokenId = c.id;
