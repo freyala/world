@@ -8,6 +8,7 @@ import './assets/toast.css';
 import App from './App'
 import router from './router'
 import store from './store'
+import './plugins/globalErrorHandler'
 
 // import custom packages
 import panZoom from 'vue-panzoom'
