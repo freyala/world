@@ -2197,7 +2197,7 @@
     .market-plaza {
         display: flex;
         flex-wrap: wrap;
-        justify-content: start;
+        justify-content: flex-start;
     }
 
     .market-modal-enter-active,
