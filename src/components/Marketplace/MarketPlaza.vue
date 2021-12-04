@@ -236,7 +236,7 @@
                                 <div class='w-8/12'>#{{ item.tokenId }}</div>
                                 <div class='w-full text-right mr-4 text-white text-white'>
                                     {{ (item.price / (10 ** 18)).toFixed(1) }}
-                                    {{getCurrencyName(item.currency.id)}}</div>
+                                    {{ getCurrencyName(item.currency.id) }}</div>
                             </div>
                             <div v-if='false' class='w-full mt-2 ml-2 mr-2 flex text-white opacity-50'>
                                 <div class='w-8/12 text-right mr-2 my-auto mt-1 text-xs'>Last </div>
@@ -539,7 +539,7 @@
                                 class="xya-btn ml-auto w-4/12 mx-2">
                                 <span>Buy</span>
                             </button>
-                            <button v-if='marketSelectedNFT.type === CONSTANTS.AUCTION'
+                            <button v-if='marketSelectedNFT.type === CONSTANTS.AUCTION && getAuctionEndDate(marketSelectedNFT) !== "Ended"' 
                                 v-on:click='showMakeBidModal(marketSelectedNFT)' type="button"
                                 class="xya-btn ml-auto w-4/12 mx-2">
                                 <span>Bid</span>
@@ -561,6 +561,10 @@
                             <h2 class='text-xl text-white'>
                                 Auction Ended
                             </h2>
+                            <button v-if='marketSelectedNFT.highestBidder === metaMaskAccount.toLowerCase()' v-on:click='delistNFT(marketSelectedNFT)' type="button"
+                                class="xya-btn md:ml-auto ml-auto h-12 w-4/12 md:w-4/12 mt-2 md:mt-0">
+                                End
+                            </button>
                         </div>
                     </div>
                 </template>
@@ -1056,12 +1060,6 @@
                 let scrollTop = element.scrollTop;
                 let scrollHeight = element.scrollHeight;
                 let offsetHeight = element.offsetHeight;
-
-                if (scrollTop < lastScrollTop) {
-                    lastScrollTop = scrollTop;
-                    return;
-                }
-
                 lastScrollTop = scrollTop;
 
                 let contentHeight = scrollHeight - offsetHeight;
@@ -1366,6 +1364,7 @@
                             userNFTs.data.forEach(c => {
                                 if (this.market.tokenName === "CryptoPig") {
                                     c.description = c.rarity;
+                                    c.tokenId = c.id;
                                 }
                             })
 
@@ -1450,7 +1449,6 @@
 
                     const pagination = this.getPaginationInfo();
                     const orderInfo = this.getOrderQuery();
-
                     const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
                         query: NFTQueryBuilder.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
