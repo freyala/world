@@ -4,6 +4,7 @@ import axios from 'axios'
 import './assets/scss/app.scss'
 import "vue-toastification/dist/index.css";
 import './assets/toast.css';
+import { addInterceptorsTo } from './plugins/http-interceptors';
 
 import App from './App'
 import router from './router'
@@ -22,7 +23,7 @@ Vue.use(VShowSlide)
 Vue.use(VModal, { componentName: 'window' })
 Vue.use(Toast, { timeout: 3000 });
 
-Vue.http = Vue.prototype.$http = axios
+Vue.http = Vue.prototype.$http = addInterceptorsTo(axios)
 Vue.config.productionTip = false
 
 const loadImage = require('../public/images/LOADING.png')
