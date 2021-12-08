@@ -4,9 +4,9 @@
     class="flex p-4 lg:px-32" v-bind:class='{"md:p-16": !isMarketOpen}'>
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: hidden;" v-bind:class='{"screen": !isMarketOpen}'
       class="rounded-2xl w-full flex flex-col">
-      <section id="section-i-1" v-bind:class='{"h-1/4": isMarketOpen}' class="border-b items-center border-primary-alt"
+      <section id="section-i-1" v-bind:class='{"h-1/4": isMarketOpen}' class="border-b flex items-center border-primary-alt"
         style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center md:py-6 py-6 flex flex-col items-center">
+        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
           <h1 class="text-3xl md:text-5xl text-primary-alt font-semibold">
             <span v-if='isMarketOpen'><i v-on:click='destroyMarketPlaza()'
                 class="fas fa-long-arrow-alt-left cursor-pointer md:text-4xl text-2xl hover:text-white"></i></span>
