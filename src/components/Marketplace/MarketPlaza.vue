@@ -707,6 +707,29 @@
             </div>
         </window>
 
+        <window class='w-10/12' height="auto" width='80%' name='force-withdraw'>
+            <div class="flex flex-wrap p-6 bg-dark h-full">
+                <div class="w-4/5">
+                    <div class="text-2xl">Withdraw NFT</div>
+                </div>
+                <div class="w-1/5 text-right">
+                    <i @click="$modal.hide('force-withdraw')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <div class='mt-4 md:text-base text-sm opacity-75'>
+                    <p>NFT #</p>
+                </div>
+                <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
+                    <input class='w-full text-black px-2' type="text" v-model='forceWithdrawTokenId' />
+                    <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
+                        <button v-on:click="withdrawNFT(forceWithdrawTokenId)" type="button"
+                            class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                            <span>Confirm</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </window>
+
         <window class='w-10/12' height="auto" width="80%" name="make-bid">
             <div class="flex flex-wrap p-6 bg-dark h-full">
                 <div class="w-4/5">
@@ -1039,7 +1062,9 @@
                 tutorial: {
                     page: 0,
                     pages: 3
-                }
+                },
+
+                forceWithdrawTokenId: 0
             };
         },
 
@@ -1163,6 +1188,10 @@
             showTutorial() {
                 this.tutorial.page = 0;
                 this.$modal.show('market-tutorial');
+            },
+
+            showForceWithdraw(){
+                this.$modal.show('force-withdraw');
             },
 
             async showCollectionCardModal(item) {
@@ -1454,6 +1483,7 @@
 
                     const pagination = this.getPaginationInfo();
                     const orderInfo = this.getOrderQuery();
+
                     const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
                         query: NFTQueryBuilder.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
@@ -1891,6 +1921,8 @@
                         gasPrice: 100000000000,
                         gasLimit: 1000000,
                     });
+
+                    this.$modal.hide('force-withdraw');
 
                     await tx.wait(1);
 
