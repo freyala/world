@@ -29,7 +29,6 @@
             return {};
         },
         mounted() {
-            console.log('ATTRIBUTE', this.attribute);
         },
         methods: {
             ...mapGetters("exchange", ["getToken"]),

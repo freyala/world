@@ -11,9 +11,11 @@
           <div class='w-full flex flex-col justify-center my-8'>
             <h2 class='w-full text-center text-white text-2xl mb-4'>Your Piggies</h2>
 
-            <div class='w-full flex justify-center text-center items-center text-white text-lg opacity-50 cursor-pointer hover:opacity-100' v-for='piggy in yourPigs' :key='piggy.id'>
-                <img class='mt-1 mx-2' width="22px" src='/pigs/snout.svg' />
-                Pig #{{piggy.id}}
+            <div
+              class='w-full flex justify-center text-center items-center text-white text-lg cursor-pointer hover:opacity-100'
+              v-for='piggy in yourPigs' :key='piggy.id' v-on:click='importPiggy(piggy)'>
+              <img v-if='selectedPig && selectedPig.id === piggy.id' class='mt-1 mx-2' width="22px" src='/pigs/snout.svg' />
+              Pig #{{piggy.id}}
             </div>
           </div>
         </div>
@@ -50,19 +52,26 @@
           </div>
         </div>
 
-        <div class="w-full h-3/5 mt-14 relative flex items-center justify-center z-25">
+        <div v-cloak v-if='selectedPig && showPig'
+          class="w-full h-3/5 mt-14 relative flex items-center justify-center z-25">
           <img v-for='(attribute, index) in selectedPig.attributes' :key='index' class="m-auto absolute w-7/10 pt-60"
             v-bind:src='getPiggieAttributeImage(attribute)' alt="Pig">
           <img class='m-auto absolute w-7/10 pt-60' v-bind:src='getPiggyWashStatus()' />
         </div>
+        <div v-on:click='showPiggyMenu = true'
+          class='absolute left-0 flex flex-col items-center justify-center w-full opacity-50 hover:opacity-100 cursor-pointer'
+          style='top: 50%;' v-else>
+          <img width="64px" src='/pigs/snout.svg' />
+          <p class='text-2xl text-white'>Select Pig</p>
+        </div>
 
         <div class='absolute mx-auto h-16 flex w-full left-0 bottom-40 z-50'>
           <div class='mx-auto w-8/10 flex items-center justify-center rounded-2xl h-full bg-white'>
-            <h2 class='text-3xl w-5/10 text-center' style='color: #3C2F35'>George</h2>
+            <h2 class='text-3xl w-5/10 text-center' style='color: #3C2F35'>{{ piggyName }}</h2>
             <div class='w-5/10 relative h-20 bg-black rounded-2xl' style='background-color: #8660F1'>
               <div class='flex w-full h-full justify-center'>
                 <div class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white text-4xl h-full'>
-                  <p class='h-3/5 pt-2 mb-1'>3</p>
+                  <p class='h-3/5 pt-2 mb-1'> {{ piggyAge }} </p>
                   <p class='h-2/5 text-base'>Age</p>
                 </div>
                 <div class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white text-4xl h-full'>
@@ -124,11 +133,13 @@
         keys: {
           piggyStats: 0
         },
-        selectedPig: 0,
+        selectedPig: {id: 0},
 
         showPiggyMenu: false,
 
         piggyNone: '/pigs/attributes/none.png',
+        piggyName: "",
+        piggyAge: 0,
         piggyCloudsHandler: undefined,
         piggyClouds: [],
         piggyStats: [],
@@ -138,10 +149,11 @@
           washing: false,
           napping: false,
         },
+
+        showPig: false
       }
     },
     async mounted() {
-      this.getYourPigs();
       this.initializeClouds();
 
       this.attributeManagerContract = await new ethers.Contract(AttributeManager.address, AttributeManager.abi, this
@@ -162,12 +174,130 @@
           name: attributes[i].attributeName,
           threshold: attributes[i].thresholdValue * 1,
           max: attributes[i].value * 1,
-          current: attributes[i].value * 1,
+          current: 0,
           eventName: event.name
         });
       }
+
+      await this.getYourPigs();
     },
     methods: {
+
+      async importPiggy(piggy) {
+        try {
+          const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
+          if (!isRegistered) {
+            const tx = await this.tamagotchiContract.importPig(piggy.id, {
+              gasPrice: 100000000000,
+              gasLimit: 1000000
+            });
+
+            await tx.wait(1);
+
+            this.selectedPig = piggy;
+            this.showPiggyMenu = false;
+            await this.fetchPiggyStats(piggy);
+          } else {
+            this.selectedPig = piggy;
+            this.showPiggyMenu = false;
+            await this.fetchPiggyStats(piggy);
+          }
+          this.showPig = true;
+        } catch (err) {
+          this.showPig = false;
+          console.error(err);
+        }
+      },
+
+      async fetchPiggyStats(piggy) {
+
+        for (let i = 0; i < this.piggyStats.length; i++) {
+          const attributeValue = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id,
+            this.piggyStats[i].name);
+          this.piggyStats[i].current = parseInt(attributeValue);
+        }
+      },
+
+      getPiggyAttribute(attributeName) {
+        const attribute = this.piggyStats.filter(c => c.name === attributeName)[0];
+        return attribute;
+      },
+
+      async selectPiggy(pig) {
+        try {
+          const isRegistered = await this.tamagotchiContract.isImported(pig.id);
+          if (!isRegistered) {
+            this.selectedPig = undefined;
+          }
+          this.showPig = true;
+        } catch (err) {
+          this.showPig = false;
+          console.error(err);
+        }
+      },
+
+      async getYourPigs() {
+        const contract = new ethers.Contract('0xe5fd335819edb8da8395f8ec48beca747a0790ab', Piggy.abi, this
+          .metaMaskWallet.signer)
+        const pigIds = await contract.tokensOfOwner(this.metaMaskAccount)
+
+        let ids = await pigIds.map(async (Piggy) => {
+          return Piggy._isBigNumber ? ethers.BigNumber.from(Piggy._hex).toString() : Piggy._hex
+        })
+
+        await Promise.all(ids)
+          .then(async (listOfIds) => {
+
+            const yourPigs = await axios.get(`https://api.cryptopigs.one/meta/list?items=${listOfIds}`)
+            this.yourPigs = yourPigs.data
+            this.loading = false
+
+            if (this.yourPigs.length) {
+              this.selectedPig = this.yourPigs[0];
+              await this.importPiggy(this.selectedPig);
+            }
+          })
+      },
+
+      getPiggieAttributeImage(attribute) {
+        if (attribute.trait_type === 'Background' || !this.selectedPig) return this.piggyNone;
+        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
+        const energy = this.piggyStats.filter(c => c.name === 'Energy')[0];
+
+        if (!hygiene || !energy) return this.piggyNone;
+
+        if (attribute.trait_type === 'Eye') {
+          if (hygiene.current < 0.25 * hygiene.max) {
+            return '/pigs/attributes/Eye/Surprised.png';
+          }
+
+          if (energy.current < 0.25 * energy.max) {
+            return '/pigs/attributes/Eye/Sleepy.png';
+          }
+        }
+
+        if (attribute.trait_type === 'Front') {
+          if (this.piggyActions.eating || this.piggyActions.playing ||
+            hygiene.current <= hygiene.max * 0.25) {
+            return this.piggyNone;
+          }
+        }
+
+        return `/pigs/attributes/${attribute.trait_type}/${attribute.value}.png`;
+      },
+
+      getPiggyWashStatus(wash) {
+        if (!this.selectedPig) return this.piggyNone;
+        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
+        if (!hygiene) return this.piggyNone;
+
+        if (hygiene.current <= 0.25 * hygiene.max) {
+          return '/pigs/attributes/Modifiers/shitter.png';
+        } else if (hygiene.current < 0.5 * hygiene.max) {
+          return '/pigs/attributes/Modifiers/muddy.png';
+        }
+        return this.piggyNone;
+      },
 
       initializeClouds() {
         for (let i = 0; i < 4; i++) {
@@ -197,74 +327,6 @@
           });
         }, 0);
       },
-
-      activatePig(id) {},
-
-      getPiggyAttribute(attributeName) {
-        const attribute = this.piggyStats.filter(c => c.name === attributeName)[0];
-        return attribute;
-      },
-
-      async getYourPigs() {
-        const contract = new ethers.Contract('0xe5fd335819edb8da8395f8ec48beca747a0790ab', Piggy.abi, this
-          .metaMaskWallet.signer)
-        const pigIds = await contract.tokensOfOwner(this.metaMaskAccount)
-
-        let ids = await pigIds.map(async (Piggy) => {
-          return Piggy._isBigNumber ? ethers.BigNumber.from(Piggy._hex).toString() : Piggy._hex
-        })
-
-        await Promise.all(ids)
-          .then(async (listOfIds) => {
-
-            const yourPigs = await axios.get(`https://api.cryptopigs.one/meta/list?items=${listOfIds}`)
-            this.yourPigs = yourPigs.data
-            this.loading = false
-
-            if (this.yourPigs.length) {
-              this.selectedPig = this.yourPigs[0];
-            }
-          })
-      },
-
-      getPiggieAttributeImage(attribute) {
-        if (attribute.trait_type === 'Background') return this.piggyNone;
-        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
-        const energy = this.piggyStats.filter(c => c.name === 'Energy')[0];
-
-        if (!hygiene || !energy) return this.piggyNone;
-
-        if (attribute.trait_type === 'Eye') {
-          if (hygiene.current < 0.25 * hygiene.max) {
-            return '/pigs/attributes/Eye/Surprised.png';
-          }
-
-          if (energy.current < 0.25 * energy.max) {
-            return '/pigs/attributes/Eye/Sleepy.png';
-          }
-        }
-
-        if (attribute.trait_type === 'Front') {
-          if (this.piggyActions.eating || this.piggyActions.playing ||
-            hygiene.current <= hygiene.max * 0.25) {
-            return this.piggyNone;
-          }
-        }
-
-        return `/pigs/attributes/${attribute.trait_type}/${attribute.value}.png`;
-      },
-
-      getPiggyWashStatus(wash) {
-        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
-        if (!hygiene) return this.piggyNone;
-
-        if (hygiene.current <= 0.25 * hygiene.max) {
-          return '/pigs/attributes/Modifiers/shitter.png';
-        } else if (hygiene.current < 0.5 * hygiene.max) {
-          return '/pigs/attributes/Modifiers/muddy.png';
-        }
-        return this.piggyNone;
-      }
     }
   }
 </script>

@@ -28,79 +28,43 @@
             "type": "event"
         },
         {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "attributeName",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "boostName",
-                    "type": "string"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "perTick",
-                    "type": "int256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "blocks",
-                    "type": "uint256"
-                }
-            ],
-            "name": "addBoostToAttributeOfPig",
+            "inputs": [],
+            "name": "owner",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "renounceOwnership",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
             "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "attributeName",
-                    "type": "string"
-                }
-            ],
-            "name": "clearAttributeOfPig",
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }],
+            "name": "transferOwnership",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "attributeName",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "value",
-                    "type": "int256"
-                }
-            ],
-            "name": "eventToAttributeValueOfPig",
-            "outputs": [],
-            "stateMutability": "nonpayable",
+            "inputs": [],
+            "name": "getTickPeriod",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -241,14 +205,79 @@
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "getTickPeriod",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "approval",
+                    "type": "bool"
+                }
+            ],
+            "name": "setApprovalOfAddressToEdit",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "value",
+                    "type": "int256"
+                }
+            ],
+            "name": "eventToAttributeValueOfPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "boostName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "perTick",
+                    "type": "int256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "blocks",
+                    "type": "uint256"
+                }
+            ],
+            "name": "addBoostToAttributeOfPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
@@ -274,47 +303,18 @@
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [{
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
             "inputs": [{
-                    "internalType": "address",
-                    "name": "addr",
-                    "type": "address"
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
                 },
                 {
-                    "internalType": "bool",
-                    "name": "approval",
-                    "type": "bool"
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
                 }
             ],
-            "name": "setApprovalOfAddressToEdit",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }],
-            "name": "transferOwnership",
+            "name": "clearAttributeOfPig",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
