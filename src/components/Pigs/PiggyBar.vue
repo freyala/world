@@ -1,16 +1,15 @@
 <template>
-    <div v-on:click='$emit("click")' class="cursor-pointer mx-2 w-full flex h-full relative tmg-btn">
-        <div class='w-8/10 h-full flex flex-col justify-center items-center'>
+    <div v-on:click='$emit("click")' class="cursor-pointer mx-1 sm:mx-2 md:w-auto sm:w-2/10 w-3/10 flex h-full relative tmg-btn">
+        <div v-on:mouseover='sayHi()' class='w-8/10 h-full flex flex-col justify-center items-center'>
             <transition name='fade'>
-                <img v-if='!attribute.loading' class="inline" width="100%" v-bind:src="getButtonImage(attribute.name)"
-                    alt="Nap Button">
+                <img v-if='!attribute.loading' class="inline" width="100%" v-bind:src="getButtonImage(attribute.name)">
             </transition>
             <transition name='fade'>
-                <img v-if='attribute.loading' class="inline fa-spin absolute" width="50%" src='/pigs/snout_dark.svg'
-                    alt="Nap Button">
+                <img v-if='attribute.loading' class="inline fa-spin absolute" width="50%" src='/pigs/snout_dark.svg'>
             </transition>
             <transition name='fade'>
-                <p v-if='!attribute.loading && attribute.freeEvent' class='text-xs uppercase'>{{ attribute.freeEvent.name }}</p>
+                <p v-if='!attribute.loading && attribute.freeEvent' class='text-xs hidden sm:block uppercase'>
+                    {{ attribute.freeEvent.name }}</p>
             </transition>
         </div>
         <div class='tmg-bar' v-bind:class='getFillBgColor(attribute)'>
@@ -35,12 +34,23 @@
             }
         },
         data() {
-            return {};
+            return {
+                tooltipTimeout: undefined,
+                showTooltip: false
+            };
         },
         mounted() {},
         methods: {
-            ...mapGetters("exchange", ["getToken"]),
-            ...mapActions("exchange", ["resetTokens", "goTo"]),
+            showTooltip() {
+                clearTimeout(this.tooltipTimeout);
+                this.tooltipTimeout = setTimeout(() => {
+                    this.showTooltip = true;
+                }, 1000);
+            },
+
+            hideTooltip() {
+                this.showTooltip = false;
+            },
 
             getButtonImage(name) {
                 return `/pigs/${name}.svg`
@@ -81,6 +91,20 @@
         box-sizing: border-box;
         border-radius: 12px;
         margin: 0px 4px 0px px;
+    }
+
+
+    @media only screen and (max-width: 512px) {
+        .tmg-btn {
+
+            min-width: 48px!important;
+            min-height: 48px!important;
+        }
+
+        .tmg-btn img{
+            height: 32px;
+            width: 32px;
+        }
     }
 
     .green-bar {
