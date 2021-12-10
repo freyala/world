@@ -10,7 +10,7 @@
                     alt="Nap Button">
             </transition>
             <transition name='fade'>
-                <p v-if='!attribute.loading' class='text-xs uppercase'>{{ attribute.freeEvent.name }}</p>
+                <p v-if='!attribute.loading && attribute.freeEvent' class='text-xs uppercase'>{{ attribute.freeEvent.name }}</p>
             </transition>
         </div>
         <div class='tmg-bar' v-bind:class='getFillBgColor(attribute)'>
