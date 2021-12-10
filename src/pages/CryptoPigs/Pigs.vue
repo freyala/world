@@ -2,6 +2,51 @@
   <section style="min-height: 100vh; width: 40vw" class="flex p-4 mx-auto overflow-y-hidden md:p-16 lg:px-32">
     <div class="screen rounded-2xl overflow-x-hidden w-full bg-dark relative">
       <!-- MENU -->
+      <transition name='pop-in'>
+        <div v-on:click='showPiggyCooldownModal = false' v-if='showPiggyCooldownModal'
+          class='absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50'>
+          <div class='w-7/10 flex flex-col items-start justify-center h-2/5 bg-white rounded-2xl piggy-modal'>
+            <div
+              style='background-image: url("/pigs/snout.svg"); background-repeat: no-repeat; background-size: contain; background-position: center; z-index: 0'
+              class='opacity-50 absolute top-0 bottom-0 left-0 m-4 right-0'>
+
+            </div>
+            <div class='w-full flex flex-row justify-center items-center'>
+              <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Oink! Oink!</h2>
+              <div class='cursor-pointer '>
+                <i class='text-xl pink hover:text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+            </div>
+            <div class='h-full w-full flex flex-col justify-center z-10'>
+              <p class='text-light px-4 h-2/7 mb-2 text-base text-center font-bold'
+                style='font-family: "Maven Pro";color: #3C2F35'>
+                You must wait a while before performing this action again.
+              </p>
+              <p class='w-full h-5 opacity-50 text-center pink'>or</p>
+              <div class='w-full px-4 text-center h-3/5 flex flex-col items-center justify-center'>
+                <p style='font-family: "Maven Pro";color: #3C2F35' class='mb-2 font-bold'>
+                  {{ piggyLastActionMessage }}
+                </p>
+                <img style='' class='bg-white rounded-2xl shadow-2xl' width='72px'
+                  v-bind:src="'/pigs/' + piggyLastAction.name + '.svg'" />
+                <p v-on:click='usePiggyPaidAction(selectedPig, piggyLastAction)'
+                  class='text-base w-3/10 rounded-2xl cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2 w-full'
+                  style='border-color: pink'>
+                  Buy
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+
+      <div v-if='piggyLoading' class='absolute top-0 bottom-0 left-0 right-0 flex flex-col justify-center items-center'
+        style='z-index: 9999; background-color: rgba(0,0,0,0.5)'>
+        <img class='fa-spin' width="68px" src='/pigs/snout.svg' />
+        <h2 class='mt-3 text-2xl text-white'>Loading...</h2>
+      </div>
+
       <div v-if='showPiggyMenu' class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 bg-dark'>
 
       </div>
@@ -14,7 +59,8 @@
             <div
               class='w-full flex justify-center text-center items-center text-white text-lg cursor-pointer hover:opacity-100'
               v-for='piggy in yourPigs' :key='piggy.id' v-on:click='importPiggy(piggy)'>
-              <img v-if='selectedPig && selectedPig.id === piggy.id' class='mt-1 mx-2' width="22px" src='/pigs/snout.svg' />
+              <img v-if='selectedPig && selectedPig.id === piggy.id' class='mt-1 mx-2' width="22px"
+                src='/pigs/snout.svg' />
               Pig #{{piggy.id}}
             </div>
           </div>
@@ -87,8 +133,8 @@
 
         <!-- TAMAGOTCHI -->
         <div :key='keys.piggyStats' class="w-9/10 flex h-20 mb-4 mt-auto pink">
-          <PiggyBar v-on:click='performAttributeAction(attribute)' v-for='(attribute, index) in piggyStats' :key='index'
-            :attribute='attribute'></PiggyBar>
+          <PiggyBar v-on:click='usePiggyFreeAction(selectedPig, attribute)' v-for='(attribute, index) in piggyStats'
+            :key='index' :attribute='attribute'></PiggyBar>
         </div>
       </div>
     </div>
@@ -107,7 +153,9 @@
 
   import Piggy from "../../plugins/artifacts/frey.json";
   import AttributeManager from "../../plugins/artifacts/attributeManager.json";
+  import Token from '../../plugins/artifacts/freyala.json';
   import PiggyTamagotchi from "../../plugins/artifacts/tamagotchi.json";
+  import fromExponential from "from-exponential";
 
   import PiggyBar from '../../components/Pigs/PiggyBar.vue';
 
@@ -127,30 +175,30 @@
       return {
         attributeManagerContract: undefined,
         tamagotchiContract: undefined,
-
-        titleText: 'George be feeling tired ser',
         yourPigs: [],
         keys: {
           piggyStats: 0
         },
-        selectedPig: {id: 0},
+        selectedPig: {
+          id: 0
+        },
 
         showPiggyMenu: false,
 
         piggyNone: '/pigs/attributes/none.png',
         piggyName: "",
         piggyAge: 0,
+        piggyDead: false,
         piggyCloudsHandler: undefined,
         piggyClouds: [],
         piggyStats: [],
-        piggyActions: {
-          eating: false,
-          playing: false,
-          washing: false,
-          napping: false,
-        },
+        piggyLoading: false,
+        piggyInterval: undefined,
+        piggyLastAction: undefined,
+        piggyLastActionMessage: "",
 
-        showPig: false
+        showPig: false,
+        showPiggyCooldownModal: false
       }
     },
     async mounted() {
@@ -166,26 +214,165 @@
       const attributes = await this.tamagotchiContract.getAttributeList();
       const events = await this.tamagotchiContract.getPurchaseableEvents();
 
-      const freeEvents = events.filter(c => parseInt(c.price._hex) === 0);
+      const allEvents = [];
+      events.forEach((c, index) => allEvents.push({
+        attributeName: c.attributeName,
+        price: parseInt(c.price),
+        name: c.name,
+        index: index
+      }));
 
       for (let i = 0; i < attributes.length; i++) {
-        const event = freeEvents.filter(c => c.attributeName === attributes[i].attributeName)[0];
+        const freeEvent = allEvents.filter(c => c.attributeName === attributes[i].attributeName && c.price === 0)[0];
+        const paidEvent = allEvents.filter(c => c.attributeName === attributes[i].attributeName && c.price > 0)[0];
+
         this.piggyStats.push({
           name: attributes[i].attributeName,
           threshold: attributes[i].thresholdValue * 1,
           max: attributes[i].value * 1,
           current: 0,
-          eventName: event.name
+          freeEvent,
+          paidEvent,
+          loading: false
         });
       }
 
+      // await this.setTokenAllowance(999999999999.9999);
+
       await this.getYourPigs();
+
+      this.piggyInterval = setInterval(async () => {
+        this.fetchPiggyStats(this.selectedPig);
+      }, 15 * 10000);
     },
     methods: {
+
+      async fetchBlockNumber() {
+        try {
+          const body =
+            '{"jsonrpc":"2.0", "method":"hmy_blockNumber","params":[], "id":1}';
+
+          const response = await fetch("https://api.harmony.one/", {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: body,
+          });
+
+          const blockNumber = await response.json();
+          return parseInt(blockNumber.result);
+        } catch (err) {
+          this.handleError(err);
+          return 0;
+        }
+      },
+
+      async setTokenAllowance(amount) {
+        let actual = 0;
+        const coinkAddress = "0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2";
+        if (amount > 0) {
+          actual = amount * 10 ** 18;
+        } else {
+          actual = 0;
+        }
+        try {
+          const arg = fromExponential(actual);
+          let tempContract = new ethers.Contract(coinkAddress, Token.abi, this
+            .metaMaskWallet.signer);
+          const tx = await tempContract.approve(
+            this.tamagotchiContract.address,
+            arg
+          );
+
+          await tx.wait(1);
+
+          this.$toast.success(``);
+        } catch (err) {
+          this.handleError(err);
+        }
+      },
+
+      async usePiggyPaidAction(piggy, attribute) {
+        try {
+          const paidEvent = attribute.paidEvent;
+          console.log(attribute);
+          const cooldownStatus = await this.tamagotchiContract.getCooldownEndsAtForPurchaseableEventOfPig(piggy.id,
+            paidEvent.index);
+
+          const blockNumber = await this.fetchBlockNumber();
+          const isCooldown = parseInt(cooldownStatus) - blockNumber > 0;
+
+          this.piggyLastAction = attribute;
+
+          const tx = await this.tamagotchiContract.buyEvent(piggy.id, paidEvent.index);
+          attribute.loading = true;
+          await tx.wait(1);
+
+          const value = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id, paidEvent
+            .attributeName);
+
+          attribute.current = value;
+          attribute.loading = false;
+        } catch (err) {
+          this.handleError(err);
+        }
+
+        attribute.loading = false;
+      },
+
+      async usePiggyFreeAction(piggy, attribute) {
+        try {
+          const freeEvent = attribute.freeEvent;
+          const cooldownStatus = await this.tamagotchiContract.getCooldownEndsAtForPurchaseableEventOfPig(piggy.id,
+            freeEvent.index);
+
+          const blockNumber = await this.fetchBlockNumber();
+          const isCooldown = parseInt(cooldownStatus) - blockNumber > 0;
+
+          this.piggyLastAction = attribute;
+
+          if (isCooldown) {
+            switch (attribute.name) {
+              case 'Hunger':
+                this.piggyLastActionMessage = 'Purchase a deluxe carrot';
+                break;
+              case 'Energy':
+                this.piggyLastActionMessage = 'Purchase a XPiggo energy drink'
+                break;
+              case 'Happiness':
+                this.piggyLastActionMessage = 'Purchase a toy for your piggy.'
+                break;
+              case 'Hygiene':
+                this.piggyLastActionMessage = 'Purchase a pair of scrubbing gloves!'
+                break;
+            }
+            this.showPiggyCooldownModal = true;
+          } else {
+            const tx = await this.tamagotchiContract.buyEvent(piggy.id, freeEvent.index);
+            attribute.loading = true;
+            await tx.wait(1);
+
+            const value = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id, freeEvent
+              .attributeName);
+
+            attribute.current = value;
+          }
+
+        } catch (err) {
+          this.handleError(err);
+        }
+
+        attribute.loading = false;
+      },
 
       async importPiggy(piggy) {
         try {
           const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
+
+          this.piggyLoading = true;
           if (!isRegistered) {
             const tx = await this.tamagotchiContract.importPig(piggy.id, {
               gasPrice: 100000000000,
@@ -195,18 +382,18 @@
             await tx.wait(1);
 
             this.selectedPig = piggy;
-            this.showPiggyMenu = false;
             await this.fetchPiggyStats(piggy);
           } else {
             this.selectedPig = piggy;
-            this.showPiggyMenu = false;
             await this.fetchPiggyStats(piggy);
           }
           this.showPig = true;
         } catch (err) {
           this.showPig = false;
-          console.error(err);
+          this.handleError(err);
         }
+        this.showPiggyMenu = false;
+        this.piggyLoading = false;
       },
 
       async fetchPiggyStats(piggy) {
@@ -216,6 +403,11 @@
             this.piggyStats[i].name);
           this.piggyStats[i].current = parseInt(attributeValue);
         }
+
+        this.piggyName = "#" + piggy.id;
+        const piggyDead = await this.tamagotchiContract.isDead(piggy.id);
+        const ageAttribute = this.piggyStats.filter(c => c.name === 'Age')[0];
+        this.piggyAge = ageAttribute && !piggyDead ? parseInt(ageAttribute.current / 10) : "RIP";
       },
 
       getPiggyAttribute(attributeName) {
@@ -225,6 +417,7 @@
 
       async selectPiggy(pig) {
         try {
+          this.piggyLoading = true;
           const isRegistered = await this.tamagotchiContract.isImported(pig.id);
           if (!isRegistered) {
             this.selectedPig = undefined;
@@ -232,8 +425,9 @@
           this.showPig = true;
         } catch (err) {
           this.showPig = false;
-          console.error(err);
+          this.handleError(err);
         }
+        this.piggyLoading = false;
       },
 
       async getYourPigs() {
@@ -277,10 +471,10 @@
         }
 
         if (attribute.trait_type === 'Front') {
-          if (this.piggyActions.eating || this.piggyActions.playing ||
-            hygiene.current <= hygiene.max * 0.25) {
-            return this.piggyNone;
-          }
+          /* if (this.piggyActions.eating || this.piggyActions.playing ||
+             hygiene.current <= hygiene.max * 0.25) {
+             return this.piggyNone;
+           }*/
         }
 
         return `/pigs/attributes/${attribute.trait_type}/${attribute.value}.png`;
@@ -327,11 +521,44 @@
           });
         }, 0);
       },
+
+      handleError(error) {
+        const errorMessage =
+          typeof error == "object" ? error.message : error.toLowerCase();
+        const lcMessage = errorMessage.toLowerCase();
+        if (lcMessage.indexOf("user denied") > -1) return;
+        if (lcMessage.indexOf("transaction failed") > -1) {
+          this.$toast.error("Transaction Failed");
+        } else if (errorMessage.length < 100) {
+          this.$toast.error(errorMessage);
+        } else {
+          this.$toast.error('Transaction Failed');
+        }
+      },
     }
   }
 </script>
 
 <style scoped>
+  .piggy-modal {
+    position: relative;
+    border: 6px solid #F16097;
+    box-shadow: 0px 12px 0px #F16097;
+    background-color: #FEEEF2;
+  }
+
+  .piggy-modal::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: -12px;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.5);
+  }
+
+
   div,
   input {
     font-family: 'Chango', serif !important;
@@ -414,6 +641,10 @@
     border-radius: 12px;
   }
 
+  .bg-pink {
+    background: #F16097;
+  }
+
   .pink {
     color: #dc5689 !important;
   }
@@ -462,5 +693,29 @@
   .menu-leave-to {
     transforM: translateX(-200px);
     opacity: 0.25;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    opacity: 1;
+    transition: all .35s;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .pop-in-enter-active,
+  .pop-in-leave-active {
+    opacity: 1;
+    transition: all .35s;
+    transform: translateX(-0px) translateY(-0px);
+  }
+
+  .pop-in-enter,
+  .pop-in-leave-to {
+    opacity: 0;
+    transform: translateX(-50px) translateY(-50px);
   }
 </style>

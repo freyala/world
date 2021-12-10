@@ -1,8 +1,17 @@
 <template>
     <div v-on:click='$emit("click")' class="cursor-pointer mx-2 w-full flex h-full relative tmg-btn">
         <div class='w-8/10 h-full flex flex-col justify-center items-center'>
-            <img class="inline" width="100%" v-bind:src="getButtonImage(attribute.name)" alt="Nap Button">
-            <p class='text-xs uppercase'>{{ attribute.eventName }}</p>
+            <transition name='fade'>
+                <img v-if='!attribute.loading' class="inline" width="100%" v-bind:src="getButtonImage(attribute.name)"
+                    alt="Nap Button">
+            </transition>
+            <transition name='fade'>
+                <img v-if='attribute.loading' class="inline fa-spin absolute" width="50%" src='/pigs/snout_dark.svg'
+                    alt="Nap Button">
+            </transition>
+            <transition name='fade'>
+                <p v-if='!attribute.loading' class='text-xs uppercase'>{{ attribute.freeEvent.name }}</p>
+            </transition>
         </div>
         <div class='tmg-bar' v-bind:class='getFillBgColor(attribute)'>
             <div v-bind:style='getBarFillMeter(attribute)' class='tmg-bar-fill' v-bind:class='getFillColor(attribute)'>
@@ -28,8 +37,7 @@
         data() {
             return {};
         },
-        mounted() {
-        },
+        mounted() {},
         methods: {
             ...mapGetters("exchange", ["getToken"]),
             ...mapActions("exchange", ["resetTokens", "goTo"]),
@@ -39,7 +47,7 @@
             },
 
             getBarFillMeter(attribute) {
-                const fill = Math.min(1, attribute.current / attribute.max);
+                const fill = Math.max(0, Math.min(1, attribute.current / attribute.max));
                 return {
                     transform: `scaleY(${fill})`
                 };
@@ -53,7 +61,7 @@
             },
 
             getFillBgColor(attribute) {
-                const fillPercent = Math.min(1, attribute.current / attribute.max);
+                const fillPercent = Math.max(0, Math.min(1, attribute.current / attribute.max));
                 const color = fillPercent > 0.5 ? 'green' : fillPercent > 0.25 ? 'yellow' : 'red';
 
                 return `${color}-fill`;

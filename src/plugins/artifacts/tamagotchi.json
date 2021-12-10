@@ -1,5 +1,5 @@
 {
-    "address": "0xe83Bbe95A29F7C4cE79a4e92b9A895B05A3a0a4e",
+    "address": "0x6dacd3563b806FE91c21Cb56ecFF198B1576c12f",
     "abi": [{
             "inputs": [{
                     "internalType": "contract IERC20",
@@ -52,6 +52,11 @@
                             "internalType": "string",
                             "name": "name",
                             "type": "string"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "occupy",
+                            "type": "bool"
                         },
                         {
                             "internalType": "uint256",
@@ -295,9 +300,50 @@
                 "name": "pigId",
                 "type": "uint256"
             }],
+            "name": "isDead",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "occupiedUntil",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
             "name": "importPig",
             "outputs": [],
             "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getRevivalPrice",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -353,6 +399,11 @@
                         "type": "string"
                     },
                     {
+                        "internalType": "bool",
+                        "name": "occupy",
+                        "type": "bool"
+                    },
+                    {
                         "internalType": "uint256",
                         "name": "price",
                         "type": "uint256"
@@ -380,6 +431,32 @@
                 ],
                 "internalType": "struct Tamagotchi.PowerupParams[]",
                 "name": "powerups",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }],
+            "name": "getRequirementsOfPowerup",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct Tamagotchi.Requirement[]",
+                "name": "",
                 "type": "tuple[]"
             }],
             "stateMutability": "view",
@@ -449,6 +526,32 @@
                 ],
                 "internalType": "struct Tamagotchi.PurchaseableEventParams[]",
                 "name": "events",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }],
+            "name": "getRequirementsOfPurchaseableEvent",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct Tamagotchi.Requirement[]",
+                "name": "",
                 "type": "tuple[]"
             }],
             "stateMutability": "view",
@@ -593,6 +696,51 @@
                     "type": "uint256"
                 },
                 {
+                    "internalType": "bool",
+                    "name": "occupy",
+                    "type": "bool"
+                }
+            ],
+            "name": "editOccupyOfPowerup",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "components": [{
+                            "internalType": "string",
+                            "name": "attributeName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "int256",
+                            "name": "value",
+                            "type": "int256"
+                        }
+                    ],
+                    "internalType": "struct Tamagotchi.Requirement[]",
+                    "name": "requirements",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "setRequirementsOfPowerup",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
                     "internalType": "uint256",
                     "name": "price",
                     "type": "uint256"
@@ -633,6 +781,34 @@
                 }
             ],
             "name": "editEffectOfPurchaseableEvent",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "components": [{
+                            "internalType": "string",
+                            "name": "attributeName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "int256",
+                            "name": "value",
+                            "type": "int256"
+                        }
+                    ],
+                    "internalType": "struct Tamagotchi.Requirement[]",
+                    "name": "requirements",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "setRequirementsOfPurchaseableEvent",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
