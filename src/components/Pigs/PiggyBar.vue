@@ -1,6 +1,6 @@
 <template>
     <div v-on:click='$emit("click")' class="cursor-pointer mx-1 sm:mx-2 md:w-auto sm:w-2/10 w-3/10 flex h-full relative tmg-btn">
-        <div v-on:mouseover='sayHi()' class='w-8/10 h-full flex flex-col justify-center items-center'>
+        <div v-on:mouseover='showTooltip()' class='w-8/10 h-full flex flex-col justify-center items-center'>
             <transition name='fade'>
                 <img v-if='!attribute.loading' class="inline" width="100%" v-bind:src="getButtonImage(attribute.name)">
             </transition>
@@ -36,7 +36,7 @@
         data() {
             return {
                 tooltipTimeout: undefined,
-                showTooltip: false
+                tooltip: false
             };
         },
         mounted() {},
@@ -44,7 +44,7 @@
             showTooltip() {
                 clearTimeout(this.tooltipTimeout);
                 this.tooltipTimeout = setTimeout(() => {
-                    this.showTooltip = true;
+                    this.tooltip = true;
                 }, 1000);
             },
 

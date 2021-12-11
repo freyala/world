@@ -1,5 +1,5 @@
 {
-    "address": "0xb6eeb3eA13ca230C51D174F3D5D7eB1Aef929301",
+    "address": "0x88473f31F0F95D8D71d97C1c95811433AFF94e80",
     "abi": [{
             "inputs": [{
                 "internalType": "uint256",
@@ -63,6 +63,21 @@
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "getNameOfPig",
+            "outputs": [{
+                "internalType": "string",
+                "name": "",
+                "type": "string"
             }],
             "stateMutability": "view",
             "type": "function"
@@ -229,6 +244,23 @@
                 },
                 {
                     "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                }
+            ],
+            "name": "setNameOfPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
                     "name": "attributeName",
                     "type": "string"
                 },
@@ -297,7 +329,7 @@
                     "type": "int256"
                 }
             ],
-            "name": "modifyDecayOfAttribute",
+            "name": "modifyDecayOfAttributeOfPig",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
