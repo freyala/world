@@ -6,6 +6,29 @@ html, body {
   font-family: 'Spectral SC', serif !important;
 }
 
+
+@font-face {
+  font-family: 'Maven Pro';
+  src: url('/fonts/MavenPro-Regular.woff2') format('woff2'),
+  url('/fonts/MavenPro-Regular.woff') format('woff'),
+  url('/fonts/MavenPro-Regular.ttf') format('truetype'),
+  url('/fonts/MavenPro-Regular.svg#MavenPro-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chango';
+  src: url('/fonts/Chango-Regular.woff2') format('woff2'),
+  url('/fonts/Chango-Regular.woff') format('woff'),
+  url('/fonts/Chango-Regular.ttf') format('truetype'),
+  url('/fonts/Chango-Regular.svg#Chango-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
@@ -219,5 +242,17 @@ body {
     max-height: 60vh;
     overflow-x: hidden;
     overflow-y: scroll;
+  }
+}
+
+.bg-pigs {
+  background: url('/pigs/Background.svg') no-repeat;
+  background-size: cover;
+
+  z-index: 9999;
+
+  @screen md {
+    background: url('/pigs/PiggyBGDesktop.svg') no-repeat;
+    background-size: cover;
   }
 }

@@ -11,6 +11,7 @@ import Blackjack from "../pages/Casino/Blackjack/Index";
 import Casino from "../pages/Casino/Index";
 
 import Harmons from "../pages/Harmons/Index";
+import CryptoPigs from "../pages/CryptoPigs/Pigs";
 import Marketplace from "../pages/Marketplace/Marketplace";
 
 import FreyNFT from "../pages/Frey/Home";
@@ -40,6 +41,11 @@ export default new Router({
             path: '/',
             name: 'world-map',
             component: WorldMap
+        },
+        {
+            path: '/pigs',
+            name: 'pigs',
+            component: CryptoPigs
         },
         {
             path: '/marketplace',

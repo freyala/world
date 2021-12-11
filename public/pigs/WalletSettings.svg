@@ -1,0 +1,22 @@
+<svg id="Wallet_Settings" data-name="Wallet Settings" xmlns="http://www.w3.org/2000/svg" width="113" height="175" viewBox="0 0 113 175">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 30px;
+        text-anchor: middle;
+        font-family: "Maven Pro";
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #3c2f35;
+      }
+
+      .cls-2 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <text id="Wallet_settings-2" data-name="Wallet settings" class="cls-1" x="56.392" y="132.148">Wallet<tspan x="56.392" dy="36">settings</tspan></text>
+  <path id="Wallet_Vector" class="cls-2" d="M991,145H919a8,8,0,0,1-8-8V89a7.986,7.986,0,0,1,3.4-6.54,2.984,2.984,0,0,1,1.817-1.9L978,58.075a2.99,2.99,0,0,1,3.365.962A2.99,2.99,0,0,1,984,62V81h7a8,8,0,0,1,8,8v48A8,8,0,0,1,991,145ZM976,67.315L938.4,81H976V67.315ZM991.752,104H975.987A8.987,8.987,0,0,0,967,112.987v0.026A8.987,8.987,0,0,0,975.987,122h15.765V104Zm0,25H976a16,16,0,0,1,0-32h15.752V93.5a4,4,0,0,0-4-4h-64.5a4,4,0,0,0-4,4v40a4,4,0,0,0,4,4h64.5a4,4,0,0,0,4-4V129Zm-18.5-16a3.75,3.75,0,1,1,3.75,3.75A3.75,3.75,0,0,1,973.25,113Z" transform="translate(-897 -51.938)"/>
+</svg>
