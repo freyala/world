@@ -15,7 +15,7 @@
       <hr class="my-3">
       <router-link :to="{ name: 'casino' }">Luderion Alleyway</router-link>
       <hr class="my-3">
-      <router-link :to="{ name: 'plots' }">Plots of Land</router-link>
+      <router-link :to="{ name: 'plots', params: {neighbourhood: '0'} }">Plots of Land</router-link>
       <hr class="my-3">
       <router-link :to="{ name: 'governance' }">Everglen Castle</router-link>
       <hr class="my-3">
