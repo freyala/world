@@ -1,6 +1,6 @@
 <template>
   <section id="login-container"
-           style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh;"
+           style="background: url('/images/map/worldmap_small.png') no-repeat; background-size: cover; min-height: 100vh;"
            class="flex w-full px-4 md:px-16 lg:px-32 xl:px-64">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;max-width: 650px;"
          class="m-auto screen rounded-2xl w-full">

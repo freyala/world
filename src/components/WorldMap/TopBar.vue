@@ -134,12 +134,14 @@ export default {
   async mounted() {
     this.mainContract = await new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
     this.stakingContract = await new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
-    this.freyContract = new ethers.Contract(Frey.address, Frey.abi, this.metaMaskWallet.signer)
-    this.avatarContract = new ethers.Contract(Avatar.address, Avatar.abi, this.metaMaskWallet.signer)
+    this.freyContract = await new ethers.Contract(Frey.address, Frey.abi, this.metaMaskWallet.signer)
+    this.avatarContract = await new ethers.Contract(Avatar.address, Avatar.abi, this.metaMaskWallet.signer)
 
-    await this.fetchData()
-    await this.getYourFrey()
-    this.topBarLoaded = true
+    this.$nextTick(async () => {
+      await this.fetchData()
+      await this.getYourFrey()
+      this.topBarLoaded = true
+    })
 
     this.dataInterval = setInterval(() => {
       this.fetchData()

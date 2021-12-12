@@ -57,7 +57,7 @@
               </div>
 
               <div @mouseenter="hovering = 'plots'" @mouseleave="hovering = ''">
-                <router-link :to="{ name: 'plots' }">
+                <router-link :to="{ name: 'plots', params: {neighbourhood: '0'} }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
 
                        style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;" src="/images/map/FreyalaPlots.png"
@@ -712,7 +712,8 @@ export default {
     }
 
     elem.parentElement.addEventListener('wheel', (e) => {
-      if (!e.target.closest('#world-map').length) {
+      const el = e.target.closest('#world-map');
+      if (el && !el.length) {
         panzoom.zoomWithWheel(e)
       }
     })

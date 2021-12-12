@@ -169,15 +169,21 @@
 
         <!-- NAVBAR -->
         <div class='absolute mx-auto h-20 z-50 flex xs:w-9/10 w-9/10 top-4'>
-          <div class='cursor-pointer w-auto h-full sm:mx-0 mx-2 piggie-menu-btn'>
-            <img class='h-full' src='/pigs/back_button.svg' />
-          </div>
+
+          <router-link :to="{ name: 'world-map' }">
+            <div class='cursor-pointer w-auto h-full sm:mx-0 mx-2 piggie-menu-btn'>
+              <img class='h-full' src='/pigs/back_button.svg' />
+            </div>
+          </router-link>
           <div v-on:click='showPiggyMenu = true' class='cursor-pointer ml-auto w-auto h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/piggies_button.svg' />
           </div>
-          <div class='cursor-pointer w-auto sm:mx-4 mx-2 h-full piggie-menu-btn'>
-            <img class='h-full' src='/pigs/market_button.svg' />
-          </div>
+          <router-link target="_blank"
+            :to="{path: 'marketplace', query: { market: '0xe5fd335819edb8da8395f8ec48beca747a0790ab' }}">
+            <div class='cursor-pointer w-auto sm:mx-4 mx-2 h-full piggie-menu-btn'>
+              <img class='h-full' src='/pigs/market_button.svg' />
+            </div>
+          </router-link>
           <div v-on:click='showPiggySettingsModal()' class='cursor-pointer w-auto xs:mr-2 mr-1 h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/settings_button.svg' />
           </div>
@@ -235,8 +241,9 @@
 
         <!-- TAMAGOTCHI -->
         <div :key='keys.piggyStats' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink">
-          <PiggyBar class='scale-anim ' v-on:click='usePiggyFreeAction(currentPig, attribute)'
-            v-for='(attribute, index) in basePiggyStats' :key='index' :attribute='attribute'></PiggyBar>
+          <PiggyBar v-bind:class='{"opacity-75": piggySleeping && index != 3, "scale-anim": !piggySleeping}'
+            v-on:click='usePiggyFreeAction(currentPig, attribute)' v-for='(attribute, index) in basePiggyStats'
+            :key='index' :attribute='attribute'></PiggyBar>
         </div>
       </div>
     </div>
@@ -275,18 +282,6 @@
 
       basePiggyStats() {
         return this.piggyStats.filter(c => c.name !== 'Age');
-      },
-
-      isEating() {
-        return this.piggyLastAttribute && this.piggyLastAttribute.name === 'Hunger';
-      },
-
-      isPlaying() {
-        return this.piggyLastAttribute && this.piggyLastAttribute.name === 'Happiness';
-      },
-
-      isWashing() {
-        return this.piggyLastAttribute && this.piggyLastAttribute.name === 'Hygiene';
       },
 
       selectedPigAttributes() {
@@ -485,6 +480,7 @@
       async usePiggyPaidAction(piggy, attribute) {
         try {
           if (!piggy) throw 'No selected piggy.'
+          if (this.piggySleeping) throw 'Piggy is sleeping.';
           if (attribute.loading) return;
 
           if (!this.piggyAllowance) {
@@ -519,8 +515,9 @@
       async usePiggyFreeAction(piggy, attribute) {
         try {
           if (!piggy) throw 'No selected piggy.'
-          if (attribute.loading) return;
+          if (this.piggySleeping) throw 'Piggy is sleeping.';
           if (this.piggyDead) throw 'Piggy is dead.';
+          if (attribute.loading) return;
 
           const freeEvent = attribute.freeEvent;
           const cooldownStatus = await this.tamagotchiContract.getCooldownEndsAtForPurchaseableEventOfPig(piggy.id,
@@ -940,6 +937,12 @@
     border-top: solid 8px #dc4689;
     color: rgba(255, 255, 255, 50%) !important;
   }
+
+  .Vue-Toastification__toast--error {
+    background-color: #dc4689 !important;
+    color: #fff;
+  }
+
 
   div,
   input {
