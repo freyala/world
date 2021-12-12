@@ -1,5 +1,5 @@
 <template>
-  <section style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"
+  <section style="background: url('/images/map/worldmap_small.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto" class="screen rounded-2xl w-full">
       <div id="exchange" class="relative max-w-screen-xl mx-auto items-center flex flex-1 justify-center xl:px-0 px-3 text-gray-500">

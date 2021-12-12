@@ -1,6 +1,6 @@
 <template>
   <section style="
-      background: url('/images/map/worldmap.png') no-repeat;
+      background: url('/images/map/worldmap_small.png') no-repeat;
       background-size: cover;
       min-height: 100vh;
     " class="flex p-4 md:p-16 lg:px-32">

@@ -712,7 +712,8 @@ export default {
     }
 
     elem.parentElement.addEventListener('wheel', (e) => {
-      if (!e.target.closest('#world-map').length) {
+      const el = e.target.closest('#world-map');
+      if (el && !el.length) {
         panzoom.zoomWithWheel(e)
       }
     })

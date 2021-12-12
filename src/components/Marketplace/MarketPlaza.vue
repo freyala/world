@@ -1124,9 +1124,10 @@
             },
 
             async initializeMarketPlaza() {
-                this.marketNFTContract = new ethers.Contract(this.market.token, HRC721.abi, this.metaMaskWallet
+                this.marketNFTContract = await new ethers.Contract(this.market.token, HRC721.abi, this
+                    .metaMaskWallet
                     .signer);
-                this.freyRegistryContract = new ethers.Contract(FreyRegistry.address, FreyRegistry.abi, this
+                this.freyRegistryContract = await new ethers.Contract(FreyRegistry.address, FreyRegistry.abi, this
                     .metaMaskWallet.signer);
                 this.isFreyMarket = this.market.tokenName === "The Frey";
 
@@ -1137,52 +1138,50 @@
                     showNFTCard = true;
                 }
 
-                this.$nextTick(async () => {
-                    this.loaders.application = true;
-                    this.initialUserTokens = [];
-                    this.userTokens = [];
-                    this.marketTokens = [];
-                    this.acceptedTokens = [];
-                    this.userSales = [];
+                this.initialUserTokens = [];
+                this.userTokens = [];
+                this.marketTokens = [];
+                this.acceptedTokens = [];
+                this.userSales = [];
 
-                    await this.fetchMarketTokens();
+                await this.initiateMarketSearch();
+                                await this.fetchMarketTokens();
+                await this.fetchMarketAttributes();
 
-                    this.marketApproved = await this.marketNFTContract.isApprovedForAll(this
-                        .metaMaskAccount,
-                        this.contract.address);
+                await this.fetchUserNFTs();
+                await this.fetchPendingNFTs();
+                
 
-                    for (let i = 0; i < this.tokens.length; i++) {
-                        const acceptsCurrency = await this.contract.acceptsCurrency(this.tokens[i]
-                            .value);
-                        if (!acceptsCurrency) continue;
+                this.marketApproved = await this.marketNFTContract.isApprovedForAll(this
+                    .metaMaskAccount,
+                    this.contract.address);
 
-                        this.acceptedTokens.push(this.tokens[i]);
+                for (let i = 0; i < this.tokens.length; i++) {
+                    const acceptsCurrency = await this.contract.acceptsCurrency(this.tokens[i]
+                        .value);
+                    if (!acceptsCurrency) continue;
+
+                    this.acceptedTokens.push(this.tokens[i]);
+                }
+
+                this.collectionSaleToken = this.acceptedTokens[0].value;
+
+                if (showNFTCard) {
+                    if (this.marketTokens.length > 0) {
+                        this.showMarketCardModal(this.marketTokens[0]);
+                    } else {
+                        this.getQuery({
+                            market: this.market.token
+                        });
                     }
+                }
 
-                    this.collectionSaleToken = this.acceptedTokens[0].value;
+                await this.verifyTokens();
+                await this.fetchMarketData();
 
-                    await this.verifyTokens();
-                    await this.fetchMarketAttributes();
-                    await this.initiateMarketSearch();
-
-                    if (showNFTCard) {
-                        if (this.marketTokens.length > 0) {
-                            this.showMarketCardModal(this.marketTokens[0]);
-                        } else {
-                            this.getQuery({
-                                market: this.market.token
-                            });
-                        }
-                    }
-
-                    await this.fetchUserNFTs();
-                    await this.fetchPendingNFTs();
-                    await this.fetchMarketData();
-
-                    if (this.isFreyMarket) {
-                        await this.getFreyFees();
-                    }
-                });
+                if (this.isFreyMarket) {
+                    await this.getFreyFees();
+                }
             },
 
             showTutorial() {
@@ -1190,7 +1189,7 @@
                 this.$modal.show('market-tutorial');
             },
 
-            showForceWithdraw(){
+            showForceWithdraw() {
                 this.$modal.show('force-withdraw');
             },
 
