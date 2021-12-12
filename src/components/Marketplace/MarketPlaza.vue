@@ -29,7 +29,6 @@
             </div>
             <div :key='keys.filters' class="overflow-y-auto text-center flex py-4 mx-2 my-4 flex-col bg-light"
                 style='height: calc(100% - 120px)'>
-                <template v-if='!loaders.filters'>
                     <div class='w-full mb-2'>
                         <div class='mb-1'>
                             Search by #
@@ -87,13 +86,6 @@
                                 {{ item }}</option>
                         </select>
                     </div>
-                </template>
-                <template v-else-if='!loaders.application'>
-                    <div class="w-full h-full flex opacity-50 justify-center">
-                        <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
-                            style="animation: rotation 2s infinite linear;">
-                    </div>
-                </template>
             </div>
         </div>
 
@@ -1174,7 +1166,6 @@
 
                     this.acceptedTokens.push(this.tokens[i]);
                 }
-                this.loaders.filters = false;
 
 
                 this.collectionSaleToken = this.acceptedTokens[0].value;
@@ -2118,7 +2109,6 @@
             },
 
             resetMarketFilters() {
-                if (this.loaders.filters) return;
                 for (let i = 0; i < this.marketSelectedFilters.length; i++) {
                     this.marketSelectedFilters[i] = '';
                 }
