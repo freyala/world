@@ -29,63 +29,61 @@
             </div>
             <div :key='keys.filters' class="overflow-y-auto text-center flex py-4 mx-2 my-4 flex-col bg-light"
                 style='height: calc(100% - 120px)'>
-                    <div class='w-full mb-2'>
-                        <div class='mb-1'>
-                            Search by #
-                        </div>
-                        <div class='flex w-9/12 mx-auto'>
-                            <select v-model='marketIdQueryComparator'
-                                class="w-9/12 border rounded-lg border-yellow text-sm py-2 px-4 bg-dark">
-                                <option value='tokenId'>Equal</option>
-                                <option value='tokenId_lte'>Lesser Than</option>
-                                <option value='tokenId_gte'>Greater Than</option>
-                            </select>
-                            <input v-model='marketIdQuery' v-bind:class='{"text-white": marketIdQuery > 0}'
-                                type='number' class='w-6/12 ml-4 border rounded-lg border-yellow py-2 px-4 bg-dark' />
-                        </div>
-                    </div>
-
-                    <div class='w-full mb-2'>
-                        <div class='mb-1'>
-                            Currency
-                        </div>
-                        <select v-model='marketSelectedCurrency'
-                            class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
-                            <option value='All'>All</option>
-                            <option v-for='(currency, index) in acceptedTokens' :key='index'
-                                v-bind:value='currency.value'>
-                                {{currency.key}}</option>
-                        </select>
-                    </div>
+                <div class='w-full mb-2'>
                     <div class='mb-1'>
-                        Order
+                        Search by #
                     </div>
-                    <div class='w-full mb-2'>
-                        <select :key='marketSelectedCurrency' v-model='marketSortBy'
-                            class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
-                            <option v-bind:value='""'>Order By</option>
-                            <option v-if='marketSelectedCurrency !== "All"' value="price-asc">Price ascending
-                            </option>
-                            <option v-if='marketSelectedCurrency !== "All"' value="price-desc">Price descending
-                            </option>
-                            <option value="tokenId-asc">ID ascending</option>
-                            <option value="tokenId-desc">ID descending</option>
+                    <div class='flex w-9/12 mx-auto'>
+                        <select v-model='marketIdQueryComparator'
+                            class="w-9/12 border rounded-lg border-yellow text-sm py-2 px-4 bg-dark">
+                            <option value='tokenId'>Equal</option>
+                            <option value='tokenId_lte'>Lesser Than</option>
+                            <option value='tokenId_gte'>Greater Than</option>
                         </select>
+                        <input v-model='marketIdQuery' v-bind:class='{"text-white": marketIdQuery > 0}' type='number'
+                            class='w-6/12 ml-4 border rounded-lg border-yellow py-2 px-4 bg-dark' />
                     </div>
-                    <hr class='w-9/12 opacity-75 mx-auto my-6'>
-                    <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
-                        <div class='mb-1'>
-                            {{ attribute.key }}
-                        </div>
-                        <select v-model='marketSelectedFilters[index]'
-                            class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
-                            v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
-                            <option v-bind:value='""'>None</option>
-                            <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values'
-                                :key='itemIndex + 10'>
-                                {{ item }}</option>
-                        </select>
+                </div>
+
+                <div class='w-full mb-2'>
+                    <div class='mb-1'>
+                        Currency
                     </div>
+                    <select v-model='marketSelectedCurrency'
+                        class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        <option value='All'>All</option>
+                        <option v-for='(currency, index) in acceptedTokens' :key='index' v-bind:value='currency.value'>
+                            {{currency.key}}</option>
+                    </select>
+                </div>
+                <div class='mb-1'>
+                    Order
+                </div>
+                <div class='w-full mb-2'>
+                    <select :key='marketSelectedCurrency' v-model='marketSortBy'
+                        class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
+                        <option v-bind:value='""'>Order By</option>
+                        <option v-if='marketSelectedCurrency !== "All"' value="price-asc">Price ascending
+                        </option>
+                        <option v-if='marketSelectedCurrency !== "All"' value="price-desc">Price descending
+                        </option>
+                        <option value="tokenId-asc">ID ascending</option>
+                        <option value="tokenId-desc">ID descending</option>
+                    </select>
+                </div>
+                <hr class='w-9/12 opacity-75 mx-auto my-6'>
+                <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
+                    <div class='mb-1'>
+                        {{ attribute.key }}
+                    </div>
+                    <select v-model='marketSelectedFilters[index]'
+                        class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
+                        v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
+                        <option v-bind:value='""'>None</option>
+                        <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values' :key='itemIndex + 10'>
+                            {{ item }}</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -1073,40 +1071,41 @@
         },
 
         async mounted() {
-            await this.initializeMarketPlaza();
-            if (this.isFreyMarket) {
-                const showTutorial = await localStorage.getItem('market-tutorial');
-                if (!showTutorial) {
-                    await localStorage.setItem('market-tutorial', "true");
-                    this.showTutorial();
-                }
-            }
+            this.$nextTick(async () => {
+                var lastScrollTop = 0;
+                this.$refs.container.addEventListener('scroll', async (e) => {
+                    if (this.loaders.fetchSales || this.marketTab !== this.CONSTANTS.SALES_TAB)
+                        return;
 
-            var lastScrollTop = 0;
+                    const element = e.target;
+                    let scrollTop = element.scrollTop;
+                    let scrollHeight = element.scrollHeight;
+                    let offsetHeight = element.offsetHeight;
+                    lastScrollTop = scrollTop;
 
-            if(!this.$refs.container) return;
+                    let contentHeight = scrollHeight - offsetHeight;
+                    if (contentHeight - 200 <= scrollTop) {
+                        try {
+                            this.loaders.application = true;
+                            this.marketPage++;
+                            await this.fetchMarketSales();
+                            this.loaders.application = false;
+                        } catch (err) {
+                            this.loaders.application = false;
+                        }
+                    }
+                });
 
-            this.$refs.container.addEventListener('scroll', async (e) => {
-                if (this.loaders.fetchSales || this.marketTab !== this.CONSTANTS.SALES_TAB) return;
+                await this.initializeMarketPlaza();
 
-                const element = e.target;
-                let scrollTop = element.scrollTop;
-                let scrollHeight = element.scrollHeight;
-                let offsetHeight = element.offsetHeight;
-                lastScrollTop = scrollTop;
-
-                let contentHeight = scrollHeight - offsetHeight;
-                if (contentHeight - 200 <= scrollTop) {
-                    try {
-                        this.loaders.application = true;
-                        this.marketPage++;
-                        await this.fetchMarketSales();
-                        this.loaders.application = false;
-                    } catch (err) {
-                        this.loaders.application = false;
+                if (this.isFreyMarket) {
+                    const showTutorial = await localStorage.getItem('market-tutorial');
+                    if (!showTutorial) {
+                        await localStorage.setItem('market-tutorial', "true");
+                        this.showTutorial();
                     }
                 }
-            });
+            })
         },
 
         watch: {
@@ -1150,6 +1149,7 @@
                 this.acceptedTokens = [];
                 this.userSales = [];
 
+
                 await this.initiateMarketSearch();
 
                 await this.fetchMarketTokens();
@@ -1166,8 +1166,6 @@
 
                     this.acceptedTokens.push(this.tokens[i]);
                 }
-
-
                 this.collectionSaleToken = this.acceptedTokens[0].value;
 
                 if (showNFTCard) {
@@ -1181,13 +1179,9 @@
                 }
 
                 await this.verifyTokens();
-                await this.fetchUserNFTs();
                 await this.fetchPendingNFTs();
                 await this.fetchMarketData();
-
-                if (this.isFreyMarket) {
-                    await this.getFreyFees();
-                }
+                await this.fetchUserNFTs();
             },
 
             showTutorial() {
@@ -1493,7 +1487,7 @@
                         query: NFTQueryBuilder.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
                     });
-
+                    
                     const marketSales = result.data.data.listings.filter(c => c.seller.id !== this.metaMaskAccount
                         .toLowerCase());
 

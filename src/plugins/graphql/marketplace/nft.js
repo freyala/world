@@ -24,6 +24,7 @@ export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, or
   {
     listings(${sortQuery}where: {ended: false, market: "${marketToken}", ${bySeller} ${byId} ${byCurrency} attributes: ${byAttributes}}${paginationQuery}) {
       id
+      tokenId
       nft {
         image
       }
