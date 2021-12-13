@@ -1163,9 +1163,6 @@
                 this.acceptedTokens = [];
                 this.userSales = [];
 
-                console.log(await this.marketNFTContract.ownerOf(90));
-
-
                 await this.initiateMarketSearch();
 
                 await this.fetchMarketTokens();
