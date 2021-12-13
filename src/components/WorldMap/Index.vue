@@ -3,7 +3,7 @@
     <main style="height: 100vh; position: relative">
       <div id="world-map">
         <div class="relative" style="cursor: grab">
-          <img src="/images/map/worldmap.png" alt="Freyala worldmap">
+          <img src="/images/map/world.png" alt="Freyala worldmap">
 
           <!--          ICONS-->
           <div class="absolute w-full h-full" style="top: -1.5vw; left: -1.75vw;">
@@ -693,38 +693,43 @@ export default {
     window.removeEventListener("resize", this.editPanZoom);
   },
   mounted() {
-    const elem = document.getElementById('world-map')
-    let panzoom = undefined
+      this.$nextTick(() => {
+        const elem = document.getElementById('world-map')
+        let panzoom = undefined
+        let a = 23
 
-    if (window.innerWidth < 1024) {
-      panzoom = Panzoom(elem, {
-        maxScale: 10,
-        minScale: 1,
-        steps: 1,
-        contain: 'outside'
-      })
-    } else {
-      panzoom = Panzoom(elem, {
-        maxScale: 10,
-        minScale: 1,
-        contain: 'outside'
-      })
-    }
+        if (window.innerWidth < 1024) {
+          panzoom = Panzoom(elem, {
+            maxScale: 10,
+            minScale: 1,
+            steps: 1,
+            contain: 'outside',
+            initialZoom: 1
+          })
+        } else {
+          panzoom = Panzoom(elem, {
+            maxScale: 10,
+            minScale: 1,
+            contain: 'outside',
+            initialZoom: 1
+          })
+        }
 
-    elem.parentElement.addEventListener('wheel', (e) => {
-      const el = e.target.closest('#world-map');
-      if (el && !el.length) {
-        panzoom.zoomWithWheel(e)
-      }
-    })
+        elem.parentElement.addEventListener('wheel', (e) => {
+          const el = e.target.closest('#world-map');
+          if (el && !el.length) {
+            panzoom.zoomWithWheel(e)
+          }
+        })
 
-    setTimeout(() => {
-      panzoom.zoom(1, {animate: false})
-    })
+        setTimeout(() => {
+          panzoom.zoom(1, {animate: false})
+        })
 
-    if (this.firstTime === true) {
-      this.$modal.show('tutorial')
-    }
+        if (this.firstTime === true) {
+          this.$modal.show('tutorial')
+        }
+      });
   },
   methods: {
     editPanZoom() {

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div v-if="$router.name !== 'login'" class="absolute w-full top-0 left-0 opacity-25"
-         style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; min-height: 100vh"></div>
+         style="background: url('/images/map/world.png') no-repeat; background-size: cover; min-height: 100vh"></div>
 
     <div style="width: 0; height: 0">
       <div class="load-in-bg1"></div>

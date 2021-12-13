@@ -649,14 +649,14 @@
                     <p v-if='collectionSelectedNFT' class='mt-1'>Register #{{collectionSelectedNFT.tokenId}} for:
                     </p>
                 </div>
-                <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
-                    <select v-model='collectionSaleToken' class="w-9/12 border rounded-lg border-yellow px-4 bg-dark">
+                <div class="mt-4 flex md:flex-row flex-col w-full items-center justify-start">
+                    <select v-model='collectionSaleToken' class="w-full md:w-9/12 h-12 border rounded-lg border-yellow px-4 bg-dark">
                         <option v-for='(token, index) in acceptedTokens' v-bind:value="token.value" :key='index'>
                             {{ token.key }}</option>
                     </select>
-                    <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
+                    <div class="text-right md:text-center mt-4 md:mt-0 md:w-9/12 w-full">
                         <button v-on:click="registerFreyNFT(collectionSelectedNFT)" type="button"
-                            class="w-full md:w-10/12 md:text-base text-sm rounded-xl border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                            class="w-full rounded-lg md:mx-4 mt-auto xya-btn md:text-xl text-base">
                             <span>Confirm</span>
                         </button>
                     </div>
@@ -696,10 +696,10 @@
                     <p v-if='collectionSelectedNFT' class='mt-1'>Send #{{collectionSelectedNFT.tokenId}} to: </p>
                 </div>
                 <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
-                    <input class='w-full text-black px-2' type="text" v-model='NFTTransactionTo' />
+                    <input class='w-full text-black px-2 rounded-lg' type="text" v-model='NFTTransactionTo' />
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                         <button v-on:click="sendNFT(collectionSelectedNFT)" type="button"
-                            class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                            class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                             <span>Confirm</span>
                         </button>
                     </div>
@@ -716,13 +716,25 @@
                     <i @click="$modal.hide('force-withdraw')" class="fas fa-times cursor-pointer text-xl"></i>
                 </div>
                 <div class='mt-4 md:text-base text-sm opacity-75'>
-                    <p>NFT #</p>
+                    <p>Cancel Auction by #</p>
                 </div>
                 <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
-                    <input class='w-full text-black px-2' type="text" v-model='forceWithdrawTokenId' />
+                    <input class='w-full text-black px-2 rounded-lg' type="text" v-model='forceWithdrawTokenId' />
                     <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
                         <button v-on:click="withdrawNFT(forceWithdrawTokenId)" type="button"
-                            class="w-full md:w-10/12 md:text-base text-sm rounded-none border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                            class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                            <span>Confirm</span>
+                        </button>
+                    </div>
+                </div>
+                <div class='mt-4 md:text-base text-sm opacity-75'>
+                    <p>Cancel Sale by #</p>
+                </div>
+                <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
+                    <input class='w-full text-black px-2 rounded-lg' type="text" v-model='forceCancelSellTokenId' />
+                    <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
+                        <button v-on:click="forceCancelNFT(forceCancelSellTokenId)" type="button"
+                            class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                             <span>Confirm</span>
                         </button>
                     </div>
@@ -1066,7 +1078,8 @@
                     pages: 3
                 },
 
-                forceWithdrawTokenId: 0
+                forceWithdrawTokenId: 0,
+                forceCancelSellTokenId: 0
             };
         },
 
@@ -1074,7 +1087,8 @@
             this.$nextTick(async () => {
                 var lastScrollTop = 0;
                 this.$refs.container.addEventListener('scroll', async (e) => {
-                    if (this.loaders.fetchSales || this.marketTab !== this.CONSTANTS.SALES_TAB)
+                    if (this.loaders.fetchSales || this.marketTab !== this.CONSTANTS
+                        .SALES_TAB)
                         return;
 
                     const element = e.target;
@@ -1148,6 +1162,8 @@
                 this.marketTokens = [];
                 this.acceptedTokens = [];
                 this.userSales = [];
+
+                console.log(await this.marketNFTContract.ownerOf(90));
 
 
                 await this.initiateMarketSearch();
@@ -1487,7 +1503,7 @@
                         query: NFTQueryBuilder.FetchMarketNFTs(this.market.token, filters, pagination,
                             orderInfo)
                     });
-                    
+
                     const marketSales = result.data.data.listings.filter(c => c.seller.id !== this.metaMaskAccount
                         .toLowerCase());
 
@@ -1922,7 +1938,7 @@
                     });
 
                     this.$modal.hide('force-withdraw');
-
+                    this.forceWithdrawTokenId = 0;
                     await tx.wait(1);
 
                     this.marketPendingTokens = this.marketPendingTokens.filter(c => c.tokenId !== tokenId);
@@ -1930,6 +1946,18 @@
                     await this.fetchUserNFTs();
                     this.$toast.success(`#${tokenId} received`);
                 } catch (err) {
+                    this.handleError(err);
+                }
+            },
+
+            async forceCancelNFT(tokenId){
+                try{
+                    const tx = await this.contract.cancelSell(this.market.token, tokenId);
+                    this.$modal.hide('force-withdraw');
+                    this.forceCancelSellTokenId = 0;
+                    await tx.wait(1);
+                }
+                catch(err){
                     this.handleError(err);
                 }
             },
