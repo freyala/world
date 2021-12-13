@@ -203,6 +203,9 @@ export default new Vuex.Store({
         },
         setNetworkId({commit}, value) {
             commit('SET_NETWORK_ID', value)
+        },
+        setError(){
+            
         }
     }
 })

@@ -79,7 +79,7 @@ export default new Router({
             component: FreyCollection
         },
         {
-          path: '/boss/:id',
+          path: '/boss/:id/:team?',
           name: 'boss',
           component: Boss
         },
