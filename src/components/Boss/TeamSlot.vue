@@ -2,35 +2,44 @@
   <div class="team-slot relative">
     <div v-if="empty">
       <img src="/images/LOADING.png" alt="Mint a Frey" />
-      
     </div>
     <div v-else>
       <img :src="frey" alt="Mint a Frey" />
-      <button
+      <request-button
         class="
-          absolute absolute
+          absolute
+          w-4/5
           bottom-0
           left-1/2
           transform
-          -translate-x-1/2 -translate-y-1/2
-          bg-green
-          text-white
+          -translate-x-1/2 -translate-y-1
         "
-
-        @click="()=>$emit('leave')"
+        :action="requestLeave"
       >
-        Leave Party
-      </button>
+        Leave
+      </request-button>
     </div>
   </div>
 </template>
 
 <script>
+import RequestButton from "../RequestButton.vue";
 export default {
+  components: { RequestButton },
   props: {
     id: {
       type: Number,
       default: -1,
+    },
+  },
+  methods: {
+    requestLeave: async function () {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          this.$emit("leave");
+          resolve()
+        }, 2000);
+      });
     },
   },
   computed: {
