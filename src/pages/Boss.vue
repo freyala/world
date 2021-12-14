@@ -5,7 +5,13 @@
     </template>
 
     <back-button :to="{ name: 'world-map' }" />
-    <BossCard :id="bossId" class="mb-6" />
+    <div class="boss-wrapper">
+      <BossCard :id="bossId" class="mb-6" />
+      <div class="attack" ref="attack-anim">BOOM</div>
+    </div>
+
+    <h2 v-if="inFight" class="text-2xl p-2">Deck</h2>
+    <deck v-if="inFight" @attack="attack" />
 
     <div v-if="hasTeam">
       <h2 class="text-2xl p-2">Team</h2>
@@ -15,13 +21,15 @@
       >
         <team-slot
           v-for="idx in teamsize"
+          :leavable="!inFight"
           @leave="leave(getMemberId(idx - 1))"
           class="teammember mx-auto"
           :id="getMemberId(idx - 1)"
           :key="'temmember-' + idx"
         />
       </section>
-      <button
+
+      <request-button
         class="
           w-full
           my-12
@@ -33,9 +41,9 @@
           min-h-12
         "
         v-if="isOwner"
+        :action="startFight"
+        >Fight Boss</request-button
       >
-        Start Fight
-      </button>
 
       <request-button v-if="offlineTeam" :action="initializeTeam"
         >Create Team</request-button
@@ -46,7 +54,7 @@
         class="flex justify-center bg-green text-white"
         @click="createTeam"
       >
-        Create Team
+        New Team
       </button>
     </div>
 
@@ -86,35 +94,26 @@ import BackButton from "../components/BackButton.vue";
 import RequestButton from "../components/RequestButton.vue";
 
 import { createToastInterface } from "vue-toastification";
+import Deck from "../components/Boss/Deck.vue";
 
 export default {
-  components: { BackButton, LightBox, BossCard, TeamSlot, RequestButton },
+  components: { BackButton, LightBox, BossCard, TeamSlot, RequestButton, Deck },
   created() {
     const toast = createToastInterface();
     this.$data.toast = toast;
 
     if (this.hasTeam) {
-      let team = window.localStorage.getItem("team-" + this.team);
-
-      if (team) {
-        console.log(team);
-        try {
-          let t = JSON.parse(team);
-          this.$data.owner = t.owner;
-          this.$data.teammembers = t.teammembers;
-        } catch (e) {
-          console.error(e);
-        }
-
-        // let team = JSON.parse(team)
-      } else {
-        //Navigate to no team
-      }
+      let team = this.teamOptions;
+      this.$data.owner = team.owner;
+      this.$data.teammembers = team.teammembers;
+      this.$data.inFight = team.inFight;
     }
   },
   data: function () {
     return {
       owner: null,
+      mode: "setup",
+      inFight: false,
       teamsize: 4,
       teammembers: [],
       availableFreys: [11, 1002, 39],
@@ -151,7 +150,6 @@ export default {
       }
     },
     leave(id) {
-      console.log("leave");
       const idx = this.teammembers.indexOf(id);
       if (idx != -1) {
         this.teammembers.splice(idx, 1);
@@ -159,23 +157,52 @@ export default {
       }
     },
     createTeam() {
-      console.log(this.$route);
       this.$router.replace({ params: { team: 0 } });
     },
     async initializeTeam() {
-      if (this.teammembers.length == 0) throw new Error("No teammembers set!");
+      if (this.teammembers.length == 0) this.$data.toast("No teammembers set!");
       else {
-        const num = Math.floor(Math.random() * 10000).toString();
+        const id = Math.floor(Math.random() * 10000).toString();
 
         const teamOptions = {
+          id: id,
+          inFight: false,
           owner: this.$store.getters.metaMaskAccount,
           teammembers: this.teammembers,
         };
 
-        window.localStorage.setItem("team-" + num, JSON.stringify(teamOptions));
-        this.$router.replace({ params: { team: num } });
+        this.saveTeam(teamOptions);
+        this.$router.replace({ params: { team: id } });
       }
     },
+    async startFight() {
+      let team = this.teamOptions;
+
+      if (!team.inFight) {
+        this.mode = "fight";
+        team.inFight = true;
+        this.inFight = true;
+        this.saveTeam(team);
+      } else {
+        this.$data.toast.error("Team is already in fight!");
+      }
+    },
+    saveTeam(teamOptions) {
+      window.localStorage.setItem(
+        "team-" + this.team,
+        JSON.stringify(teamOptions)
+      );
+    },
+    async attack() {
+      if (this.$refs["attack-anim"]) {
+        this.$refs["attack-anim"].classList.remove("animate");
+        await this.hiccup()
+        this.$refs["attack-anim"].classList.add("animate");
+      }
+    },
+    async hiccup(){
+      return new Promise(r => setTimeout(r, 1))
+    }
   },
   computed: {
     bossId() {
@@ -194,8 +221,18 @@ export default {
       return this.hasTeam;
     },
     isOwner() {
-      console.log(this.owner == this.$store.getters.metaMaskAccount);
       return this.owner == this.$store.getters.metaMaskAccount;
+    },
+
+    teamOptions() {
+      let teamString = window.localStorage.getItem("team-" + this.team);
+      let team;
+      try {
+        team = JSON.parse(teamString.toString());
+      } catch (error) {
+        console.error(error);
+      }
+      return team;
     },
   },
 };
@@ -214,6 +251,39 @@ export default {
   bottom: 0;
   right: 0;
   transform: translateY(100%);
+}
+
+.boss-wrapper {
+  position: relative;
+}
+
+.attack {
+  position: absolute;
+  left: 0;
+  right: 50%;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  opacity: 0;
+
+  color: red;
+  font-size: 100px;
+}
+.attack.animate {
+  animation: boom 1s;
+}
+
+@keyframes boom {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 </style>
 

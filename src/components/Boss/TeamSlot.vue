@@ -15,6 +15,7 @@
           -translate-x-1/2 -translate-y-1
         "
         :action="requestLeave"
+        v-if="leavable"
       >
         Leave
       </request-button>
@@ -31,6 +32,7 @@ export default {
       type: Number,
       default: -1,
     },
+    leavable: Boolean
   },
   methods: {
     requestLeave: async function () {
