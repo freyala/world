@@ -1,5 +1,5 @@
 {
-    "address": "0x48a999FF86802A7b2a3E5f87d91E97a8cc604A36",
+    "address": "0x644f36ad6f4CF9e3fbB2965a12e50FA53003E25F",
     "abi": [{
             "inputs": [{
                     "internalType": "contract IERC20",
@@ -110,8 +110,8 @@
                             "type": "int256"
                         }
                     ],
-                    "internalType": "struct Tamagotchi.RandomEvent[]",
-                    "name": "randomEvents",
+                    "internalType": "struct Tamagotchi.RandomEventParams[]",
+                    "name": "randomEventParams",
                     "type": "tuple[]"
                 },
                 {
@@ -204,155 +204,216 @@
         },
         {
             "inputs": [{
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-            }],
-            "name": "getFeeTakerAt",
-            "outputs": [{
-                "components": [{
-                        "internalType": "address",
-                        "name": "addr",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "points",
-                        "type": "uint256"
-                    }
-                ],
-                "internalType": "struct FeeTakers.FeeTaker",
-                "name": "",
-                "type": "tuple"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getFeeTakersLength",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [{
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-            }],
-            "name": "removeFromFeeTakers",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "renounceOwnership",
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                }
+            ],
+            "name": "buyEvent",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
             "inputs": [{
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }],
-            "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "pigId",
-                "type": "uint256"
-            }],
-            "name": "isImported",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "pigId",
-                "type": "uint256"
-            }],
-            "name": "isDead",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "pigId",
-                "type": "uint256"
-            }],
-            "name": "occupiedUntil",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "pigId",
-                "type": "uint256"
-            }],
-            "name": "importPig",
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                }
+            ],
+            "name": "buyPowerup",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
             "inputs": [],
-            "name": "getRevivalPrice",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
+            "name": "distributeExcessCoink",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
             "inputs": [{
-                "internalType": "uint256",
-                "name": "pigId",
-                "type": "uint256"
-            }],
-            "name": "revivePig",
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "percentageChance",
+                    "type": "uint256"
+                }
+            ],
+            "name": "editChanceOfRandomEvent",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "cooldown",
+                    "type": "uint256"
+                }
+            ],
+            "name": "editCooldownOfPowerup",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "cooldown",
+                    "type": "uint256"
+                }
+            ],
+            "name": "editCooldownOfPurchaseableEvent",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "decay",
+                    "type": "int256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "length",
+                    "type": "uint256"
+                }
+            ],
+            "name": "editDecayOfPowerup",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "value",
+                    "type": "int256"
+                }
+            ],
+            "name": "editDefaultAttributeValue",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "effect",
+                    "type": "int256"
+                }
+            ],
+            "name": "editEffectOfPurchaseableEvent",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "effect",
+                    "type": "int256"
+                }
+            ],
+            "name": "editEffectOfRandomEvent",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "occupy",
+                    "type": "bool"
+                }
+            ],
+            "name": "editOccupyOfPowerup",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "price",
+                    "type": "uint256"
+                }
+            ],
+            "name": "editPriceOfPowerup",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "price",
+                    "type": "uint256"
+                }
+            ],
+            "name": "editPriceOfPurchaseableEvent",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -385,6 +446,85 @@
                 "internalType": "struct Tamagotchi.DefaultAttribute[]",
                 "name": "attributes",
                 "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getCooldownEndsAtForPowerupOfPig",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getCooldownEndsAtForPurchaseableEventOfPig",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }],
+            "name": "getFeeTakerAt",
+            "outputs": [{
+                "components": [{
+                        "internalType": "address",
+                        "name": "addr",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "points",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct FeeTakers.FeeTaker",
+                "name": "",
+                "type": "tuple"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getFeeTakersLength",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }],
             "stateMutability": "view",
             "type": "function"
@@ -437,64 +577,6 @@
             "type": "function"
         },
         {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-            }],
-            "name": "getRequirementsOfPowerup",
-            "outputs": [{
-                "components": [{
-                        "internalType": "string",
-                        "name": "attributeName",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "int256",
-                        "name": "value",
-                        "type": "int256"
-                    }
-                ],
-                "internalType": "struct Tamagotchi.Requirement[]",
-                "name": "",
-                "type": "tuple[]"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getRandomEvents",
-            "outputs": [{
-                "components": [{
-                        "internalType": "string",
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "percentageChance",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "attributeName",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "int256",
-                        "name": "effect",
-                        "type": "int256"
-                    }
-                ],
-                "internalType": "struct Tamagotchi.RandomEvent[]",
-                "name": "",
-                "type": "tuple[]"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
             "inputs": [],
             "name": "getPurchaseableEvents",
             "outputs": [{
@@ -532,6 +614,86 @@
             "type": "function"
         },
         {
+            "inputs": [],
+            "name": "getRandomEvents",
+            "outputs": [{
+                "components": [{
+                        "components": [{
+                                "internalType": "string",
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "percentageChance",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "effect",
+                                "type": "int256"
+                            }
+                        ],
+                        "internalType": "struct Tamagotchi.RandomEventParams",
+                        "name": "params",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "value",
+                                "type": "int256"
+                            }
+                        ],
+                        "internalType": "struct Tamagotchi.Requirement[]",
+                        "name": "requirements",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct Tamagotchi.RandomEvent[]",
+                "name": "",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }],
+            "name": "getRequirementsOfPowerup",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct Tamagotchi.Requirement[]",
+                "name": "",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "inputs": [{
                 "internalType": "uint256",
                 "name": "index",
@@ -558,18 +720,8 @@
             "type": "function"
         },
         {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getCooldownEndsAtForPowerupOfPig",
+            "inputs": [],
+            "name": "getRevivalPrice",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
@@ -580,23 +732,109 @@
         },
         {
             "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getCooldownEndsAtForPurchaseableEventOfPig",
-            "outputs": [{
                 "internalType": "uint256",
-                "name": "",
+                "name": "pigId",
                 "type": "uint256"
             }],
+            "name": "importPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "isDead",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
             "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "isImported",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "occupiedUntil",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "occupiedUntil",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Tamagotchi.OccupiedData",
+                "name": "",
+                "type": "tuple"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }],
+            "name": "removeFromFeeTakers",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "revivePig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
@@ -612,113 +850,6 @@
                 }
             ],
             "name": "setNameOfPig",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                }
-            ],
-            "name": "buyPowerup",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                }
-            ],
-            "name": "buyEvent",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "price",
-                    "type": "uint256"
-                }
-            ],
-            "name": "editPriceOfPowerup",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "cooldown",
-                    "type": "uint256"
-                }
-            ],
-            "name": "editCooldownOfPowerup",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "decay",
-                    "type": "int256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "length",
-                    "type": "uint256"
-                }
-            ],
-            "name": "editDecayOfPowerup",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "bool",
-                    "name": "occupy",
-                    "type": "bool"
-                }
-            ],
-            "name": "editOccupyOfPowerup",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -758,57 +889,6 @@
                     "type": "uint256"
                 },
                 {
-                    "internalType": "uint256",
-                    "name": "price",
-                    "type": "uint256"
-                }
-            ],
-            "name": "editPriceOfPurchaseableEvent",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "cooldown",
-                    "type": "uint256"
-                }
-            ],
-            "name": "editCooldownOfPurchaseableEvent",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "effect",
-                    "type": "int256"
-                }
-            ],
-            "name": "editEffectOfPurchaseableEvent",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
                     "components": [{
                             "internalType": "string",
                             "name": "attributeName",
@@ -837,46 +917,23 @@
                     "type": "uint256"
                 },
                 {
-                    "internalType": "int256",
-                    "name": "value",
-                    "type": "int256"
+                    "components": [{
+                            "internalType": "string",
+                            "name": "attributeName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "int256",
+                            "name": "value",
+                            "type": "int256"
+                        }
+                    ],
+                    "internalType": "struct Tamagotchi.Requirement[]",
+                    "name": "requirements",
+                    "type": "tuple[]"
                 }
             ],
-            "name": "editDefaultAttributeValue",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "percentageChance",
-                    "type": "uint256"
-                }
-            ],
-            "name": "editChanceOfRandomEvent",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "index",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "effect",
-                    "type": "int256"
-                }
-            ],
-            "name": "editEffectOfRandomEvent",
+            "name": "setRequirementsOfRandomEvent",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -888,6 +945,17 @@
                 "type": "uint256"
             }],
             "name": "setRevivalPrice",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }],
+            "name": "transferOwnership",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

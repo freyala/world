@@ -132,6 +132,13 @@
         class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 bg-dark'>
 
       </div>
+
+      <transition name='menu'>
+        <PiggyDividends :piggyList='piggyList' v-if='showPiggyBank' v-on:close='showPiggyBank = false'>
+
+        </PiggyDividends>
+      </transition>
+
       <transition name='menu'>
         <div v-if='showPiggyMenu' class='piggie-menu-container top-0 bottom-0 sm:w-7/10 w-9/10' style=''>
 
@@ -145,16 +152,19 @@
             </div>
 
             <div
-              class='w-8/10 h-10 my-1 mx-auto rounded-xl scale-anim bg-white flex justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'
-              v-for='piggy in yourPigs' :key='piggy.id' v-on:click='selectPiggy(piggy)'>
-              <img v-if='currentPig && currentPig.id === piggy.id' class='mt-1 mx-2 opacity-50' width="22px"
-                src='/pigs/snout_dark.svg' />
-              Pig #{{piggy.id}}
+              class='w-8/10 h-32 my-2 py-2 mx-auto rounded-xl pink-border-bottom scale-anim bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'
+              v-for='piggy in piggyList' :key='piggy.id' v-on:click='selectPiggy(piggy)'>
+              <p class='w-full h-1/5'>Pig #{{piggy.id}}</p>
+              <div class='sm:w-4/10 w-5/10 mt-2 h-4/5 relative flex items-center'>
+
+                <img v-for='(attribute, index) in piggy.attributes' :key='index' class='absolute -top-6'
+                  v-bind:src='getSimplePiggyAttributeImage(attribute)' alt="Pig">
+              </div>
             </div>
           </div>
         </div>
-
       </transition>
+
       <!-- BACKGROUND -->
       <div class="p-8 flex h-3/5 z-0 absolute top-0 w-full bg-pig-sky">
       </div>
@@ -178,9 +188,12 @@
           <div v-on:click='showPiggyMenu = true' class='cursor-pointer ml-auto w-auto h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/piggies_button.svg' />
           </div>
+          <div v-on:click='showPiggyBank = true' class='cursor-pointer sm:mx-4 mx-2 w-auto h-full piggie-menu-btn'>
+            <img class='h-full' src='/pigs/wallet_button.svg' />
+          </div>
           <router-link target="_blank"
             :to="{path: 'marketplace', query: { market: '0xe5fd335819edb8da8395f8ec48beca747a0790ab' }}">
-            <div class='cursor-pointer w-auto sm:mx-4 mx-2 h-full piggie-menu-btn'>
+            <div class='cursor-pointer w-auto mr-4 h-full piggie-menu-btn'>
               <img class='h-full' src='/pigs/market_button.svg' />
             </div>
           </router-link>
@@ -261,18 +274,20 @@
   } from "vuex";
 
   import Piggy from "../../plugins/artifacts/frey.json";
-  import AttributeManager from "../../plugins/artifacts/attributeManager.json";
+  import AttributeManager from "../../plugins/artifacts/piggyAttributeManager.json";
+  import PiggyTamagotchi from "../../plugins/artifacts/piggyTamagotchi.json";
   import Token from '../../plugins/artifacts/freyala.json';
-  import PiggyTamagotchi from "../../plugins/artifacts/tamagotchi.json";
   import fromExponential from "from-exponential";
 
   import PiggyBar from '../../components/Pigs/PiggyBar.vue';
+  import PiggyDividends from '../../components/Pigs/PiggyDividends.vue';
 
   export default {
     name: 'CryptoPigs',
     mixins: [wallet],
     components: {
-      PiggyBar
+      PiggyBar,
+      PiggyDividends
     },
     computed: {
       ...mapGetters([
@@ -293,7 +308,7 @@
       return {
         attributeManagerContract: undefined,
         tamagotchiContract: undefined,
-        yourPigs: [],
+        piggyList: [],
         keys: {
           piggyStats: 0
         },
@@ -331,6 +346,7 @@
         showPiggyImport: false,
         showPiggyName: false,
         showPiggyMenu: false,
+        showPiggyBank: false,
 
         CONSTANTS: {
           CARROT_FOOD: 'carrot.png',
@@ -390,7 +406,7 @@
             loading: false
           });
         }
-        await this.getYourPigs();
+        await this.getPiggyList();
 
         this.piggyInterval = setInterval(async () => {
           this.fetchPiggyStats(this.currentPig);
@@ -548,9 +564,15 @@
             let tx = undefined;
 
             if (attribute.name === 'Energy') {
-              tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.powerUp.index);
+              tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.powerUp.index, {
+              gasPrice: 50000000000,
+              gasLimit: 500000
+            });
             } else {
-              tx = await this.tamagotchiContract.buyEvent(piggy.id, freeEvent.index);
+              tx = await this.tamagotchiContract.buyEvent(piggy.id, freeEvent.index, {
+              gasPrice: 50000000000,
+              gasLimit: 500000
+            });
             }
 
             if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
@@ -569,6 +591,12 @@
 
       async revivePiggy(piggy) {
         try {
+          if (!this.piggyAllowance) {
+            this.showPiggyCooldown = false;
+            this.showPiggySettingsModal();
+            throw '"Coink" token is not enabled!';
+          }
+
           const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
           if (!isRegistered) return;
           const isDead = await this.tamagotchiContract.isDead(piggy.id);
@@ -596,6 +624,7 @@
           this.piggyLoading = true;
           const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
           if (!isRegistered) {
+            console.log(this.tamagotchiContract);
             const tx = await this.tamagotchiContract.importPig(piggy.id, {
               gasPrice: 100000000000,
               gasLimit: 1000000
@@ -610,6 +639,7 @@
           this.showPig = true;
 
         } catch (err) {
+          console.log(err);
           this.showPig = false;
           this.handleError(err);
         }
@@ -633,6 +663,7 @@
 
           this.piggySleeping = currentBlock < parseInt(occupiedUntil);
           const piggyName = await this.attributeManagerContract.getNameOfPig(piggy.id);
+          console.log('anme', piggyName);
 
           this.piggyName = piggyName ? piggyName : "#" + piggy.id;
           this.newPiggyName = this.piggyName;
@@ -648,23 +679,25 @@
 
       async setPiggyName(pig) {
         try {
-          let name = this.piggyName;
+          let name = this.newPiggyName;
 
-          if (!name) throw 'Names can not be empty';
-          if (name.length > 30) "Names can not be longer than 30 characters.";
+          if (!name || name.length === 0) throw 'Names can not be empty';
+          if (name.length > 12) "Names can not be longer than 12 characters.";
 
           this.hideAllPiggyDialogs();
 
-          const tx = await this.attributeManagerContract.setNameOfPig(pig.id, name, {
+          const tx = await this.tamagotchiContract.setNameOfPig(pig.id, name, {
             gasPrice: 100000000000,
             gasLimit: 1000000
           });
+          this.piggyLoading = true;
           await tx.wait(1);
 
           this.piggyName = this.newPiggyName;
         } catch (err) {
           this.handleError(err);
         }
+        this.piggyLoading = false;
       },
 
       async selectPiggy(pig) {
@@ -688,7 +721,7 @@
         }
       },
 
-      async getYourPigs() {
+      async getPiggyList() {
         const contract = new ethers.Contract('0xe5fd335819edb8da8395f8ec48beca747a0790ab', Piggy.abi, this
           .metaMaskWallet.signer)
         const pigIds = await contract.tokensOfOwner(this.metaMaskAccount)
@@ -700,12 +733,12 @@
         await Promise.all(ids)
           .then(async (listOfIds) => {
 
-            const yourPigs = await axios.get(`https://api.cryptopigs.one/meta/list?items=${listOfIds}`)
-            this.yourPigs = yourPigs.data
+            const piggyList = await axios.get(`https://api.cryptopigs.one/meta/list?items=${listOfIds}`)
+            this.piggyList = piggyList.data
             this.loading = false
 
-            if (this.yourPigs.length) {
-              const firstPig = this.yourPigs[0];
+            if (this.piggyList.length) {
+              const firstPig = this.piggyList[0];
               const isRegistered = await this.tamagotchiContract.isImported(firstPig.id);
 
               if (isRegistered) {
@@ -718,6 +751,11 @@
       getPiggyAttribute(attributeName) {
         const attribute = this.piggyStats.filter(c => c.name === attributeName)[0];
         return attribute;
+      },
+
+      getSimplePiggyAttributeImage(attribute) {
+        if (attribute.trait_type === 'Background') return '/pigs/attributes/none.png';
+        return `/pigs/attributes/${attribute.trait_type}/${attribute.value}.png`;
       },
 
       getPiggieAttributeImage(attribute) {
@@ -879,6 +917,43 @@
   }
 </script>
 
+<style>
+  .piggie-btn {
+    min-width: 64px;
+    min-height: 64px;
+    background: #F16097;
+    border: 1px solid #FBCCDE;
+    box-sizing: border-box;
+    border-radius: 12px;
+  }
+
+  .bg-pink {
+    background: #F16097;
+  }
+
+  .bg-pink-light {
+    background-color: #F16097;
+  }
+
+  .pink {
+    color: #dc5689 !important;
+  }
+
+  .scale-anim:hover {
+    transform: scale(1.05);
+  }
+
+  .press-anim:hover {
+    border-top: solid 8px #dc4689;
+    border-bottom: solid 1px #dc4689;
+    color: rgba(255, 255, 255, 50%) !important;
+  }
+
+  .pink-border-bottom {
+    border-bottom: solid 8px #dc4689;
+  }
+</style>
+
 <style scoped>
   .pig-tamagotchi {
     max-width: 768px;
@@ -928,21 +1003,10 @@
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.5);
   }
 
-  .scale-anim:hover {
-    transform: scale(1.05);
-  }
-
-  .press-anim:hover {
-    border-bottom: 0;
-    border-top: solid 8px #dc4689;
-    color: rgba(255, 255, 255, 50%) !important;
-  }
-
   .Vue-Toastification__toast--error {
     background-color: #dc4689 !important;
     color: #fff;
   }
-
 
   div,
   input {
@@ -962,10 +1026,6 @@
   .piggie-menu-btn:hover {
     position: relative;
     transform: scale(1.05);
-  }
-
-  .pink-border-bottom {
-    border-bottom: solid 8px #dc4689;
   }
 
   .piggy-jump {
@@ -1129,6 +1189,8 @@
   .piggie-menu-container {
     z-index: 5000;
     position: absolute;
+    max-height: 100%;
+    overflow-y: auto;
     background: linear-gradient(269.03deg, #FF8AB6 0.85%, #F16097 99.18%);
     box-shadow: 4px 0px 12px 6px rgba(0, 0, 0, 0.15);
     border-radius: 16px;
@@ -1143,49 +1205,6 @@
     bottom: 0;
     left: 0;
     background-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .piggie-btn {
-    min-width: 64px;
-    min-height: 64px;
-    background: #F16097;
-    border: 1px solid #FBCCDE;
-    box-sizing: border-box;
-    border-radius: 12px;
-  }
-
-  .bg-pink {
-    background: #F16097;
-  }
-
-  .bg-pink-light {
-    background-color: #F16097;
-  }
-
-  .pink {
-    color: #dc5689 !important;
-  }
-
-  .progress-container {
-    padding: 12px 15px 20px 15px;
-  }
-
-  .progress {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    position: relative;
-  }
-
-  .bar {
-    width: 100%;
-    display: block;
-    font-size: 12px;
-    background-color: #bb9319;
-    color: #fff;
-    position: absolute;
-    bottom: 0;
   }
 
   ::-webkit-scrollbar-thumb {
