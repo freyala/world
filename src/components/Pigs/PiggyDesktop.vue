@@ -71,18 +71,7 @@
     export default {
         name: 'PiggyDividends',
         props: {
-            show: {
-                type: Boolean,
-                default: false
-            },
-            tamagotchiContract: {
-                type: Object,
-                default: undefined
-            },
-            piggyList: {
-                type: Array,
-                default: []
-            }
+            bgColor
         },
         computed: {
             ...mapGetters([
@@ -92,108 +81,13 @@
         },
         data() {
             return {
-                contract: undefined,
-                currentEpoch: 0,
-                currentEpochPiggyCount: 0,
-                page: 0,
-                perPage: 5
             };
         },
         async mounted() {
-            this.contract = await new ethers.Contract(PiggyDividends.address, PiggyDividends.abi, this
-                .metaMaskWallet
-                .signer);
-
-            await this.getEpochInfo();
-
-            let lastScrollTop = 0;
-            this.$refs.container.addEventListener('scroll', async (e) => {
-                if (this.loaders.fetchSales || this.marketTab !== this.CONSTANTS
-                    .SALES_TAB)
-                    return;
-
-                const element = e.target;
-                let scrollTop = element.scrollTop;
-                let scrollHeight = element.scrollHeight;
-                let offsetHeight = element.offsetHeight;
-                lastScrollTop = scrollTop;
-
-                let contentHeight = scrollHeight - offsetHeight;
-                if (contentHeight - 200 <= scrollTop) {
-                    try {
-                        this.page++;
-                        await this.fetchPiggyData(page);
-                    } catch (err) {}
-                }
-            });
-
-            await this.fetchPiggyData(0);
 
         },
         methods: {
 
-            async getEpochInfo() {
-                try {
-                    this.currentEpoch = await this.contract.currentEpochNumber();
-                    this.currentEpochPiggyCount = await this.contract.pigCountAtEpochNumber(this.currentEpoch);
-                } catch (err) {
-                    this.$emit('error', err);
-                }
-            },
-
-            getPiggieAttributeImage(attribute) {
-                if (attribute.trait_type === 'Background') return '/pigs/attributes/none.png';
-                return `/pigs/attributes/${attribute.trait_type}/${attribute.value}.png`;
-            },
-
-            async claimDividendsForPiggy(piggy) {
-                try {
-                    const tx = await this.contract.claimDividend(piggy.id);
-                    await tx.wait(1);
-                    piggy.nextEpoch = 0;
-                } catch (err) {
-                    this.$emit('error', err);
-                }
-            },
-
-            async registerPiggy(piggy) {
-                try {
-                    const piggyStatus = await this.tamagotchiContract.isImported(piggy.id);
-                    if(!piggyStatus) throw `Piggy #${piggy.id} is not imported!`;
-                    const piggyDead = await this.tamagotchiContract.isDead(piggy.id);
-                    if(piggyDead) throw `Piggy #${piggy.id} is dead`; 
-
-                    const tx = await this.contract.registerPig(piggy.id, {
-                        gasPrice: 100000000000,
-                        gasLimit: 1000000
-                    });
-                    await tx.wait(1);
-                    piggy.registered = true;
-                    this.getEpochInfo();
-                } catch (err) {
-                    this.$emit('error', err);
-                }
-            },
-
-            async fetchPiggyData(page) {
-                const start = page * this.perPage;
-                const end = Math.min(this.piggyList.length, start + this.perPage);
-
-                const claimableLastEpoch = await this.contract.claimablePerPigThisEpoch();
-                const claimableNextEpoch = await this.contract.claimablePerPigNextEpoch();
-
-                for (let i = start; i < end; i++) {
-                    const claimedPrevious = await this.contract.hasClaimedPreviousEpochRewards(this.piggyList[i]
-                        .id);
-                    const registeredThisEpoch = await this.contract.hasRegisteredThisEpoch(this.piggyList[i].id);
-
-                    this.piggyList[i].lastEpoch = claimedPrevious ? 0 : claimableLastEpoch;
-                    this.piggyList[i].nextEpoch = registeredThisEpoch ? claimableNextEpoch : 0;
-                    this.piggyList[i].registered = registeredThisEpoch;
-                    this.piggyList[i].claimedPrevious = claimedPrevious;
-                }
-
-            }
         }
     }
 </script>

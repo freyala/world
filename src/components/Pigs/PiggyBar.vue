@@ -1,6 +1,7 @@
 <template>
-    <div v-on:click='$emit("click")' class="cursor-pointer mx-1 sm:mx-2 md:w-auto sm:w-2/10 w-3/10 flex h-full relative tmg-btn">
-        <div v-on:mouseover='showTooltip()' class='w-8/10 h-full flex flex-col justify-center items-center'>
+    <div v-on:mouseleave='hideTooltip()' v-on:mouseover='showTooltip()' v-on:click='$emit("click")'
+        class="cursor-pointer mx-1 sm:mx-2 md:w-auto sm:w-2/10 w-3/10 flex h-full relative tmg-btn z-50">
+        <div class='w-8/10 h-full flex flex-col justify-center items-center'>
             <transition name='fade'>
                 <img v-if='!attribute.loading' class="inline" width="100%" v-bind:src="getButtonImage(attribute.name)">
             </transition>
@@ -8,7 +9,7 @@
                 <img v-if='attribute.loading' class="inline fa-spin absolute" width="50%" src='/pigs/snout_dark.svg'>
             </transition>
             <transition name='fade'>
-                <p v-if='!attribute.loading && attribute.freeEvent' class='text-xs hidden sm:block uppercase'>
+                <p v-if='!attribute.loading && attribute.freeEvent' class='text-xs hidden sm:block opacity-75 uppercase'>
                     {{ attribute.freeEvent.name }}</p>
             </transition>
         </div>
@@ -16,6 +17,29 @@
             <div v-bind:style='getBarFillMeter(attribute)' class='tmg-bar-fill' v-bind:class='getFillColor(attribute)'>
             </div>
         </div>
+        <transition name='tooltip'>
+            <div v-if='tooltip' style='width: 150%; height: 164px; left: calc(-25% - 2px)'
+                class='absolute text-sm py-1 -top-44 w-full text-center z-50 bg-white rounded-xl pink-border-bottom shadow-lg'>
+                <p class='mt-1 text-light opacity-75'>
+                    {{attribute.name}}
+                </p>
+                <p class='mt-1 text-sm opacity-75'>
+                    {{attribute.current}}/{{attribute.max}}
+                </p>
+                <p class='mt-1 text-light opacity-75'>
+                    Cooldown
+                </p>
+                <p class='mt-1 text-sm opacity-75'>
+                    {{ calculateCooldown(attribute.freeEvent.cooldown) }}
+                </p>
+                <p class='mt-1 text-light opacity-75'>
+                    Effect
+                </p>
+                <p class='mt-1 text-sm opacity-75'>
+                    +25%
+                </p>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -29,6 +53,10 @@
         name: "PiggyBar",
         props: {
             attribute: {
+                type: Object,
+                default: undefined
+            },
+            tamagotchiContract: {
                 type: Object,
                 default: undefined
             }
@@ -45,11 +73,12 @@
                 clearTimeout(this.tooltipTimeout);
                 this.tooltipTimeout = setTimeout(() => {
                     this.tooltip = true;
-                }, 1000);
+                }, 300);
             },
 
             hideTooltip() {
-                this.showTooltip = false;
+                this.tooltip = false;
+                clearTimeout(this.tooltipTimeout);
             },
 
             getButtonImage(name) {
@@ -75,6 +104,17 @@
                 const color = fillPercent > 0.5 ? 'green' : fillPercent > 0.25 ? 'yellow' : 'red';
 
                 return `${color}-fill`;
+            },
+
+            calculateCooldown(cooldown){
+                const seconds = cooldown * 2;
+                const minutes = parseInt(seconds / 60);
+                const hours = parseInt(minutes / 60);
+
+                if(hours > 0) return `~${hours} h`;
+                if(minutes > 0) return `~${minutes} m`;
+                if(minutes < 0 && seconds > 0) return '< 1 m';
+                return 'Ready';
             }
         },
     };
@@ -87,7 +127,6 @@
         padding: 8px;
 
         background: white;
-        border: 1px solid #FBCCDE;
         box-sizing: border-box;
         border-radius: 12px;
         margin: 0px 4px 0px px;
@@ -97,11 +136,11 @@
     @media only screen and (max-width: 512px) {
         .tmg-btn {
 
-            min-width: 48px!important;
-            min-height: 48px!important;
+            min-width: 48px !important;
+            min-height: 48px !important;
         }
 
-        .tmg-btn img{
+        .tmg-btn img {
             height: 32px;
             width: 32px;
         }
@@ -142,6 +181,7 @@
         width: 100%;
         height: 100%;
         transform-origin: 0 100%;
+        pointer-events: none;
         border-radius: 6px;
         transition: all 0.5s ease-out;
     }
@@ -154,8 +194,22 @@
         width: 10px;
         height: 100%;
         margin: 0px 4px 0px 2px;
+        pointer-events: none;
         border-radius: 6px;
         min-height: 90% !important;
+    }
+
+    .tooltip-enter-active,
+    .tooltip-leave-active {
+        opacity: 1;
+        transition: all .35s;
+        transform: translateY(-0px);
+    }
+
+    .tooltip-enter,
+    .tooltip-leave-to {
+        opacity: 0;
+        transform: translateY(20px);
     }
 
     @keyframes alert {

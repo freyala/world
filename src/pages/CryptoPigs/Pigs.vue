@@ -134,7 +134,8 @@
       </div>
 
       <transition name='menu'>
-        <PiggyDividends :piggyList='piggyList' v-if='showPiggyBank' v-on:close='showPiggyBank = false'>
+        <PiggyDividends :piggyList='piggyList' :tamagotchiContract='tamagotchiContract' v-if='showPiggyBank'
+          v-on:close='showPiggyBank = false' v-on:error='handleError($event)'>
 
         </PiggyDividends>
       </transition>
@@ -168,12 +169,13 @@
       <!-- BACKGROUND -->
       <div class="p-8 flex h-3/5 z-0 absolute top-0 w-full bg-pig-sky">
       </div>
-      <div class='w-full h-3/5 z-0 absolute bottom-0 bg-pig-ground'>
+      <div :key='keys.piggyBackground' v-bind:style='getPiggyBackground(currentPig)'
+        class='w-full h-3/5 z-0 absolute bottom-0'>
       </div>
       <img class='absolute z-25' v-for='(cloud, index) in piggyClouds' :key='index'
         v-bind:style='{"top": cloud.top + "px", "left": cloud.left + "px", opacity: cloud.opacity}'
         v-bind:src='cloud.img' />
-      <img class='absolute z-10 right-2 w-7/10' style='top: 40%' src='/pigs/pigsty.png' />
+      <img class='absolute z-10 right-2 w-7/10' style='top: 40%' v-bind:src='getPigstyColor(currentPig)' />
 
       <div class="flex flex-wrap p-4 md:p-8 z-10 relative h-full">
 
@@ -233,19 +235,12 @@
           <div class='mx-auto sm:w-8/10 w-9/10 flex items-center justify-center rounded-2xl h-full bg-white'>
             <h2 title='Change name' v-on:click='showPiggyNameModal()'
               class='sm:text-3xl text-xl w-5/10 text-center cursor-pointer' style='color: #3C2F35'>{{ piggyName }}</h2>
-            <div class='w-5/10 relative sm:h-20 h-14 bg-black rounded-2xl' style='background-color: #8660F1'>
+            <div class='w-5/10 relative sm:h-20 h-14 bg-black rounded-2xl' style='background-color: #F16097'>
               <div class='flex w-full h-full justify-center'>
                 <div
                   class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white sm:text-4xl text-xl h-full'>
                   <p class='h-3/5 pt-2 mb-1'> {{ piggyAge }} </p>
                   <p class='h-2/5 sm:text-base text-xs'>Age</p>
-                </div>
-                <div
-                  class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white sm:text-4xl text-xl h-full'>
-                  <p class='h-3/5 mb-1 p-4 sm:p-0 sm:pt-4 pt-2'>
-                    <img width='32px' src='/pigs/battle.svg' />
-                  </p>
-                  <p class='h-2/5 sm:text-base text-xs'>Battle</p>
                 </div>
               </div>
             </div>
@@ -272,6 +267,9 @@
   import {
     mapGetters
   } from "vuex";
+  import {
+    provideToast
+  } from 'vue-toastification';
 
   import Piggy from "../../plugins/artifacts/frey.json";
   import AttributeManager from "../../plugins/artifacts/piggyAttributeManager.json";
@@ -288,6 +286,13 @@
     components: {
       PiggyBar,
       PiggyDividends
+    },
+    setup() {
+      provideToast({
+        toastClassName: "piggy-toast",
+
+        bodyClassName: ["piggy-toast-body", "piggy-toaster"]
+      });
     },
     computed: {
       ...mapGetters([
@@ -310,7 +315,8 @@
         tamagotchiContract: undefined,
         piggyList: [],
         keys: {
-          piggyStats: 0
+          piggyStats: 0,
+          piggyBackground: 500,
         },
         currentPig: undefined,
         selectedPig: undefined,
@@ -351,7 +357,9 @@
         CONSTANTS: {
           CARROT_FOOD: 'carrot.png',
           TURNIP_FOOD: 'turnip.png'
-        }
+        },
+
+        backAttributeFilter: ['Cloud', 'Dark Clouds', 'Green Candles', 'Mat', 'Meteorite', 'Stars', 'Sunny Day']
 
       }
     },
@@ -410,9 +418,10 @@
 
         this.piggyInterval = setInterval(async () => {
           this.fetchPiggyStats(this.currentPig);
-        }, 15 * 1000);
+        }, 25 * 1000);
 
         this.piggyLoading = false;
+        this.keys.piggyBackground++;
       } catch (err) {
         this.handleError(err);
       }
@@ -496,7 +505,7 @@
       async usePiggyPaidAction(piggy, attribute) {
         try {
           if (!piggy) throw 'No selected piggy.'
-          if (this.piggySleeping) throw 'Piggy is sleeping.';
+          if (this.piggySleeping) throw `${piggy.name} is sleeping.`;
           if (attribute.loading) return;
 
           if (!this.piggyAllowance) {
@@ -531,8 +540,8 @@
       async usePiggyFreeAction(piggy, attribute) {
         try {
           if (!piggy) throw 'No selected piggy.'
-          if (this.piggySleeping) throw 'Piggy is sleeping.';
-          if (this.piggyDead) throw 'Piggy is dead.';
+          if (this.piggySleeping) throw `${this.piggyName} is sleeping.`;
+          if (this.piggyDead) throw `${this.piggyName} is dead.`;
           if (attribute.loading) return;
 
           const freeEvent = attribute.freeEvent;
@@ -565,14 +574,14 @@
 
             if (attribute.name === 'Energy') {
               tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.powerUp.index, {
-              gasPrice: 50000000000,
-              gasLimit: 500000
-            });
+                gasPrice: 50000000000,
+                gasLimit: 500000
+              });
             } else {
               tx = await this.tamagotchiContract.buyEvent(piggy.id, freeEvent.index, {
-              gasPrice: 50000000000,
-              gasLimit: 500000
-            });
+                gasPrice: 50000000000,
+                gasLimit: 500000
+              });
             }
 
             if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
@@ -611,6 +620,7 @@
             await tx.wait(1);
 
             await this.fetchPiggyStats(piggy);
+            this.keys.piggyBackground++;
           }
         } catch (err) {
           this.handleError(err);
@@ -637,9 +647,7 @@
           this.currentPig = piggy;
           await this.fetchPiggyStats(piggy);
           this.showPig = true;
-
         } catch (err) {
-          console.log(err);
           this.showPig = false;
           this.handleError(err);
         }
@@ -651,19 +659,26 @@
       async fetchPiggyStats(piggy) {
         try {
           if (!this.currentPig) return;
+          let currentBlock = await this.fetchBlockNumber();
 
           for (let i = 0; i < this.piggyStats.length; i++) {
             const attributeValue = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id,
               this.piggyStats[i].name);
             this.piggyStats[i].current = parseInt(attributeValue);
+
+            if (this.piggyStats[i].name !== 'Age') {
+              const cooldown = parseInt(await this.tamagotchiContract.getCooldownEndsAtForPurchaseableEventOfPig(piggy.id,
+                this.piggyStats[i].freeEvent.index));
+
+              this.piggyStats[i].freeEvent.cooldown = currentBlock < cooldown ? (cooldown - currentBlock) * 2 : 0;
+            }
           }
 
-          let currentBlock = await this.fetchBlockNumber();
-          const occupiedUntil = await this.tamagotchiContract.occupiedUntil(piggy.id);
+          const piggyStatusModifier = await this.tamagotchiContract.occupiedUntil(piggy.id);
 
-          this.piggySleeping = currentBlock < parseInt(occupiedUntil);
+          this.piggySleeping = piggyStatusModifier.name === 'Nap' && currentBlock < parseInt(piggyStatusModifier
+            .occupiedUntil);
           const piggyName = await this.attributeManagerContract.getNameOfPig(piggy.id);
-          console.log('anme', piggyName);
 
           this.piggyName = piggyName ? piggyName : "#" + piggy.id;
           this.newPiggyName = this.piggyName;
@@ -764,6 +779,10 @@
         const energy = this.piggyStats.filter(c => c.name === 'Energy')[0];
 
         if (!hygiene || !energy) return this.piggyNone;
+
+        if (attribute.trait_type === 'Back') {
+          if (this.backAttributeFilter.indexOf(attribute.value)) return this.piggyNone;
+        }
 
         if (attribute.trait_type === 'Eye') {
           if (this.piggyDead) {
@@ -872,17 +891,39 @@
         }, 0);
       },
 
+      getPiggyBackground(piggy) {
+        const defaultValue = {
+          background: `url('/pigs/ground.png') no-repeat`,
+          backgroundSize: 'cover!important'
+        };
+        if (!piggy) return defaultValue;
+        let bg = piggy.attributes.filter(c => c.trait_type === 'Background')[0];
+        if (!bg) return defaultValue;
+        return {
+          background: `url('/pigs/ground_${bg.value}.png') no-repeat`,
+          backgroundSize: 'cover!important'
+        };
+      },
+
+      getPigstyColor(piggy) {
+        const defaultValue = `/pigs/pigsty.png`;
+        if (!piggy) return defaultValue;
+        let bg = piggy.attributes.filter(c => c.trait_type === 'Background')[0];
+        if (!bg) return defaultValue;
+        return `/pigs/pigsty_${bg.value}.png`
+      },
+
       handleError(error) {
         const errorMessage =
           typeof error == "object" ? error.message : error.toLowerCase();
         const lcMessage = errorMessage.toLowerCase();
         if (lcMessage.indexOf("user denied") > -1) return;
         if (lcMessage.indexOf("transaction failed") > -1) {
-          this.$toast.error("Transaction Failed");
+          this.$toast("Transaction Failed");
         } else if (errorMessage.length < 100) {
-          this.$toast.error(errorMessage);
+          this.$toast(errorMessage);
         } else {
-          this.$toast.error('Transaction Failed');
+          this.$toast('Transaction Failed');
         }
       },
 
@@ -891,6 +932,7 @@
           c.loading = false;
           c.current = 0;
         });
+        this.keys.piggyBackground++;
       },
 
       closeModal(event) {
@@ -952,6 +994,19 @@
   .pink-border-bottom {
     border-bottom: solid 8px #dc4689;
   }
+
+  .Vue-Toastification__toast--default {
+    background-color: white !important;
+    color: #F16097;
+    font-family: 'Chango', serif !important;
+    border: 4px solid #F16097;
+    border-bottom: solid 12px #F16097;
+  }
+
+  .text-light {
+    font-family: "Maven Pro";
+    color: #3C2F35;
+  }
 </style>
 
 <style scoped>
@@ -960,6 +1015,7 @@
     width: 768;
     height: 100vh;
   }
+
 
   @media only screen and (max-width: 1024px) {
     .pig-tamagotchi {
@@ -1003,11 +1059,6 @@
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.5);
   }
 
-  .Vue-Toastification__toast--error {
-    background-color: #dc4689 !important;
-    color: #fff;
-  }
-
   div,
   input {
     font-family: 'Chango', serif !important;
@@ -1015,11 +1066,6 @@
 
   .bg-pig-sky {
     background: url('/pigs/sky.png') no-repeat;
-    background-size: cover;
-  }
-
-  .bg-pig-ground {
-    background: url('/pigs/ground.png') no-repeat;
     background-size: cover;
   }
 

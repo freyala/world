@@ -1,6 +1,6 @@
 <template>
   <section
-    style="background: url('/images/map/worldmap.png') no-repeat; background-size: cover; overflow-y:auto; height: 100vh; max-height: 100vh;"
+    style="background: url('/images/map/worldmap_small.png') no-repeat; background-size: cover; overflow-y:auto; height: 100vh; max-height: 100vh;"
     class="flex p-4 lg:px-32" v-bind:class='{"md:p-16": !isMarketOpen}'>
     <div style="background: #1c1c1c; z-index: 9999; overflow-y: hidden;" v-bind:class='{"screen": !isMarketOpen}'
       class="rounded-2xl w-full flex flex-col">
