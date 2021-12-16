@@ -171,7 +171,7 @@
           <div class="w-1/5 text-right">
             <i @click="$modal.hide('attributes')" class="fas fa-times cursor-pointer text-xl"></i>
           </div>
-          <div class="mt-4 flex flex-wrap w-full items-start justify-start">
+          <div v-if='frey.length > 0' class="mt-4 flex flex-wrap w-full items-start justify-start">
             <div
                 v-if="frey[selectedIndex].attributes.some((a) => { return (a.trait_type === 'Gender' && a.value === 'Female') })"
                 class="w-full flex flex-wrap" :key="frey[selectedIndex].tokenId + attribute.trait_type" v-for="attribute in frey[selectedIndex].attributes">
