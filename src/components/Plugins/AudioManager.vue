@@ -19,7 +19,7 @@
             return {
                 fakeVolume: 1,
                 volume: 1,
-                volumeStep: 0.1,
+                volumeStep: 0.05,
                 prevVolume: 1,
                 currentAudio: undefined,
 
@@ -115,7 +115,7 @@
                         }, 500);
                         clearInterval(this.transitionTimeout);
                     }
-                    this.volume = Math.max(0, Math.min(1, this.volume - this.volumeStep / 2));
+                    this.volume = Math.max(0, Math.min(1, this.volume - this.volumeStep));
                 }, 100);
             }
         },
