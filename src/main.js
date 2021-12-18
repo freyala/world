@@ -17,12 +17,16 @@ import VShowSlide from 'v-show-slide'
 import VModal from 'vue-js-modal'
 import VueLazyload from 'vue-lazyload'
 import Toast from "vue-toastification"
+import AudioManager from './plugins/audioManager';
+import MathF from './plugins/mathfPlugin';
 
 // use packages
 Vue.use(panZoom, { componentName: 'world' });
 Vue.use(VShowSlide)
 Vue.use(VModal, { componentName: 'window' })
 Vue.use(Toast, { timeout: 3000 });
+Vue.use(AudioManager);
+Vue.use(MathF);
 
 Vue.http = Vue.prototype.$http = addInterceptorsTo(axios)
 Vue.config.productionTip = false

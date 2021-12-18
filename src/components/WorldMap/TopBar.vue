@@ -3,11 +3,12 @@
     <div class="w-auto md:w-full flex flex-wrap">
       <div class="hidden md:block w-auto rounded-full bg-dark p-2 z-20">
         <div @mouseenter="hoverUser = true" @mouseleave="hoverUser = false"
-             class="w-16 md:w-24 h-16 md:h-24 cursor-pointer relative" @click="$modal.show('settings')">
-          <img v-if="avatar !== undefined" class="rounded-full" :src="`https://frey.freyala.com/images/${avatar}.png`" alt="Your Frey">
+          class="w-16 md:w-24 h-16 md:h-24 cursor-pointer relative" @click="$modal.show('settings')">
+          <img v-if="avatar !== undefined" class="rounded-full" :src="`https://frey.freyala.com/images/${avatar}.png`"
+            alt="Your Frey">
           <img v-else src="/images/XYA.png" alt="XYA logo">
           <div :class="`${hoverUser ? 'opacity-25' : 'opacity-0'}`"
-               class="absolute top-0 left-0 flex h-full w-full bg-black rounded-full"></div>
+            class="absolute top-0 left-0 flex h-full w-full bg-black rounded-full"></div>
           <div :class="`${hoverUser ? 'opacity-75' : 'opacity-0'}`" class="absolute top-0 left-0 flex h-full w-full"><i
               class="m-auto text-black text-xl fas fa-user-edit"></i></div>
         </div>
@@ -56,19 +57,23 @@
             <i @click="$modal.hide('settings')" class="fas fa-times cursor-pointer text-xl"></i>
           </div>
         </div>
-        <div v-if="yourFrey.length > 0 && loading === false" class="w-full flex flex-wrap" style="max-height: 30vh; overflow: auto">
+        <div v-if="yourFrey.length > 0 && loading === false" class="w-full flex flex-wrap"
+          style="max-height: 30vh; overflow: auto">
           <div v-if="yourFrey[0] === 'You do not own any Frey NFT.'">
             <p>
               You do not own any Frey NFT.
               <br>
               <br>
-              To get an avatar, mint a Frey at <a href="https://nft.freyala.com/" class="underline" target="_blank">nft.freyala.com</a>
+              To get an avatar, mint a Frey at <a href="https://nft.freyala.com/" class="underline"
+                target="_blank">nft.freyala.com</a>
             </p>
           </div>
-          <div v-else @click="selectFrey(frey.tokenId)" class="w-1/4 px-2 py-1 -mx-1 relative" :key="frey.name" v-for="frey in yourFrey">
+          <div v-else @click="selectFrey(frey.tokenId)" class="w-1/4 px-2 py-1 -mx-1 relative" :key="frey.name"
+            v-for="frey in yourFrey">
             <img class="w-full h-auto" v-lazy="frey.image" :alt="frey.name">
 
-            <div class="absolute top-0 flex left-0 w-full h-full opacity-0 hover:opacity-100 cursor-pointer" style="background: rgba(0,0,0,.5)">
+            <div class="absolute top-0 flex left-0 w-full h-full opacity-0 hover:opacity-100 cursor-pointer"
+              style="background: rgba(0,0,0,.5)">
               <p class="m-auto text-white font-black">
                 Select
               </p>
@@ -79,7 +84,7 @@
           <div class="m-auto text-center">
             <div class="w-full flex">
               <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
-                   style="animation: rotation 2s infinite linear;">
+                style="animation: rotation 2s infinite linear;">
             </div>
             <br>
             <p class="text-2xl">Loading...</p>
@@ -91,156 +96,163 @@
 </template>
 
 <script>
-import Frey from "../../plugins/artifacts/frey.json";
-import Freyala from "../../plugins/artifacts/freyala.json";
-import Staking from "../../plugins/artifacts/staking.json";
-import Avatar from "../../plugins/artifacts/avatar.json";
-import {mapGetters} from 'vuex'
-import wallet from '../../plugins/wallet'
-import dropDownMenu from './DropDownMenu'
-import {ethers} from 'ethers'
-import axios from 'axios'
+  import Frey from "../../plugins/artifacts/frey.json";
+  import Freyala from "../../plugins/artifacts/freyala.json";
+  import Staking from "../../plugins/artifacts/staking.json";
+  import Avatar from "../../plugins/artifacts/avatar.json";
+  import {
+    mapGetters
+  } from 'vuex'
+  import wallet from '../../plugins/wallet'
+  import dropDownMenu from './DropDownMenu'
+  import {
+    ethers
+  } from 'ethers'
+  import axios from 'axios'
 
-export default {
-  name: 'TopBar',
-  mixins: [wallet],
-  data() {
-    return {
-      mainContract: {},
-      stakingContract: {},
-      freyContract: {},
-      dataInterval: undefined,
-      balances: [],
-      loadingBalances: true,
-      topBarLoaded: false,
-      walletBalance: 0,
-      stakingBalance: 0,
-      rewardBalance: 0,
-      hoverUser: false,
-      yourFrey: [],
-      avatar: undefined,
-      loading: false
-    }
-  },
-  components: {
-    dropDownMenu
-  },
-  computed: {
-    ...mapGetters([
-      'metaMaskAccount',
-      'metaMaskWallet'
-    ])
-  },
-  async mounted() {
-    this.mainContract = await new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-    this.stakingContract = await new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
-    this.freyContract = await new ethers.Contract(Frey.address, Frey.abi, this.metaMaskWallet.signer)
-    this.avatarContract = await new ethers.Contract(Avatar.address, Avatar.abi, this.metaMaskWallet.signer)
-
-    this.$nextTick(async () => {
-      await this.fetchData()
-      await this.getYourFrey()
-      this.topBarLoaded = true
-    })
-
-    this.dataInterval = setInterval(() => {
-      this.fetchData()
-    }, 4000)
-  },
-  beforeDestroy() {
-    clearInterval(this.dataInterval)
-  },
-  methods: {
-    async fetchData() {
-      const balances = await Promise.all([
-        this.mainContract.balanceOf(this.metaMaskAccount),
-        this.stakingContract.stakes(this.metaMaskAccount),
-        this.stakingContract.calculateEarnings(this.metaMaskAccount)
-      ])
-
-      this.walletBalance = (balances[0] / Math.pow(10, 18)).toFixed(2)
-      this.stakingBalance = (balances[1] / Math.pow(10, 18)).toFixed(2)
-      this.rewardBalance = (balances[2] / Math.pow(10, 18)).toFixed(2)
-
-      const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
-
-      if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex) !== '99999') {
-        this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
-      } else {
-        this.avatar = undefined
+  export default {
+    name: 'TopBar',
+    mixins: [wallet],
+    data() {
+      return {
+        mainContract: {},
+        stakingContract: {},
+        freyContract: {},
+        dataInterval: undefined,
+        balances: [],
+        loadingBalances: true,
+        topBarLoaded: false,
+        walletBalance: 0,
+        stakingBalance: 0,
+        rewardBalance: 0,
+        hoverUser: false,
+        yourFrey: [],
+        avatar: undefined,
+        loading: false
       }
-
-      this.loadingBalances = false
     },
-    async getYourFrey() {
-      const allFrey = await this.freyContract.tokensOfOwner(this.metaMaskAccount)
+    components: {
+      dropDownMenu
+    },
+    computed: {
+      ...mapGetters([
+        'metaMaskAccount',
+        'metaMaskWallet'
+      ])
+    },
+    async mounted() {
+      this.mainContract = await new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+      this.stakingContract = await new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
+      this.freyContract = await new ethers.Contract(Frey.address, Frey.abi, this.metaMaskWallet.signer)
+      this.avatarContract = await new ethers.Contract(Avatar.address, Avatar.abi, this.metaMaskWallet.signer)
 
-      let ids = await allFrey.map(async (frey) => {
-        return frey._isBigNumber ? ethers.BigNumber.from(frey._hex).toString() : frey._hex
+      this.$nextTick(async () => {
+        await this.fetchData()
+        await this.getYourFrey()
+        this.topBarLoaded = true
       })
 
-      if (ids.length > 0) {
-        await Promise.all(ids)
+      this.dataInterval = setInterval(() => {
+        this.fetchData()
+      }, 4000)
+    },
+    beforeDestroy() {
+      clearInterval(this.dataInterval)
+    },
+    methods: {
+      async fetchData() {
+        const balances = await Promise.all([
+          this.mainContract.balanceOf(this.metaMaskAccount),
+          this.stakingContract.stakes(this.metaMaskAccount),
+          this.stakingContract.calculateEarnings(this.metaMaskAccount)
+        ])
+
+        this.walletBalance = (balances[0] / Math.pow(10, 18)).toFixed(2)
+        this.stakingBalance = (balances[1] / Math.pow(10, 18)).toFixed(2)
+        this.rewardBalance = (balances[2] / Math.pow(10, 18)).toFixed(2)
+
+        const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
+
+        if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[
+            0]._hex) !== '99999') {
+          this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
+        } else {
+          this.avatar = undefined
+        }
+
+        this.loadingBalances = false
+      },
+      async getYourFrey() {
+        const allFrey = await this.freyContract.tokensOfOwner(this.metaMaskAccount)
+
+        let ids = await allFrey.map(async (frey) => {
+          return frey._isBigNumber ? ethers.BigNumber.from(frey._hex).toString() : frey._hex
+        })
+
+        if (ids.length > 0) {
+          await Promise.all(ids)
             .then(async (listOfIds) => {
               const yourFrey = await axios.get(`https://frey.freyala.com/meta/list?items=${listOfIds}`)
               this.yourFrey = yourFrey.data
             })
-      } else {
-        this.yourFrey.push('You do not own any Frey NFT.')
-      }
-    },
-    async removeFrey() {
-      this.error = ''
-      this.loading = true
-
-      try {
-        const tx = await this.avatarContract.removeUser()
-
-        await tx.wait(1)
-
-      } catch (err) {
-        if (err.code !== 4001) {
-          this.error = err
+        } else {
+          this.yourFrey.push('You do not own any Frey NFT.')
         }
-        console.error(err)
-      }
+      },
+      async removeFrey() {
+        this.error = ''
+        this.loading = true
 
-      const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
+        try {
+          const tx = await this.avatarContract.removeUser()
 
-      if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex) !== '99999') {
-        this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
-      } else {
-        this.avatar = undefined
-      }
+          await tx.wait(1)
 
-      this.loading = false
-    },
-    async selectFrey(id) {
-      this.error = ''
-      this.loading = true
-
-      try {
-        const tx = await this.avatarContract.selectAvatar(id)
-
-        await tx.wait(1)
-
-      } catch (err) {
-        if (err.code !== 4001) {
-          this.error = err
+        } catch (err) {
+          if (err.code !== 4001) {
+            this.error = err
+          }
+          console.error(err)
         }
-        console.error(err)
+
+        const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
+
+        if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[
+            0]._hex) !== '99999') {
+          this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
+        } else {
+          this.avatar = undefined
+        }
+
+        this.loading = false
+      },
+      async selectFrey(id) {
+        this.error = ''
+        this.loading = true
+
+        try {
+          const tx = await this.avatarContract.selectAvatar(id)
+
+          await tx.wait(1)
+
+        } catch (err) {
+          if (err.code !== 4001) {
+            this.error = err
+          }
+          console.error(err)
+        }
+
+        const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
+
+        if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[
+            0]._hex) !== '99999') {
+          this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
+        } else {
+          this.avatar = undefined
+        }
+
+        this.loading = false
       }
-
-      const avatar = await this.avatarContract.getAvatar(this.metaMaskAccount)
-
-      if (avatar[1] === true && (avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex) !== '99999') {
-        this.avatar = avatar[0]._isBigNumber ? ethers.BigNumber.from(avatar[0]._hex).toString() : avatar[0]._hex
-      } else {
-        this.avatar = undefined
-      }
-
-      this.loading = false
     }
   }
-}
 </script>
