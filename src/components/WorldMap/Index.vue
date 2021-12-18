@@ -288,6 +288,9 @@
 
       <top-bar></top-bar>
 
+      <div class='absolute mb-8 top-36 left-0 ml-12 w-auto mt-4'>
+        <AudioManagerInterface></AudioManagerInterface>
+      </div>
       <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
         <a href="https://docs.freyala.com/freyala" target="_blank">
           PROJECT INFO
@@ -663,6 +666,7 @@
 
 <script>
 import topBar from './TopBar';
+import AudioManagerInterface from '../../components/Plugins/AudioManagerInterface.vue'
 import wallet from '../../plugins/wallet';
 import Panzoom from '@panzoom/panzoom'
 import {mapGetters} from "vuex";
@@ -679,7 +683,8 @@ export default {
     }
   },
   components: {
-    topBar
+    topBar,
+    AudioManagerInterface
   },
   computed: {
     ...mapGetters([
@@ -696,7 +701,6 @@ export default {
       this.$nextTick(() => {
         const elem = document.getElementById('world-map')
         let panzoom = undefined
-        let a = 23
 
         if (window.innerWidth < 1024) {
           panzoom = Panzoom(elem, {
