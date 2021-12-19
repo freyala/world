@@ -2,12 +2,7 @@
     "address": "0x806998B8d4c76aA0F441ebB4e224622228EDb8Ef",
     "abi": [{
             "inputs": [{
-                    "internalType": "contract Tamagotchi",
-                    "name": "tamagotchi",
-                    "type": "address"
-                },
-                {
-                    "internalType": "contract IERC721",
+                    "internalType": "contract IERC721Enumerable",
                     "name": "piggies",
                     "type": "address"
                 },
@@ -17,18 +12,52 @@
                     "type": "address"
                 },
                 {
-                    "internalType": "uint256",
-                    "name": "epochLength",
-                    "type": "uint256"
+                    "internalType": "contract AttributeManagerV2",
+                    "name": "attributeManager",
+                    "type": "address"
+                },
+                {
+                    "internalType": "contract TamagotchiV2",
+                    "name": "tamagotchi",
+                    "type": "address"
+                },
+                {
+                    "internalType": "contract Attributes",
+                    "name": "attributes",
+                    "type": "address"
                 },
                 {
                     "internalType": "uint256",
-                    "name": "percentToBase",
+                    "name": "epochLength",
                     "type": "uint256"
                 }
             ],
             "stateMutability": "nonpayable",
             "type": "constructor"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "string",
+                    "name": "value",
+                    "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "multiplier",
+                    "type": "uint256"
+                }
+            ],
+            "name": "MultiplierSet",
+            "type": "event"
         },
         {
             "anonymous": false,
@@ -54,14 +83,18 @@
                 "name": "pigId",
                 "type": "uint256"
             }],
-            "name": "claimDividend",
+            "name": "claim",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "claimablePerPigNextEpoch",
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "claimable",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
@@ -72,7 +105,7 @@
         },
         {
             "inputs": [],
-            "name": "claimablePerPigThisEpoch",
+            "name": "epochNumber",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
@@ -82,19 +115,18 @@
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "currentEpochNumber",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "currentEpochPigCount",
+            "inputs": [{
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "value",
+                    "type": "string"
+                }
+            ],
+            "name": "getMultiplierForAttribute",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
@@ -109,26 +141,22 @@
                 "name": "pigId",
                 "type": "uint256"
             }],
-            "name": "hasClaimedPreviousEpochRewards",
+            "name": "getMultiplierOfPig",
             "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
+                "internalType": "uint256",
+                "name": "multiplier",
+                "type": "uint256"
             }],
             "stateMutability": "view",
             "type": "function"
         },
         {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "pigId",
-                "type": "uint256"
-            }],
-            "name": "hasRegisteredThisEpoch",
+            "inputs": [],
+            "name": "lastEpochNumber",
             "outputs": [{
-                "internalType": "bool",
+                "internalType": "uint256",
                 "name": "",
-                "type": "bool"
+                "type": "uint256"
             }],
             "stateMutability": "view",
             "type": "function"
@@ -147,21 +175,6 @@
         {
             "inputs": [{
                 "internalType": "uint256",
-                "name": "epochNumber",
-                "type": "uint256"
-            }],
-            "name": "pigCountAtEpochNumber",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
                 "name": "pigId",
                 "type": "uint256"
             }],
@@ -173,6 +186,39 @@
         {
             "inputs": [],
             "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            }],
+            "name": "setAttributeToTrack",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "value",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "multiplier",
+                    "type": "uint256"
+                }
+            ],
+            "name": "setMultiplierForAttribute",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

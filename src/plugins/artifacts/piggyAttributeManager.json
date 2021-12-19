@@ -1,9 +1,103 @@
 {
     "address": "0x789E81ca31E0e1d5b044Ac28bb2AF9190Eb7731C",
     "abi": [{
-            "inputs": [],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
+                }
+            ],
+            "name": "AttributeReset",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "components": [{
+                            "internalType": "string",
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "int256",
+                            "name": "effect",
+                            "type": "int256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "startedAt",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "endsAt",
+                            "type": "uint256"
+                        }
+                    ],
+                    "indexed": false,
+                    "internalType": "struct AttributeManagerV2.Boost",
+                    "name": "",
+                    "type": "tuple"
+                }
+            ],
+            "name": "BoostAdded",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "int256",
+                    "name": "effectPerSecond",
+                    "type": "int256"
+                }
+            ],
+            "name": "DecaySet",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                }
+            ],
+            "name": "NameSet",
+            "type": "event"
         },
         {
             "anonymous": false,
@@ -36,17 +130,17 @@
                 },
                 {
                     "internalType": "string",
-                    "name": "boostName",
+                    "name": "name",
                     "type": "string"
                 },
                 {
                     "internalType": "int256",
-                    "name": "perTick",
+                    "name": "effect",
                     "type": "int256"
                 },
                 {
                     "internalType": "uint256",
-                    "name": "blocks",
+                    "name": "length",
                     "type": "uint256"
                 }
             ],
@@ -57,44 +151,17 @@
         },
         {
             "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
                 },
                 {
-                    "internalType": "string",
-                    "name": "attributeName",
-                    "type": "string"
+                    "internalType": "bool",
+                    "name": "approval",
+                    "type": "bool"
                 }
             ],
-            "name": "clearAttributeOfPig",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "attributeName",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "value",
-                    "type": "int256"
-                }
-            ],
-            "name": "eventToAttributeValueOfPig",
+            "name": "approveAddressToEdit",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -111,28 +178,7 @@
                     "type": "string"
                 }
             ],
-            "name": "getAttributeValueOfPig",
-            "outputs": [{
-                "internalType": "int256",
-                "name": "",
-                "type": "int256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "attributeName",
-                    "type": "string"
-                }
-            ],
-            "name": "getBoostsOfAttributeOfPig",
+            "name": "getActiveBoostsOfAttributeOfPig",
             "outputs": [{
                 "components": [{
                         "internalType": "string",
@@ -141,12 +187,12 @@
                     },
                     {
                         "internalType": "int256",
-                        "name": "perTick",
+                        "name": "effect",
                         "type": "int256"
                     },
                     {
                         "internalType": "uint256",
-                        "name": "blockLastAccountedFor",
+                        "name": "startedAt",
                         "type": "uint256"
                     },
                     {
@@ -155,8 +201,8 @@
                         "type": "uint256"
                     }
                 ],
-                "internalType": "struct AttributeManager.Boost[]",
-                "name": "",
+                "internalType": "struct AttributeManagerV2.Boost[]",
+                "name": "boosts",
                 "type": "tuple[]"
             }],
             "stateMutability": "view",
@@ -178,60 +224,18 @@
             "outputs": [{
                 "components": [{
                         "internalType": "int256",
-                        "name": "perTick",
+                        "name": "effectPerSecond",
                         "type": "int256"
                     },
                     {
                         "internalType": "uint256",
-                        "name": "blockLastAccountedFor",
+                        "name": "startedAt",
                         "type": "uint256"
                     }
                 ],
-                "internalType": "struct AttributeManager.Decay",
-                "name": "",
+                "internalType": "struct AttributeManagerV2.Decay",
+                "name": "decay",
                 "type": "tuple"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "attributeName",
-                    "type": "string"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "skip",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "howMany",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getEventHistoryOfAttributeOfPig",
-            "outputs": [{
-                "components": [{
-                        "internalType": "string",
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "int256",
-                        "name": "value",
-                        "type": "int256"
-                    }
-                ],
-                "internalType": "struct AttributeManager.Event[]",
-                "name": "events",
-                "type": "tuple[]"
             }],
             "stateMutability": "view",
             "type": "function"
@@ -261,16 +265,30 @@
                     "internalType": "string",
                     "name": "attributeName",
                     "type": "string"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "value",
-                    "type": "int256"
                 }
             ],
-            "name": "modifyDecayOfAttributeOfPig",
-            "outputs": [],
-            "stateMutability": "nonpayable",
+            "name": "getValueOfAttributeOfPig",
+            "outputs": [{
+                "internalType": "int256",
+                "name": "value",
+                "type": "int256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            }],
+            "name": "isApprovedToEdit",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -293,17 +311,39 @@
         },
         {
             "inputs": [{
-                    "internalType": "address",
-                    "name": "addr",
-                    "type": "address"
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
                 },
                 {
-                    "internalType": "bool",
-                    "name": "approval",
-                    "type": "bool"
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
                 }
             ],
-            "name": "setApprovalOfAddressToEdit",
+            "name": "resetAttributeOfPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "effectPerSecond",
+                    "type": "int256"
+                }
+            ],
+            "name": "setDecayOfAttributeOfPig",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
