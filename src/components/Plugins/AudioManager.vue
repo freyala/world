@@ -9,12 +9,6 @@
 <script>
     export default {
         name: "AudioManager",
-        props: {
-            routeName: {
-                type: String,
-                default: "world-map"
-            }
-        },
         data() {
             return {
                 fakeVolume: 1,
@@ -99,14 +93,14 @@
                 }
                 if (!nextAudio) return;
 
-                this.preFadeVolume = this.volume;
+                this.preFadeVolume = this.isTransition ? this.preFadeVolume : this.volume;
                 this.isTransition = true;
                 this.transitionTimeout = setInterval(() => {
                     if (this.volume <= 0) {
                         this.currentAudio = nextAudio;
                         this.volume = this.preFadeVolume;
                         this.setPlayerVolume();
-                        
+
                         setTimeout(() => {
                             this.isTransition = false;
                             this.volume = this.preFadeVolume;
@@ -127,15 +121,3 @@
         }
     };
 </script>
-
-<style scoped>
-    .fade-icon {
-        background-color: rgba(34, 34, 34, 0.4);
-        cursor: pointer;
-        color: white;
-    }
-
-    .fade-icon:hover {
-        transform: scale(1.05);
-    }
-</style>

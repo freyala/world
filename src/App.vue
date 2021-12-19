@@ -24,7 +24,8 @@
     </transition>
 
     <transition name="fade" mode="out-in">
-      <div v-show="!loading && $route.name !== 'world-map'" style='transition: opacity 1s' class='absolute mb-8 top-12 ml-6 w-auto mt-4 transition-all'>
+      <div v-show="!loading && $route.name !== 'world-map'" style='transition: opacity 1s'
+        class='md:absolute lg:block hidden mb-8 top-12 lg:ml-6 ml-2 w-auto mt-6 transition-all'>
         <AudioManagerInterface></AudioManagerInterface>
       </div>
     </transition>
@@ -96,10 +97,15 @@
       this.$nextTick(() => {
         this.$audio.setAudioForRoute(this.$route);
 
-        window.addEventListener('click', () => {
-          if (!this.$audio) return;
-          this.$audio.play();
+        ['click', 'ontouchstart'].forEach(c => {
+          window.addEventListener(c, () => {
+            if (!this.$audio) return;
+            this.$audio.play();
+          }, {
+            once: true
+          });
         });
+
       });
     },
     watch: {

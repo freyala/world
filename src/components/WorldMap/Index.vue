@@ -288,7 +288,7 @@
 
       <top-bar></top-bar>
 
-      <div class='absolute mb-8 top-36 left-0 ml-12 w-auto mt-4'>
+      <div class='absolute mb-8 md:top-36 top-32 left-0 md:ml-12 ml-0 w-auto md:mt-4'>
         <AudioManagerInterface></AudioManagerInterface>
       </div>
       <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
