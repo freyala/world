@@ -105,28 +105,6 @@
                 .signer);
 
             await this.getEpochInfo();
-
-            let lastScrollTop = 0;
-            this.$refs.container.addEventListener('scroll', async (e) => {
-                if (this.loaders.fetchSales || this.marketTab !== this.CONSTANTS
-                    .SALES_TAB)
-                    return;
-
-                const element = e.target;
-                let scrollTop = element.scrollTop;
-                let scrollHeight = element.scrollHeight;
-                let offsetHeight = element.offsetHeight;
-                lastScrollTop = scrollTop;
-
-                let contentHeight = scrollHeight - offsetHeight;
-                if (contentHeight - 200 <= scrollTop) {
-                    try {
-                        this.page++;
-                        await this.fetchPiggyData(page);
-                    } catch (err) {}
-                }
-            });
-
             await this.fetchPiggyData(0);
 
         },
@@ -134,8 +112,8 @@
 
             async getEpochInfo() {
                 try {
-                    this.currentEpoch = await this.contract.currentEpochNumber();
-                    this.currentEpochPiggyCount = await this.contract.pigCountAtEpochNumber(this.currentEpoch);
+                    this.currentEpoch = await this.contract.epochNumber();
+                    this.currentEpochPiggyCount = 1;// await this.contract.pigCountAtEpochNumber(this.currentEpoch);
                 } catch (err) {
                     this.$emit('error', err);
                 }
@@ -175,14 +153,11 @@
                 }
             },
 
-            async fetchPiggyData(page) {
-                const start = page * this.perPage;
-                const end = Math.min(this.piggyList.length, start + this.perPage);
-
+            async fetchPiggyData() {
                 const claimableLastEpoch = await this.contract.claimablePerPigThisEpoch();
                 const claimableNextEpoch = await this.contract.claimablePerPigNextEpoch();
 
-                for (let i = start; i < end; i++) {
+                for (let i = 0; i < piggyList.length; i++) {
                     const claimedPrevious = await this.contract.hasClaimedPreviousEpochRewards(this.piggyList[i]
                         .id);
                     const registeredThisEpoch = await this.contract.hasRegisteredThisEpoch(this.piggyList[i].id);
