@@ -36,7 +36,7 @@
                   v-bind:src="'/pigs/' + selectedAttribute.name + '.svg'" />
                 <p v-on:click='usePiggyPaidAction(currentPig, selectedAttribute)'
                   class='text-base w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
-                  {{ selectedAttribute.paidEvent.price / (10 ** 18) }} COINK
+                  {{ selectedAttribute.paidPowerUp.price / (10 ** 18) }} COINK
                 </p>
               </div>
             </div>
@@ -248,10 +248,11 @@
         </div>
 
         <!-- TAMAGOTCHI -->
-        <div :key='keys.piggyStats' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink">
-          <PiggyBar v-bind:class='{"opacity-75": piggySleeping && index != 3, "scale-anim": !piggySleeping}'
-            v-on:click='usePiggyFreeAction(currentPig, attribute)' v-for='(attribute, index) in basePiggyStats'
-            :key='index' :attribute='attribute'></PiggyBar>
+        <div v-if='piggyAttributes' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink">
+          <PiggyBar v-for='(attribute, index) in piggyAtributeList' :key='index'
+            v-bind:class='{"opacity-75": piggySleeping, "scale-anim": !piggySleeping}'
+            v-on:click='usePiggyFreeAction(currentPig, piggyAttributes[attribute])'
+            :attribute='piggyAttributes[attribute]'></PiggyBar>
         </div>
       </div>
     </div>
@@ -301,7 +302,7 @@
       ]),
 
       basePiggyStats() {
-        return this.piggyStats.filter(c => c.name !== 'Age');
+        return this.piggyAttributes.filter(c => c.name !== 'Age');
       },
 
       selectedPigAttributes() {
@@ -315,7 +316,7 @@
         tamagotchiContract: undefined,
         piggyList: [],
         keys: {
-          piggyStats: 0,
+          piggyAttributes: 0,
           piggyBackground: 500,
         },
         currentPig: undefined,
@@ -329,6 +330,8 @@
         piggyCloudsHandler: undefined,
         piggyClouds: [],
         piggyStats: [],
+        piggyAttributes: undefined,
+        piggyAtributeList: [],
         piggyLoading: false,
         piggyInterval: undefined,
         piggyAllowance: false,
@@ -378,42 +381,45 @@
         const allowance = await tempContract.allowance(this.metaMaskAccount, PiggyTamagotchi.address);
         this.piggyAllowance = allowance > 0;
 
-        const attributes = await this.tamagotchiContract.getAttributeList();
-        const contractEvents = await this.tamagotchiContract.getPurchaseableEvents();
-        const contractPowerups = await this.tamagotchiContract.getPowerups();
-
-        let events = [],
-          powerUps = [];
-        contractEvents.forEach((c, index) => events.push({
-          attributeName: c.attributeName,
-          price: parseInt(c.price),
-          name: c.name,
-          index: index
-        }));
-        contractPowerups.forEach((c, index) => powerUps.push({
-          attributeName: c.attributeName,
-          price: parseInt(c.price),
-          name: c.name,
-          index: index
-        }));
-
-        for (let i = 0; i < attributes.length; i++) {
-          const freeEvent = events.filter(c => c.attributeName === attributes[i].attributeName && c.price === 0)[
-            0];
-          const paidEvent = events.filter(c => c.attributeName === attributes[i].attributeName && c.price > 0)[0];
-          const powerUp = powerUps.filter(c => c.attributeName === attributes[i].attributeName)[0];
-
-          this.piggyStats.push({
-            name: attributes[i].attributeName,
-            threshold: attributes[i].thresholdValue * 1,
-            max: attributes[i].value * 1,
-            current: 0,
-            freeEvent,
-            paidEvent,
-            powerUp,
-            loading: false
+        const contractAttributes = await this.tamagotchiContract.getDefaultAttributeList();
+        const attributeLimits = await this.tamagotchiContract.getAttributeLimits();
+        let contractPowerups = await this.tamagotchiContract.getPowerups();
+        let powerUps = [];
+        contractPowerups.forEach((c, index) => {
+          powerUps.push({
+            data: c,
+            index: index
           });
+        });
+        let attributes = {};
+
+        for (let i = 0; i < contractAttributes.length; i++) {
+          const freePowerUp = powerUps.filter(c => c.data.price * 1 === 0 && c.data.boostInitialisers[0]
+            .attributeName === contractAttributes[i])[0];
+          const paidPowerUp = powerUps.filter(c => c.data.price * 1 > 0 && c.data.boostInitialisers[0]
+            .attributeName ===
+            contractAttributes[i])[0];
+          const attributeLimit = attributeLimits.filter(c => c.attributeName === contractAttributes[i])[0];
+
+          attributes[contractAttributes[i]] = {
+            name: contractAttributes[i],
+            max: attributeLimit.value * 1,
+            current: attributeLimit.value * 1,
+            freePowerUp: {
+              ...freePowerUp.data,
+              index: freePowerUp.index
+            },
+            paidPowerUp: {
+              ...paidPowerUp.data,
+              index: paidPowerUp.index
+            },
+          };
         }
+        this.piggyAttributes = attributes;
+        this.piggyAtributeList = contractAttributes;
+
+        console.log(this.piggyAttributes);
+
         await this.getPiggyList();
 
         this.piggyInterval = setInterval(async () => {
@@ -421,6 +427,7 @@
         }, 25 * 1000);
 
         this.piggyLoading = false;
+        this.showPig = true;
         this.keys.piggyBackground++;
       } catch (err) {
         this.handleError(err);
@@ -514,27 +521,21 @@
             throw '"Coink" token is not enabled!';
           }
 
-          const paidEvent = attribute.paidEvent;
-          const tx = await this.tamagotchiContract.buyEvent(piggy.id, paidEvent.index);
-
+          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
           attribute.loading = true;
           this.showPiggyCooldown = false;
+          this.keys.piggyAttributes++;
           this.selectedAttribute = attribute;
+          await tx.wait(1);
 
           if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.TURNIP_FOOD;
 
-          await tx.wait(1);
           this.piggyLastAttribute = attribute;
-          const value = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id, paidEvent
-            .attributeName);
-
-          attribute.current = value;
           attribute.loading = false;
+          await this.fetchPiggyStats(piggy);
         } catch (err) {
           this.handleError(err);
         }
-
-        attribute.loading = false;
       },
 
       async usePiggyFreeAction(piggy, attribute) {
@@ -544,15 +545,11 @@
           if (this.piggyDead) throw `${this.piggyName} is dead.`;
           if (attribute.loading) return;
 
-          const freeEvent = attribute.freeEvent;
-          const cooldownStatus = await this.tamagotchiContract.getCooldownEndsAtForPurchaseableEventOfPig(piggy.id,
-            freeEvent.index);
-
-          const blockNumber = await this.fetchBlockNumber();
-          const isCooldown = parseInt(cooldownStatus) - blockNumber > 0;
           this.selectedAttribute = attribute;
+          const blockNumber = await this.fetchBlockNumber();
+          const cooldown = await this.getCooldownForAttributePowerUp(piggy, attribute, blockNumber);
 
-          if (isCooldown) {
+          if (cooldown > 0) {
             switch (attribute.name) {
               case 'Hunger':
                 this.piggyLastActionMessage = 'Purchase a deluxe turnip';
@@ -570,21 +567,10 @@
             this.showPiggyCooldown = true;
           } else {
             attribute.loading = true;
-            let tx = undefined;
-
-            if (attribute.name === 'Energy') {
-              tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.powerUp.index, {
-                gasPrice: 50000000000,
-                gasLimit: 500000
-              });
-            } else {
-              tx = await this.tamagotchiContract.buyEvent(piggy.id, freeEvent.index, {
-                gasPrice: 50000000000,
-                gasLimit: 500000
-              });
-            }
+            const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index);
 
             if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
+            this.keys.piggyAttributes++;
             await tx.wait(1);
 
             this.piggyLastAttribute = attribute;
@@ -634,7 +620,6 @@
           this.piggyLoading = true;
           const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
           if (!isRegistered) {
-            console.log(this.tamagotchiContract);
             const tx = await this.tamagotchiContract.importPig(piggy.id, {
               gasPrice: 100000000000,
               gasLimit: 1000000
@@ -659,37 +644,40 @@
       async fetchPiggyStats(piggy) {
         try {
           if (!this.currentPig) return;
-          let currentBlock = await this.fetchBlockNumber();
 
-          for (let i = 0; i < this.piggyStats.length; i++) {
-            const attributeValue = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id,
-              this.piggyStats[i].name);
-            this.piggyStats[i].current = parseInt(attributeValue);
+          for (let i = 0; i < this.piggyAtributeList.length; i++) {
+            const attribute = this.piggyAttributes[this.piggyAtributeList[i]];
+            const attributeValue = await this.attributeManagerContract.getValueOfAttributeOfPig(piggy.id,
+              attribute.name);
+            attribute.current = parseInt(attributeValue);
 
-            if (this.piggyStats[i].name !== 'Age') {
-              const cooldown = parseInt(await this.tamagotchiContract.getCooldownEndsAtForPurchaseableEventOfPig(piggy.id,
-                this.piggyStats[i].freeEvent.index));
-
-              this.piggyStats[i].freeEvent.cooldown = currentBlock < cooldown ? (cooldown - currentBlock) * 2 : 0;
+            if (attribute.name !== 'Age') {
+              attribute.freePowerUp.cooldown = await this.getCooldownForAttributePowerUp(piggy, attribute);
             }
           }
 
-          const piggyStatusModifier = await this.tamagotchiContract.occupiedUntil(piggy.id);
-
-          this.piggySleeping = piggyStatusModifier.name === 'Nap' && currentBlock < parseInt(piggyStatusModifier
-            .occupiedUntil);
+          this.piggySleeping = await this.tamagotchiContract.isOccupied(piggy.id, 'Sleep');
           const piggyName = await this.attributeManagerContract.getNameOfPig(piggy.id);
-
           this.piggyName = piggyName ? piggyName : "#" + piggy.id;
           this.newPiggyName = this.piggyName;
-          const piggyDead = await this.tamagotchiContract.isDead(piggy.id);
 
-          const ageAttribute = this.piggyStats.filter(c => c.name === 'Age')[0];
-          this.piggyAge = ageAttribute && !piggyDead ? parseInt(ageAttribute.current / 10) : "RIP";
-          this.piggyDead = piggyDead;
+          const ageAttribute = await this.attributeManagerContract.getValueOfAttributeOfPig(piggy.id, 'Age');
+          this.piggyDead = await this.tamagotchiContract.isDead(piggy.id);
+          this.piggyAge = ageAttribute && !this.piggyDead ? parseInt(ageAttribute / (12 * 3600)) : "RIP";
         } catch (err) {
           this.handleError(err);
         }
+        this.keys.piggyAttributes++;
+      },
+
+      async getCooldownForAttributePowerUp(piggy, attribute) {
+        const occupiedUntil = await this.tamagotchiContract.occupiedUntil(piggy.id, attribute.freePowerUp
+          .boostInitialisers[0].attributeName + "_Cooldown") * 1000;
+        const dateNow = Date.now();
+
+        const cooldown = occupiedUntil - dateNow;
+        attribute.cooldown = cooldown;
+        return cooldown;
       },
 
       async setPiggyName(pig) {
@@ -775,8 +763,8 @@
 
       getPiggieAttributeImage(attribute) {
         if (attribute.trait_type === 'Background' || !this.currentPig) return this.piggyNone;
-        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
-        const energy = this.piggyStats.filter(c => c.name === 'Energy')[0];
+        const hygiene = this.piggyAttributes['Hygiene'];
+        const energy = this.piggyAttributes['Energy'];
 
         if (!hygiene || !energy) return this.piggyNone;
 
@@ -811,7 +799,7 @@
 
       getPiggyWashStatus(wash) {
         if (!this.currentPig) return this.piggyNone;
-        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
+        const hygiene = this.piggyAttributes['Hygiene'];
         if (!hygiene) return this.piggyNone;
 
         if (hygiene.current <= 0.25 * hygiene.max) {

@@ -1,5 +1,5 @@
 {
-    "address": "0x806998B8d4c76aA0F441ebB4e224622228EDb8Ef",
+    "address": "0x0FFB6026e51D4ae1a567dB705F88B34cd68d155b",
     "abi": [{
             "inputs": [{
                     "internalType": "contract IERC721Enumerable",

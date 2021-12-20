@@ -9,8 +9,8 @@
                 <img v-if='attribute.loading' class="inline fa-spin absolute" width="50%" src='/pigs/snout_dark.svg'>
             </transition>
             <transition name='fade'>
-                <p v-if='!attribute.loading && attribute.freeEvent' class='text-xs hidden sm:block opacity-75 uppercase'>
-                    {{ attribute.freeEvent.name }}</p>
+                <p v-if='!attribute.loading && attribute.freePowerUp' class='text-xs hidden sm:block opacity-75 uppercase'>
+                    {{ attribute.freePowerUp.name }}</p>
             </transition>
         </div>
         <div class='tmg-bar' v-bind:class='getFillBgColor(attribute)'>
@@ -30,13 +30,13 @@
                     Cooldown
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
-                    {{ calculateCooldown(attribute.freeEvent.cooldown) }}
+                    {{ calculateCooldown(attribute.freePowerUp.cooldown) }}
                 </p>
                 <p class='mt-1 text-light opacity-75'>
                     Effect
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
-                    +25%
+                    +{{attribute.freePowerUp.boostInitialisers[0].effect}}
                 </p>
             </div>
         </transition>
@@ -107,7 +107,7 @@
             },
 
             calculateCooldown(cooldown){
-                const seconds = cooldown * 2;
+                const seconds = cooldown / 1000;
                 const minutes = parseInt(seconds / 60);
                 const hours = parseInt(minutes / 60);
 
