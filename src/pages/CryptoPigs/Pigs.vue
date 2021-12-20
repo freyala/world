@@ -21,24 +21,21 @@
               <i v-on:click='showPiggyCooldown = false'
                 class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
             </div>
-            <div class='h-full w-full flex flex-col justify-center z-10'>
+            <div class='h-full w-full flex flex-col justify-center items-center z-10'>
               <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                 style='font-family: "Maven Pro";color: #3C2F35'>
-                You must wait a while before performing this action again.
+                {{ piggyActionMessage }}
               </p>
               <p class='w-full h-5 opacity-50 text-center pink'>or</p>
-              <div
-                class='w-full px-4 text-center h-3/5 flex flex-col mt-2 sm:mt-0 sm:text-base text-sm items-center justify-center'>
                 <p style='font-family: "Maven Pro";color: #3C2F35' class='font-bold'>
                   {{ piggyLastActionMessage }}
                 </p>
-                <img style='' class='bg-white rounded-2xl shadow-2xl' width='72px'
+                <img style='' class='bg-white rounded-2xl shadow-2xl my-3' width='72px'
                   v-bind:src="'/pigs/' + selectedAttribute.name + '.svg'" />
                 <p v-on:click='usePiggyPaidAction(currentPig, selectedAttribute)'
-                  class='text-base w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
+                  class='text-base text-center w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
                   {{ selectedAttribute.paidPowerUp.price / (10 ** 18) }} COINK
                 </p>
-              </div>
             </div>
           </div>
         </div>
@@ -130,7 +127,6 @@
 
       <div v-on:click='showPiggyMenu = false' v-if='showPiggyMenu'
         class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 bg-dark'>
-
       </div>
 
       <transition name='menu'>
@@ -142,7 +138,6 @@
 
       <transition name='menu'>
         <div v-if='showPiggyMenu' class='piggie-menu-container top-0 bottom-0 sm:w-7/10 w-9/10' style=''>
-
           <div class='w-full flex flex-col justify-center my-4'>
             <div class='w-full flex flex-row justify-center items-center'>
               <h2 class='h-auto w-full ml-4 text-center mt-2 sm:text-2xl text-xl text-white mb-4 z-10'>Your Piggies</h2>
@@ -151,13 +146,11 @@
                   class='sm:text-2xl text-xl scale-anim opacity-50 hover:opacity-100 text-white ml-auto mr-4 fa fa-close'></i>
               </div>
             </div>
-
             <div
               class='w-8/10 h-32 my-2 py-2 mx-auto rounded-xl pink-border-bottom scale-anim bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'
               v-for='piggy in piggyList' :key='piggy.id' v-on:click='selectPiggy(piggy)'>
               <p class='w-full h-1/5'>Pig #{{piggy.id}}</p>
               <div class='sm:w-4/10 w-5/10 mt-2 h-4/5 relative flex items-center'>
-
                 <img v-for='(attribute, index) in piggy.attributes' :key='index' class='absolute -top-6'
                   v-bind:src='getSimplePiggyAttributeImage(attribute)' alt="Pig">
               </div>
@@ -169,11 +162,9 @@
       <!-- BACKGROUND -->
       <div class="p-8 flex h-3/5 z-0 absolute top-0 w-full bg-pig-sky">
       </div>
-      <div style='background-image: url("pigs/ground_purple.png");'
-        class='w-full h-3/5 z-0 absolute bottom-0 bg-cover'>
+      <div style='background-image: url("pigs/ground_purple.png");' class='w-full h-3/5 z-0 absolute bottom-0 bg-cover'>
       </div>
-      <div v-bind:style='getPiggyBackground(currentPig)'
-        class='w-full h-3/5 z-10 absolute bottom-0 bg-cover'>
+      <div v-bind:style='getPiggyBackground(currentPig)' class='w-full h-3/5 z-10 absolute bottom-0 bg-cover'>
       </div>
       <img class='absolute z-25' v-for='(cloud, index) in piggyClouds' :key='index'
         v-bind:style='{"top": cloud.top + "px", "left": cloud.left + "px", opacity: cloud.opacity}'
@@ -354,6 +345,7 @@
           sleeping: false
         },
         piggyFood: 'carrot.png',
+        piggyActionMessage: 'You must wait a while before performing this action again.',
 
         showPig: false,
         showPiggyAlertDialog: false,
@@ -366,7 +358,10 @@
 
         CONSTANTS: {
           CARROT_FOOD: 'carrot.png',
-          TURNIP_FOOD: 'turnip.png'
+          TURNIP_FOOD: 'turnip.png',
+
+          CD_MESSAGE: 'You must wait a while before performing this action again.',
+          THRESHOLD_MESSAGE: 'Your piggy feels neglected.'
         },
 
         backAttributeFilter: ['Cloud', 'Dark Clouds', 'Green Candles', 'Mat', 'Meteorite', 'Stars', 'Sunny Day']
@@ -390,7 +385,7 @@
 
         const contractAttributes = await this.tamagotchiContract.getDefaultAttributeList();
         const attributeLimits = await this.tamagotchiContract.getAttributeLimits();
-        let contractPowerups = await this.tamagotchiContract.getPowerups();
+        const contractPowerups = await this.tamagotchiContract.getPowerups();
         let powerUps = [];
         contractPowerups.forEach((c, index) => {
           powerUps.push({
@@ -401,6 +396,7 @@
         let attributes = {};
 
         for (let i = 0; i < contractAttributes.length; i++) {
+          if (contractAttributes[i] === 'Age' || contractAttributes[i] === 'Exp') continue;
           const freePowerUp = powerUps.filter(c => c.data.price * 1 === 0 && c.data.boostInitialisers[0]
             .attributeName === contractAttributes[i])[0];
           const paidPowerUp = powerUps.filter(c => c.data.price * 1 > 0 && c.data.boostInitialisers[0]
@@ -423,9 +419,7 @@
           };
         }
         this.piggyAttributes = attributes;
-        this.piggyAtributeList = contractAttributes;
-
-        console.log(this.piggyAttributes);
+        this.piggyAtributeList = contractAttributes.filter(c => c !== 'Age' && c !== 'Exp');
 
         await this.getPiggyList();
 
@@ -531,18 +525,19 @@
           const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
           attribute.loading = true;
           this.showPiggyCooldown = false;
-          this.selectedAttribute = attribute;
           this.keys[attribute.name]++;
           await tx.wait(1);
 
           if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.TURNIP_FOOD;
-
+          this.selectedAttribute = attribute;
           this.piggyLastAttribute = attribute;
           attribute.loading = false;
           await this.fetchPiggyStats(piggy);
         } catch (err) {
           this.handleError(err);
         }
+        attribute.loading = false;
+        this.keys[attribute.name]++;
       },
 
       async usePiggyFreeAction(piggy, attribute) {
@@ -557,30 +552,30 @@
           const cooldown = await this.getCooldownForAttributePowerUp(piggy, attribute, blockNumber);
 
           if (cooldown > 0) {
-            switch (attribute.name) {
-              case 'Hunger':
-                this.piggyLastActionMessage = 'Purchase a deluxe turnip';
-                break;
-              case 'Energy':
-                this.piggyLastActionMessage = 'Purchase a XPiggo energy drink'
-                break;
-              case 'Happiness':
-                this.piggyLastActionMessage = 'Purchase a toy for your piggy.'
-                break;
-              case 'Hygiene':
-                this.piggyLastActionMessage = 'Purchase a pair of scrubbing gloves!'
-                break;
-            }
-            this.showPiggyCooldown = true;
+            this.preparePiggyCooldownModal(attribute);
           } else {
             attribute.loading = true;
+
+            for (let i = 0; i < attribute.freePowerUp.thresholds.length; i++) {
+              const threshold = attribute.freePowerUp.thresholds[i];
+              const thresholdAttribute = this.piggyAttributes[threshold.attributeName];
+
+              if (threshold.greaterThan && thresholdAttribute.current * 1 < threshold.value * 1) {
+                this.preparePiggyCooldownModal(attribute);
+                this.piggyActionMessage = this.CONSTANTS.THRESHOLD_MESSAGE;
+                throw `${threshold.attributeName} must be higher than ${threshold.value}`;
+              } else if (!threshold.greaterThan && thresholdAttribute.current * 1 > threshold.value * 1) {
+                this.piggyActionMessage = this.CONSTANTS.THRESHOLD_MESSAGE;
+                this.preparePiggyCooldownModal(attribute);
+                throw `${threshold.attributeName} too high.`;
+              }
+            }
+
             const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index);
 
             if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
-            this.keys.piggyAttributes++;
-            this.keys[attribute.name]++;
-            this.piggyLastAttribute = attribute;
             await tx.wait(1);
+            this.piggyLastAttribute = attribute;
             await this.fetchPiggyStats(piggy);
           }
 
@@ -589,6 +584,26 @@
         }
 
         attribute.loading = false;
+        this.keys[attribute.name]++;
+      },
+
+      preparePiggyCooldownModal(attribute) {
+        this.piggyActionMessage = this.CONSTANTS.CD_MESSAGE;
+        switch (attribute.name) {
+          case 'Hunger':
+            this.piggyLastActionMessage = 'Purchase a deluxe turnip';
+            break;
+          case 'Energy':
+            this.piggyLastActionMessage = 'Purchase a XPiggo energy drink'
+            break;
+          case 'Happiness':
+            this.piggyLastActionMessage = 'Purchase a toy for your piggy.'
+            break;
+          case 'Hygiene':
+            this.piggyLastActionMessage = 'Purchase a pair of scrubbing gloves!'
+            break;
+        }
+        this.showPiggyCooldown = true;
       },
 
       async revivePiggy(piggy) {

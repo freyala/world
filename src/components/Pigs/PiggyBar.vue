@@ -113,7 +113,7 @@
 
                 if(hours > 0) return `~${hours} h`;
                 if(minutes > 0) return `~${minutes} m`;
-                if(minutes < 0 && seconds > 0) return '< 1 m';
+                if(minutes <= 0 && seconds > 0) return '< 1 m';
                 return 'Ready';
             }
         },

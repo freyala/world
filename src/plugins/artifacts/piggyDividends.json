@@ -1,5 +1,5 @@
 {
-    "address": "0xDF0a72B7C88E57dE7826b3cdb87153ac6f1406e1",
+    "address": "0x227bF664F43012A44669dAdFEc7B0C47f27E5c88",
     "abi": [{
             "inputs": [{
                     "internalType": "contract IERC721Enumerable",
@@ -39,24 +39,24 @@
             "anonymous": false,
             "inputs": [{
                     "indexed": true,
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
+                    "internalType": "address",
+                    "name": "player",
+                    "type": "address"
                 },
                 {
                     "indexed": true,
-                    "internalType": "string",
-                    "name": "value",
-                    "type": "string"
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
                 },
                 {
                     "indexed": false,
                     "internalType": "uint256",
-                    "name": "multiplier",
+                    "name": "value",
                     "type": "uint256"
                 }
             ],
-            "name": "MultiplierSet",
+            "name": "Claimed",
             "type": "event"
         },
         {
@@ -76,6 +76,95 @@
             ],
             "name": "OwnershipTransferred",
             "type": "event"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "player",
+                "type": "address"
+            }],
+            "name": "bigDaddyFunction",
+            "outputs": [{
+                "components": [{
+                        "internalType": "uint256",
+                        "name": "registered",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "claimed",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "uint256",
+                                "name": "pigId",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "bool",
+                                "name": "registered",
+                                "type": "bool"
+                            },
+                            {
+                                "internalType": "bool",
+                                "name": "claimed",
+                                "type": "bool"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "claimable",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "claimableNextEpoch",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "attributeValue",
+                                "type": "int256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "multiplier",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct Dividends.BigDaddyPigResult[]",
+                        "name": "bigDaddyPigResults",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct Dividends.BigDaddyResult",
+                "name": "bigDaddyResult",
+                "type": "tuple"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256[]",
+                "name": "pigIds",
+                "type": "uint256[]"
+            }],
+            "name": "bulkClaimPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256[]",
+                "name": "pigIds",
+                "type": "uint256[]"
+            }],
+            "name": "bulkRegisterPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
             "inputs": [{
@@ -104,29 +193,12 @@
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "epochNumber",
-            "outputs": [{
+            "inputs": [{
                 "internalType": "uint256",
-                "name": "",
+                "name": "pigId",
                 "type": "uint256"
             }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "value",
-                    "type": "string"
-                }
-            ],
-            "name": "getMultiplierForAttribute",
+            "name": "claimableNextEpoch",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
@@ -141,21 +213,92 @@
                 "name": "pigId",
                 "type": "uint256"
             }],
-            "name": "getMultiplierOfPig",
+            "name": "claimed",
             "outputs": [{
-                "internalType": "uint256",
-                "name": "multiplier",
-                "type": "uint256"
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
             }],
             "stateMutability": "view",
             "type": "function"
         },
         {
             "inputs": [],
-            "name": "lastEpochNumber",
+            "name": "currentEpochNumber",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }],
+            "name": "emergencyWithdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "endLastEpoch",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getMultipliers",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "value",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "multiplier",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Dividends.Multiplier[]",
+                "name": "",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "lastEpochEnded",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "multiplier",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "multiplier",
                 "type": "uint256"
             }],
             "stateMutability": "view",
@@ -184,6 +327,21 @@
             "type": "function"
         },
         {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "registered",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "inputs": [],
             "name": "renounceOwnership",
             "outputs": [],
@@ -203,22 +361,27 @@
         },
         {
             "inputs": [{
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "value",
-                    "type": "string"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "multiplier",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setMultiplierForAttribute",
+                "components": [{
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "value",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "multiplier",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Dividends.Multiplier[]",
+                "name": "multipliers",
+                "type": "tuple[]"
+            }],
+            "name": "setMultipliers",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
