@@ -169,8 +169,11 @@
       <!-- BACKGROUND -->
       <div class="p-8 flex h-3/5 z-0 absolute top-0 w-full bg-pig-sky">
       </div>
-      <div :key='keys.piggyBackground' v-bind:style='getPiggyBackground(currentPig)'
-        class='w-full h-3/5 z-0 absolute bottom-0'>
+      <div style='background-image: url("pigs/ground_purple.png");'
+        class='w-full h-3/5 z-0 absolute bottom-0 bg-cover'>
+      </div>
+      <div v-bind:style='getPiggyBackground(currentPig)'
+        class='w-full h-3/5 z-10 absolute bottom-0 bg-cover'>
       </div>
       <img class='absolute z-25' v-for='(cloud, index) in piggyClouds' :key='index'
         v-bind:style='{"top": cloud.top + "px", "left": cloud.left + "px", opacity: cloud.opacity}'
@@ -232,10 +235,10 @@
         </div>
 
         <div class='absolute mx-auto sm:h-16 h-12 pres-anim flex w-full left-0 sm:bottom-40 bottom-24 z-50'>
-          <div class='mx-auto sm:w-8/10 w-9/10 flex items-center justify-center rounded-2xl h-full bg-white'>
+          <div class='mx-auto shadow-lg sm:w-8/10 w-9/10 flex items-center justify-center rounded-2xl h-full bg-white'>
             <h2 title='Change name' v-on:click='showPiggyNameModal()'
-              class='sm:text-3xl text-xl w-5/10 text-center cursor-pointer' style='color: #3C2F35'>{{ piggyName }}</h2>
-            <div class='w-5/10 relative sm:h-20 h-14 bg-black rounded-2xl' style='background-color: #F16097'>
+              class='sm:text-3xl text-xl w-7/10 text-center cursor-pointer' style='color: #3C2F35'>{{ piggyName }}</h2>
+            <div class='w-3/10 shadow-lg relative sm:h-20 h-14 bg-black rounded-2xl' style='background-color: #AA5FBD'>
               <div class='flex w-full h-full justify-center'>
                 <div
                   class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white sm:text-4xl text-xl h-full'>
@@ -248,9 +251,9 @@
         </div>
 
         <!-- TAMAGOTCHI -->
-        <div v-if='piggyAttributes' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink">
-          <PiggyBar v-for='(attribute, index) in piggyAtributeList' :key='index'
-            v-bind:class='{"opacity-75": piggySleeping, "scale-anim": !piggySleeping}'
+        <div v-if='piggyAttributes' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink ">
+          <PiggyBar class="shadow-lg" v-for='attribute in piggyAtributeList' :key='keys[attribute]'
+            v-bind:class='{"scale-anim": !piggySleeping}'
             v-on:click='usePiggyFreeAction(currentPig, piggyAttributes[attribute])'
             :attribute='piggyAttributes[attribute]'></PiggyBar>
         </div>
@@ -316,6 +319,10 @@
         tamagotchiContract: undefined,
         piggyList: [],
         keys: {
+          Hunger: 0,
+          Happiness: 50,
+          Hygiene: 100,
+          Energy: 150,
           piggyAttributes: 0,
           piggyBackground: 500,
         },
@@ -524,8 +531,8 @@
           const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
           attribute.loading = true;
           this.showPiggyCooldown = false;
-          this.keys.piggyAttributes++;
           this.selectedAttribute = attribute;
+          this.keys[attribute.name]++;
           await tx.wait(1);
 
           if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.TURNIP_FOOD;
@@ -571,9 +578,9 @@
 
             if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
             this.keys.piggyAttributes++;
-            await tx.wait(1);
-
+            this.keys[attribute.name]++;
             this.piggyLastAttribute = attribute;
+            await tx.wait(1);
             await this.fetchPiggyStats(piggy);
           }
 
@@ -597,10 +604,7 @@
           const isDead = await this.tamagotchiContract.isDead(piggy.id);
 
           if (isDead) {
-            const tx = await this.tamagotchiContract.revivePig(piggy.id, {
-              gasPrice: 100000000000,
-              gasLimit: 1000000
-            });
+            const tx = await this.tamagotchiContract.revivePig(piggy.id);
 
             this.piggyLoading = true;
             await tx.wait(1);
@@ -689,10 +693,7 @@
 
           this.hideAllPiggyDialogs();
 
-          const tx = await this.tamagotchiContract.setNameOfPig(pig.id, name, {
-            gasPrice: 100000000000,
-            gasLimit: 1000000
-          });
+          const tx = await this.tamagotchiContract.setNameOfPig(pig.id, name);
           this.piggyLoading = true;
           await tx.wait(1);
 
@@ -776,15 +777,12 @@
           if (this.piggyDead) {
             return '/pigs/attributes/Eye/Crosses.png';
           }
-
           if (this.piggySleeping) {
             return '/pigs/attributes/closed_eyes.png';
           }
-
           if (hygiene.current < 0.25 * hygiene.max) {
             return '/pigs/attributes/Eye/Surprised.png';
           }
-
           if (energy.current < 0.25 * energy.max) {
             return '/pigs/attributes/Eye/Sleepy.png';
           }
@@ -881,15 +879,13 @@
 
       getPiggyBackground(piggy) {
         const defaultValue = {
-          background: `url('/pigs/ground.png') no-repeat`,
-          backgroundSize: 'cover!important'
+          backgroundImage: `url('/pigs/ground_purple.png')`
         };
         if (!piggy) return defaultValue;
         let bg = piggy.attributes.filter(c => c.trait_type === 'Background')[0];
         if (!bg) return defaultValue;
         return {
-          background: `url('/pigs/ground_${bg.value}.png') no-repeat`,
-          backgroundSize: 'cover!important'
+          backgroundImage: `url('/pigs/ground_${bg.value}.png')`
         };
       },
 
@@ -897,7 +893,7 @@
         const defaultValue = `/pigs/pigsty.png`;
         if (!piggy) return defaultValue;
         let bg = piggy.attributes.filter(c => c.trait_type === 'Background')[0];
-        if (!bg) return defaultValue;
+        if (!bg || !piggy) return defaultValue;
         return `/pigs/pigsty_${bg.value}.png`
       },
 
