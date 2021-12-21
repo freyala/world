@@ -504,7 +504,8 @@
           await tx.wait(1);
           this.piggyAllowance = amount > 0;
 
-          this.$toast.success(``);
+          if(amount > 0) this.$toast.success(`Coink has been enabled!`);
+          else this.$toast.succes('Coink has been disabled!');
         } catch (err) {
           this.handleError(err);
         }
@@ -521,11 +522,11 @@
             this.showPiggySettingsModal();
             throw '"Coink" token is not enabled!';
           }
-
-          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
           attribute.loading = true;
+          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
           this.showPiggyCooldown = false;
           this.keys[attribute.name]++;
+
           await tx.wait(1);
 
           if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.TURNIP_FOOD;
@@ -554,8 +555,6 @@
           if (cooldown > 0) {
             this.preparePiggyCooldownModal(attribute);
           } else {
-            attribute.loading = true;
-
             for (let i = 0; i < attribute.freePowerUp.thresholds.length; i++) {
               const threshold = attribute.freePowerUp.thresholds[i];
               const thresholdAttribute = this.piggyAttributes[threshold.attributeName];
@@ -570,11 +569,12 @@
                 throw `${threshold.attributeName} too high.`;
               }
             }
-
+            attribute.loading = true;
             const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index);
 
-            if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
             await tx.wait(1);
+            
+            if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
             this.piggyLastAttribute = attribute;
             await this.fetchPiggyStats(piggy);
           }

@@ -162,6 +162,7 @@
                     });
                     await tx.wait(1);
                     piggy.registered = true;
+                    this.$toast.success(`Piggy #${piggy.id} has been registered!`);
                     this.fetchPiggyData();
                 } catch (err) {
                     this.$emit('error', err);
@@ -196,6 +197,7 @@
                         gasLimit: 1000000
                     });
                     await tx.wait(1);
+                    this.$toast.success(`Your piggies have been registered!`);
                     await this.fetchPiggyData();
                 } catch (err) {
                     this.$emit('error', "Couldn't register one or more piggies.");
@@ -206,6 +208,7 @@
                 try {
                     const tx = await this.contract.endLastEpoch();
                     await tx.wait(1);
+                    this.$toast.success(`The epoch has been ended! Claim your reward!`);
                     await this.fetchPiggyData();
                 } catch (err) {
                     this.$emit('error', "The epoch was ended by another player.");
