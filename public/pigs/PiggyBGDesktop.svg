@@ -1,47 +1,5 @@
 <svg id="Background" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
   <defs>
-    <style>
-      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8 {
-        fill-rule: evenodd;
-      }
-
-      .cls-1 {
-        fill: url(#linear-gradient);
-      }
-
-      .cls-2 {
-        fill: #f16097;
-        filter: url(#filter);
-      }
-
-      .cls-3, .cls-6 {
-        opacity: 0.5;
-      }
-
-      .cls-3 {
-        fill: url(#linear-gradient-2);
-      }
-
-      .cls-4 {
-        fill: #a93e66;
-      }
-
-      .cls-5 {
-        fill: #b6436e;
-      }
-
-      .cls-6 {
-        fill: #ca5883;
-      }
-
-      .cls-7 {
-        fill: #c84a79;
-      }
-
-      .cls-8 {
-        fill: #fff;
-      }
-    </style>
     <linearGradient id="linear-gradient" x1="959.999" y1="448" x2="959.999" y2="-3" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#fff"/>
       <stop offset="0.337" stop-color="#fff"/>
@@ -61,14 +19,6 @@
   <g id="Static_Background" data-name="Static Background">
     <path id="Rectangle_5_copy" data-name="Rectangle 5 copy" class="cls-1" d="M1920.04-3H-0.031V448H1920.04V-3h0Z"/>
     <path id="Rectangle_5_copy_2" data-name="Rectangle 5 copy 2" class="cls-2" d="M-135,424s359.344-70,1110-70c600,0,972,63,972,63l-4,681-761.11-5.75H715.725L-69,1116Z"/>
-    <g id="Farm">
-      <path class="cls-3" d="M1215.17,367.458s-67.37,6.065-86.19,15.162-60.09,26.685-86.19,31.537-119.573,15.769-149.315,26.685-46.13,23.653-46.13,23.653l247.645,1.213s35.21-21.227,44.92-35.176,26.71-33.356,35.2-39.421,57.06-22.44,59.49-22.44S1215.17,367.458,1215.17,367.458Z"/>
-      <path id="Shape_2_copy" data-name="Shape 2 copy" class="cls-4" d="M1203.04,347.444l46.43-4.548,17.3-16.375-44.61,2.729Z"/>
-      <path id="Shape_1_copy" data-name="Shape 1 copy" class="cls-4" d="M1281.47,364.56l0.34-21.536-16.64-15.547-40.84,2.625-2,25.686,18.11,13.744Z"/>
-      <path class="cls-5" d="M1209.48,366.84l-0.24-22.4,15.03-14.412,16.4,17.539-0.09,21.809Z"/>
-      <path id="Shape_1_copy_2" data-name="Shape 1 copy 2" class="cls-6" d="M1214.08,367.941l-0.16-17.675,20.68,1.12-0.1,18.24Z"/>
-      <path class="cls-7" d="M1240.36,349.87l46.44-4.548-20.03-18.8-44.61,2.729Z"/>
-    </g>
   </g>
   <g id="Clouds">
     <path class="cls-8" d="M896.074,202.228l0,0.006h-170.4l0-.01a44.394,44.394,0,0,1-21.537-5.866h-21.11a30.851,30.851,0,1,1,3.814-59.631,44.651,44.651,0,0,1,58.532-19.443,50.4,50.4,0,0,1,99.983,6.8,39.613,39.613,0,0,1,48.93,43.493c0.521-.047,1.047-0.075,1.58-0.075A17.363,17.363,0,0,1,896.074,202.228Z"/>

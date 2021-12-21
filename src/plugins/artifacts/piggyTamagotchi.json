@@ -1,0 +1,768 @@
+{
+    "address": "0x5b5895133e18F6CF55473a1849e3FAe0386B5d4B",
+    "abi": [{
+            "inputs": [{
+                    "internalType": "contract IERC721",
+                    "name": "piggies",
+                    "type": "address"
+                },
+                {
+                    "internalType": "contract IERC20",
+                    "name": "coink",
+                    "type": "address"
+                },
+                {
+                    "internalType": "contract AttributeManagerV2",
+                    "name": "attributeManager",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "FeeSent",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "previousOwner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "OwnershipTransferred",
+            "type": "event"
+        },
+        {
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "points",
+                    "type": "uint256"
+                }
+            ],
+            "name": "addToFeeTakers",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                }
+            ],
+            "name": "buyPowerup",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                }
+            ],
+            "name": "canBuyPowerup",
+            "outputs": [{
+                    "internalType": "bool",
+                    "name": "canBuy",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "string[]",
+                    "name": "occupied",
+                    "type": "string[]"
+                },
+                {
+                    "internalType": "string[]",
+                    "name": "notSurpassedThresholds",
+                    "type": "string[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getAttributeLimits",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "greaterThan",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct TamagotchiV2.Threshold[]",
+                "name": "",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getDefaultAttributeList",
+            "outputs": [{
+                "internalType": "string[]",
+                "name": "",
+                "type": "string[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "howMany",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "skip",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getEventHistoryOfPig",
+            "outputs": [{
+                "internalType": "string[]",
+                "name": "events",
+                "type": "string[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }],
+            "name": "getFeeTakerAt",
+            "outputs": [{
+                "components": [{
+                        "internalType": "address",
+                        "name": "addr",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "points",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct FeeTakers.FeeTaker",
+                "name": "",
+                "type": "tuple"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getFeeTakersLength",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getPowerups",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string[]",
+                        "name": "cantBeOccupied",
+                        "type": "string[]"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "length",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.Occupy[]",
+                        "name": "occupies",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "effect",
+                                "type": "int256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "length",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.BoostInitialiser[]",
+                        "name": "boostInitialisers",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "bool",
+                                "name": "greaterThan",
+                                "type": "bool"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "value",
+                                "type": "int256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.Threshold[]",
+                        "name": "thresholds",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct TamagotchiV2.Powerup[]",
+                "name": "",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "importPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "isDead",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "isImported",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "occupy",
+                    "type": "string"
+                }
+            ],
+            "name": "isOccupied",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "occupy",
+                    "type": "string"
+                }
+            ],
+            "name": "occupiedUntil",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }],
+            "name": "removeFromFeeTakers",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "revivePig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "greaterThan",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct TamagotchiV2.Threshold[]",
+                "name": "limits",
+                "type": "tuple[]"
+            }],
+            "name": "setAttributeLimits",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "components": [{
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "effect",
+                                "type": "int256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "length",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.BoostInitialiser[]",
+                        "name": "boostInitialisers",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "effectPerSecond",
+                                "type": "int256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.DecayInitialiser[]",
+                        "name": "decayInitialisers",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct TamagotchiV2.AttributesInitialiser",
+                "name": "attributesInitialiser",
+                "type": "tuple"
+            }],
+            "name": "setAttributesInitialiser",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "greaterThan",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct TamagotchiV2.Threshold[]",
+                "name": "deathThresholds",
+                "type": "tuple[]"
+            }],
+            "name": "setDeathThresholds",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "string[]",
+                "name": "defaultAttributeList",
+                "type": "string[]"
+            }],
+            "name": "setDefaultAttributeList",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                }
+            ],
+            "name": "setNameOfPig",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string[]",
+                        "name": "cantBeOccupied",
+                        "type": "string[]"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "length",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.Occupy[]",
+                        "name": "occupies",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "effect",
+                                "type": "int256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "length",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.BoostInitialiser[]",
+                        "name": "boostInitialisers",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "bool",
+                                "name": "greaterThan",
+                                "type": "bool"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "value",
+                                "type": "int256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.Threshold[]",
+                        "name": "thresholds",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct TamagotchiV2.Powerup[]",
+                "name": "powerups",
+                "type": "tuple[]"
+            }],
+            "name": "setPowerups",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "percentageChance",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "effect",
+                                "type": "int256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "length",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.BoostInitialiser[]",
+                        "name": "boostInitialisers",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "string",
+                                "name": "attributeName",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "bool",
+                                "name": "greaterThan",
+                                "type": "bool"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "value",
+                                "type": "int256"
+                            }
+                        ],
+                        "internalType": "struct TamagotchiV2.Threshold[]",
+                        "name": "thresholds",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct TamagotchiV2.RandomEvent[]",
+                "name": "randomEvents",
+                "type": "tuple[]"
+            }],
+            "name": "setRandomEvents",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "revivalPrice",
+                "type": "uint256"
+            }],
+            "name": "setRevivalPrice",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }],
+            "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }],
+            "name": "withdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ]
+}

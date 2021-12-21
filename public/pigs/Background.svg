@@ -1,47 +1,5 @@
 <svg id="Background" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1080" height="1920" viewBox="0 0 1080 1920">
   <defs>
-    <style>
-      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8 {
-        fill-rule: evenodd;
-      }
-
-      .cls-1 {
-        fill: url(#linear-gradient);
-      }
-
-      .cls-2 {
-        fill: #f16097;
-        filter: url(#filter);
-      }
-
-      .cls-3 {
-        fill: #f477a6;
-      }
-
-      .cls-3, .cls-6 {
-        opacity: 0.5;
-      }
-
-      .cls-4 {
-        fill: #a93e66;
-      }
-
-      .cls-5 {
-        fill: #b6436e;
-      }
-
-      .cls-6 {
-        fill: #ca5883;
-      }
-
-      .cls-7 {
-        fill: #c84a79;
-      }
-
-      .cls-8 {
-        fill: #fff;
-      }
-    </style>
     <linearGradient id="linear-gradient" x1="541.015" y1="796" x2="541.015" y2="-5" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#fff"/>
       <stop offset="0.337" stop-color="#fff"/>

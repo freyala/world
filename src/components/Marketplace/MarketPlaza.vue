@@ -1164,7 +1164,6 @@
                 this.userSales = [];
 
                 await this.initiateMarketSearch();
-
                 await this.fetchMarketTokens();
                 await this.fetchMarketAttributes();
 

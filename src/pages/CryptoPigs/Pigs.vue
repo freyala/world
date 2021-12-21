@@ -21,24 +21,21 @@
               <i v-on:click='showPiggyCooldown = false'
                 class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
             </div>
-            <div class='h-full w-full flex flex-col justify-center z-10'>
+            <div class='h-full w-full flex flex-col justify-center items-center z-10'>
               <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                 style='font-family: "Maven Pro";color: #3C2F35'>
-                You must wait a while before performing this action again.
+                {{ piggyActionMessage }}
               </p>
               <p class='w-full h-5 opacity-50 text-center pink'>or</p>
-              <div
-                class='w-full px-4 text-center h-3/5 flex flex-col mt-2 sm:mt-0 sm:text-base text-sm items-center justify-center'>
                 <p style='font-family: "Maven Pro";color: #3C2F35' class='font-bold'>
                   {{ piggyLastActionMessage }}
                 </p>
-                <img style='' class='bg-white rounded-2xl shadow-2xl' width='72px'
+                <img style='' class='bg-white rounded-2xl shadow-2xl my-3' width='72px'
                   v-bind:src="'/pigs/' + selectedAttribute.name + '.svg'" />
                 <p v-on:click='usePiggyPaidAction(currentPig, selectedAttribute)'
-                  class='text-base w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
-                  {{ selectedAttribute.paidEvent.price / (10 ** 18) }} COINK
+                  class='text-base text-center w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
+                  {{ selectedAttribute.paidPowerUp.price / (10 ** 18) }} COINK
                 </p>
-              </div>
             </div>
           </div>
         </div>
@@ -130,11 +127,17 @@
 
       <div v-on:click='showPiggyMenu = false' v-if='showPiggyMenu'
         class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 bg-dark'>
-
       </div>
+
+      <transition name='menu'>
+        <PiggyDividends :piggyList='piggyList' :tamagotchiContract='tamagotchiContract' v-if='showPiggyBank'
+          v-on:close='showPiggyBank = false' v-on:error='handleError($event)'>
+
+        </PiggyDividends>
+      </transition>
+
       <transition name='menu'>
         <div v-if='showPiggyMenu' class='piggie-menu-container top-0 bottom-0 sm:w-7/10 w-9/10' style=''>
-
           <div class='w-full flex flex-col justify-center my-4'>
             <div class='w-full flex flex-row justify-center items-center'>
               <h2 class='h-auto w-full ml-4 text-center mt-2 sm:text-2xl text-xl text-white mb-4 z-10'>Your Piggies</h2>
@@ -143,27 +146,30 @@
                   class='sm:text-2xl text-xl scale-anim opacity-50 hover:opacity-100 text-white ml-auto mr-4 fa fa-close'></i>
               </div>
             </div>
-
             <div
-              class='w-8/10 h-10 my-1 mx-auto rounded-xl scale-anim bg-white flex justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'
-              v-for='piggy in yourPigs' :key='piggy.id' v-on:click='selectPiggy(piggy)'>
-              <img v-if='currentPig && currentPig.id === piggy.id' class='mt-1 mx-2 opacity-50' width="22px"
-                src='/pigs/snout_dark.svg' />
-              Pig #{{piggy.id}}
+              class='w-8/10 h-32 my-2 py-2 mx-auto rounded-xl pink-border-bottom scale-anim bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'
+              v-for='piggy in piggyList' :key='piggy.id' v-on:click='selectPiggy(piggy)'>
+              <p class='w-full h-1/5'>Pig #{{piggy.id}}</p>
+              <div class='sm:w-4/10 w-5/10 mt-2 h-4/5 relative flex items-center'>
+                <img v-for='(attribute, index) in piggy.attributes' :key='index' class='absolute -top-6'
+                  v-bind:src='getSimplePiggyAttributeImage(attribute)' alt="Pig">
+              </div>
             </div>
           </div>
         </div>
-
       </transition>
+
       <!-- BACKGROUND -->
       <div class="p-8 flex h-3/5 z-0 absolute top-0 w-full bg-pig-sky">
       </div>
-      <div class='w-full h-3/5 z-0 absolute bottom-0 bg-pig-ground'>
+      <div style='background-image: url("pigs/ground_purple.png");' class='w-full h-3/5 z-0 absolute bottom-0 bg-cover'>
+      </div>
+      <div v-bind:style='getPiggyBackground(currentPig)' class='w-full h-3/5 z-10 absolute bottom-0 bg-cover'>
       </div>
       <img class='absolute z-25' v-for='(cloud, index) in piggyClouds' :key='index'
         v-bind:style='{"top": cloud.top + "px", "left": cloud.left + "px", opacity: cloud.opacity}'
         v-bind:src='cloud.img' />
-      <img class='absolute z-10 right-2 w-7/10' style='top: 40%' src='/pigs/pigsty.png' />
+      <img class='absolute z-10 right-2 w-7/10' style='top: 40%' v-bind:src='getPigstyColor(currentPig)' />
 
       <div class="flex flex-wrap p-4 md:p-8 z-10 relative h-full">
 
@@ -178,9 +184,12 @@
           <div v-on:click='showPiggyMenu = true' class='cursor-pointer ml-auto w-auto h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/piggies_button.svg' />
           </div>
+          <div v-on:click='showPiggyBank = true' class='cursor-pointer sm:mx-4 mx-2 w-auto h-full piggie-menu-btn'>
+            <img class='h-full' src='/pigs/wallet_button.svg' />
+          </div>
           <router-link target="_blank"
             :to="{path: 'marketplace', query: { market: '0xe5fd335819edb8da8395f8ec48beca747a0790ab' }}">
-            <div class='cursor-pointer w-auto sm:mx-4 mx-2 h-full piggie-menu-btn'>
+            <div class='cursor-pointer w-auto mr-4 h-full piggie-menu-btn'>
               <img class='h-full' src='/pigs/market_button.svg' />
             </div>
           </router-link>
@@ -217,22 +226,15 @@
         </div>
 
         <div class='absolute mx-auto sm:h-16 h-12 pres-anim flex w-full left-0 sm:bottom-40 bottom-24 z-50'>
-          <div class='mx-auto sm:w-8/10 w-9/10 flex items-center justify-center rounded-2xl h-full bg-white'>
+          <div class='mx-auto shadow-lg sm:w-8/10 w-9/10 flex items-center justify-center rounded-2xl h-full bg-white'>
             <h2 title='Change name' v-on:click='showPiggyNameModal()'
-              class='sm:text-3xl text-xl w-5/10 text-center cursor-pointer' style='color: #3C2F35'>{{ piggyName }}</h2>
-            <div class='w-5/10 relative sm:h-20 h-14 bg-black rounded-2xl' style='background-color: #8660F1'>
+              class='sm:text-3xl text-xl w-7/10 text-center cursor-pointer' style='color: #3C2F35'>{{ piggyName }}</h2>
+            <div class='w-3/10 shadow-lg relative sm:h-20 h-14 bg-black rounded-2xl' style='background-color: #AA5FBD'>
               <div class='flex w-full h-full justify-center'>
                 <div
                   class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white sm:text-4xl text-xl h-full'>
                   <p class='h-3/5 pt-2 mb-1'> {{ piggyAge }} </p>
                   <p class='h-2/5 sm:text-base text-xs'>Age</p>
-                </div>
-                <div
-                  class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white sm:text-4xl text-xl h-full'>
-                  <p class='h-3/5 mb-1 p-4 sm:p-0 sm:pt-4 pt-2'>
-                    <img width='32px' src='/pigs/battle.svg' />
-                  </p>
-                  <p class='h-2/5 sm:text-base text-xs'>Battle</p>
                 </div>
               </div>
             </div>
@@ -240,10 +242,11 @@
         </div>
 
         <!-- TAMAGOTCHI -->
-        <div :key='keys.piggyStats' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink">
-          <PiggyBar v-bind:class='{"opacity-75": piggySleeping && index != 3, "scale-anim": !piggySleeping}'
-            v-on:click='usePiggyFreeAction(currentPig, attribute)' v-for='(attribute, index) in basePiggyStats'
-            :key='index' :attribute='attribute'></PiggyBar>
+        <div v-if='piggyAttributes' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink ">
+          <PiggyBar class="shadow-lg" v-for='attribute in piggyAtributeList' :key='keys[attribute]'
+            v-bind:class='{"scale-anim": !piggySleeping}'
+            v-on:click='usePiggyFreeAction(currentPig, piggyAttributes[attribute])'
+            :attribute='piggyAttributes[attribute]'></PiggyBar>
         </div>
       </div>
     </div>
@@ -259,20 +262,32 @@
   import {
     mapGetters
   } from "vuex";
+  import {
+    provideToast
+  } from 'vue-toastification';
 
   import Piggy from "../../plugins/artifacts/frey.json";
-  import AttributeManager from "../../plugins/artifacts/attributeManager.json";
+  import AttributeManager from "../../plugins/artifacts/piggyAttributeManager.json";
+  import PiggyTamagotchi from "../../plugins/artifacts/piggyTamagotchi.json";
   import Token from '../../plugins/artifacts/freyala.json';
-  import PiggyTamagotchi from "../../plugins/artifacts/tamagotchi.json";
   import fromExponential from "from-exponential";
 
   import PiggyBar from '../../components/Pigs/PiggyBar.vue';
+  import PiggyDividends from '../../components/Pigs/PiggyDividends.vue';
 
   export default {
     name: 'CryptoPigs',
     mixins: [wallet],
     components: {
-      PiggyBar
+      PiggyBar,
+      PiggyDividends
+    },
+    setup() {
+      provideToast({
+        toastClassName: "piggy-toast",
+
+        bodyClassName: ["piggy-toast-body", "piggy-toaster"]
+      });
     },
     computed: {
       ...mapGetters([
@@ -281,7 +296,7 @@
       ]),
 
       basePiggyStats() {
-        return this.piggyStats.filter(c => c.name !== 'Age');
+        return this.piggyAttributes.filter(c => c.name !== 'Age');
       },
 
       selectedPigAttributes() {
@@ -293,9 +308,14 @@
       return {
         attributeManagerContract: undefined,
         tamagotchiContract: undefined,
-        yourPigs: [],
+        piggyList: [],
         keys: {
-          piggyStats: 0
+          Hunger: 0,
+          Happiness: 50,
+          Hygiene: 100,
+          Energy: 150,
+          piggyAttributes: 0,
+          piggyBackground: 500,
         },
         currentPig: undefined,
         selectedPig: undefined,
@@ -308,6 +328,8 @@
         piggyCloudsHandler: undefined,
         piggyClouds: [],
         piggyStats: [],
+        piggyAttributes: undefined,
+        piggyAtributeList: [],
         piggyLoading: false,
         piggyInterval: undefined,
         piggyAllowance: false,
@@ -323,6 +345,7 @@
           sleeping: false
         },
         piggyFood: 'carrot.png',
+        piggyActionMessage: 'You must wait a while before performing this action again.',
 
         showPig: false,
         showPiggyAlertDialog: false,
@@ -331,11 +354,17 @@
         showPiggyImport: false,
         showPiggyName: false,
         showPiggyMenu: false,
+        showPiggyBank: false,
 
         CONSTANTS: {
           CARROT_FOOD: 'carrot.png',
-          TURNIP_FOOD: 'turnip.png'
-        }
+          TURNIP_FOOD: 'turnip.png',
+
+          CD_MESSAGE: 'You must wait a while before performing this action again.',
+          THRESHOLD_MESSAGE: 'Your piggy feels neglected.'
+        },
+
+        backAttributeFilter: ['Cloud', 'Dark Clouds', 'Green Candles', 'Mat', 'Meteorite', 'Stars', 'Sunny Day']
 
       }
     },
@@ -354,49 +383,53 @@
         const allowance = await tempContract.allowance(this.metaMaskAccount, PiggyTamagotchi.address);
         this.piggyAllowance = allowance > 0;
 
-        const attributes = await this.tamagotchiContract.getAttributeList();
-        const contractEvents = await this.tamagotchiContract.getPurchaseableEvents();
+        const contractAttributes = await this.tamagotchiContract.getDefaultAttributeList();
+        const attributeLimits = await this.tamagotchiContract.getAttributeLimits();
         const contractPowerups = await this.tamagotchiContract.getPowerups();
-
-        let events = [],
-          powerUps = [];
-        contractEvents.forEach((c, index) => events.push({
-          attributeName: c.attributeName,
-          price: parseInt(c.price),
-          name: c.name,
-          index: index
-        }));
-        contractPowerups.forEach((c, index) => powerUps.push({
-          attributeName: c.attributeName,
-          price: parseInt(c.price),
-          name: c.name,
-          index: index
-        }));
-
-        for (let i = 0; i < attributes.length; i++) {
-          const freeEvent = events.filter(c => c.attributeName === attributes[i].attributeName && c.price === 0)[
-            0];
-          const paidEvent = events.filter(c => c.attributeName === attributes[i].attributeName && c.price > 0)[0];
-          const powerUp = powerUps.filter(c => c.attributeName === attributes[i].attributeName)[0];
-
-          this.piggyStats.push({
-            name: attributes[i].attributeName,
-            threshold: attributes[i].thresholdValue * 1,
-            max: attributes[i].value * 1,
-            current: 0,
-            freeEvent,
-            paidEvent,
-            powerUp,
-            loading: false
+        let powerUps = [];
+        contractPowerups.forEach((c, index) => {
+          powerUps.push({
+            data: c,
+            index: index
           });
+        });
+        let attributes = {};
+
+        for (let i = 0; i < contractAttributes.length; i++) {
+          if (contractAttributes[i] === 'Age' || contractAttributes[i] === 'Exp') continue;
+          const freePowerUp = powerUps.filter(c => c.data.price * 1 === 0 && c.data.boostInitialisers[0]
+            .attributeName === contractAttributes[i])[0];
+          const paidPowerUp = powerUps.filter(c => c.data.price * 1 > 0 && c.data.boostInitialisers[0]
+            .attributeName ===
+            contractAttributes[i])[0];
+          const attributeLimit = attributeLimits.filter(c => c.attributeName === contractAttributes[i])[0];
+
+          attributes[contractAttributes[i]] = {
+            name: contractAttributes[i],
+            max: attributeLimit.value * 1,
+            current: attributeLimit.value * 1,
+            freePowerUp: {
+              ...freePowerUp.data,
+              index: freePowerUp.index
+            },
+            paidPowerUp: {
+              ...paidPowerUp.data,
+              index: paidPowerUp.index
+            },
+          };
         }
-        await this.getYourPigs();
+        this.piggyAttributes = attributes;
+        this.piggyAtributeList = contractAttributes.filter(c => c !== 'Age' && c !== 'Exp');
+
+        await this.getPiggyList();
 
         this.piggyInterval = setInterval(async () => {
           this.fetchPiggyStats(this.currentPig);
-        }, 15 * 1000);
+        }, 25 * 1000);
 
         this.piggyLoading = false;
+        this.showPig = true;
+        this.keys.piggyBackground++;
       } catch (err) {
         this.handleError(err);
       }
@@ -480,7 +513,7 @@
       async usePiggyPaidAction(piggy, attribute) {
         try {
           if (!piggy) throw 'No selected piggy.'
-          if (this.piggySleeping) throw 'Piggy is sleeping.';
+          if (this.piggySleeping) throw `${piggy.name} is sleeping.`;
           if (attribute.loading) return;
 
           if (!this.piggyAllowance) {
@@ -489,73 +522,59 @@
             throw '"Coink" token is not enabled!';
           }
 
-          const paidEvent = attribute.paidEvent;
-          const tx = await this.tamagotchiContract.buyEvent(piggy.id, paidEvent.index);
-
+          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
           attribute.loading = true;
           this.showPiggyCooldown = false;
-          this.selectedAttribute = attribute;
+          this.keys[attribute.name]++;
+          await tx.wait(1);
 
           if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.TURNIP_FOOD;
-
-          await tx.wait(1);
+          this.selectedAttribute = attribute;
           this.piggyLastAttribute = attribute;
-          const value = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id, paidEvent
-            .attributeName);
-
-          attribute.current = value;
           attribute.loading = false;
+          await this.fetchPiggyStats(piggy);
         } catch (err) {
           this.handleError(err);
         }
-
         attribute.loading = false;
+        this.keys[attribute.name]++;
       },
 
       async usePiggyFreeAction(piggy, attribute) {
         try {
           if (!piggy) throw 'No selected piggy.'
-          if (this.piggySleeping) throw 'Piggy is sleeping.';
-          if (this.piggyDead) throw 'Piggy is dead.';
+          if (this.piggySleeping) throw `${this.piggyName} is sleeping.`;
+          if (this.piggyDead) throw `${this.piggyName} is dead.`;
           if (attribute.loading) return;
 
-          const freeEvent = attribute.freeEvent;
-          const cooldownStatus = await this.tamagotchiContract.getCooldownEndsAtForPurchaseableEventOfPig(piggy.id,
-            freeEvent.index);
-
-          const blockNumber = await this.fetchBlockNumber();
-          const isCooldown = parseInt(cooldownStatus) - blockNumber > 0;
           this.selectedAttribute = attribute;
+          const blockNumber = await this.fetchBlockNumber();
+          const cooldown = await this.getCooldownForAttributePowerUp(piggy, attribute, blockNumber);
 
-          if (isCooldown) {
-            switch (attribute.name) {
-              case 'Hunger':
-                this.piggyLastActionMessage = 'Purchase a deluxe turnip';
-                break;
-              case 'Energy':
-                this.piggyLastActionMessage = 'Purchase a XPiggo energy drink'
-                break;
-              case 'Happiness':
-                this.piggyLastActionMessage = 'Purchase a toy for your piggy.'
-                break;
-              case 'Hygiene':
-                this.piggyLastActionMessage = 'Purchase a pair of scrubbing gloves!'
-                break;
-            }
-            this.showPiggyCooldown = true;
+          if (cooldown > 0) {
+            this.preparePiggyCooldownModal(attribute);
           } else {
             attribute.loading = true;
-            let tx = undefined;
 
-            if (attribute.name === 'Energy') {
-              tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.powerUp.index);
-            } else {
-              tx = await this.tamagotchiContract.buyEvent(piggy.id, freeEvent.index);
+            for (let i = 0; i < attribute.freePowerUp.thresholds.length; i++) {
+              const threshold = attribute.freePowerUp.thresholds[i];
+              const thresholdAttribute = this.piggyAttributes[threshold.attributeName];
+
+              if (threshold.greaterThan && thresholdAttribute.current * 1 < threshold.value * 1) {
+                this.preparePiggyCooldownModal(attribute);
+                this.piggyActionMessage = this.CONSTANTS.THRESHOLD_MESSAGE;
+                throw `${threshold.attributeName} must be higher than ${threshold.value}`;
+              } else if (!threshold.greaterThan && thresholdAttribute.current * 1 > threshold.value * 1) {
+                this.piggyActionMessage = this.CONSTANTS.THRESHOLD_MESSAGE;
+                this.preparePiggyCooldownModal(attribute);
+                throw `${threshold.attributeName} too high.`;
+              }
             }
+
+            const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index);
 
             if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
             await tx.wait(1);
-
             this.piggyLastAttribute = attribute;
             await this.fetchPiggyStats(piggy);
           }
@@ -565,24 +584,48 @@
         }
 
         attribute.loading = false;
+        this.keys[attribute.name]++;
+      },
+
+      preparePiggyCooldownModal(attribute) {
+        this.piggyActionMessage = this.CONSTANTS.CD_MESSAGE;
+        switch (attribute.name) {
+          case 'Hunger':
+            this.piggyLastActionMessage = 'Purchase a deluxe turnip';
+            break;
+          case 'Energy':
+            this.piggyLastActionMessage = 'Purchase a XPiggo energy drink'
+            break;
+          case 'Happiness':
+            this.piggyLastActionMessage = 'Purchase a toy for your piggy.'
+            break;
+          case 'Hygiene':
+            this.piggyLastActionMessage = 'Purchase a pair of scrubbing gloves!'
+            break;
+        }
+        this.showPiggyCooldown = true;
       },
 
       async revivePiggy(piggy) {
         try {
+          if (!this.piggyAllowance) {
+            this.showPiggyCooldown = false;
+            this.showPiggySettingsModal();
+            throw '"Coink" token is not enabled!';
+          }
+
           const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
           if (!isRegistered) return;
           const isDead = await this.tamagotchiContract.isDead(piggy.id);
 
           if (isDead) {
-            const tx = await this.tamagotchiContract.revivePig(piggy.id, {
-              gasPrice: 100000000000,
-              gasLimit: 1000000
-            });
+            const tx = await this.tamagotchiContract.revivePig(piggy.id);
 
             this.piggyLoading = true;
             await tx.wait(1);
 
             await this.fetchPiggyStats(piggy);
+            this.keys.piggyBackground++;
           }
         } catch (err) {
           this.handleError(err);
@@ -608,7 +651,6 @@
           this.currentPig = piggy;
           await this.fetchPiggyStats(piggy);
           this.showPig = true;
-
         } catch (err) {
           this.showPig = false;
           this.handleError(err);
@@ -622,49 +664,59 @@
         try {
           if (!this.currentPig) return;
 
-          for (let i = 0; i < this.piggyStats.length; i++) {
-            const attributeValue = await this.attributeManagerContract.getAttributeValueOfPig(piggy.id,
-              this.piggyStats[i].name);
-            this.piggyStats[i].current = parseInt(attributeValue);
+          for (let i = 0; i < this.piggyAtributeList.length; i++) {
+            const attribute = this.piggyAttributes[this.piggyAtributeList[i]];
+            const attributeValue = await this.attributeManagerContract.getValueOfAttributeOfPig(piggy.id,
+              attribute.name);
+            attribute.current = parseInt(attributeValue);
+
+            if (attribute.name !== 'Age') {
+              attribute.freePowerUp.cooldown = await this.getCooldownForAttributePowerUp(piggy, attribute);
+            }
           }
 
-          let currentBlock = await this.fetchBlockNumber();
-          const occupiedUntil = await this.tamagotchiContract.occupiedUntil(piggy.id);
-
-          this.piggySleeping = currentBlock < parseInt(occupiedUntil);
+          this.piggySleeping = await this.tamagotchiContract.isOccupied(piggy.id, 'Sleep');
           const piggyName = await this.attributeManagerContract.getNameOfPig(piggy.id);
-
           this.piggyName = piggyName ? piggyName : "#" + piggy.id;
           this.newPiggyName = this.piggyName;
-          const piggyDead = await this.tamagotchiContract.isDead(piggy.id);
 
-          const ageAttribute = this.piggyStats.filter(c => c.name === 'Age')[0];
-          this.piggyAge = ageAttribute && !piggyDead ? parseInt(ageAttribute.current / 10) : "RIP";
-          this.piggyDead = piggyDead;
+          const ageAttribute = await this.attributeManagerContract.getValueOfAttributeOfPig(piggy.id, 'Age');
+          this.piggyDead = await this.tamagotchiContract.isDead(piggy.id);
+          this.piggyAge = ageAttribute && !this.piggyDead ? parseInt(ageAttribute / (12 * 3600)) : "RIP";
         } catch (err) {
           this.handleError(err);
         }
+        this.keys.piggyAttributes++;
+      },
+
+      async getCooldownForAttributePowerUp(piggy, attribute) {
+        const occupiedUntil = await this.tamagotchiContract.occupiedUntil(piggy.id, attribute.freePowerUp
+          .boostInitialisers[0].attributeName + "_Cooldown") * 1000;
+        const dateNow = Date.now();
+
+        const cooldown = occupiedUntil - dateNow;
+        attribute.cooldown = cooldown;
+        return cooldown;
       },
 
       async setPiggyName(pig) {
         try {
-          let name = this.piggyName;
+          let name = this.newPiggyName;
 
-          if (!name) throw 'Names can not be empty';
-          if (name.length > 30) "Names can not be longer than 30 characters.";
+          if (!name || name.length === 0) throw 'Names can not be empty';
+          if (name.length > 12) "Names can not be longer than 12 characters.";
 
           this.hideAllPiggyDialogs();
 
-          const tx = await this.attributeManagerContract.setNameOfPig(pig.id, name, {
-            gasPrice: 100000000000,
-            gasLimit: 1000000
-          });
+          const tx = await this.tamagotchiContract.setNameOfPig(pig.id, name);
+          this.piggyLoading = true;
           await tx.wait(1);
 
           this.piggyName = this.newPiggyName;
         } catch (err) {
           this.handleError(err);
         }
+        this.piggyLoading = false;
       },
 
       async selectPiggy(pig) {
@@ -688,7 +740,7 @@
         }
       },
 
-      async getYourPigs() {
+      async getPiggyList() {
         const contract = new ethers.Contract('0xe5fd335819edb8da8395f8ec48beca747a0790ab', Piggy.abi, this
           .metaMaskWallet.signer)
         const pigIds = await contract.tokensOfOwner(this.metaMaskAccount)
@@ -700,12 +752,12 @@
         await Promise.all(ids)
           .then(async (listOfIds) => {
 
-            const yourPigs = await axios.get(`https://api.cryptopigs.one/meta/list?items=${listOfIds}`)
-            this.yourPigs = yourPigs.data
+            const piggyList = await axios.get(`https://api.cryptopigs.one/meta/list?items=${listOfIds}`)
+            this.piggyList = piggyList.data
             this.loading = false
 
-            if (this.yourPigs.length) {
-              const firstPig = this.yourPigs[0];
+            if (this.piggyList.length) {
+              const firstPig = this.piggyList[0];
               const isRegistered = await this.tamagotchiContract.isImported(firstPig.id);
 
               if (isRegistered) {
@@ -720,26 +772,32 @@
         return attribute;
       },
 
+      getSimplePiggyAttributeImage(attribute) {
+        if (attribute.trait_type === 'Background') return '/pigs/attributes/none.png';
+        return `/pigs/attributes/${attribute.trait_type}/${attribute.value}.png`;
+      },
+
       getPiggieAttributeImage(attribute) {
         if (attribute.trait_type === 'Background' || !this.currentPig) return this.piggyNone;
-        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
-        const energy = this.piggyStats.filter(c => c.name === 'Energy')[0];
+        const hygiene = this.piggyAttributes['Hygiene'];
+        const energy = this.piggyAttributes['Energy'];
 
         if (!hygiene || !energy) return this.piggyNone;
+
+        if (attribute.trait_type === 'Back') {
+          if (this.backAttributeFilter.indexOf(attribute.value)) return this.piggyNone;
+        }
 
         if (attribute.trait_type === 'Eye') {
           if (this.piggyDead) {
             return '/pigs/attributes/Eye/Crosses.png';
           }
-
           if (this.piggySleeping) {
             return '/pigs/attributes/closed_eyes.png';
           }
-
           if (hygiene.current < 0.25 * hygiene.max) {
             return '/pigs/attributes/Eye/Surprised.png';
           }
-
           if (energy.current < 0.25 * energy.max) {
             return '/pigs/attributes/Eye/Sleepy.png';
           }
@@ -754,7 +812,7 @@
 
       getPiggyWashStatus(wash) {
         if (!this.currentPig) return this.piggyNone;
-        const hygiene = this.piggyStats.filter(c => c.name === 'Hygiene')[0];
+        const hygiene = this.piggyAttributes['Hygiene'];
         if (!hygiene) return this.piggyNone;
 
         if (hygiene.current <= 0.25 * hygiene.max) {
@@ -834,17 +892,37 @@
         }, 0);
       },
 
+      getPiggyBackground(piggy) {
+        const defaultValue = {
+          backgroundImage: `url('/pigs/ground_purple.png')`
+        };
+        if (!piggy) return defaultValue;
+        let bg = piggy.attributes.filter(c => c.trait_type === 'Background')[0];
+        if (!bg) return defaultValue;
+        return {
+          backgroundImage: `url('/pigs/ground_${bg.value}.png')`
+        };
+      },
+
+      getPigstyColor(piggy) {
+        const defaultValue = `/pigs/pigsty.png`;
+        if (!piggy) return defaultValue;
+        let bg = piggy.attributes.filter(c => c.trait_type === 'Background')[0];
+        if (!bg || !piggy) return defaultValue;
+        return `/pigs/pigsty_${bg.value}.png`
+      },
+
       handleError(error) {
         const errorMessage =
           typeof error == "object" ? error.message : error.toLowerCase();
         const lcMessage = errorMessage.toLowerCase();
         if (lcMessage.indexOf("user denied") > -1) return;
         if (lcMessage.indexOf("transaction failed") > -1) {
-          this.$toast.error("Transaction Failed");
+          this.$toast("Transaction Failed");
         } else if (errorMessage.length < 100) {
-          this.$toast.error(errorMessage);
+          this.$toast(errorMessage);
         } else {
-          this.$toast.error('Transaction Failed');
+          this.$toast('Transaction Failed');
         }
       },
 
@@ -853,6 +931,7 @@
           c.loading = false;
           c.current = 0;
         });
+        this.keys.piggyBackground++;
       },
 
       closeModal(event) {
@@ -879,12 +958,63 @@
   }
 </script>
 
+<style>
+  .piggie-btn {
+    min-width: 64px;
+    min-height: 64px;
+    background: #F16097;
+    border: 1px solid #FBCCDE;
+    box-sizing: border-box;
+    border-radius: 12px;
+  }
+
+  .bg-pink {
+    background: #F16097;
+  }
+
+  .bg-pink-light {
+    background-color: #F16097;
+  }
+
+  .pink {
+    color: #dc5689 !important;
+  }
+
+  .scale-anim:hover {
+    transform: scale(1.05);
+  }
+
+  .press-anim:hover {
+    border-top: solid 8px #dc4689;
+    border-bottom: solid 1px #dc4689;
+    color: rgba(255, 255, 255, 50%) !important;
+  }
+
+  .pink-border-bottom {
+    border-bottom: solid 8px #dc4689;
+  }
+
+  .Vue-Toastification__toast--default {
+    background-color: white !important;
+    color: #F16097;
+    font-family: 'Chango', serif !important;
+    border: 4px solid #F16097;
+    border-bottom: solid 12px #F16097;
+  }
+
+  .text-light {
+    font-family: "Maven Pro";
+    color: #3C2F35;
+  }
+</style>
+
 <style scoped>
   .pig-tamagotchi {
     max-width: 768px;
     width: 768;
     height: 100vh;
   }
+
 
   @media only screen and (max-width: 1024px) {
     .pig-tamagotchi {
@@ -928,22 +1058,6 @@
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.5);
   }
 
-  .scale-anim:hover {
-    transform: scale(1.05);
-  }
-
-  .press-anim:hover {
-    border-bottom: 0;
-    border-top: solid 8px #dc4689;
-    color: rgba(255, 255, 255, 50%) !important;
-  }
-
-  .Vue-Toastification__toast--error {
-    background-color: #dc4689 !important;
-    color: #fff;
-  }
-
-
   div,
   input {
     font-family: 'Chango', serif !important;
@@ -954,18 +1068,9 @@
     background-size: cover;
   }
 
-  .bg-pig-ground {
-    background: url('/pigs/ground.png') no-repeat;
-    background-size: cover;
-  }
-
   .piggie-menu-btn:hover {
     position: relative;
     transform: scale(1.05);
-  }
-
-  .pink-border-bottom {
-    border-bottom: solid 8px #dc4689;
   }
 
   .piggy-jump {
@@ -1129,6 +1234,8 @@
   .piggie-menu-container {
     z-index: 5000;
     position: absolute;
+    max-height: 100%;
+    overflow-y: auto;
     background: linear-gradient(269.03deg, #FF8AB6 0.85%, #F16097 99.18%);
     box-shadow: 4px 0px 12px 6px rgba(0, 0, 0, 0.15);
     border-radius: 16px;
@@ -1143,49 +1250,6 @@
     bottom: 0;
     left: 0;
     background-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .piggie-btn {
-    min-width: 64px;
-    min-height: 64px;
-    background: #F16097;
-    border: 1px solid #FBCCDE;
-    box-sizing: border-box;
-    border-radius: 12px;
-  }
-
-  .bg-pink {
-    background: #F16097;
-  }
-
-  .bg-pink-light {
-    background-color: #F16097;
-  }
-
-  .pink {
-    color: #dc5689 !important;
-  }
-
-  .progress-container {
-    padding: 12px 15px 20px 15px;
-  }
-
-  .progress {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    position: relative;
-  }
-
-  .bar {
-    width: 100%;
-    display: block;
-    font-size: 12px;
-    background-color: #bb9319;
-    color: #fff;
-    position: absolute;
-    bottom: 0;
   }
 
   ::-webkit-scrollbar-thumb {
