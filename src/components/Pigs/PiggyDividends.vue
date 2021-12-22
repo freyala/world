@@ -13,31 +13,24 @@
             </div>
 
             <div
-                class="w-8/10 h-12 mb-2 py-4 mx-auto rounded-xl bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100">
+                class="w-8/10 h-12 mb-4 py-4 mx-auto rounded-xl bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100">
                 <p class='opacity-75'>Current Epoch {{currentEpoch}}</p>
             </div>
             <div
-                class="w-8/10 h-12 mb-2 py-4 mb-4 mx-auto rounded-xl flex flex-row text-center justify-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100">
-                <div v-on:click='claimAllPiggys(piggyList)'
-                    class='w-full rounded-xl pink-border-bottom press-anim text-white mr-2 h-12 bg-white pink'>
-                    <p class='opacity-75 pink mt-1'>Claim All</p>
-                </div>
-                <div v-on:click='registerAllPiggys(piggyList)'
-                    class='w-full rounded-xl pink-border-bottom press-anim text-white ml-2 h-12 bg-white pink'>
-                    <p class='opacity-75 pink mt-1'>Register All</p>
-                </div>
+                class="w-8/10 h-12 mb-0 py-4 mx-auto rounded-xl bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100">
+                <p class='opacity-75'>Registered Piggies {{currentEpochPiggyCount}}</p>
             </div>
             <div v-if='!lastEpochEnded'
                 class='w-8/10 h-12 mb-2 py-4 mb-4 mx-auto rounded-xl flex flex-row text-center cursor-pointer'>
                 <div v-on:click='endEpoch()'
                     class='w-full rounded-xl pink-border-bottom press-anim text-white h-12 bg-white pink'>
-                    <p class='opacity-75 pink mt-2'>End Last Epoch</p>
+                    <p class='pink mt-2'>End Last Epoch</p>
                 </div>
             </div>
             <h2 class='h-auto w-full text-center mt-2 sm:text-2xl text-xl text-white mb-4 pt-2 z-10'>Your Piggies
             </h2>
             <div v-show='!loading' v-for='piggy in piggyList' :key='piggy.id'
-                class='sm:w-8/10 w-9/10 h-36 my-6 py-6 pink-border-bottom mx-auto rounded-xl relative bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'>
+                class='sm:w-8/10 w-9/10 h-36 my-6 py-6 px-2 pink-border-bottom mx-auto rounded-xl relative bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'>
                 <p
                     class='text-pink sm:text-xl text-sm bg-white sm:-top-8 -top-6 absolute w-5/10 rounded-xl rounded-b-none my-1'>
                     Piggy
@@ -46,8 +39,11 @@
                     <div class='flex flex-col items-center mt-auto justify-center h-full w-5/10'>
                         <p class='text-pink text-xs sm:text-sm opacity-75 my-1'>Last Epoch</p>
                         <p class='text-pink text-xs opacity-75'>{{(piggy.claimedLastEpoch / 10 ** 18).toFixed(2)}}</p>
-                        <p v-on:click='claimDividendsForPiggy(piggy)'
+                        <p v-if='piggy.claimedLastEpoch > 0' v-on:click='claimDividendsForPiggy(piggy)'
                             class='sm:text-sm text-xs sm:w-7/10 w-full rounded-2xl text-center press-anim cursor-pointer text-white py-1 bg-pink pink-border-bottom border mt-2'>
+                            Claim</p>
+                        <p v-else
+                            class='sm:text-sm text-xs sm:w-7/10 w-full rounded-2xl text-center opacity-50 text-white py-1 bg-pink border mt-2'>
                             Claim</p>
                     </div>
                     <div class='w-4/10 h-1/5 relative'>
@@ -55,16 +51,25 @@
                             class="absolute sm:-top-6 top-0" v-bind:src='getPiggieAttributeImage(attribute)' alt="Pig">
                     </div>
                     <div class='flex flex-col justify-center mt-auto items-center h-full w-5/10'>
-                        <p class='text-pink text-xs sm:text-sm opacity-75 my-1'>Current Epoch</p>
-                        <p class='text-pink text-xs opacity-75'>{{(piggy.claimedNextEpoch / 10 ** 18).toFixed(2)}}</p>
+                        <p v-if='piggy.isRegistered' class='text-pink text-xs sm:text-sm opacity-75 my-1'>Current Epoch
+                        </p>
+                        <p v-if='!piggy.isRegistered' class='text-pink text-xs sm:text-sm opacity-75 my-1'>Not
+                            Registered</p>
+                        <p v-if='piggy.isRegistered' class='text-pink text-xs opacity-75'>
+                            {{(piggy.claimedNextEpoch / 10 ** 18).toFixed(2)}}</p>
                         <p v-on:click='registerPiggy(piggy)' v-if='!piggy.isRegistered'
                             class='sm:text-sm text-xs sm:w-7/10 w-full rounded-2xl text-center press-anim cursor-pointer text-white py-1 bg-pink pink-border-bottom border mt-2'>
                             Register</p>
-                        <p v-on:click='claimDividendsForPiggy(piggy)' v-else
+                        <p v-else
                             class='sm:text-sm text-xs sm:w-7/10 w-full rounded-2xl text-center opacity-50 text-white py-1 bg-pink border mt-2'>
                             Register</p>
                     </div>
                 </div>
+            </div>
+            <div v-if='loading' class='absolute top-0 bottom-0 left-0 right-0 flex flex-col justify-center items-center'
+                style='z-index: 9999; background-color: rgba(0,0,0,0.5)'>
+                <img class='fa-spin' width="68px" src='/pigs/snout.svg' />
+                <h2 class='mt-3 text-2xl text-white'>Loading...</h2>
             </div>
 
         </div>
@@ -110,7 +115,8 @@
                 currentEpoch: 0,
                 currentEpochPiggyCount: 0,
                 dividendsKey: 0,
-                lastEpochEnded: false
+                lastEpochEnded: false,
+                piggyListMirror: []
             };
         },
         async mounted() {
@@ -126,9 +132,7 @@
 
             async getEpochInfo() {
                 try {
-                    this.currentEpoch = await this.contract.currentEpochNumber();
-                    this.currentEpochPiggyCount =
-                        1; // await this.contract.pigCountAtEpochNumber(this.currentEpoch);
+
                 } catch (err) {
                     this.$emit('error', err);
                 }
@@ -141,9 +145,10 @@
 
             async claimDividendsForPiggy(piggy) {
                 try {
+                    if (!this.lastEpochEnded) throw 'You must end the epoch before claiming rewards!';
                     const tx = await this.contract.claim(piggy.id);
                     await tx.wait(1);
-                    this.fetchPiggyData();
+                    piggy.claimedLastEpoch = 0;
                 } catch (err) {
                     this.$emit('error', err);
                 }
@@ -174,6 +179,7 @@
                 piggyList.forEach(c => piggyIds.push(c.id));
 
                 try {
+                    if (!this.lastEpochEnded) throw 'You must end the epoch before claiming rewards!';
                     const tx = await this.contract.bulkClaimPig(piggyIds, {
                         gasPrice: 100000000000,
                         gasLimit: 1000000
@@ -181,14 +187,14 @@
                     await tx.wait(1);
                     await this.fetchPiggyData();
                 } catch (err) {
-                    console.error(err);
+                    this.$emit('error', err);
                 }
             },
 
             async registerAllPiggys(piggyList) {
                 const piggyIds = [];
                 piggyList.forEach(piggy => {
-                    if(!piggy.isDead && !piggy.isRegistered) piggyIds.push(piggy.id);
+                    if (!piggy.isDead && !piggy.isRegistered) piggyIds.push(piggy.id);
                 });
 
                 try {
@@ -218,21 +224,21 @@
             async fetchPiggyData() {
                 this.loading = true;
                 this.lastEpochEnded = await this.contract.lastEpochEnded();
-                for (let i = 0; i < this.piggyList.length; i++) {
-                    try {
-                        const isRegistered = await this.contract.registered(this.piggyList[i].id);
-                        const claimedLastEpoch = await this.contract.claimable(this.piggyList[i].id);
-                        const claimedNextEpoch = await this.contract.claimableNextEpoch(this.piggyList[i].id);
+                this.currentEpoch = await this.contract.currentEpochNumber();
+                const data = await this.contract.bigDaddyFunction(this.metaMaskAccount);
 
-                        this.piggyList[i].isRegistered = isRegistered;
-                        this.piggyList[i].claimedLastEpoch = claimedLastEpoch;
-                        this.piggyList[i].claimedNextEpoch = claimedNextEpoch;
-                    } catch (err) {
-                        this.piggyList[i].isRegistered = false;
-                        this.piggyList[i].claimedLastEpoch = 0;
-                        this.piggyList[i].claimedNextEpoch = 0;
-                    }
+                const piggies = data.bigDaddyPigResults;
+                this.currentEpochPiggyCount = data.registered;
+
+                for (let i = 0; i < piggies.length; i++) {
+                    const piggy = this.piggyList.filter(c => c.id == piggies[i].pigId)[0];
+                    if (!piggy) continue;
+
+                    piggy.isRegistered = piggies[i].registered;
+                    piggy.claimedLastEpoch = piggies[i].claimable * 1;
+                    piggy.claimedNextEpoch = piggies[i].claimableNextEpoch * 1;
                 }
+
                 this.dividendsKey++;
                 this.loading = false;
             }

@@ -6,6 +6,201 @@
         class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 bg-dark'>
 
       </div>
+      <div v-on:click='showPiggyTutorial = false' v-if='showPiggyTutorial'
+        class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 bg-dark'>
+
+      </div>
+      <transition name='pop-in'>
+        <div v-on:click='closeModal' v-if='showPiggyTutorial'
+          class='absolute modal-overlay flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 '>
+          <div
+            class='sm:w-7/10 w-9/10 flex flex-col items-start justify-center my-8 h-auto sm:pb-0 pb-3 bg-white rounded-2xl piggy-modal'>
+            <div
+              style='background-image: url("/pigs/snout.svg"); background-repeat: no-repeat; background-size: contain; background-position: center; z-index: 0'
+              class='opacity-50 absolute top-0 bottom-0 left-0 m-4 right-0'>
+
+            </div>
+            <template v-if='tutorialPage === 1'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Tutorial</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  In order to start playing, you need to import your piggies inside the tamagotchi.
+                  <br /><br />
+                  Once imported, you can start taking care of your piggy. But, be careful! A toaster piggy's needs are
+                  not easy to fulfill.
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 2'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Attributes</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  Each piggy has 4 main attributes:<br /> Hunger, Happiness, Hygiene and Energy.
+                  <br /><br />
+                  In order to keep your piggy alive and well, you need to ensure that none of these attributes deplete
+                  to
+                  a critical point.
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 3'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Hunger</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  You can feed your piggy for free once every 8 hours. If you wish to do so more often, you have to pay
+                  a small COINKX fee!
+                  <br /><br />
+                  Hunger fully depletes in 12 hours.
+                  <br /><br />
+                  If Hunger drops below 10%, the piggy will die.
+                  <br /><br />
+                  Whenever the piggy eats, it loses 5% Hygiene.
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 4'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Happiness</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  You can play with your piggy for free once every 8 hours. If you wish to do so more often, you have to
+                  pay a small COINKX fee!
+                  <br /><br />
+                  Happiness fully depletes in 12 hours
+                  <br /><br />
+                  If the Happiness drops below 0%, the piggy will die.
+                  <br /><br />
+                  Whenever the piggy plays, it loses 5% Energy.
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 5'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Hygiene</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  You can wash your piggy for free once every 16 hours. If you wish to do so more often, you have to pay
+                  a small COINKX fee!
+                  <br /><br />
+                  Hygiene fully depletes in 48 hours.
+                  <br /><br />
+                  If Hygiene drops below 0%, the piggy will die.
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 6'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Energy</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  You can put your piggy to sleep for 12 hours. While the piggy sleeps, its energy will slowly replenish
+                  back to 100%.
+                  <br /><br />
+                  Energy fully depletes in 24 hours.
+                  <br /><br />
+                  If Energy drops below 0%, the piggy will die.
+                  <br /><br />
+                  While the piggy sleeps, Hunger and Happiness will drain at a 75% reduced rate, but it will lose 3%
+                  Hygiene per hour.
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 7'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Play To Earn 1</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  An epoch passes every 24 hours, which means that a small % of all the COINKX gathered in the reward
+                  pool is split amongst the alive and registered piggies.
+                  <br /><br />
+                  Each piggy has a small share of the reward pool. This is based 50% on the current Age of the pig, and
+                  50% on the rarity and body color.
+                  <br /><br />
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 8'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Play To Earn 2</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  In order to be eligible for these rewards, you have to 'Register' your piggies to the current epoch.
+                  <br /><br />
+                  Open up the 'Piggy Bank' by pressing on the wallet icon, and register or claim the pending rewards for
+                  each of your piggies.
+                  <br /><br />
+                  When an epoch ends, you or any other player must press on the 'End Epoch Button' in order to
+                  distribute any pending rewards to each piggy holder!
+                  <br /><br />
+                </p>
+              </div>
+            </template>
+            <template v-else-if='tutorialPage === 9'>
+              <div class='w-full flex flex-row justify-center items-center z-50'>
+                <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Good luck!</h2>
+                <i v-on:click='showPiggyTutorial = false'
+                  class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
+              </div>
+              <div class='h-full w-full flex flex-col justify-start items-start z-10'>
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
+                  style='font-family: "Maven Pro";color: #3C2F35'>
+                  For more information about the tamagotchi, please refer to our detailed document on game mechanics
+                  here:
+                  <br /><br />
+                </p>
+              </div>
+            </template>
+            <div class='w-full h-20 z-50 flex justify-center items-center'>
+              <p v-bind:class='{"opacity-50": tutorialPage - 1 < 1}'
+                v-on:click='tutorialPage = Math.max(1, tutorialPage - 1)'
+                class='text-base h-12 flex items-center justify-center mx-2 w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
+                Previous
+              </p>
+              <p v-bind:class='{"opacity-50": tutorialPage + 1 > tutorialPages}'
+                v-on:click='tutorialPage = Math.min(tutorialPages, tutorialPage + 1)'
+                class='text-base h-12 flex items-center justify-center mx-2 w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
+                Next
+              </p>
+            </div>
+          </div>
+        </div>
+      </transition>
+
       <transition name='pop-in'>
         <div v-on:click='closeModal' v-if='showPiggyCooldown'
           class='absolute modal-overlay flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 '>
@@ -27,15 +222,15 @@
                 {{ piggyActionMessage }}
               </p>
               <p class='w-full h-5 opacity-50 text-center pink'>or</p>
-                <p style='font-family: "Maven Pro";color: #3C2F35' class='font-bold'>
-                  {{ piggyLastActionMessage }}
-                </p>
-                <img style='' class='bg-white rounded-2xl shadow-2xl my-3' width='72px'
-                  v-bind:src="'/pigs/' + selectedAttribute.name + '.svg'" />
-                <p v-on:click='usePiggyPaidAction(currentPig, selectedAttribute)'
-                  class='text-base text-center w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
-                  {{ selectedAttribute.paidPowerUp.price / (10 ** 18) }} COINK
-                </p>
+              <p style='font-family: "Maven Pro";color: #3C2F35' class='font-bold'>
+                {{ piggyLastActionMessage }}
+              </p>
+              <img style='' class='bg-white rounded-2xl shadow-2xl my-3' width='72px'
+                v-bind:src="'/pigs/' + selectedAttribute.name + '.svg'" />
+              <p v-on:click='usePiggyPaidAction(currentPig, selectedAttribute)'
+                class='text-base text-center w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
+                {{ selectedAttribute.paidPowerUp.price / (10 ** 18) }} COINK
+              </p>
             </div>
           </div>
         </div>
@@ -117,14 +312,6 @@
         <h2 class='mt-3 text-2xl text-white'>Loading...</h2>
       </div>
 
-      <div v-on:click='revivePiggy(currentPig)' v-if='piggyDead'
-        class='absolute top-32 w-full flex flex-col justify-center items-center' style='z-index: 1000;'>
-        <div
-          class="text-base sm:w-3/10 w-6/10 h-16 px-2 rounded-2xl text-center press-anim cursor-pointer py-4 bg-pink pink-border-bottom text-white border mt-2">
-          <h2 class='w-full text-lg'>Revive</h2>
-        </div>
-      </div>
-
       <div v-on:click='showPiggyMenu = false' v-if='showPiggyMenu'
         class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 bg-dark'>
       </div>
@@ -177,23 +364,25 @@
         <div class='absolute mx-auto h-20 z-50 flex xs:w-9/10 w-9/10 top-4'>
 
           <router-link :to="{ name: 'world-map' }">
-            <div class='cursor-pointer w-auto h-full sm:mx-0 mx-2 piggie-menu-btn'>
+            <div class='cursor-pointer w-auto h-full w-auto xs:mr-2 mr-1 piggie-menu-btn'>
               <img class='h-full' src='/pigs/back_button.svg' />
             </div>
           </router-link>
-          <div v-on:click='showPiggyMenu = true' class='cursor-pointer ml-auto w-auto h-full piggie-menu-btn'>
+          <div v-on:click='showPiggyMenu = true'
+            class='cursor-pointer ml-auto w-auto sm:mr-5 mr-1 w-auto h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/piggies_button.svg' />
           </div>
-          <div v-on:click='showPiggyBank = true' class='cursor-pointer sm:mx-4 mx-2 w-auto h-full piggie-menu-btn'>
+          <div v-on:click='showPiggyBank = true'
+            class='cursor-pointer w-auto sm:mr-5 mr-1 w-auto h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/wallet_button.svg' />
           </div>
           <router-link target="_blank"
             :to="{path: 'marketplace', query: { market: '0xe5fd335819edb8da8395f8ec48beca747a0790ab' }}">
-            <div class='cursor-pointer w-auto mr-4 h-full piggie-menu-btn'>
+            <div class='cursor-pointer w-auto sm:mr-5 mr-1 h-full piggie-menu-btn'>
               <img class='h-full' src='/pigs/market_button.svg' />
             </div>
           </router-link>
-          <div v-on:click='showPiggySettingsModal()' class='cursor-pointer w-auto xs:mr-2 mr-1 h-full piggie-menu-btn'>
+          <div v-on:click='showPiggySettingsModal()' class='cursor-pointer w-auto sm:mr-1 mr-1 h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/settings_button.svg' />
           </div>
         </div>
@@ -210,14 +399,15 @@
             src='/pigs/attributes/sleep.png' />
         </div>
 
-
-        <div ref='pig' v-cloak v-show='currentPig && showPig'
+        <!-- PIG -->
+        <div ref='pig' v-bind:class='{"piggy-idle": !isPiggyBusy && !piggyDead}' v-cloak v-show='currentPig && showPig'
           class="w-full h-3/5 mt-14 relative flex items-center justify-center z-25">
           <img v-for='(attribute, index) in selectedPigAttributes' :key='index'
             class="m-auto absolute sm:w-7/10 w-9/10 lg:pt-60 pt-48" v-bind:src='getPiggieAttributeImage(attribute)'
             alt="Pig">
           <img class='m-auto absolute sm:w-7/10 w-9/10 lg:pt-60 pt-48' v-bind:src='getPiggyWashStatus()' />
         </div>
+
         <div v-on:click='showPiggyMenu = true'
           class='absolute left-0 flex flex-col items-center justify-center w-full opacity-50 hover:opacity-100 cursor-pointer'
           style='top: 50%;' v-if='!currentPig || !showPig'>
@@ -225,26 +415,49 @@
           <p class='text-2xl text-white'>Select Pig</p>
         </div>
 
-        <div class='absolute mx-auto sm:h-16 h-12 pres-anim flex w-full left-0 sm:bottom-40 bottom-24 z-50'>
-          <div class='mx-auto shadow-lg sm:w-8/10 w-9/10 flex items-center justify-center rounded-2xl h-full bg-white'>
+        <div v-on:click='revivePiggy(currentPig)'
+          class='absolute sm:py-6 py-2 left-0 flex flex-col rounded-xl items-center justify-center w-full opacity-75 hover:opacity-100 cursor-pointer'
+          style='top: 45%; background-color: rgba(0,0,0,0.5)' v-if='showPig && piggyDead'>
+          <img width="64px" src='/pigs/snout.svg' />
+          <p class='sm:text-2xl text-lg text-white'>Revive Pig</p>
+          <p class='sm:text-2xl text-lg text-white'>150 CoinkX</p>
+        </div>
+
+        <!-- NAME & AGE -->
+        <div class='absolute ml-auto sm:h-16 h-12 pres-anim flex w-full left-0 sm:top-32 top-28 z-50'>
+          <div style='border: 1px solid #F1609766'
+            class='shadow-lg sm:mr-4 sm:ml-auto mx-auto sm:w-6/10 w-9/10 flex items-center justify-center rounded-2xl h-12 bg-white'>
             <h2 title='Change name' v-on:click='showPiggyNameModal()'
-              class='sm:text-3xl text-xl w-7/10 text-center cursor-pointer' style='color: #3C2F35'>{{ piggyName }}</h2>
-            <div class='w-3/10 shadow-lg relative sm:h-20 h-14 bg-black rounded-2xl' style='background-color: #AA5FBD'>
+              class='sm:text-3xl text-xl w-7/10 text-center cursor-pointer' style='color: #3C2F35;'>{{ piggyName }}</h2>
+            <div class='w-3/10 shadow-lg relative sm:h-14 h-14 bg-black rounded-2xl' style='background-color: #F16097'>
               <div class='flex w-full h-full justify-center'>
                 <div
-                  class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white sm:text-4xl text-xl h-full'>
-                  <p class='h-3/5 pt-2 mb-1'> {{ piggyAge }} </p>
-                  <p class='h-2/5 sm:text-base text-xs'>Age</p>
+                  class='w-5/10 flex flex-col justify-center items-center cursor-pointer text-white sm:text-2xl text-lg h-full'>
+                  <p v-bind:class='{"h-3/5 pt-2": !piggyDead, "h-5/5 mb-1": piggyDead}'> {{ piggyAge }} </p>
+                  <p v-if='!piggyDead' class='mb-2 sm:text-base text-xs'>Age</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- HELPFUL BUTTON -->
+        <div class='absolute ml-auto sm:h-16 h-12 pres-anim flex w-full left-0 sm:top-48 top-28 z-50'>
+          <div class='w-auto mr-4 h-full flex ml-auto'>
+            <div v-bind:class='{"icon-pulse": piggyFirstTime}' v-on:click='showPiggyTutorialModal()' style='border: 1px solid #F1609766'
+              class='shadow-lg w-12 mx-2 flex items-center justify-center rounded-2xl h-12 bg-white scale-anim cursor-pointer'>
+              <p class='fa opacity-75 text-2xl fa-question pink'></p>
+            </div>
+            <div style='border: 1px solid #F1609766'
+              class='shadow-lg w-12 flex items-center justify-center rounded-2xl h-12 bg-white scale-anim cursor-pointer'>
+              <p class='fa opacity-75 text-2xl fa-book pink'></p>
+            </div>
+          </div>
+        </div>
+
         <!-- TAMAGOTCHI -->
-        <div v-if='piggyAttributes' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-12 mb-4 mt-auto pink ">
+        <div v-if='piggyAttributes' class="sm:w-9/10 w-full flex md:h-20 xs:h-16 h-16 mb-4 mt-auto pink">
           <PiggyBar class="shadow-lg" v-for='attribute in piggyAtributeList' :key='keys[attribute]'
-            v-bind:class='{"scale-anim": !piggySleeping}'
             v-on:click='usePiggyFreeAction(currentPig, piggyAttributes[attribute])'
             :attribute='piggyAttributes[attribute]'></PiggyBar>
         </div>
@@ -302,7 +515,7 @@
       selectedPigAttributes() {
         if (!this.currentPig) return [];
         return this.currentPig.attributes;
-      }
+      },
     },
     data() {
       return {
@@ -324,6 +537,7 @@
         piggyName: "",
         newPiggyName: "",
         piggyAge: 0,
+        piggyRevivalPrice: 0,
         piggyDead: false,
         piggyCloudsHandler: undefined,
         piggyClouds: [],
@@ -338,6 +552,7 @@
         piggyLastActionItem: "",
         piggyLastAttribute: undefined,
         piggySleeping: false,
+        isPiggyBusy: false,
         piggyActions: {
           eating: false,
           playing: false,
@@ -346,6 +561,7 @@
         },
         piggyFood: 'carrot.png',
         piggyActionMessage: 'You must wait a while before performing this action again.',
+        piggyFirstTime: false,
 
         showPig: false,
         showPiggyAlertDialog: false,
@@ -355,6 +571,7 @@
         showPiggyName: false,
         showPiggyMenu: false,
         showPiggyBank: false,
+        showPiggyTutorial: false,
 
         CONSTANTS: {
           CARROT_FOOD: 'carrot.png',
@@ -364,7 +581,10 @@
           THRESHOLD_MESSAGE: 'Your piggy feels neglected.'
         },
 
-        backAttributeFilter: ['Cloud', 'Dark Clouds', 'Green Candles', 'Mat', 'Meteorite', 'Stars', 'Sunny Day']
+        backAttributeFilter: ['Cloud', 'Dark Clouds', 'Green Candles', 'Mat', 'Meteorite', 'Stars', 'Sunny Day'],
+
+        tutorialPage: 1,
+        tutorialPages: 9
 
       }
     },
@@ -386,6 +606,13 @@
         const contractAttributes = await this.tamagotchiContract.getDefaultAttributeList();
         const attributeLimits = await this.tamagotchiContract.getAttributeLimits();
         const contractPowerups = await this.tamagotchiContract.getPowerups();
+        
+        if(!localStorage.piggyFirstTime){
+          localStorage.piggyFirstTime = false;
+          this.piggyFirstTime = true;
+        }
+        //const revivalPrice = await this.tamagotchiContract.getRevivalPrice();
+
         let powerUps = [];
         contractPowerups.forEach((c, index) => {
           powerUps.push({
@@ -460,6 +687,12 @@
         this.showPiggyName = true;
       },
 
+      showPiggyTutorialModal() {
+        this.showPiggyTutorial = true;
+        this.tutorialPage = 1;
+        this.piggyFirstTime = false;
+      },
+
       async fetchBlockNumber() {
         try {
           const body =
@@ -504,7 +737,7 @@
           await tx.wait(1);
           this.piggyAllowance = amount > 0;
 
-          if(amount > 0) this.$toast.success(`Coink has been enabled!`);
+          if (amount > 0) this.$toast.success(`Coink has been enabled!`);
           else this.$toast.succes('Coink has been disabled!');
         } catch (err) {
           this.handleError(err);
@@ -573,7 +806,7 @@
             const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index);
 
             await tx.wait(1);
-            
+
             if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.CARROT_FOOD;
             this.piggyLastAttribute = attribute;
             await this.fetchPiggyStats(piggy);
@@ -682,7 +915,7 @@
 
           const ageAttribute = await this.attributeManagerContract.getValueOfAttributeOfPig(piggy.id, 'Age');
           this.piggyDead = await this.tamagotchiContract.isDead(piggy.id);
-          this.piggyAge = ageAttribute && !this.piggyDead ? parseInt(ageAttribute / (12 * 3600)) : "RIP";
+          this.piggyAge = ageAttribute && !this.piggyDead ? parseInt(ageAttribute / (600)) : "RIP";
         } catch (err) {
           this.handleError(err);
         }
@@ -827,6 +1060,7 @@
         clearTimeout(this.piggyLastActionItem);
         this.clearPiggyAnimations();
         const pig = this.$refs.pig;
+        this.isPiggyBusy = true;
 
         if (attribute.name === 'Hunger') {
           const carrotElement = this.$refs.carrot;
@@ -840,7 +1074,10 @@
             pig.classList.remove('piggy-eat');
             pig.classList.add('piggy-eat');
 
-            setTimeout(() => this.piggyActions.eating = false, 1500);
+            setTimeout(() => {
+              this.piggyActions.eating = false;
+              this.isPiggyBusy = false;
+            }, 2000);
           }, 500);
         }
 
@@ -849,7 +1086,10 @@
           this.piggyLastActionItem = setTimeout(() => {
             pig.classList.add('piggy-jump');
 
-            setTimeout(() => this.piggyActions.playing = false, 1500);
+            setTimeout(() => {
+              this.piggyActions.playing = false;
+              this.isPiggyBusy = false;
+            }, 2000);
           }, 500);
         }
       },
@@ -918,11 +1158,11 @@
         const lcMessage = errorMessage.toLowerCase();
         if (lcMessage.indexOf("user denied") > -1) return;
         if (lcMessage.indexOf("transaction failed") > -1) {
-          this.$toast("Transaction Failed");
+          this.$toast.error("Transaction Failed");
         } else if (errorMessage.length < 100) {
-          this.$toast(errorMessage);
+          this.$toast.error(errorMessage);
         } else {
-          this.$toast('Transaction Failed');
+          this.$toast.error('Transaction Failed');
         }
       },
 
@@ -994,14 +1234,6 @@
     border-bottom: solid 8px #dc4689;
   }
 
-  .Vue-Toastification__toast--default {
-    background-color: white !important;
-    color: #F16097;
-    font-family: 'Chango', serif !important;
-    border: 4px solid #F16097;
-    border-bottom: solid 12px #F16097;
-  }
-
   .text-light {
     font-family: "Maven Pro";
     color: #3C2F35;
@@ -1036,7 +1268,8 @@
     .pig-tamagotchi {
       max-width: 95vw;
       width: 95vw;
-      height: 85vh;
+      height: 70vh;
+      margin-top: 15vh !important;
     }
   }
 
@@ -1088,6 +1321,24 @@
 
   .carrot-fall {
     animation: carrot-fall 0.5s ease-in-out;
+  }
+
+  .piggy-idle {
+    animation: piggy-idle 20s ease-in-out infinite;
+    animation-delay: 10s;
+  }
+
+  .icon-pulse{
+    animation: pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%{
+      transform: scale(1);
+    }
+    50%{
+      transform: scale(1.1);
+    }
   }
 
   @keyframes piggy-eat {
@@ -1228,6 +1479,44 @@
 
     100% {
       transform: translateY(0px);
+    }
+  }
+
+  @keyframes piggy-idle {
+    0% {
+      transform: translateX(0px);
+    }
+
+    2% {
+      transform: translateX(-6px);
+    }
+
+    5% {
+      transform: translateX(-10px);
+    }
+
+    30% {
+      transform: translateX(-10px);
+    }
+
+    33% {
+      transform: translateX(0px);
+    }
+
+    36% {
+      transform: translateX(3px);
+    }
+
+    42% {
+      transform: translateX(8px);
+    }
+
+    70% {
+      transform: translateX(0px);
+    }
+
+    80% {
+      transform: translateX(0px);
     }
   }
 

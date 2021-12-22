@@ -1,15 +1,16 @@
 <template>
-    <div v-on:mouseleave='hideTooltip()' v-on:mouseover='showTooltip()' v-on:click='$emit("click")'
-        class="cursor-pointer mx-1 sm:mx-2 md:w-auto sm:w-2/10 w-3/10 flex h-full relative tmg-btn z-50">
-        <div class='w-8/10 h-full flex flex-col justify-center items-center'>
+    <div :key='key' v-on:mouseleave='hideTooltip()' v-on:mouseover='showTooltip()' v-on:click='$emit("click")'
+        class="cursor-pointer scale-anim mx-1 sm:mx-2 md:w-auto sm:w-2/10 w-3/10 flex h-full relative tmg-btn z-50">
+        <div v-bind:class='{"opacity-50": isCooldown}' class='w-8/10 h-full flex flex-col justify-center items-center'>
             <transition name='fade'>
-                <img v-if='!attribute.loading' class="inline" width="100%" v-bind:src="getButtonImage(attribute.name)">
+                <img v-if='!attribute.loading' class="h-36 inline" v-bind:src="getButtonImage(attribute.name)">
             </transition>
             <transition name='fade'>
                 <img v-if='attribute.loading' class="inline fa-spin absolute" width="50%" src='/pigs/snout_dark.svg'>
             </transition>
             <transition name='fade'>
-                <p v-if='!attribute.loading && attribute.freePowerUp' class='text-xs hidden sm:block opacity-75 uppercase'>
+                <p v-if='!attribute.loading && attribute.freePowerUp'
+                    class='text-xs hidden sm:block opacity-75 uppercase'>
                     {{ attribute.freePowerUp.name }}</p>
             </transition>
         </div>
@@ -18,13 +19,19 @@
             </div>
         </div>
         <transition name='tooltip'>
-            <div v-if='tooltip' style='width: 150%; height: 164px; left: calc(-25% - 2px)'
-                class='absolute text-sm py-1 -top-44 w-full text-center z-50 bg-white rounded-xl pink-border-bottom shadow-lg'>
+            <div v-if='tooltip' style='width: 150%; height: 220px; left: calc(-25% - 2px)'
+                class='absolute text-sm py-1 -top-60 w-full text-center z-50 bg-white rounded-xl pink-border-bottom shadow-lg'>
                 <p class='mt-1 text-light opacity-75'>
                     {{attribute.name}}
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
                     {{attribute.current}}/{{attribute.max}}
+                </p>
+                <p class='mt-1 text-light opacity-75'>
+                    Lasts for
+                </p>
+                <p class='mt-1 text-sm opacity-75'>
+                    ~12 hours
                 </p>
                 <p class='mt-1 text-light opacity-75'>
                     Cooldown
@@ -64,10 +71,19 @@
         data() {
             return {
                 tooltipTimeout: undefined,
-                tooltip: false
+                tooltip: false,
+                isCooldown: false,
+                key: 0
             };
         },
-        mounted() {},
+        mounted() {
+            this.calculateCooldown(this.attribute.freePowerUp.cooldown);
+        },
+        watch: {
+            attribute: function (newVal) {
+                this.calculateCooldown(this.attribute.freePowerUp.cooldown);
+            }
+        },
         methods: {
             showTooltip() {
                 clearTimeout(this.tooltipTimeout);
@@ -106,14 +122,19 @@
                 return `${color}-fill`;
             },
 
-            calculateCooldown(cooldown){
+            calculateCooldown(cooldown) {
                 const seconds = cooldown / 1000;
                 const minutes = parseInt(seconds / 60);
                 const hours = parseInt(minutes / 60);
 
-                if(hours > 0) return `~${hours} h`;
-                if(minutes > 0) return `~${minutes} m`;
-                if(minutes <= 0 && seconds > 0) return '< 1 m';
+                if ((seconds > 0 || minutes > 0 || hours > 0) && !this.isCooldown) this.isCooldown = true;
+
+                if (hours > 0) return `~${hours} h`;
+                if (minutes > 0) return `~${minutes} m`;
+                if (minutes <= 0 && seconds > 0) return '< 1 m';
+                this.isCooldown = false;
+                this.key++;
+
                 return 'Ready';
             }
         },
@@ -136,13 +157,13 @@
     @media only screen and (max-width: 512px) {
         .tmg-btn {
 
-            min-width: 48px !important;
-            min-height: 48px !important;
+            min-width: 64px !important;
+            min-height: 64px !important;
         }
 
         .tmg-btn img {
-            height: 32px;
-            width: 32px;
+            height: 64px;
+            width: 64px;
         }
     }
 

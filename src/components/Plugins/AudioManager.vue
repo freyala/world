@@ -24,7 +24,8 @@
                 audioMap: {
                     'world-map': 'Freya_Theme.mp3',
                     'casino': 'Luderion.mp3',
-                    'marketplace': 'Marketplace.mp3'
+                    'marketplace': 'Marketplace.mp3',
+                    'pigs': 'PiggyTamagotchi.mp3'
                 }
             };
         },
