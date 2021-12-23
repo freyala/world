@@ -1,5 +1,5 @@
 {
-    "address": "0x21f3fa938FFbc4f998dc6EC9ce712567d4c0852b",
+    "address": "0x197898f040724566D472341032c61DdF500A1573",
     "abi": [{
             "anonymous": false,
             "inputs": [{
@@ -118,6 +118,50 @@
             "type": "event"
         },
         {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }],
+            "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "pigId",
+                "type": "uint256"
+            }],
+            "name": "getNameOfPig",
+            "outputs": [{
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "inputs": [{
                     "internalType": "uint256",
                     "name": "pigId",
@@ -127,43 +171,15 @@
                     "internalType": "string",
                     "name": "attributeName",
                     "type": "string"
-                },
-                {
-                    "internalType": "string",
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "internalType": "int256",
-                    "name": "effect",
-                    "type": "int256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "length",
-                    "type": "uint256"
                 }
             ],
-            "name": "addBoostToAttributeOfPig",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "addr",
-                    "type": "address"
-                },
-                {
-                    "internalType": "bool",
-                    "name": "approval",
-                    "type": "bool"
-                }
-            ],
-            "name": "approveAddressToEdit",
-            "outputs": [],
-            "stateMutability": "nonpayable",
+            "name": "getValueOfAttributeOfPig",
+            "outputs": [{
+                "internalType": "int256",
+                "name": "value",
+                "type": "int256"
+            }],
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -242,21 +258,6 @@
         },
         {
             "inputs": [{
-                "internalType": "uint256",
-                "name": "pigId",
-                "type": "uint256"
-            }],
-            "name": "getNameOfPig",
-            "outputs": [{
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
                     "internalType": "uint256",
                     "name": "pigId",
                     "type": "uint256"
@@ -265,63 +266,24 @@
                     "internalType": "string",
                     "name": "attributeName",
                     "type": "string"
-                }
-            ],
-            "name": "getValueOfAttributeOfPig",
-            "outputs": [{
-                "internalType": "int256",
-                "name": "value",
-                "type": "int256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            }],
-            "name": "isApprovedToEdit",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [{
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint256",
-                    "name": "pigId",
-                    "type": "uint256"
                 },
                 {
                     "internalType": "string",
-                    "name": "attributeName",
+                    "name": "name",
                     "type": "string"
+                },
+                {
+                    "internalType": "int256",
+                    "name": "effect",
+                    "type": "int256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "length",
+                    "type": "uint256"
                 }
             ],
-            "name": "resetAttributeOfPig",
+            "name": "addBoostToAttributeOfPig",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -367,13 +329,105 @@
         },
         {
             "inputs": [{
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }],
-            "name": "transferOwnership",
+                    "internalType": "uint256",
+                    "name": "pigId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "attributeName",
+                    "type": "string"
+                }
+            ],
+            "name": "resetAttributeOfPig",
             "outputs": [],
             "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "greaterThan",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct AttributeManagerV2.Threshold[]",
+                "name": "limits",
+                "type": "tuple[]"
+            }],
+            "name": "setAttributeLimits",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getAttributeLimits",
+            "outputs": [{
+                "components": [{
+                        "internalType": "string",
+                        "name": "attributeName",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "greaterThan",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "value",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct AttributeManagerV2.Threshold[]",
+                "name": "",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "approval",
+                    "type": "bool"
+                }
+            ],
+            "name": "approveAddressToEdit",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            }],
+            "name": "isApprovedToEdit",
+            "outputs": [{
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }],
+            "stateMutability": "view",
             "type": "function"
         }
     ]

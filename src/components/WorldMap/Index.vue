@@ -203,6 +203,25 @@
                 </router-link>
               </div>
 
+              
+              <div @mouseenter="hovering = 'pigsty'" @mouseleave="hovering = ''">
+                <router-link :to="{ name: 'pigs' }">
+                  <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
+                       style="left: 64.4281%; top: 40%; width: 5vw;" src="/images/map/Pigsty.png" alt="Pigsty">
+                  <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
+                       style="left: 64.4281%; top: 40%; width: 5vw;">
+                    <div class="relative">
+                      <img class="w-full" src="/images/map/Pigsty_MO.png" alt="Pigsty">
+                    </div>
+                  </div>
+                  <p :class="hovering === 'pigsty' ? 'md:opacity-90' : 'md:opacity-70'"
+                     class="text-center bubble text-white absolute"
+                     style="pointer-events: none; left: 65.8281%; top: 45.6611%">
+                    Pigsty
+                  </p>
+                </router-link>
+              </div>
+
               <div>
                 <img @click="showWindow('11')" class="cursor-pointer opacity-60 hover:opacity-90 absolute z-10"
                      style="left: 76.5547%; top: 42.84722222222222%; width: 2.5vw;" src="/images/map/Generic_Camp.png"

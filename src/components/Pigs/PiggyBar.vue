@@ -1,7 +1,7 @@
 <template>
-    <div :key='key' v-on:mouseleave='hideTooltip()' v-on:mouseover='showTooltip()' v-on:click='$emit("click")'
+    <div v-on:mouseleave='hideTooltip()' v-on:mouseover='showTooltip()' v-on:click='$emit("click")'
         class="cursor-pointer scale-anim mx-1 sm:mx-2 md:w-auto sm:w-2/10 w-3/10 flex h-full relative tmg-btn z-50">
-        <div v-bind:class='{"opacity-50": isCooldown}' class='w-8/10 h-full flex flex-col justify-center items-center'>
+        <div class='w-8/10 h-full flex flex-col justify-center items-center'>
             <transition name='fade'>
                 <img v-if='!attribute.loading' class="h-36 inline" v-bind:src="getButtonImage(attribute.name)">
             </transition>
@@ -18,20 +18,17 @@
             <div v-bind:style='getBarFillMeter(attribute)' class='tmg-bar-fill' v-bind:class='getFillColor(attribute)'>
             </div>
         </div>
+        <div v-if='attribute.freePowerUp.cooldown > 0' class='absolute -top-2 flex w-full opacity-75 left-0'>
+            <span class='mx-auto fa fa-spinner fa-spin'></span>
+        </div>
         <transition name='tooltip'>
-            <div v-if='tooltip' style='width: 150%; height: 220px; left: calc(-25% - 2px)'
-                class='absolute text-sm py-1 -top-60 w-full text-center z-50 bg-white rounded-xl pink-border-bottom shadow-lg'>
+            <div v-if='tooltip' style='width: 150%; height: 166px; left: calc(-25% - 2px)'
+                class='absolute text-sm py-1 -top-44 w-full text-center z-50 bg-white rounded-xl pink-border-bottom shadow-lg'>
                 <p class='mt-1 text-light opacity-75'>
                     {{attribute.name}}
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
-                    {{attribute.current}}/{{attribute.max}}
-                </p>
-                <p class='mt-1 text-light opacity-75'>
-                    Lasts for
-                </p>
-                <p class='mt-1 text-sm opacity-75'>
-                    ~12 hours
+                   {{ getAttributePercentage(attribute) }}
                 </p>
                 <p class='mt-1 text-light opacity-75'>
                     Cooldown
@@ -43,7 +40,7 @@
                     Effect
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
-                    +{{attribute.freePowerUp.boostInitialisers[0].effect}}
+                    + {{ getBoostFillPercentange(attribute)}}
                 </p>
             </div>
         </transition>
@@ -72,9 +69,13 @@
             return {
                 tooltipTimeout: undefined,
                 tooltip: false,
-                isCooldown: false,
                 key: 0
             };
+        },
+        computed:{
+            isCooldown() {
+                return this.attribute.freePowerUp.cooldown > 0;
+            }
         },
         mounted() {
             this.calculateCooldown(this.attribute.freePowerUp.cooldown);
@@ -108,6 +109,18 @@
                 };
             },
 
+            getBoostFillPercentange(attribute){
+                return (Math.ceil(attribute.freePowerUp.boostInitialisers[0].effect / attribute.max * 100)).toFixed(2) + '%';
+            },
+
+            getDepletionStatus(attribute){
+
+            },
+
+            getAttributePercentage(attribute){
+                return (attribute.current / attribute.max * 100).toFixed(2) + '%';
+            },
+
             getFillColor(attribute) {
                 const fillPercent = Math.min(1, attribute.current / attribute.max);
                 const color = fillPercent > 0.5 ? 'green' : fillPercent > 0.25 ? 'yellow' : 'red';
@@ -127,13 +140,9 @@
                 const minutes = parseInt(seconds / 60);
                 const hours = parseInt(minutes / 60);
 
-                if ((seconds > 0 || minutes > 0 || hours > 0) && !this.isCooldown) this.isCooldown = true;
-
                 if (hours > 0) return `~${hours} h`;
                 if (minutes > 0) return `~${minutes} m`;
                 if (minutes <= 0 && seconds > 0) return '< 1 m';
-                this.isCooldown = false;
-                this.key++;
 
                 return 'Ready';
             }

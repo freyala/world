@@ -12,7 +12,7 @@
         data() {
             return {
                 fakeVolume: 1,
-                volume: 1,
+                volume: 0,
                 volumeStep: 0.05,
                 prevVolume: 1,
                 currentAudio: undefined,
@@ -30,11 +30,9 @@
             };
         },
         mounted() {
-            this.$nextTick(() => {
-                if (!localStorage.volume) {
-                    localStorage.volume = 1;
-                } else this.volume = localStorage.volume * 1;
-            });
+            if (!localStorage.volume) {
+                localStorage.volume = 1;
+            } else this.volume = localStorage.volume * 1;
         },
         methods: {
             play() {
@@ -94,7 +92,13 @@
                 }
                 if (!nextAudio) return;
 
-                this.preFadeVolume = this.isTransition ? this.preFadeVolume : this.volume;
+                if (this.volume === 0) {
+                    this.currentAudio = nextAudio;
+                    this.play();
+                    return;
+                }
+
+                this.preFadeVolume = this.isTransition && this.volume > 0 ? this.preFadeVolume : this.volume;
                 this.isTransition = true;
                 this.transitionTimeout = setInterval(() => {
                     if (this.volume <= 0) {

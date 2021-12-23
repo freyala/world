@@ -120,7 +120,8 @@
               <div class='h-full w-full flex flex-col justify-start items-start z-10'>
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  You can put your piggy to sleep for 12 hours. While the piggy sleeps, its energy will slowly replenish
+                  You can put your piggy to sleep for 12 (half an epoch) hours. While the piggy sleeps, its energy will
+                  slowly replenish
                   back to 100%.
                   <br /><br />
                   Energy fully depletes in 24 hours.
@@ -180,7 +181,7 @@
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
                   For more information about the tamagotchi, please refer to our detailed document on game mechanics
-                  here:
+                  here: <br /><br />(coming soon)
                   <br /><br />
                 </p>
               </div>
@@ -259,30 +260,30 @@
               <template v-if='!piggyAllowance'>
                 <p class='text-light px-4 h-2/7 mb-2 text-base text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  Approve the 'Coink' contract in order to purchase piggy powerups.
+                  Approve the 'COINKX' contract in order to purchase piggy powerups.
                 </p>
                 <p v-on:click='setTokenAllowance(999999999999.9999)'
                   class='text-base w-6/10 mx-auto rounded-2xl press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
-                  Approve Coink </p>
+                  Approve COINKX </p>
               </template>
               <template v-else>
                 <p class='text-light px-4 h-2/7 mb-2 text-base text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  Disable the 'Coink' contract.
+                  Disable the 'COINKX' contract.
                 </p>
                 <p v-on:click='setTokenAllowance(0)'
                   class='text-base w-6/10 mx-auto rounded-2xl press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
-                  Disable Coink </p>
+                  Disable COINKX </p>
               </template>
             </div>
             <div v-else-if='showPiggyImport' class='h-full w-full flex flex-col justify-start text-center z-10'>
               <p class='text-light px-4 h-2/7 mb-2 text-base text-center font-bold'
                 style='font-family: "Maven Pro";color: #3C2F35'>
-                Register your piggy in the Tamagotchi to start playing!
+                Import your piggy in the Tamagotchi to start playing!
               </p>
               <p v-on:click='importPiggy(selectedPig, true)'
                 class='text-base w-6/10 mx-auto rounded-2xl text-center press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
-                Register #{{ selectedPig.id }} </p>
+                Import #{{ selectedPig.id }} </p>
             </div>
             <div v-else-if='showPiggyName' class='h-full w-full flex flex-col justify-start text-center z-10'>
               <p class='text-light px-4 h-2/7 mb-3 text-base text-center font-bold'
@@ -363,11 +364,10 @@
         <!-- NAVBAR -->
         <div class='absolute mx-auto h-20 z-50 flex xs:w-9/10 w-9/10 top-4'>
 
-          <router-link :to="{ name: 'world-map' }">
-            <div class='cursor-pointer w-auto h-full w-auto xs:mr-2 mr-1 piggie-menu-btn'>
-              <img class='h-full' src='/pigs/back_button.svg' />
-            </div>
-          </router-link>
+          <div v-on:click='goToRoute("world-map")'
+            class='cursor-pointer w-auto h-full w-auto xs:mr-2 mr-1 piggie-menu-btn'>
+            <img class='h-full' src='/pigs/back_button.svg' />
+          </div>
           <div v-on:click='showPiggyMenu = true'
             class='cursor-pointer ml-auto w-auto sm:mr-5 mr-1 w-auto h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/piggies_button.svg' />
@@ -400,8 +400,8 @@
         </div>
 
         <!-- PIG -->
-        <div ref='pig' v-bind:class='{"piggy-idle": !isPiggyBusy && !piggyDead}' v-cloak v-show='currentPig && showPig'
-          class="w-full h-3/5 mt-14 relative flex items-center justify-center z-25">
+        <div ref='pig' v-bind:class='{"piggy-idle": !isPiggyBusy && !piggyDead && !piggySleeping}' v-cloak
+          v-show='currentPig && showPig' class="w-full h-3/5 mt-14 relative flex items-center justify-center z-25">
           <img v-for='(attribute, index) in selectedPigAttributes' :key='index'
             class="m-auto absolute sm:w-7/10 w-9/10 lg:pt-60 pt-48" v-bind:src='getPiggieAttributeImage(attribute)'
             alt="Pig">
@@ -420,7 +420,7 @@
           style='top: 45%; background-color: rgba(0,0,0,0.5)' v-if='showPig && piggyDead'>
           <img width="64px" src='/pigs/snout.svg' />
           <p class='sm:text-2xl text-lg text-white'>Revive Pig</p>
-          <p class='sm:text-2xl text-lg text-white'>150 CoinkX</p>
+          <p class='sm:text-2xl text-lg text-white'>150 COINKX</p>
         </div>
 
         <!-- NAME & AGE -->
@@ -442,15 +442,16 @@
         </div>
 
         <!-- HELPFUL BUTTON -->
-        <div class='absolute ml-auto sm:h-16 h-12 pres-anim flex w-full left-0 sm:top-48 top-28 z-50'>
+        <div class='absolute ml-auto sm:h-16 sm:h-12 h-8 pres-anim flex w-full left-0 sm:top-48 top-44 z-50'>
           <div class='w-auto mr-4 h-full flex ml-auto'>
-            <div v-bind:class='{"icon-pulse": piggyFirstTime}' v-on:click='showPiggyTutorialModal()' style='border: 1px solid #F1609766'
-              class='shadow-lg w-12 mx-2 flex items-center justify-center rounded-2xl h-12 bg-white scale-anim cursor-pointer'>
-              <p class='fa opacity-75 text-2xl fa-question pink'></p>
+            <div v-bind:class='{"icon-pulse": piggyFirstTime}' v-on:click='showPiggyTutorialModal()'
+              style='border: 1px solid #F1609766'
+              class='shadow-lg sm:w-12 w-8 sm:h-12 h-8 mx-2 flex items-center justify-center rounded-2xl bg-white scale-anim cursor-pointer'>
+              <p class='fa opacity-75 sm:text-2xl text-xl fa-question pink'></p>
             </div>
             <div style='border: 1px solid #F1609766'
-              class='shadow-lg w-12 flex items-center justify-center rounded-2xl h-12 bg-white scale-anim cursor-pointer'>
-              <p class='fa opacity-75 text-2xl fa-book pink'></p>
+              class='shadow-lg sm:w-12 w-8 sm:h-12 h-8 flex items-center justify-center rounded-2xl bg-white scale-anim cursor-pointer'>
+              <p class='fa opacity-75 sm:text-2xl text-xl fa-book pink'></p>
             </div>
           </div>
         </div>
@@ -598,20 +599,20 @@
           .signer);
         this.tamagotchiContract = await new ethers.Contract(PiggyTamagotchi.address, PiggyTamagotchi.abi, this
           .metaMaskWallet.signer);
-        let tempContract = await new ethers.Contract("0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", Token.abi, this
+        let tempContract = await new ethers.Contract("0x7ca9C1D0bb11F1b7C31ee5538D7a75aAF2d8E2FC", Token.abi, this
           .metaMaskWallet.signer);
         const allowance = await tempContract.allowance(this.metaMaskAccount, PiggyTamagotchi.address);
         this.piggyAllowance = allowance > 0;
 
         const contractAttributes = await this.tamagotchiContract.getDefaultAttributeList();
-        const attributeLimits = await this.tamagotchiContract.getAttributeLimits();
+        const attributeLimits = await this.attributeManagerContract.getAttributeLimits();
         const contractPowerups = await this.tamagotchiContract.getPowerups();
-        
-        if(!localStorage.piggyFirstTime){
+
+        if (!localStorage.piggyFirstTime) {
           localStorage.piggyFirstTime = false;
           this.piggyFirstTime = true;
         }
-        //const revivalPrice = await this.tamagotchiContract.getRevivalPrice();
+
 
         let powerUps = [];
         contractPowerups.forEach((c, index) => {
@@ -660,6 +661,7 @@
       } catch (err) {
         this.handleError(err);
       }
+
     },
     methods: {
       hideAllPiggyDialogs() {
@@ -693,6 +695,13 @@
         this.piggyFirstTime = false;
       },
 
+      goToRoute(route, query) {
+        this.$router.push({
+          name: route,
+          query: query
+        });
+      },
+
       async fetchBlockNumber() {
         try {
           const body =
@@ -718,7 +727,7 @@
 
       async setTokenAllowance(amount) {
         let actual = 0;
-        const coinkAddress = "0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2";
+        const coinkAddress = "0x7ca9C1D0bb11F1b7C31ee5538D7a75aAF2d8E2FC";
         if (amount > 0) {
           actual = amount * 10 ** 18;
         } else {
@@ -737,8 +746,8 @@
           await tx.wait(1);
           this.piggyAllowance = amount > 0;
 
-          if (amount > 0) this.$toast.success(`Coink has been enabled!`);
-          else this.$toast.succes('Coink has been disabled!');
+          if (amount > 0) this.$toast.success(`COINKX has been enabled!`);
+          else this.$toast.succes('COINKX has been disabled!');
         } catch (err) {
           this.handleError(err);
         }
@@ -746,23 +755,25 @@
 
       async usePiggyPaidAction(piggy, attribute) {
         try {
-          if (!piggy) throw 'No selected piggy.'
-          if (this.piggySleeping) throw `${piggy.name} is sleeping.`;
+          if (!piggy) throw 'Select a piggy first!'
+          if (this.piggySleeping) throw `${piggy.name} is sleeping!`;
           if (attribute.loading) return;
 
           if (!this.piggyAllowance) {
             this.showPiggyCooldown = false;
             this.showPiggySettingsModal();
-            throw '"Coink" token is not enabled!';
+            throw '"COINKX" token is not enabled!';
           }
+
           attribute.loading = true;
-          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
-          this.showPiggyCooldown = false;
           this.keys[attribute.name]++;
 
-          await tx.wait(1);
+          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
+          this.showPiggyCooldown = false;
 
+          await tx.wait(1);
           if (attribute.name === 'Hunger') this.piggyFood = this.CONSTANTS.TURNIP_FOOD;
+
           this.selectedAttribute = attribute;
           this.piggyLastAttribute = attribute;
           attribute.loading = false;
@@ -776,10 +787,12 @@
 
       async usePiggyFreeAction(piggy, attribute) {
         try {
-          if (!piggy) throw 'No selected piggy.'
+          if (!piggy) throw 'Select a piggy first!'
           if (this.piggySleeping) throw `${this.piggyName} is sleeping.`;
           if (this.piggyDead) throw `${this.piggyName} is dead.`;
           if (attribute.loading) return;
+          attribute.loading = true;
+          this.keys[attribute.name]++;
 
           this.selectedAttribute = attribute;
           const blockNumber = await this.fetchBlockNumber();
@@ -802,7 +815,6 @@
                 throw `${threshold.attributeName} too high.`;
               }
             }
-            attribute.loading = true;
             const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index);
 
             await tx.wait(1);
@@ -844,7 +856,7 @@
           if (!this.piggyAllowance) {
             this.showPiggyCooldown = false;
             this.showPiggySettingsModal();
-            throw '"Coink" token is not enabled!';
+            throw '"COINKX" token is not enabled!';
           }
 
           const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
@@ -915,7 +927,7 @@
 
           const ageAttribute = await this.attributeManagerContract.getValueOfAttributeOfPig(piggy.id, 'Age');
           this.piggyDead = await this.tamagotchiContract.isDead(piggy.id);
-          this.piggyAge = ageAttribute && !this.piggyDead ? parseInt(ageAttribute / (600)) : "RIP";
+          this.piggyAge = ageAttribute && !this.piggyDead ? parseInt(ageAttribute / (12 * 3600)) : "RIP";
         } catch (err) {
           this.handleError(err);
         }
@@ -978,6 +990,8 @@
           .metaMaskWallet.signer)
         const pigIds = await contract.tokensOfOwner(this.metaMaskAccount)
 
+        if(pigIds.length === 0) return;
+
         let ids = await pigIds.map(async (Piggy) => {
           return Piggy._isBigNumber ? ethers.BigNumber.from(Piggy._hex).toString() : Piggy._hex
         })
@@ -989,7 +1003,7 @@
             this.piggyList = piggyList.data
             this.loading = false
 
-            if (this.piggyList.length) {
+            if (this.piggyList.length > 0) {
               const firstPig = this.piggyList[0];
               const isRegistered = await this.tamagotchiContract.isImported(firstPig.id);
 
@@ -1089,7 +1103,7 @@
             setTimeout(() => {
               this.piggyActions.playing = false;
               this.isPiggyBusy = false;
-            }, 2000);
+            }, 2800);
           }, 500);
         }
       },
@@ -1149,6 +1163,7 @@
         if (!piggy) return defaultValue;
         let bg = piggy.attributes.filter(c => c.trait_type === 'Background')[0];
         if (!bg || !piggy) return defaultValue;
+        if (bg.value === 'Purple') return defaultValue;
         return `/pigs/pigsty_${bg.value}.png`
       },
 
@@ -1328,15 +1343,16 @@
     animation-delay: 10s;
   }
 
-  .icon-pulse{
+  .icon-pulse {
     animation: pulse 1s ease-in-out infinite;
   }
 
   @keyframes pulse {
-    0%{
+    0% {
       transform: scale(1);
     }
-    50%{
+
+    50% {
       transform: scale(1.1);
     }
   }
