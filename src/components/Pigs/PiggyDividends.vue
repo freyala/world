@@ -259,4 +259,50 @@
         transforM: translateX(-200px);
         opacity: 0.25;
     }
+
+    .piggie-btn {
+        min-width: 64px;
+        min-height: 64px;
+        background: #F16097;
+        border: 1px solid #FBCCDE;
+        box-sizing: border-box;
+        border-radius: 12px;
+    }
+
+    .bg-pink {
+        background: #F16097;
+    }
+
+    .bg-pink-light {
+        background-color: #F16097;
+    }
+
+    .pink {
+        color: #dc5689 !important;
+    }
+
+    .scale-anim:hover {
+        transform: scale(1.05);
+    }
+
+    .press-anim:hover {
+        border-top: solid 8px #dc4689;
+        border-bottom: solid 1px #dc4689;
+        color: rgba(255, 255, 255, 50%) !important;
+    }
+
+    .pink-border-bottom {
+        border-bottom: solid 8px #dc4689;
+    }
+
+    .text-light {
+        font-family: "Maven Pro";
+        color: #3C2F35;
+    }
+
+    .pig-tamagotchi {
+        max-width: 768px;
+        width: 768;
+        height: 100vh;
+    }
 </style>

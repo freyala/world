@@ -1213,7 +1213,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .piggie-btn {
     min-width: 64px;
     min-height: 64px;
@@ -1253,9 +1253,7 @@
     font-family: "Maven Pro";
     color: #3C2F35;
   }
-</style>
 
-<style scoped>
   .pig-tamagotchi {
     max-width: 768px;
     width: 768;
