@@ -1,6 +1,6 @@
 <template>
   <section class="flex p-4 mx-auto overflow-y-hidden md:p-16 my-16 md:my-0 lg:px-32 pig-tamagotchi">
-    <div class="screen rounded-2xl overflow-x-hidden w-full bg-dark relative">
+    <div class="screen rounded-2xl overflow-x-hidden w-full bg-light relative">
       <!-- MENU -->
       <div v-on:click='showPiggyCooldown = false' v-if='showPiggyCooldown'
         class='absolute top-0 bottom-0 right-0 left-0 bg-opacity-20 bg-dark'>
@@ -65,7 +65,7 @@
                   You can feed your piggy for free once every 8 hours. If you wish to do so more often, you have to pay
                   a small COINKX fee!
                   <br /><br />
-                  Hunger fully depletes in 12 hours.
+                  Hunger fully depletes in 24 hours.
                   <br /><br />
                   If Hunger drops below 10%, the piggy will die.
                   <br /><br />
@@ -85,7 +85,7 @@
                   You can play with your piggy for free once every 8 hours. If you wish to do so more often, you have to
                   pay a small COINKX fee!
                   <br /><br />
-                  Happiness fully depletes in 12 hours
+                  Happiness fully depletes in 24 hours
                   <br /><br />
                   If the Happiness drops below 0%, the piggy will die.
                   <br /><br />
@@ -128,7 +128,7 @@
                   <br /><br />
                   If Energy drops below 0%, the piggy will die.
                   <br /><br />
-                  While the piggy sleeps, Hunger and Happiness will drain at a 75% reduced rate, but it will lose 3%
+                  While the piggy sleeps, Hunger and Happiness will drain at a 50% reduced rate, but it will lose 2.75%
                   Hygiene per hour.
                 </p>
               </div>
@@ -181,7 +181,9 @@
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
                   For more information about the tamagotchi, please refer to our detailed document on game mechanics
-                  here: <br /><br />(coming soon)
+                  here: <br /><br /><a class='pink underline' target='_blank'
+                    href='https://docs.freyala.com/freyala/cryptopigs'>Piggy
+                    Docs</a>
                   <br /><br />
                 </p>
               </div>
@@ -189,12 +191,12 @@
             <div class='w-full h-20 z-50 flex justify-center items-center'>
               <p v-bind:class='{"opacity-50": tutorialPage - 1 < 1}'
                 v-on:click='tutorialPage = Math.max(1, tutorialPage - 1)'
-                class='text-base h-12 flex items-center justify-center mx-2 w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
+                class=' sm:text-base text-xs h-12 flex items-center justify-center mx-2 w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
                 Previous
               </p>
               <p v-bind:class='{"opacity-50": tutorialPage + 1 > tutorialPages}'
                 v-on:click='tutorialPage = Math.min(tutorialPages, tutorialPage + 1)'
-                class='text-base h-12 flex items-center justify-center mx-2 w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
+                class=' sm:text-base text-xs h-12 flex items-center justify-center mx-2 w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
                 Next
               </p>
             </div>
@@ -206,14 +208,14 @@
         <div v-on:click='closeModal' v-if='showPiggyCooldown'
           class='absolute modal-overlay flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-opacity-20 w-full h-full z-50 '>
           <div
-            class='sm:w-7/10 w-9/10 flex flex-col items-start justify-center sm:h-2/5 h-3/7 sm:pb-0 pb-3 bg-white rounded-2xl piggy-modal'>
+            class='sm:w-7/10 w-9/10 flex flex-col items-start justify-center h-auto sm:pb-0 pb-3 bg-white rounded-2xl piggy-modal'>
             <div
               style='background-image: url("/pigs/snout.svg"); background-repeat: no-repeat; background-size: contain; background-position: center; z-index: 0'
               class='opacity-50 absolute top-0 bottom-0 left-0 m-4 right-0'>
 
             </div>
             <div class='w-full flex flex-row justify-center items-center z-50'>
-              <h2 class='h-auto w-full ml-4 text-center mt-4 text-xl pink mb-4 z-10'>Oink! Oink!</h2>
+              <h2 class='h-auto w-full ml-4 text-center mt-4 text-lg sm:text-xl pink mb-4 z-10'>Oink! Oink!</h2>
               <i v-on:click='showPiggyCooldown = false'
                 class='text-2xl scale-anim opacity-50 hover:opacity-100 pink cursor-pointer text-white ml-auto mr-4 fa fa-close'></i>
             </div>
@@ -229,9 +231,13 @@
               <img style='' class='bg-white rounded-2xl shadow-2xl my-3' width='72px'
                 v-bind:src="'/pigs/' + selectedAttribute.name + '.svg'" />
               <p v-on:click='usePiggyPaidAction(currentPig, selectedAttribute)'
-                class='text-base text-center w-4/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border mt-2'>
-                {{ selectedAttribute.paidPowerUp.price / (10 ** 18) }} COINK
+                class='sm:text-base text-xs text-center sm:w-4/10 w-5/10 rounded-2xl press-anim pink-border-bottom cursor-pointer hover:shadow-2xl bg-pink text-white border my-2'>
+                {{ selectedAttribute.paidPowerUp.price / (10 ** 18) }} COINKX
               </p>
+              <a href='https://game.defikingdoms.com/#/marketplace?outputCurrency=0x7ca9c1d0bb11f1b7c31ee5538d7a75aaf2d8e2fc'
+                target="_blank" class='opacity-75 sm:text-lg text-sm pink'>
+                Buy COINKX!
+              </a>
             </div>
           </div>
         </div>
@@ -258,21 +264,21 @@
             </div>
             <div v-if='showPiggyAllowance' class='h-full w-full flex flex-col justify-start text-center z-10'>
               <template v-if='!piggyAllowance'>
-                <p class='text-light px-4 h-2/7 mb-2 text-base text-center font-bold'
+                <p class='text-light px-4 h-2/7 mb-2  sm:text-base text-xs text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
                   Approve the 'COINKX' contract in order to purchase piggy powerups.
                 </p>
                 <p v-on:click='setTokenAllowance(999999999999.9999)'
-                  class='text-base w-6/10 mx-auto rounded-2xl press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
+                  class=' sm:text-base text-xs w-6/10 mx-auto rounded-2xl press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
                   Approve COINKX </p>
               </template>
               <template v-else>
-                <p class='text-light px-4 h-2/7 mb-2 text-base text-center font-bold'
+                <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-xs text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
                   Disable the 'COINKX' contract.
                 </p>
                 <p v-on:click='setTokenAllowance(0)'
-                  class='text-base w-6/10 mx-auto rounded-2xl press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
+                  class=' sm:text-base text-xs w-6/10 mx-auto rounded-2xl press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
                   Disable COINKX </p>
               </template>
             </div>
@@ -295,10 +301,10 @@
 
               <div class='w-full h-full flex flex-row'>
                 <p v-on:click='hideAllPiggyDialogs()'
-                  class='text-base w-3/10 ml-auto mr-2 rounded-2xl text-center press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
+                  class='sm:text-base text-xs w-3/10 ml-auto mr-2 rounded-2xl text-center press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
                   Cancel</p>
                 <p v-on:click='setPiggyName(currentPig)'
-                  class='text-base w-3/10 mr-8 rounded-2xl text-center press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
+                  class='sm:text-base text-xs w-3/10 mr-8 rounded-2xl text-center press-anim cursor-pointer py-2 bg-pink pink-border-bottom text-white border mt-2'>
                   Save</p>
               </div>
             </div>
@@ -376,12 +382,11 @@
             class='cursor-pointer w-auto sm:mr-5 mr-1 w-auto h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/wallet_button.svg' />
           </div>
-          <router-link target="_blank"
-            :to="{path: 'marketplace', query: { market: '0xe5fd335819edb8da8395f8ec48beca747a0790ab' }}">
-            <div class='cursor-pointer w-auto sm:mr-5 mr-1 h-full piggie-menu-btn'>
-              <img class='h-full' src='/pigs/market_button.svg' />
-            </div>
-          </router-link>
+
+          <a class='cursor-pointer w-auto sm:mr-5 mr-1 h-full piggie-menu-btn' target='_blank'
+            href='/#/marketplace?market=0xe5fd335819edb8da8395f8ec48beca747a0790ab'>
+            <img class='h-full' src='/pigs/market_button.svg' />
+          </a>
           <div v-on:click='showPiggySettingsModal()' class='cursor-pointer w-auto sm:mr-1 mr-1 h-full piggie-menu-btn'>
             <img class='h-full' src='/pigs/settings_button.svg' />
           </div>
@@ -427,8 +432,8 @@
         <div class='absolute ml-auto sm:h-16 h-12 pres-anim flex w-full left-0 sm:top-32 top-28 z-50'>
           <div style='border: 1px solid #F1609766'
             class='shadow-lg sm:mr-4 sm:ml-auto mx-auto sm:w-6/10 w-9/10 flex items-center justify-center rounded-2xl h-12 bg-white'>
-            <h2 title='Change name' v-on:click='showPiggyNameModal()'
-              class='sm:text-3xl text-xl w-7/10 text-center cursor-pointer' style='color: #3C2F35;'>{{ piggyName }}</h2>
+            <h2 title='Change name' v-on:click='showPiggyNameModal()' v-bind:class='getPiggyNameFontSize(piggyName)'
+              class='w-7/10 text-center cursor-pointer' style='color: #3C2F35;'>{{ piggyName }}</h2>
             <div class='w-3/10 shadow-lg relative sm:h-14 h-14 bg-black rounded-2xl' style='background-color: #F16097'>
               <div class='flex w-full h-full justify-center'>
                 <div
@@ -447,11 +452,21 @@
             <div v-bind:class='{"icon-pulse": piggyFirstTime}' v-on:click='showPiggyTutorialModal()'
               style='border: 1px solid #F1609766'
               class='shadow-lg sm:w-12 w-8 sm:h-12 h-8 mx-2 flex items-center justify-center rounded-2xl bg-white scale-anim cursor-pointer'>
-              <p class='fa opacity-75 sm:text-2xl text-xl fa-question pink'></p>
+              <p class='fa opacity-75 sm:text-2xl text-lg fa-question pink'></p>
+            </div>
+            <div style='border: 1px solid #F1609766'
+              class='shadow-lg sm:w-12 w-8 sm:h-12 h-8 flex items-center justify-center rounded-2xl mr-2 bg-white scale-anim cursor-pointer'>
+              <a href='https://game.defikingdoms.com/#/marketplace?outputCurrency=0x7ca9c1d0bb11f1b7c31ee5538d7a75aaf2d8e2fc'
+                target="_blank" class='fa opacity-75 sm:text-2xl text-lg fa-money pink'>
+
+              </a>
             </div>
             <div style='border: 1px solid #F1609766'
               class='shadow-lg sm:w-12 w-8 sm:h-12 h-8 flex items-center justify-center rounded-2xl bg-white scale-anim cursor-pointer'>
-              <p class='fa opacity-75 sm:text-2xl text-xl fa-book pink'></p>
+              <a href='https://docs.freyala.com/freyala/cryptopigs' target="_blank"
+                class='fa opacity-75 sm:text-2xl text-lg fa-book pink'>
+
+              </a>
             </div>
           </div>
         </div>
@@ -535,7 +550,7 @@
         selectedPig: undefined,
 
         piggyNone: '/pigs/attributes/none.png',
-        piggyName: "",
+        piggyName: "No Piggy",
         newPiggyName: "",
         piggyAge: 0,
         piggyRevivalPrice: 0,
@@ -702,29 +717,6 @@
         });
       },
 
-      async fetchBlockNumber() {
-        try {
-          const body =
-            '{"jsonrpc":"2.0", "method":"hmy_blockNumber","params":[], "id":1}';
-
-          const response = await fetch("https://api.harmony.one/", {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: body,
-          });
-
-          const blockNumber = await response.json();
-          return parseInt(blockNumber.result);
-        } catch (err) {
-          this.handleError(err);
-          return 0;
-        }
-      },
-
       async setTokenAllowance(amount) {
         let actual = 0;
         const coinkAddress = "0x7ca9C1D0bb11F1b7C31ee5538D7a75aAF2d8E2FC";
@@ -768,7 +760,10 @@
           attribute.loading = true;
           this.keys[attribute.name]++;
 
-          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index);
+          const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index, {
+            gasLimit: 30000000,
+            gasPrice: 1000000000
+          });
           this.showPiggyCooldown = false;
 
           await tx.wait(1);
@@ -795,8 +790,7 @@
           this.keys[attribute.name]++;
 
           this.selectedAttribute = attribute;
-          const blockNumber = await this.fetchBlockNumber();
-          const cooldown = await this.getCooldownForAttributePowerUp(piggy, attribute, blockNumber);
+          const cooldown = await this.getCooldownForAttributePowerUp(piggy, attribute);
 
           if (cooldown > 0) {
             this.preparePiggyCooldownModal(attribute);
@@ -815,7 +809,10 @@
                 throw `${threshold.attributeName} too high.`;
               }
             }
-            const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index);
+            const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index, {
+              gasLimit: 30000000,
+              gasPrice: 1000000000
+            });
 
             await tx.wait(1);
 
@@ -884,10 +881,7 @@
           this.piggyLoading = true;
           const isRegistered = await this.tamagotchiContract.isImported(piggy.id);
           if (!isRegistered) {
-            const tx = await this.tamagotchiContract.importPig(piggy.id, {
-              gasPrice: 100000000000,
-              gasLimit: 1000000
-            });
+            const tx = await this.tamagotchiContract.importPig(piggy.id);
             await tx.wait(1);
 
             this.resetStatus();
@@ -949,7 +943,7 @@
           let name = this.newPiggyName;
 
           if (!name || name.length === 0) throw 'Names can not be empty';
-          if (name.length > 12) "Names can not be longer than 12 characters.";
+          if (name.length > 12) throw "Names can not be longer than 16 characters.";
 
           this.hideAllPiggyDialogs();
 
@@ -990,7 +984,7 @@
           .metaMaskWallet.signer)
         const pigIds = await contract.tokensOfOwner(this.metaMaskAccount)
 
-        if(pigIds.length === 0) return;
+        if (pigIds.length === 0) return;
 
         let ids = await pigIds.map(async (Piggy) => {
           return Piggy._isBigNumber ? ethers.BigNumber.from(Piggy._hex).toString() : Piggy._hex
@@ -1050,6 +1044,10 @@
           }
         }
 
+        if (attribute.trait_type === 'Head') {
+          if (attribute.value === 'Chef Hat') return '/pigs/attributes/Head/Chef_Hat.png';
+        }
+
         if (attribute.trait_type === 'Front') {
           if (this.piggyDead || this.piggyActions.eating) return this.piggyNone;
         }
@@ -1068,6 +1066,13 @@
           return '/pigs/attributes/Modifiers/muddy.png';
         }
         return this.piggyNone;
+      },
+
+      getPiggyNameFontSize(piggyName) {
+        if (piggyName.length > 12) {
+          return "sm:text-lg text-base";
+        }
+        return "sm:text-2xl text-xl";
       },
 
       managePiggyAnimations(attribute) {
@@ -1259,7 +1264,6 @@
     width: 768;
     height: 100vh;
   }
-
 
   @media only screen and (max-width: 1024px) {
     .pig-tamagotchi {

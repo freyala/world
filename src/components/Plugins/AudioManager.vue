@@ -1,7 +1,7 @@
 <template>
     <div>
-        <audio :key='currentAudio' type='audio/mpeg' loop autoplay muted id='audio-player'>
-            <source v-bind:src='getCurrentAudio(currentAudio)'>
+        <audio :key='key' type='audio/mpeg' loop autoplay muted id='audio-player'>
+            <source v-bind:src='getCurrentAudio'>
         </audio>
     </div>
 </template>
@@ -11,6 +11,7 @@
         name: "AudioManager",
         data() {
             return {
+                key: 0,
                 fakeVolume: 1,
                 volume: 0,
                 volumeStep: 0.05,
@@ -34,6 +35,11 @@
                 localStorage.volume = 1;
             } else this.volume = localStorage.volume * 1;
         },
+        computed: {
+            getCurrentAudio() {
+                return `music/${this.currentAudio}`;
+            },
+        },
         methods: {
             play() {
                 const audioPlayer = document.getElementById('audio-player');
@@ -53,6 +59,9 @@
                 const prevVolume = this.volume;
                 this.volume = this.volume === 0 ? this.prevVolume : 0;
                 this.prevVolume = prevVolume;
+                if (this.volume > 0) {
+                    this.key++;
+                }
             },
 
             setPlayerVolume() {
@@ -66,10 +75,6 @@
                 }
             },
 
-            getCurrentAudio(audio) {
-                return `music/${audio}`;
-            },
-
             setAudioForRoute(route) {
                 for (const [key, value] of Object.entries(this.audioMap)) {
                     if (route.path.indexOf(key) > -1 || route.name.indexOf(key) > -1) {
@@ -78,6 +83,7 @@
                     }
                 }
                 if (!this.currentAudio) this.currentAudio = 'Freya_Theme.mp3';
+                this.key++;
             },
 
             setTransitionToRoute(route) {
@@ -92,34 +98,32 @@
                 }
                 if (!nextAudio) return;
 
-                if (this.volume === 0) {
-                    this.currentAudio = nextAudio;
-                    this.play();
-                    return;
-                }
-
                 this.preFadeVolume = this.isTransition && this.volume > 0 ? this.preFadeVolume : this.volume;
                 this.isTransition = true;
                 this.transitionTimeout = setInterval(() => {
                     if (this.volume <= 0) {
+                        this.isTransition = false;
+                        this.volume = this.preFadeVolume;;
                         this.currentAudio = nextAudio;
-                        this.volume = this.preFadeVolume;
                         this.setPlayerVolume();
-
-                        setTimeout(() => {
-                            this.isTransition = false;
-                            this.volume = this.preFadeVolume;
-                            this.setPlayerVolume();
-                            this.play();
-                        }, 500);
                         clearInterval(this.transitionTimeout);
+                        
+                        if (this.preFadeVolume > 0) {
+                            this.key++;
+                        }
+                    } else {
+                        this.volume = Math.max(0, Math.min(1, this.volume - this.volumeStep));
                     }
-                    this.volume = Math.max(0, Math.min(1, this.volume - this.volumeStep));
                 }, 100);
             }
         },
 
         watch: {
+            key() {
+                this.$nextTick(() => {
+                    this.setPlayerVolume();
+                });
+            },
             volume() {
                 this.setPlayerVolume(this.volume);
             },

@@ -24,19 +24,19 @@
         <transition name='tooltip'>
             <div v-if='tooltip' style='width: 150%; height: 166px; left: calc(-25% - 2px)'
                 class='absolute text-sm py-1 -top-44 w-full text-center z-50 bg-white rounded-xl pink-border-bottom shadow-lg'>
-                <p class='mt-1 text-light opacity-75'>
+                <p style='font-family: "Maven Pro";color: #3C2F35' class='mt-1 text-light opacity-75'>
                     {{attribute.name}}
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
                    {{ getAttributePercentage(attribute) }}
                 </p>
-                <p class='mt-1 text-light opacity-75'>
+                <p style='font-family: "Maven Pro";color: #3C2F35' class='mt-1 text-light opacity-75'>
                     Cooldown
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
                     {{ calculateCooldown(attribute.freePowerUp.cooldown) }}
                 </p>
-                <p class='mt-1 text-light opacity-75'>
+                <p style='font-family: "Maven Pro";color: #3C2F35' class='mt-1 text-light opacity-75'>
                     Effect
                 </p>
                 <p class='mt-1 text-sm opacity-75'>

@@ -162,8 +162,8 @@
                     if (piggyDead) throw `Piggy #${piggy.id} is dead`;
 
                     const tx = await this.contract.registerPig(piggy.id, {
-                        gasPrice: 100000000000,
-                        gasLimit: 1000000
+                        gasLimit: 1000000,
+                        gasPrice: 1000000000
                     });
                     await tx.wait(1);
                     piggy.registered = true;
@@ -181,8 +181,8 @@
                 try {
                     if (!this.lastEpochEnded) throw 'You must end the epoch before claiming rewards!';
                     const tx = await this.contract.bulkClaimPig(piggyIds, {
-                        gasPrice: 100000000000,
-                        gasLimit: 1000000
+                        gasLimit: 1000000,
+                        gasPrice: 1000000000
                     });
                     await tx.wait(1);
                     await this.fetchPiggyData();
