@@ -15,5 +15,14 @@
         "token": "0xe5fd335819edb8da8395f8ec48beca747a0790ab",
         "metadata": "https://api.cryptopigs.one/meta/list?items=",
         "thumbnail": "none"
+    },
+    {
+        "collectionName": "Dingos",
+        "tokenName": "Dingo",
+        "image": "https://api.dingosbowlsclub.one/images/147.png",
+        "status": "SOON",
+        "token": "",
+        "metadata": "",
+        "thumbnail": "none"
     }
 ]

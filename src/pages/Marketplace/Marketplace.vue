@@ -81,7 +81,7 @@
             </div>
             <div class='w-full flex flex-row flex-wrap justify-center'>
               <div v-if='upcomingMarkets.length === 0'>To be announced</div>
-              <MarketCard v-on:cardClick='openMarket(market)' v-for='(market, index) in upcomingMarkets' :key='index'
+              <MarketCard  v-for='(market, index) in upcomingMarkets' :key='index'
                 :caption='market.collectionName' class='my-4 lg:my-4 md:mx-4 mx-0' :image='market.image'></MarketCard>
             </div>
           </div>

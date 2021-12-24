@@ -1044,10 +1044,6 @@
           }
         }
 
-        if (attribute.trait_type === 'Head') {
-          if (attribute.value === 'Chef Hat') return '/pigs/attributes/Head/Chef_Hat.png';
-        }
-
         if (attribute.trait_type === 'Front') {
           if (this.piggyDead || this.piggyActions.eating) return this.piggyNone;
         }
