@@ -67,7 +67,7 @@
                   <br /><br />
                   Hunger fully depletes in 24 hours.
                   <br /><br />
-                  If Hunger drops below 10%, the piggy will die.
+                  If Hunger drops below 0%, the piggy will die.
                   <br /><br />
                   Whenever the piggy eats, it loses 5% Hygiene.
                 </p>
@@ -120,9 +120,11 @@
               <div class='h-full w-full flex flex-col justify-start items-start z-10'>
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  You can put your piggy to sleep for 12 (half an epoch) hours. While the piggy sleeps, its energy will
+                  You can put your piggy to sleep for 8 hours. While the piggy sleeps, its energy will
                   slowly replenish
                   back to 100%.
+                  <br /><br />
+                  You can't wake or interact with the piggy during this time.
                   <br /><br />
                   Energy fully depletes in 24 hours.
                   <br /><br />
@@ -142,11 +144,15 @@
               <div class='h-full w-full flex flex-col justify-start items-start z-10'>
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  An epoch passes every 24 hours, which means that a small % of all the COINKX gathered in the reward
+                  An epoch passes every 3 days, which means that a small % of all the COINKX gathered in the reward
                   pool is split amongst the alive and registered piggies.
                   <br /><br />
                   Each piggy has a small share of the reward pool. This is based 50% on the current Age of the pig, and
                   50% on the rarity and body color.
+                  <br /><br />
+                  <span class='pink'>
+                    Registering a piggy near the end of an epoch will guarantee more coinks!
+                  </span>
                   <br /><br />
                 </p>
               </div>
@@ -425,7 +431,7 @@
           style='top: 45%; background-color: rgba(0,0,0,0.5)' v-if='showPig && piggyDead'>
           <img width="64px" src='/pigs/snout.svg' />
           <p class='sm:text-2xl text-lg text-white'>Revive Pig</p>
-          <p class='sm:text-2xl text-lg text-white'>150 COINKX</p>
+          <p class='sm:text-2xl text-lg text-white'>100 COINKX</p>
         </div>
 
         <!-- NAME & AGE -->
@@ -468,6 +474,14 @@
 
               </a>
             </div>
+          </div>
+        </div>
+
+        <div v-if='piggySleeping' class='absolute ml-auto sm:h-16 sm:h-12 h-8 pres-anim flex w-full left-0 sm:top-64 top-44 z-50'>
+          <div class='w-auto mr-4 h-full flex ml-auto'>
+            <p class='pink opacity-50'>
+               {{ piggySleepingString }}
+            </p>
           </div>
         </div>
 
@@ -568,6 +582,7 @@
         piggyLastActionItem: "",
         piggyLastAttribute: undefined,
         piggySleeping: false,
+        piggySleepingString: "",
         isPiggyBusy: false,
         piggyActions: {
           eating: false,
@@ -623,8 +638,8 @@
         const attributeLimits = await this.attributeManagerContract.getAttributeLimits();
         const contractPowerups = await this.tamagotchiContract.getPowerups();
 
-        if (!localStorage.piggyFirstTime) {
-          localStorage.piggyFirstTime = false;
+        if (!localStorage.piggyFirstTimeNew) {
+          localStorage.piggyFirstTimeNew = false;
           this.piggyFirstTime = true;
         }
 
@@ -673,6 +688,7 @@
         this.piggyLoading = false;
         this.showPig = true;
         this.keys.piggyBackground++;
+
       } catch (err) {
         this.handleError(err);
       }
@@ -861,7 +877,10 @@
           const isDead = await this.tamagotchiContract.isDead(piggy.id);
 
           if (isDead) {
-            const tx = await this.tamagotchiContract.revivePig(piggy.id);
+            const tx = await this.tamagotchiContract.revivePig(piggy.id, {
+              gasLimit: 30000000,
+              gasPrice: 1000000000
+            });
 
             this.piggyLoading = true;
             await tx.wait(1);
@@ -915,6 +934,11 @@
           }
 
           this.piggySleeping = await this.tamagotchiContract.isOccupied(piggy.id, 'Sleep');
+          if (this.piggySleeping) {
+            let sleepsUntill = await this.tamagotchiContract.occupiedUntil(piggy.id, 'Sleep');
+            this.piggySleepingString = "Asleep for " + this.$timeStamper(sleepsUntill * 1000 - Date.now());
+          }
+
           const piggyName = await this.attributeManagerContract.getNameOfPig(piggy.id);
           this.piggyName = piggyName ? piggyName : "#" + piggy.id;
           this.newPiggyName = this.piggyName;
@@ -943,7 +967,7 @@
           let name = this.newPiggyName;
 
           if (!name || name.length === 0) throw 'Names can not be empty';
-          if (name.length > 12) throw "Names can not be longer than 16 characters.";
+          if (name.length > 16) throw "Names can not be longer than 16 characters.";
 
           this.hideAllPiggyDialogs();
 

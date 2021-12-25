@@ -17,8 +17,12 @@
                 <p class='opacity-75'>Current Epoch {{currentEpoch}}</p>
             </div>
             <div
+                class="w-8/10 h-12 mb-4 py-4 mx-auto rounded-xl bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100">
+                <p class='opacity-75'>Registered Piggies {{currentEpochPiggyCount}} / {{ piggyList.length }}</p>
+            </div>
+            <div
                 class="w-8/10 h-12 mb-0 py-4 mx-auto rounded-xl bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100">
-                <p class='opacity-75'>Registered Piggies {{currentEpochPiggyCount}}</p>
+                <p class='opacity-75'>Epoch Ends in {{getEpochEndTime(contractTimeStamp)}}</p>
             </div>
             <div v-if='!lastEpochEnded'
                 class='w-8/10 h-12 mb-2 py-4 mb-4 mx-auto rounded-xl flex flex-row text-center cursor-pointer'>
@@ -116,7 +120,8 @@
                 currentEpochPiggyCount: 0,
                 dividendsKey: 0,
                 lastEpochEnded: false,
-                piggyListMirror: []
+                piggyListMirror: [],
+                contractTimeStamp: 1640347200000
             };
         },
         async mounted() {
@@ -126,7 +131,6 @@
 
             await this.getEpochInfo();
             await this.fetchPiggyData(0);
-
         },
         methods: {
 
@@ -141,6 +145,13 @@
             getPiggieAttributeImage(attribute) {
                 if (attribute.trait_type === 'Background') return '/pigs/attributes/none.png';
                 return `/pigs/attributes/${attribute.trait_type}/${attribute.value}.png`;
+            },
+
+            getEpochEndTime(timeStamp) {
+                const dateNow = Date.now();
+                const millis = (72 * 3600 * 1000) - (dateNow - timeStamp) % (72 * 3600 * 1000);
+
+                return this.$timeStamper(millis);
             },
 
             async claimDividendsForPiggy(piggy) {

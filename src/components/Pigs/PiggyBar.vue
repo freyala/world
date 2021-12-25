@@ -34,7 +34,7 @@
                     Cooldown
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
-                    {{ calculateCooldown(attribute.freePowerUp.cooldown) }}
+                    {{ $timeStamper(attribute.freePowerUp.cooldown) }}
                 </p>
                 <p style='font-family: "Maven Pro";color: #3C2F35' class='mt-1 text-light opacity-75'>
                     Effect
@@ -72,17 +72,12 @@
                 key: 0
             };
         },
+        mounted() {
+            this.$timeStamper(this.attribute.freePowerUp.cooldown);
+        },
         computed:{
             isCooldown() {
                 return this.attribute.freePowerUp.cooldown > 0;
-            }
-        },
-        mounted() {
-            this.calculateCooldown(this.attribute.freePowerUp.cooldown);
-        },
-        watch: {
-            attribute: function (newVal) {
-                this.calculateCooldown(this.attribute.freePowerUp.cooldown);
             }
         },
         methods: {
@@ -134,18 +129,6 @@
 
                 return `${color}-fill`;
             },
-
-            calculateCooldown(cooldown) {
-                const seconds = cooldown / 1000;
-                const minutes = parseInt(seconds / 60);
-                const hours = parseInt(minutes / 60);
-
-                if (hours > 0) return `~${hours} h`;
-                if (minutes > 0) return `~${minutes} m`;
-                if (minutes <= 0 && seconds > 0) return '< 1 m';
-
-                return 'Ready';
-            }
         },
     };
 </script>
