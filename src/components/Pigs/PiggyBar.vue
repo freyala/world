@@ -18,7 +18,7 @@
             <div v-bind:style='getBarFillMeter(attribute)' class='tmg-bar-fill' v-bind:class='getFillColor(attribute)'>
             </div>
         </div>
-        <div v-if='attribute.freePowerUp.cooldown > 0' class='absolute -top-2 flex w-full opacity-75 left-0'>
+        <div :key='key' v-if='isCooldown' class='absolute -top-2 flex w-full opacity-75 left-0'>
             <span class='mx-auto fa fa-spinner fa-spin'></span>
         </div>
         <transition name='tooltip'>
@@ -28,7 +28,7 @@
                     {{attribute.name}}
                 </p>
                 <p class='mt-1 text-sm opacity-75'>
-                   {{ getAttributePercentage(attribute) }}
+                    {{ getAttributePercentage(attribute) }}
                 </p>
                 <p style='font-family: "Maven Pro";color: #3C2F35' class='mt-1 text-light opacity-75'>
                     Cooldown
@@ -69,18 +69,23 @@
             return {
                 tooltipTimeout: undefined,
                 tooltip: false,
-                key: 0
+                key: 0,
+                isCooldown: false
             };
         },
         mounted() {
             this.$timeStamper(this.attribute.freePowerUp.cooldown);
-        },
-        computed:{
-            isCooldown() {
-                return this.attribute.freePowerUp.cooldown > 0;
-            }
+
+            this.$nextTick(() => {
+                this.isCooldown = this.attribute.freePowerUp.cooldown > 0;
+                this.key++;
+            });
         },
         methods: {
+            getCooldownStatus(attribute) {
+                return attribute.freePowerUp.cooldown > 0;
+            },
+
             showTooltip() {
                 clearTimeout(this.tooltipTimeout);
                 this.tooltipTimeout = setTimeout(() => {
@@ -104,15 +109,16 @@
                 };
             },
 
-            getBoostFillPercentange(attribute){
-                return (Math.ceil(attribute.freePowerUp.boostInitialisers[0].effect / attribute.max * 100)).toFixed(2) + '%';
+            getBoostFillPercentange(attribute) {
+                return (Math.ceil(attribute.freePowerUp.boostInitialisers[0].effect / attribute.max * 100)).toFixed(2) +
+                    '%';
             },
 
-            getDepletionStatus(attribute){
+            getDepletionStatus(attribute) {
 
             },
 
-            getAttributePercentage(attribute){
+            getAttributePercentage(attribute) {
                 return (attribute.current / attribute.max * 100).toFixed(2) + '%';
             },
 

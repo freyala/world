@@ -1,9 +1,7 @@
 const TimeStamper = {
     install(Vue, options) {
 
-        Vue.mixin({
-            mounted() { console.log("PEPEGA"); }
-        })
+        Vue.mixin({})
 
         Vue.prototype.$timeStamper = function(milliseconds) {
             const seconds = milliseconds / 1000;

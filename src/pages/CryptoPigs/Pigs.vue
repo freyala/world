@@ -953,8 +953,10 @@
       },
 
       async getCooldownForAttributePowerUp(piggy, attribute) {
-        const occupiedUntil = await this.tamagotchiContract.occupiedUntil(piggy.id, attribute.freePowerUp
-          .boostInitialisers[0].attributeName + "_Cooldown") * 1000;
+        const cooldownName = attribute.name === 'Energy' ? "Sleep_Cooldown" : attribute.name + "_Cooldown";
+        const occupiedUntil = await this.tamagotchiContract.occupiedUntil(piggy.id, cooldownName) * 1000;
+
+        
         const dateNow = Date.now();
 
         const cooldown = occupiedUntil - dateNow;
