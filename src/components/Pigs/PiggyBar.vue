@@ -18,9 +18,6 @@
             <div v-bind:style='getBarFillMeter(attribute)' class='tmg-bar-fill' v-bind:class='getFillColor(attribute)'>
             </div>
         </div>
-        <div :key='key' v-if='isCooldown' class='absolute -top-2 flex w-full opacity-75 left-0'>
-            <span class='mx-auto fa fa-spinner fa-spin'></span>
-        </div>
         <transition name='tooltip'>
             <div v-if='tooltip' style='width: 150%; height: 166px; left: calc(-25% - 2px)'
                 class='absolute text-sm py-1 -top-44 w-full text-center z-50 bg-white rounded-xl pink-border-bottom shadow-lg'>
