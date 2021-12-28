@@ -346,6 +346,15 @@
                   class='sm:text-2xl text-xl scale-anim opacity-50 hover:opacity-100 text-white ml-auto mr-4 fa fa-close'></i>
               </div>
             </div>
+            <a href='https://cryptopigs.one/#/' target="_blank">
+              <div class='w-full flex flex-row justify-center items-center'>
+                <h2
+                  class='h-auto w-full ml-4 text-center mt-2 sm:text-xl text-lg opacity-75 hover:opacity-100 text-white mb-4 z-10'>
+                  Adopt a piggy!</h2>
+              </div>
+            </a>
+
+
             <div
               class='w-8/10 h-32 my-2 py-2 mx-auto rounded-xl pink-border-bottom scale-anim bg-white flex flex-col justify-center text-center items-center pink sm:text-lg text-sm cursor-pointer hover:opacity-100'
               v-for='piggy in piggyList' :key='piggy.id' v-on:click='selectPiggy(piggy)'>
@@ -431,7 +440,7 @@
           style='top: 45%; background-color: rgba(0,0,0,0.5)' v-if='showPig && piggyDead'>
           <img width="64px" src='/pigs/snout.svg' />
           <p class='sm:text-2xl text-lg text-white'>Revive Pig</p>
-          <p class='sm:text-2xl text-lg text-white'>100 COINKX</p>
+          <p class='sm:text-2xl text-lg text-white'>75 COINKX</p>
         </div>
 
         <!-- NAME & AGE -->
@@ -452,7 +461,7 @@
           </div>
         </div>
 
-        <!-- HELPFUL BUTTON -->
+        <!-- HELPFUL BUTTONS -->
         <div class='absolute ml-auto sm:h-16 sm:h-12 h-8 pres-anim flex w-full left-0 sm:top-48 top-44 z-50'>
           <div class='w-auto mr-4 h-full flex ml-auto'>
             <div v-bind:class='{"icon-pulse": piggyFirstTime}' v-on:click='showPiggyTutorialModal()'
@@ -477,10 +486,11 @@
           </div>
         </div>
 
-        <div v-if='piggySleeping' class='absolute ml-auto sm:h-16 sm:h-12 h-8 pres-anim flex w-full left-0 sm:top-64 top-44 z-50'>
-          <div class='w-auto mr-4 h-full flex ml-auto'>
+        <div v-if='!piggySleeping'
+          class='absolute ml-auto sm:h-16 sm:h-12 h-8 pres-anim flex w-full left-0 sm:top-64 top-56 z-50'>
+          <div class='w-auto sm:mr-4 mr-0 sm:text-left text-right mr-4 h-full flex ml-auto'>
             <p class='pink opacity-50'>
-               {{ piggySleepingString }}
+              {{ piggySleepingString }}
             </p>
           </div>
         </div>
@@ -956,7 +966,6 @@
         const cooldownName = attribute.name === 'Energy' ? "Sleep_Cooldown" : attribute.name + "_Cooldown";
         const occupiedUntil = await this.tamagotchiContract.occupiedUntil(piggy.id, cooldownName) * 1000;
 
-        
         const dateNow = Date.now();
 
         const cooldown = occupiedUntil - dateNow;
@@ -1307,8 +1316,8 @@
     .pig-tamagotchi {
       max-width: 95vw;
       width: 95vw;
-      height: 70vh;
-      margin-top: 15vh !important;
+      height: 90vh;
+      margin-top: 5vh !important;
     }
   }
 
