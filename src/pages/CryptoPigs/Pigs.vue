@@ -486,7 +486,7 @@
           </div>
         </div>
 
-        <div v-if='!piggySleeping'
+        <div v-if='piggySleeping'
           class='absolute ml-auto sm:h-16 sm:h-12 h-8 pres-anim flex w-full left-0 sm:top-64 top-56 z-50'>
           <div class='w-auto sm:mr-4 mr-0 sm:text-left text-right mr-4 h-full flex ml-auto'>
             <p class='pink opacity-50'>
