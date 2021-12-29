@@ -77,36 +77,36 @@ export default new Router({
             name: 'frey-collection',
             component: FreyCollection
         },
-        {
-            path: '/casino/coinflip',
-            name: 'coinflip',
-            component: Coinflip
-        },
-        {
-            path: '/casino/roulette/low',
-            name: 'roulette-low',
-            component: RouletteLow
-        },
-        {
-            path: '/casino/roulette/medium',
-            name: 'roulette-medium',
-            component: RouletteMedium
-        },
-        {
-            path: '/casino/roulette/high',
-            name: 'roulette-high',
-            component: RouletteHigh
-        },
-        {
-            path: '/casino/slots',
-            name: 'slots',
-            component: Slots
-        },
-        {
-            path: '/casino/blackjack',
-            name: 'blackjack',
-            component: Blackjack
-        },
+        /*       {
+                   path: '/casino/coinflip',
+                   name: 'coinflip',
+                   component: Coinflip
+               },
+               {
+                   path: '/casino/roulette/low',
+                   name: 'roulette-low',
+                   component: RouletteLow
+               },
+               {
+                   path: '/casino/roulette/medium',
+                   name: 'roulette-medium',
+                   component: RouletteMedium
+               },
+               {
+                   path: '/casino/roulette/high',
+                   name: 'roulette-high',
+                   component: RouletteHigh
+               },
+               {
+                   path: '/casino/slots',
+                   name: 'slots',
+                   component: Slots
+               },
+               {
+                   path: '/casino/blackjack',
+                   name: 'blackjack',
+                   component: Blackjack
+               },*/
         {
             path: '/casino',
             name: 'casino',
