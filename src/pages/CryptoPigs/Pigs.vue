@@ -440,7 +440,8 @@
           style='top: 45%; background-color: rgba(0,0,0,0.5)' v-if='showPig && piggyDead'>
           <img width="64px" src='/pigs/snout.svg' />
           <p class='sm:text-2xl text-lg text-white'>Revive Pig</p>
-          <p class='sm:text-2xl text-lg text-white'>75 COINKX</p>
+           <del class='sm:text-2xl text-lg text-white'>75 COINKX</del>
+          <p class='sm:text-2xl text-lg text-white'>25 COINKX (limited event)</p>
         </div>
 
         <!-- NAME & AGE -->
