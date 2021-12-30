@@ -1,5 +1,5 @@
 {
-  "address": "0x465ed0B4A3e9e730E466366cF62c176652D4DC4A",
+  "address": "0xaE27D3082Ff10aE2bA8C1D9640419112C14Bd778",
   "abi": [
     {
       "inputs": [
@@ -215,22 +215,6 @@
         }
       ],
       "name": "PlotIsBeingUtilised",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint8",
-          "name": "plotType",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint256",
-          "name": "plotId",
-          "type": "uint256"
-        }
-      ],
-      "name": "PlotNotRegisterd",
       "type": "error"
     },
     {
@@ -494,6 +478,25 @@
       "type": "event"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "_isAddressWhitelistedToModifyAttributes",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "balance",
       "outputs": [
@@ -555,25 +558,6 @@
       "name": "downgradePlot",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint8",
-          "name": "_plotType",
-          "type": "uint8"
-        }
-      ],
-      "name": "getAllRegisteredPlots",
-      "outputs": [
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -766,54 +750,61 @@
       "name": "getPlotData",
       "outputs": [
         {
-          "internalType": "uint256",
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "plotNumber",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "neighbourhood",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "soilTypeBase",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fertility",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "level",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "crimeRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountOwnedByPlot",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "upgradeCost",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "resetCost",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "upgradesPerformed",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IPlotHandler.PlotDataView",
           "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
+          "type": "tuple"
         }
       ],
       "stateMutability": "view",
@@ -835,9 +826,61 @@
       "name": "getPlotDataMultiple",
       "outputs": [
         {
-          "internalType": "string",
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "plotNumber",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "neighbourhood",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "soilTypeBase",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fertility",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "level",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "crimeRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountOwnedByPlot",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "upgradeCost",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "resetCost",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "upgradesPerformed",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IPlotHandler.PlotDataView[]",
           "name": "",
-          "type": "string"
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",
@@ -881,49 +924,6 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_addr",
-          "type": "address"
-        }
-      ],
-      "name": "isAddressWhitelisted",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint8",
-          "name": "_plotType",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_plotId",
-          "type": "uint256"
-        }
-      ],
-      "name": "isPlotRegistered",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -1050,11 +1050,6 @@
           "internalType": "address",
           "name": "_addr",
           "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "_allowed",
-          "type": "bool"
         }
       ],
       "name": "setAddressAllowedToEditAttributes",
@@ -1068,11 +1063,6 @@
           "internalType": "address",
           "name": "_addr",
           "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "_allowed",
-          "type": "bool"
         }
       ],
       "name": "setAddressAllowedToWithdraw",
@@ -1104,6 +1094,19 @@
         }
       ],
       "name": "setPlotAttribute",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "setPlotInventoryAddress",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

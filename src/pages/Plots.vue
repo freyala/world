@@ -531,7 +531,8 @@ export default {
         this.plotContract.getPlotDataMultiple(2, type2Ids)
       ])
 
-      let plotData = JSON.parse(plot0Data).plots.concat(JSON.parse(plot1Data).plots, JSON.parse(plot2Data).plots)
+
+      let plotData = plot0Data.plots.concat(plot1Data.plots, plot2Data.plots)
 
       let tempPlotData = []
 
@@ -610,10 +611,9 @@ export default {
         this.plotContract.getTokensOwnedByOwner(this.plotType, this.metaMaskAccount)
       ])
 
-      plotData = JSON.parse(plotData)
       let tempPlotData = []
 
-      const plotPromise = plotData.plots.map(async (plot) => {
+      const plotPromise = plotData.map(async (plot) => {
         let singlePlotData = {
           neighbourhood: plot.neighbourhood,
           token_id: plot.ID,
@@ -637,6 +637,7 @@ export default {
         } else {
           singlePlotData.plot_type = 0
         }
+        console.log(plot)
 
         const sales = await this.marketContracts[singlePlotData.plot_type === 0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' : 'yang'].getListing(plot.ID)
 
