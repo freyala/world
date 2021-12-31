@@ -19,7 +19,7 @@
                 currentAudio: undefined,
 
                 isTransition: false,
-                preFadeVolume: 0,
+                preFadeVolume: 0.05,
                 transitionTimeout: undefined,
 
                 audioMap: {
