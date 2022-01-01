@@ -62,14 +62,14 @@
               <div class='h-full w-full flex flex-col justify-start items-start z-10'>
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  You can feed your piggy for free once every 8 hours. If you wish to do so more often, you have to pay
+                  You can feed your piggy for free once every 12 hours. If you wish to do so more often, you have to pay
                   a small COINKX fee!
                   <br /><br />
                   Hunger fully depletes in 24 hours.
                   <br /><br />
                   If Hunger drops below 0%, the piggy will die.
                   <br /><br />
-                  Whenever the piggy eats, it loses 5% Hygiene.
+                  Whenever the piggy eats, it loses 15% Hygiene.
                 </p>
               </div>
             </template>
@@ -82,14 +82,14 @@
               <div class='h-full w-full flex flex-col justify-start items-start z-10'>
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  You can play with your piggy for free once every 8 hours. If you wish to do so more often, you have to
+                  You can play with your piggy for free once every 12 hours. If you wish to do so more often, you have to
                   pay a small COINKX fee!
                   <br /><br />
                   Happiness fully depletes in 24 hours
                   <br /><br />
                   If the Happiness drops below 0%, the piggy will die.
                   <br /><br />
-                  Whenever the piggy plays, it loses 5% Energy.
+                  Whenever the piggy plays, it loses 15% Energy.
                 </p>
               </div>
             </template>
@@ -120,7 +120,7 @@
               <div class='h-full w-full flex flex-col justify-start items-start z-10'>
                 <p class='text-light px-4 h-2/7 mb-2 sm:text-base text-sm text-center font-bold'
                   style='font-family: "Maven Pro";color: #3C2F35'>
-                  You can put your piggy to sleep for 8 hours. While the piggy sleeps, its energy will
+                  You can put your piggy to sleep for 24 hours. While the piggy sleeps, its energy will
                   slowly replenish
                   back to 100%.
                   <br /><br />
@@ -130,7 +130,7 @@
                   <br /><br />
                   If Energy drops below 0%, the piggy will die.
                   <br /><br />
-                  While the piggy sleeps, Hunger and Happiness will drain at a 50% reduced rate, but it will lose 2.75%
+                  While the piggy sleeps, Hunger and Happiness will drain at a 15% reduced rate, but it will lose 4.5%
                   Hygiene per hour.
                 </p>
               </div>
@@ -440,8 +440,7 @@
           style='top: 45%; background-color: rgba(0,0,0,0.5)' v-if='showPig && piggyDead'>
           <img width="64px" src='/pigs/snout.svg' />
           <p class='sm:text-2xl text-lg text-white'>Revive Pig</p>
-           <del class='sm:text-2xl text-lg text-white'>75 COINKX</del>
-          <p class='sm:text-2xl text-lg text-white'>25 COINKX (limited event)</p>
+          <p class='sm:text-2xl text-lg text-white'>25 COINKX</p>
         </div>
 
         <!-- NAME & AGE -->
