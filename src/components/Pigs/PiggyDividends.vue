@@ -121,7 +121,7 @@
                 dividendsKey: 0,
                 lastEpochEnded: false,
                 piggyListMirror: [],
-                contractTimeStamp: 1640347200000
+                contractTimeStamp: 1640343600000
             };
         },
         async mounted() {

@@ -105,7 +105,7 @@
                   You can wash your piggy for free once every 16 hours. If you wish to do so more often, you have to pay
                   a small COINKX fee!
                   <br /><br />
-                  Hygiene fully depletes in 48 hours.
+                  Hygiene fully depletes in 96 hours.
                   <br /><br />
                   If Hygiene drops below 0%, the piggy will die.
                 </p>
@@ -130,7 +130,7 @@
                   <br /><br />
                   If Energy drops below 0%, the piggy will die.
                   <br /><br />
-                  While the piggy sleeps, Hunger and Happiness will drain at a 15% reduced rate, but it will lose 4.5%
+                  While the piggy sleeps, Hunger and Happiness will drain at a 25% reduced rate, but it will lose 3.5%
                   Hygiene per hour.
                 </p>
               </div>
