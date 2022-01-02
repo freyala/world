@@ -19,8 +19,8 @@ import Faucet from "../pages/Faucet";
 import Governance from "../pages/Governance";
 import JennyMines from "../pages/JennyMines";
 import Staking from "../pages/Staking";
-import Plots from "../pages/Plots";
-
+//import Plots from "../pages/Plots";
+import Plots from "../pages/Plots/Plots";
 Vue.use(Router)
 
 const originalPush = Router.prototype.push
