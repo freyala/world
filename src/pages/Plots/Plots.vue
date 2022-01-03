@@ -1,33 +1,39 @@
 <template>
-    <div style="width: 100vw; min-height:100vh; height: 100vh; background-color: #222222; z-index: 999"
+    <div style="width: 100vw; min-height:100vh; height: 100vh; background-color: #282828; z-index: 999"
         class="flex flex-row w-full h-full relative">
-        <div class='absolute bg-dark flex flex-row h-16 w-full top-0 z-50'
-            style="border: 1px solid #00000077; box-shadow: 4px 0px 12px rgba(0,0,0,0.1);">
-            <div class='ml-6 mt-5 mb-4 text-xl'>
+        <div class='absolute flex flex-row h-16 w-full top-0'
+            style="border-bottom: 1px solid #565656; z-index: 1000;bacjground-color: #282828">
+            <div class='ml-6 mt-5 mb-4 text-xl cursor-pointer absolute'>
                 <i class='fa fa-arrow-left'>
 
                 </i>
-                Back
+                <span v-if='!showPlotDetails'>
+                    Back
+                </span>
+                <span v-on:click='showPlotDetails = false' v-else>
+                    Back to plots
+                </span>
             </div>
-            <div class='mx-auto mt-4 text-2xl font-bold'>
-                Plots of Land
+            <div class='mt-3 w-full text-center text-4xl font-bold'>
+                <p v-if='!showPlotDetails' class='ml-36'>Plots of Land</p>
+                <p v-else class='ml-36'>Plot #{{currentPlot.token_id}}</p>
             </div>
         </div>
-        <div class='h-2/10 flex flex-col py-4 px-4 relative z-10 mt-16'
-            style="border: 1px solid #00000077; box-shadow: 4px 0px 12px rgba(0,0,0,0.1); width: 400px">
-            <p class="p-1 text-xl mb-1 text-white opacity-80">
+        <div class='h-2/10 flex flex-col py-4 px-4 relative mt-16'
+            style="border-right: 1px solid #565656; width: 400px; z-index: 9000">
+            <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
                 Neighbourhood
             </p>
-            <div class="w-full rounded-xl p-4 mb-4" style='background-color: #1C1C1C; border: 1px solid #00000077'>
+            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4" style='background-color: #1C1C1C; border: 1px solid 565656'>
                 <select class="p-1 bg-dark border border-bbrown rounded-xl cursor-pointer xya-input text-lg"
                     style='width: 100%' name="neighbourhood" id="neighbourhood-select" v-model="neighbourhood">
                     <option v-for="(n, index) in allNeighbourhoods" :value="index" :key='index'>{{ n }}</option>
                 </select>
             </div>
-            <p class="p-1 text-xl mb-1 text-white opacity-80">
+            <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
                 Filter
             </p>
-            <div class="w-full rounded-xl p-4 mb-4 text-white"
+            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 text-white"
                 style='background-color: #1C1C1C; border: 1px solid #00000077'>
                 <div class='flex flex-row mb-4 w-full'>
                     <div class='checkbox checked mr-3'></div>
@@ -89,21 +95,13 @@
                         <i class='fa fa-map mr-4'></i>Plot #{{plot.token_id}}
                     </p>
                 </div>
-                <div v-for='(neighbourhood, index) in myNeighbourhoods' :key='index'>
-                    <p class="p-1 text-lg mb-1 text-white opacity-80">
-                        {{neighbourhood}}
-                    </p>
-                    <p v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)' :key='plot.token_id'
-                        class='ml-2 text-lg mb-1 cursor-pointer'>
-                        <i class='fa fa-map mr-4'></i>Plot #{{plot.token_id}}
-                    </p>
-                </div>
             </div>
         </div>
         <div class='w-8/10 h-full relative overflow-hidden z-5 mt-16'>
             <div id='plots' class='relative' :style='"height:" + parseInt(plotData.length / 10) * 220 + "px"'
                 style='width: 2200px;'>
-                <div v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='index' class="absolute" style='width: 220px; height: 220px'
+                <div v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='index' class="absolute"
+                    style='width: 220px; height: 220px'
                     :style="'top: ' + (parseInt(index / 10) * 220) + 'px; left: ' + ((index % 10) * 220) + 'px'">
                     <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
                     <img class="absolute top-0 left-0 w-full h-full"
@@ -173,8 +171,8 @@
         </div>
 
         <transition name='slide-in'>
-            <PlotDetails v-if='showPlotDetails' v-on:close="showPlotDetails = false" class='fixed top-16 opacity-95'
-                 style='z-index: 9999; backdrop-filter: blur(24px); transition: all 0.25s; right: -0.75rem'>
+            <PlotDetails v-if='showPlotDetails' v-on:close="showPlotDetails = false" class='fixed top-16'
+                style='z-index: 500; transition: all 0.25s;' :plot='currentPlot'>
 
             </PlotDetails>
         </transition>
@@ -307,8 +305,13 @@
                 emissionsRate: 0,
                 currentTotalEmittingPlots: 0,
                 costToEmit: 0,
+
+                showPlotDetails: false,
+                plotsInitialX: 0,
+                plotsInitialY: 0,
+                plotsInitialZoom: 1.75,
                 
-                showPlotDetails: false
+                currentPlot: undefined,
             }
         },
         async created() {
@@ -321,6 +324,17 @@
                 })
             } else {
                 this.neighbourhood = parseInt(this.$route.params.neighbourhood)
+            }
+
+            if (this.$route.query.coordX && this.$route.query.coordY) {
+                const initialX = parseInt(this.$route.query.coordX);
+                const initialY = parseInt(this.$route.query.coordY);
+                this.plotsInitialX = initialX;
+                this.plotsInitialY = initialY;
+
+                if(this.$route.query.scale){
+                    this.plotsInitialZoom = parseFloat(this.$route.query.scale);
+                }
             }
         },
         watch: {
@@ -363,9 +377,8 @@
 
             let panzoom = Panzoom(elem, {
                 maxScale: 3,
-                minScale: 2.5,
+                minScale: 1,
                 contain: 'outside',
-                initialZoom: 2.5
             });
 
             elem.parentElement.addEventListener('wheel', (e) => {
@@ -375,11 +388,24 @@
                 }
             })
 
-            setTimeout(() => {
-                panzoom.zoom(2, {
-                    animate: false
+            elem.addEventListener('panzoomchange', (e) => {
+                const position = e.detail;
+                this.$router.push({
+                    query: {
+                        coordX: position.x,
+                        coordY: position.y,
+                        scale: position.scale
+                    }
                 })
-            })
+            });
+
+            setTimeout(() => {
+                panzoom.pan(this.plotsInitialX, this.plotsInitialY);
+            });
+
+            setTimeout(() => {
+                panzoom.zoom(this.plotsInitialZoom);
+            }, 5);
 
             await this.getMyPlots();
 
@@ -748,9 +774,10 @@
                     window.location.reload(1)
                 }
             },
-            
-            openPlot(plot){
+
+            openPlot(plot) {
                 this.showPlotDetails = true;
+                this.currentPlot = plot;
             }
         }
     }
@@ -785,11 +812,13 @@
 
     .slide-in-enter-active,
     .slide-in-leave-active {
-        opacity: 0.9;
+        right: -0.5rem;
+        opacity: 1;
     }
 
     .slide-in-enter,
     .slide-in-leave-to {
-        opacity: 0.25;
+        opacity: 0.0;
+        right: 1000px;
     }
 </style>
