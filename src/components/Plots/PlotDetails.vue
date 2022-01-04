@@ -16,8 +16,7 @@
             </div>
 
             <!--PLOT ATTRIBUTES-->
-            <div class='w-6/10 ml-6 h-full rounded-xl p-6 mb-12'
-                style='background-color: #1C1C1C; border: 1px solid #00000077'>
+            <div class='w-6/10 ml-6 h-full rounded-xl p-6 mb-12 dark-panel'>
                 <h2 class='text-3xl mb-2'>Plot #{{ plot.token_id }}</h2>
                 <p class='text-white text-sm opacity-30 mb-6'>
                     Owned by 0x..1234
@@ -52,12 +51,11 @@
             </div>
         </div>
         <!--PLOT EMITTER-->
-        <div class='flex flex-col px-12 xl:w-8/10 w-full  mx-auto h-auto mt-12'>
+        <div class='flex flex-col px-12 xl:w-8/10 w-full mx-auto h-auto mt-12'>
             <h2 class='w-full text-white text-3xl opacity-80 mb-4'>
                 Emitter
             </h2>
-            <div class='w-full h-full rounded-xl px-8 py-6'
-                style='background-color: #1C1C1C; border: 1px solid #00000077'>
+            <div class='w-full h-full rounded-xl px-8 py-6 dark-panel'>
                 <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
                     <p class='text-white text-xl opacity-80  w-3/10'>
                         Emission Rate
@@ -102,8 +100,7 @@
             <h2 class='w-full text-white text-3xl opacity-80 mb-4'>
                 Plot Slots
             </h2>
-            <div v-for='i in 3' :key='i' class='w-full h-full rounded-xl my-2 pr-12 pl-8 py-4'
-                style='background-color: #1C1C1C; border: 1px solid #00000077'>
+            <div v-for='i in 3' :key='i' class='w-full h-full rounded-xl my-2 pr-12 pl-8 py-4 dark-panel'>
                 <div class='w-full h-auto flex flex-row justify-start items-center'>
                     <div class='plot-slot w-2/10 empty rounded-xl mr-12'>
 
@@ -125,8 +122,7 @@
             <h2 class='w-full text-white text-3xl opacity-80 mb-4'>
                 Plot Raids
             </h2>
-            <div class='w-full h-full rounded-xl my-2 py-4'
-                style='background-color: #1C1C1C; border: 1px solid #00000077'>
+            <div class='w-full h-full rounded-xl my-2 py-4 dark-panel'>
                 <div class='w-full h-auto flex flex-col justify-start items-center'>
                     <div class='w-full h-1/10 flex flex-row justify-center text-center items-center'>
                         <p class='text-2xl text-white opacity-80 w-2/10'>

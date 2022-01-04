@@ -1,5 +1,5 @@
-import {mapGetters, mapActions} from 'vuex'
-import {ethers} from 'ethers'
+import { mapGetters, mapActions } from 'vuex'
+import { ethers } from 'ethers'
 
 export default {
     computed: {
@@ -26,13 +26,13 @@ export default {
                     this.setChainId(network.chainId)
 
 
-                    if (network.chainId === 1666600001 || network.chainId === 1666600002 || network.chainId === 1666600003 || network.chainId === 1666700000 || network.chainId === 1666700001 || network.chainId === 1666700002 || network.chainId === 1666700003) {
+                    if (network.chainId === 1666600001 || network.chainId === 1666600002 || network.chainId === 1666600003 || network.chainId === 1666700001 || network.chainId === 1666700002 || network.chainId === 1666700003) {
                         this.setChainStatus('Wrong network. <br> Click to connect to Harmony.')
                         this.setUserLoggedIn(true)
                         return false
-                    } else if (network.chainId === 1666600000) {
+                    } else if (network.chainId === 1666600000 || network.chainId === 1666700000) {
                         this.setChainStatus(true)
-                        this.setMetaMaskWallet({signer})
+                        this.setMetaMaskWallet({ signer })
                         this.setUserLoggedIn(true)
                     } else {
                         this.setChainStatus('Wrong network. <br> Click to connect to Harmony.')

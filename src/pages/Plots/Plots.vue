@@ -1,8 +1,8 @@
 <template>
-    <div style="width: 100vw; min-height:100vh; height: 100vh; background-color: #282828; z-index: 999"
+    <div style="width: 100vw; min-height:100vh; height: 100vh; background-color: #222222; z-index: 999"
         class="flex flex-row w-full h-full relative">
         <div class='absolute flex flex-row h-16 w-full top-0'
-            style="border-bottom: 1px solid #565656; z-index: 1000;bacjground-color: #282828">
+            style="z-index: 1000;background-color: #222222; box-shadow: 0px 8px 8px rgba(0,0,0,0.2);">
             <div class='ml-6 mt-5 mb-4 text-xl cursor-pointer absolute'>
                 <i class='fa fa-arrow-left'>
 
@@ -20,11 +20,11 @@
             </div>
         </div>
         <div class='h-2/10 flex flex-col py-4 px-4 relative mt-16'
-            style="border-right: 1px solid #565656; width: 400px; z-index: 9000">
+            style="border-right: 1px solid #363636; width: 400px; z-index: 9000">
             <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
                 Neighbourhood
             </p>
-            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4" style='background-color: #1C1C1C; border: 1px solid 565656'>
+            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 dark-panel">
                 <select class="p-1 bg-dark border border-bbrown rounded-xl cursor-pointer xya-input text-lg"
                     style='width: 100%' name="neighbourhood" id="neighbourhood-select" v-model="neighbourhood">
                     <option v-for="(n, index) in allNeighbourhoods" :value="index" :key='index'>{{ n }}</option>
@@ -33,8 +33,7 @@
             <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
                 Filter
             </p>
-            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 text-white"
-                style='background-color: #1C1C1C; border: 1px solid #00000077'>
+            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 text-white dark-panel">
                 <div class='flex flex-row mb-4 w-full'>
                     <div class='checkbox checked mr-3'></div>
                     <p class='mb-2'>
@@ -85,13 +84,13 @@
             <p class="p-1 text-xl mb-1 text-white opacity-80">
                 Your Plots
             </p>
-            <div class="w-full rounded-xl p-4 mb-4" style='background-color: #1C1C1C; border: 1px solid #00000077'>
+            <div class="w-full rounded-xl p-4 mb-4 dark-panel">
                 <div v-for='(neighbourhood, index) in myNeighbourhoods' :key='index'>
                     <p class="p-1 text-lg mb-1 text-white opacity-80">
                         {{neighbourhood}}
                     </p>
-                    <p v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)' :key='plot.token_id'
-                        class='ml-2 text-lg mb-1 cursor-pointer'>
+                    <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
+                        :key='plot.token_id' class='ml-2 text-lg mb-1 cursor-pointer'>
                         <i class='fa fa-map mr-4'></i>Plot #{{plot.token_id}}
                     </p>
                 </div>
@@ -105,13 +104,13 @@
                     :style="'top: ' + (parseInt(index / 10) * 220) + 'px; left: ' + ((index % 10) * 220) + 'px'">
                     <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
                     <img class="absolute top-0 left-0 w-full h-full"
-                        :src="`/images/plots/soil_type/${plot.soil_type}.png`" alt="Soil Type">
+                        :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
                     <img class="absolute top-0 left-0 w-full h-full"
-                        :src="`/images/plots/level/${plot.level + plot.level_buff}.png`" alt="Level">
+                        :src="`/images/plots/level/${plot.level}.png`" alt="Level">
                     <img class="absolute top-0 left-0 w-full h-full"
-                        :src="`/images/plots/fertility/${plot.fertility + plot.fertility_buff}.png`" alt="Fertility">
+                        :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
                     <img class="absolute top-0 left-0 w-full h-full"
-                        :src="`/images/plots/crime/${plot.crime_rate + plot.crime_rate_buff}.png`" alt="Crime">
+                        :src="`/images/plots/crime/${plot.crimeRate}.png`" alt="Crime">
 
                     <div class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
                         style="line-height: 0.75;pointer-events: none;">
@@ -128,15 +127,15 @@
                             </small>
                             <br>
                             <small>
-                                F: {{ plot.fertility + plot.fertility_buff }}
+                                F: {{ plot.fertility }}
                             </small>
 
                             <small>
-                                L: {{ plot.level + plot.level_buff }}
+                                L: {{ plot.level}}
                             </small>
 
                             <small>
-                                C: {{ plot.crime_rate + plot.crime_rate_buff }}
+                                C: {{ plot.crime_rate }}
                             </small>
                         </div>
                     </div>
@@ -310,7 +309,7 @@
                 plotsInitialX: 0,
                 plotsInitialY: 0,
                 plotsInitialZoom: 1.75,
-                
+
                 currentPlot: undefined,
             }
         },
@@ -332,7 +331,7 @@
                 this.plotsInitialX = initialX;
                 this.plotsInitialY = initialY;
 
-                if(this.$route.query.scale){
+                if (this.$route.query.scale) {
                     this.plotsInitialZoom = parseFloat(this.$route.query.scale);
                 }
             }
@@ -407,7 +406,7 @@
                 panzoom.zoom(this.plotsInitialZoom);
             }, 5);
 
-            await this.getMyPlots();
+           // await this.getMyPlots();
 
 
             //window.addEventListener("resize", this.editPanZoom);
@@ -450,25 +449,27 @@
                     this.plotContract.getPlotDataMultiple(2, type2Ids)
                 ])
 
-                let plotData = JSON.parse(plot0Data).plots.concat(JSON.parse(plot1Data).plots, JSON.parse(plot2Data)
-                    .plots)
-
+                let plotData = [...plot0Data, ...plot1Data, ...plot2Data];
                 let tempPlotData = []
 
                 const plotPromise = plotData.map(async (plot) => {
                     let singlePlotData = {
-                        neighbourhood: plot.neighbourhood,
-                        token_id: plot.ID,
-                        plot_number: plot.plotNumber,
-                        soil_type: plot.soilTypeBase,
-                        fertility: plot.fertilityBase,
-                        level: plot.levelBase,
-                        crime_rate: plot.crimeRateBase,
-                        fertility_buff: plot.fertility,
-                        level_buff: plot.level,
-                        crime_rate_buff: plot.crimeRate,
-                        plot_type: 0,
-                        ownerOf: true
+                            resetCost: plot.resetCost,
+                            crimeRateBase: plot.crimeRateBase,
+                            fertilityBase: plot.fertilityBase,
+                            levelBase: plot.levelBase,
+
+                            level: plot.level,
+                            fertility: plot.fertility,
+                            crimeRate: plot.crimeRate,
+                            soilType: plot.soilTypeBase,
+
+                            neighbourhood: plot.neighbourhood,
+                            token_id: plot.plotId,
+                            plot_number: plot.plotNumber,
+                            plot_type: 0,
+                            plotOwner: '',
+                            ownerOf: false
                     }
 
                     if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
@@ -508,8 +509,6 @@
                     this.userPlots = tempPlotData.sort((a, b) => {
                         return a.neighbourhood - b.neighbourhood
                     })
-
-                    console.log(this.userPlots);
                 })
             },
             async getPlots() {
@@ -535,67 +534,80 @@
                     this.plotContract.getTokensOwnedByOwner(this.plotType, this.metaMaskAccount)
                 ])
 
-                plotData = JSON.parse(plotData)
                 let tempPlotData = []
+                const plotPromises = [];
 
-                const plotPromise = plotData.plots.map(async (plot) => {
-                    let singlePlotData = {
-                        neighbourhood: plot.neighbourhood,
-                        token_id: plot.ID,
-                        plot_number: plot.plotNumber,
-                        soil_type: plot.soilTypeBase,
-                        fertility: plot.fertilityBase,
-                        level: plot.levelBase,
-                        crime_rate: plot.crimeRateBase,
-                        fertility_buff: plot.fertility,
-                        level_buff: plot.level,
-                        plot_type: 0,
-                        crime_rate_buff: plot.crimeRate,
-                        plotOwner: '',
-                        ownerOf: false
-                    }
+                plotData.forEach(async (plot) => {
+                    plotPromises.push(new Promise(async (resolve, reject) => {
+                        let singlePlotData = {
+                            resetCost: plot.resetCost,
+                            crimeRateBase: plot.crimeRateBase,
+                            fertilityBase: plot.fertilityBase,
+                            levelBase: plot.levelBase,
 
-                    if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
-                        singlePlotData.plot_type = 1
-                    } else if (plot.neighbourhood === 16 || plot.neighbourhood === 17) {
-                        singlePlotData.plot_type = 2
-                    } else {
-                        singlePlotData.plot_type = 0
-                    }
+                            level: plot.level,
+                            fertility: plot.fertility,
+                            crimeRate: plot.crimeRate,
+                            soilType: plot.soilTypeBase,
 
-                    const sales = await this.marketContracts[singlePlotData.plot_type === 0 ? 'xya' :
-                        singlePlotData.plot_type === 1 ? 'yin' : 'yang'].getListing(plot.ID)
-
-                    singlePlotData.sales = {
-                        seller: 0,
-                        buyer: 0,
-                        tokenId: plot.ID,
-                        price: 0,
-                        forSale: false,
-                    }
-
-                    if (sales[4]) {
-                        singlePlotData.sales.seller = sales[0]
-                        singlePlotData.sales.buyer = sales[1]
-                        singlePlotData.sales.price = ethers.BigNumber.from(sales[3]).toString()
-                        singlePlotData.sales.forSale = sales[4]
-
-                        singlePlotData.plotOwner = await this.plotContracts[singlePlotData.plot_type ===
-                            0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' : 'yang'].ownerOf(
-                            plot.ID)
-                    }
-
-                    for (let i = 0; i < plotOwner.length; i++) {
-                        if (ethers.BigNumber.from(plotOwner[i]._hex).toString() === plot.ID
-                            .toString()) {
-                            singlePlotData.ownerOf = true
+                            neighbourhood: plot.neighbourhood,
+                            token_id: plot.plotId,
+                            plot_number: plot.plotNumber,
+                            plot_type: 0,
+                            plotOwner: '',
+                            ownerOf: false
                         }
-                    }
 
-                    tempPlotData.push(singlePlotData)
-                })
+                        if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
+                            singlePlotData.plot_type = 1
+                        } else if (plot.neighbourhood === 16 || plot.neighbourhood ===
+                            17) {
+                            singlePlotData.plot_type = 2
+                        } else {
+                            singlePlotData.plot_type = 0
+                        }
 
-                await Promise.all(plotPromise).then(() => {
+                        const sales = await this.marketContracts[singlePlotData
+                                .plot_type === 0 ? 'xya' :
+                                singlePlotData.plot_type === 1 ? 'yin' : 'yang']
+                            .getListing(plot.plotId);
+
+                        singlePlotData.sales = {
+                            seller: 0,
+                            buyer: 0,
+                            tokenId: plot.plotId,
+                            price: 0,
+                            forSale: false,
+                        }
+
+                        if (sales[4]) {
+                            singlePlotData.sales.seller = sales[0]
+                            singlePlotData.sales.buyer = sales[1]
+                            singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
+                                .toString()
+                            singlePlotData.sales.forSale = sales[4]
+
+                            singlePlotData.plotOwner = await this.plotContracts[
+                                singlePlotData.plot_type ===
+                                0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
+                                'yang'].ownerOf(
+                                plot.plotId)
+                        }
+
+                        for (let i = 0; i < plotOwner.length; i++) {
+                            if (ethers.BigNumber.from(plotOwner[i]._hex).toString() ===
+                                plot.plotId
+                                .toString()) {
+                                singlePlotData.ownerOf = true
+                            }
+                        }
+
+                        tempPlotData.push(singlePlotData);
+                        resolve();
+                    }));
+                });
+
+                await Promise.all(plotPromises).then(() => {
                     this.plotData = tempPlotData.sort((a, b) => {
                         return a.plot_number - b.plot_number
                     })
@@ -808,6 +820,12 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 4px;
         border: 1px solid #000000aa;
+    }
+
+    .dark-panel {
+        background-color: #262626;
+        border: 1px solid #363636;
+
     }
 
     .slide-in-enter-active,
