@@ -223,6 +223,46 @@ body {
     background: transparent;
 }
 
+.xya-btn2 {
+    background-color: #1f6d36;
+    border-radius: var(--var-border-radius);
+    box-sizing: border-box;
+    color: #8cd1a7c7;
+    display: block;
+    font-size: calc(max(1vw, 14px));
+    padding: 10px;
+    position: relative;
+    text-decoration: none;
+    z-index: 2;
+    transition: all 0.5s ease-out;
+    width: 85%;
+    cursor: pointer;
+}
+
+.xya-btn2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--var-border-radius);
+    padding: 1px;
+    background: linear-gradient(-145deg, var(--var-hilight-color) 50%, var(--var-soft-shadow-color));
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+}
+
+.xya-btn2:hover {
+    background-image: #296B3D;
+    color: #fff;
+}
+
+.xya-btn2:hover span {
+    background: transparent;
+}
+
 .plot-container {
     @screen md {
         max-height: 60vh;

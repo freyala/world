@@ -2,7 +2,7 @@
     <div style="width: 100vw; min-height:100vh; height: 100vh; background-color: #222222; z-index: 999"
         class="flex flex-row w-full h-full relative">
         <div class='absolute flex flex-row h-16 w-full top-0'
-            style="z-index: 1000;background-color: #222222; box-shadow: 0px 8px 8px rgba(0,0,0,0.2);">
+            style="z-index: 0; border-bottom: 1px solid #363636; background-color: #282828; box-shadow: 0px 8px 8px rgba(0,0,0,0.15);">
             <div class='ml-6 mt-5 mb-4 text-xl cursor-pointer absolute'>
                 <i class='fa fa-arrow-left'>
 
@@ -14,19 +14,19 @@
                     Back to plots
                 </span>
             </div>
-            <div class='mt-3 w-full text-center text-4xl font-bold'>
+            <div class='mt-3 w-full text-center text-3xl font-bold'>
                 <p v-if='!showPlotDetails' class='ml-36'>Plots of Land</p>
                 <p v-else class='ml-36'>Plot #{{currentPlot.token_id}}</p>
             </div>
         </div>
         <div class='h-2/10 flex flex-col py-4 px-4 relative mt-16'
-            style="border-right: 1px solid #363636; width: 400px; z-index: 9000">
+            style="border-right: 1px solid #363636; width: 400px; z-index: 0; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15);">
             <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
                 Neighbourhood
             </p>
             <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 dark-panel">
-                <select class="p-1 bg-dark border border-bbrown rounded-xl cursor-pointer xya-input text-lg"
-                    style='width: 100%' name="neighbourhood" id="neighbourhood-select" v-model="neighbourhood">
+                <select class="p-1 rounded-xl cursor-pointer xya-input text-white text-lg" style='width: 100%'
+                    name="neighbourhood" id="neighbourhood-select" v-model="neighbourhood">
                     <option v-for="(n, index) in allNeighbourhoods" :value="index" :key='index'>{{ n }}</option>
                 </select>
             </div>
@@ -35,7 +35,7 @@
             </p>
             <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 text-white dark-panel">
                 <div class='flex flex-row mb-4 w-full'>
-                    <div class='checkbox checked mr-3'></div>
+                    <div class='checkbox mr-3'></div>
                     <p class='mb-2'>
                         On Sale
                     </p>
@@ -48,10 +48,10 @@
                 </div>
                 <div class='flex flex-row w-full mb-4'>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 xya-input' type='number' />
+                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 xya-input' type='number' />
+                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                 </div>
                 <div class='flex flex-row w-full mb-2'>
@@ -61,10 +61,10 @@
                 </div>
                 <div class='flex flex-row w-full mb-4'>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 xya-input' type='number' />
+                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 xya-input' type='number' />
+                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                 </div>
                 <div class='flex flex-row w-full mb-2'>
@@ -74,10 +74,10 @@
                 </div>
                 <div class='flex flex-row w-full mb-4'>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 xya-input' type='number' />
+                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 xya-input' type='number' />
+                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                 </div>
             </div>
@@ -85,12 +85,15 @@
                 Your Plots
             </p>
             <div class="w-full rounded-xl p-4 mb-4 dark-panel">
+                <p v-if='userPlots.length === 0' class="p-1 text-lg opacity-80">
+                    You don't own any plots.
+                </p>
                 <div v-for='(neighbourhood, index) in myNeighbourhoods' :key='index'>
                     <p class="p-1 text-lg mb-1 text-white opacity-80">
                         {{neighbourhood}}
                     </p>
                     <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
-                        :key='plot.token_id' class='ml-2 text-lg mb-1 cursor-pointer'>
+                        :key='plot.token_id * 1' class='ml-2 text-lg mb-1 cursor-pointer'>
                         <i class='fa fa-map mr-4'></i>Plot #{{plot.token_id}}
                     </p>
                 </div>
@@ -105,12 +108,12 @@
                     <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
                     <img class="absolute top-0 left-0 w-full h-full"
                         :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
-                    <img class="absolute top-0 left-0 w-full h-full"
-                        :src="`/images/plots/level/${plot.level}.png`" alt="Level">
+                    <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
+                        alt="Level">
                     <img class="absolute top-0 left-0 w-full h-full"
                         :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
-                    <img class="absolute top-0 left-0 w-full h-full"
-                        :src="`/images/plots/crime/${plot.crimeRate}.png`" alt="Crime">
+                    <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crimeRate}.png`"
+                        alt="Crime">
 
                     <div class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
                         style="line-height: 0.75;pointer-events: none;">
@@ -123,7 +126,7 @@
 
                         <div class="absolute bottom-0 pb-2">
                             <small>
-                                Soil: {{ soilTypes[plot.soil_type] }}
+                                Soil: {{ soilTypes[plot.soilType] }}
                             </small>
                             <br>
                             <small>
@@ -135,7 +138,7 @@
                             </small>
 
                             <small>
-                                C: {{ plot.crime_rate }}
+                                C: {{ plot.crimeRate }}
                             </small>
                         </div>
                     </div>
@@ -295,15 +298,7 @@
                 loadingSendPlot: false,
                 loadingCancelPlotListing: false,
 
-                // emission data
-                fertilityReq: 0,
-                levelReq: 0,
-                crimeRateReq: 0,
-
-                emissionsLeft: 0,
                 emissionsRate: 0,
-                currentTotalEmittingPlots: 0,
-                costToEmit: 0,
 
                 showPlotDetails: false,
                 plotsInitialX: 0,
@@ -367,10 +362,52 @@
                     .signer)
             ])
 
-            this.plotContract = new ethers.Contract(plot.address, plot.abi, this.metaMaskWallet.signer);
+            let averageLevel = 0;
+            let averageCrime = 0;
+            let averageFertility = 0;
+
+            let bestPlot = { level: 0, crime_rate: 0, fertility: 0};
+
+            let worstPlot = {level: 10, crime_rate: 0, fertility: 10};
+
+            let levelAboveAverage = 0;
+            let bestAverage = 0;
+
+            for (let i = 0; i < plotSnapshot.plots.length; i++) {
+                const plot = plotSnapshot.plots[i];
+
+                if(plot.level >= bestPlot.level && plot.crime_rate <= bestPlot.crime_rate && plot.fertility >= bestPlot.fertility){
+                    bestPlot = plot;
+                }
+
+                if(plot.level <= worstPlot.level && plot.crime_rate >= worstPlot.crime_rate && plot.fertility <= worstPlot.fertility){
+                    worstPlot = plot;
+                }
+
+                if(plot.level > 4){
+                    levelAboveAverage++;
+                    bestAverage += plot.level;
+                }
+
+                averageLevel += plotSnapshot.plots[i].level;
+                averageCrime += plotSnapshot.plots[i].crime_rate;
+                averageFertility += plotSnapshot.plots[i].fertility;
+            }
+
+            console.log("Plots with level above average: ", levelAboveAverage, bestAverage / levelAboveAverage);
+
+            console.log("Level:", (averageLevel / plotSnapshot.plots.length));
+            console.log("Fertility:", (averageFertility / plotSnapshot.plots.length));
+            console.log("Crime:", (averageCrime / plotSnapshot.plots.length));
+
+            console.log("Best Plot:", bestPlot);
+            console.log("Worst Plot:", worstPlot);
+
+            this.plotContract = await new ethers.Contract(plot.address, plot.abi, this.metaMaskWallet.signer);
 
             await this.getPlots()
             this.plotsMounted = true;
+
 
             const elem = document.getElementById("plots");
 
@@ -406,7 +443,7 @@
                 panzoom.zoom(this.plotsInitialZoom);
             }, 5);
 
-           // await this.getMyPlots();
+            await this.getMyPlots();
 
 
             //window.addEventListener("resize", this.editPanZoom);
@@ -450,10 +487,12 @@
                 ])
 
                 let plotData = [...plot0Data, ...plot1Data, ...plot2Data];
-                let tempPlotData = []
+                let tempPlotData = [];
+                let plotPromises = [];
 
-                const plotPromise = plotData.map(async (plot) => {
-                    let singlePlotData = {
+                plotData.forEach(async (plot) => {
+                    plotPromises.push(new Promise(async (resolve, reject) => {
+                        let singlePlotData = {
                             resetCost: plot.resetCost,
                             crimeRateBase: plot.crimeRateBase,
                             fertilityBase: plot.fertilityBase,
@@ -464,56 +503,65 @@
                             crimeRate: plot.crimeRate,
                             soilType: plot.soilTypeBase,
 
-                            neighbourhood: plot.neighbourhood,
+                            neighbourhood: plot.neighbourhood * 1,
                             token_id: plot.plotId,
                             plot_number: plot.plotNumber,
                             plot_type: 0,
                             plotOwner: '',
                             ownerOf: false
-                    }
+                        }
 
-                    if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
-                        singlePlotData.plot_type = 1
-                    } else if (plot.neighbourhood === 16 || plot.neighbourhood === 17) {
-                        singlePlotData.plot_type = 2
-                    } else {
-                        singlePlotData.plot_type = 0
-                    }
+                        if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
+                            singlePlotData.plot_type = 1
+                        } else if (plot.neighbourhood === 16 || plot.neighbourhood ===
+                            17) {
+                            singlePlotData.plot_type = 2
+                        } else {
+                            singlePlotData.plot_type = 0
+                        }
 
-                    const sales = await this.marketContracts[singlePlotData.plot_type === 0 ? 'xya' :
-                        singlePlotData.plot_type === 1 ? 'yin' : 'yang'].getListing(plot.ID)
+                        const sales = await this.marketContracts[singlePlotData
+                                .plot_type === 0 ? 'xya' :
+                                singlePlotData.plot_type === 1 ? 'yin' : 'yang']
+                            .getListing(plot.plotId);
 
-                    singlePlotData.sales = {
-                        seller: 0,
-                        buyer: 0,
-                        tokenId: plot.ID,
-                        price: 0,
-                        forSale: false,
-                    }
+                        singlePlotData.sales = {
+                            seller: 0,
+                            buyer: 0,
+                            tokenId: plot.plotId,
+                            price: 0,
+                            forSale: false,
+                        }
 
-                    if (sales[4]) {
-                        singlePlotData.sales.seller = sales[0]
-                        singlePlotData.sales.buyer = sales[1]
-                        singlePlotData.sales.price = ethers.BigNumber.from(sales[3]).toString()
-                        singlePlotData.sales.forSale = sales[4]
+                        if (sales[4]) {
+                            singlePlotData.sales.seller = sales[0]
+                            singlePlotData.sales.buyer = sales[1]
+                            singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
+                                .toString()
+                            singlePlotData.sales.forSale = sales[4]
 
-                        singlePlotData.plotOwner = await this.plotContracts[singlePlotData.plot_type ===
-                            0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' : 'yang'].ownerOf(
-                            plot.ID)
-                    }
+                            singlePlotData.plotOwner = await this.plotContracts[
+                                singlePlotData.plot_type ===
+                                0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
+                                'yang'].ownerOf(
+                                plot.plotId)
+                        }
 
-                    tempPlotData.push(singlePlotData)
-                })
+                        tempPlotData.push(singlePlotData);
+                        resolve();
+                    }));
+                });
 
-                await Promise.all(plotPromise).then(() => {
+                await Promise.all(plotPromises).then(() => {
                     this.userPlots = tempPlotData.sort((a, b) => {
                         return a.neighbourhood - b.neighbourhood
-                    })
+                    });
                 })
             },
+
             async getPlots() {
-                this.plotIds = []
-                this.plotData = []
+                this.plotIds = [];
+                this.plotData = [];
 
                 plotSnapshot.plots.map((plot) => {
                     if (this.neighbourhood === plot.neighbourhood) {
@@ -532,7 +580,7 @@
                 let [plotData, plotOwner] = await Promise.all([
                     this.plotContract.getPlotDataMultiple(this.plotType, this.plotIds),
                     this.plotContract.getTokensOwnedByOwner(this.plotType, this.metaMaskAccount)
-                ])
+                ]);
 
                 let tempPlotData = []
                 const plotPromises = [];
@@ -586,21 +634,13 @@
                             singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
                                 .toString()
                             singlePlotData.sales.forSale = sales[4]
-
-                            singlePlotData.plotOwner = await this.plotContracts[
-                                singlePlotData.plot_type ===
-                                0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
-                                'yang'].ownerOf(
-                                plot.plotId)
                         }
 
-                        for (let i = 0; i < plotOwner.length; i++) {
-                            if (ethers.BigNumber.from(plotOwner[i]._hex).toString() ===
-                                plot.plotId
-                                .toString()) {
-                                singlePlotData.ownerOf = true
-                            }
-                        }
+                        singlePlotData.plotOwner = await this.plotContracts[
+                            singlePlotData.plot_type ===
+                            0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
+                            'yang'].ownerOf(
+                            plot.plotId * 1)
 
                         tempPlotData.push(singlePlotData);
                         resolve();
@@ -613,20 +653,11 @@
                     })
                 })
             },
+
             async getEmissionsData() {
-                const emissionsLeft = await this.plotContracts.xyaEmitter.emissionsLeft();
                 const emissionsRate = await this.plotContracts.xyaEmitter.emissionRate();
-                const emittingPlotCount = await this.plotContracts.xyaEmitter.currentPlotsEmitting();
-
-                this.emissionsLeft = emissionsLeft;
-                this.emissionsRate = emissionsRate;
-                this.currentTotalEmittingPlots = emittingPlotCount;
-
-                const emitterAttributeRequirements = await this.plotContracts.xyaEmitter.getEmissionRequirements();
-                this.fertilityReq = emitterAttributeRequirements[0];
-                this.levelReq = emitterAttributeRequirements[1];
-                this.crimeRateReq = emitterAttributeRequirements[2];
             },
+
             changePlotModalViewState(state) {
                 if (state !== 'trade' && state !== 'manage' && state !== 'utility') {
                     this.plotModalState = "trade"
@@ -635,9 +666,11 @@
 
                 this.plotModalState = state
             },
+
             modalClose() {
                 this.plotModalReason = ''
             },
+
             async sendPlotNow(address, id, neighbourhood) {
                 if (neighbourhood === 18 || neighbourhood === 19) {
                     this.loadingSendPlot = true
@@ -662,6 +695,7 @@
                     window.location.reload(1)
                 }
             },
+
             async cancelListing(id, neighbourhood) {
                 if (neighbourhood === 18 || neighbourhood === 19) {
                     this.loadingCancelPlotListing = true
@@ -686,6 +720,7 @@
                     window.location.reload(1)
                 }
             },
+
             async approvePlotToSellNow(id, neighbourhood) {
                 if (neighbourhood === 18 || neighbourhood === 19) {
                     this.loadingApproveSellPlot = true
@@ -825,7 +860,6 @@
     .dark-panel {
         background-color: #262626;
         border: 1px solid #363636;
-
     }
 
     .slide-in-enter-active,

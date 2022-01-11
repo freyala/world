@@ -1,5 +1,5 @@
 {
-    "address": "0xB62ff17695168a08AE135638d24688aB5b161AE0",
+    "address": "0xDffBAbC28B705d515d7F1Bf7e9da8310760CB57d",
     "abi": [{
             "inputs": [{
                     "internalType": "address",
@@ -53,34 +53,9 @@
                     "internalType": "uint256",
                     "name": "plotId",
                     "type": "uint256"
-                },
-                {
-                    "internalType": "uint8",
-                    "name": "attribute",
-                    "type": "uint8"
                 }
             ],
-            "name": "AttributeAlreadyMaxLevel",
-            "type": "error"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint8",
-                    "name": "plotType",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "plotId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint8",
-                    "name": "attribute",
-                    "type": "uint8"
-                }
-            ],
-            "name": "AttributeAlreadyMinLevel",
+            "name": "AlreadyMaxLevel",
             "type": "error"
         },
         {
@@ -122,11 +97,6 @@
                     "internalType": "uint256",
                     "name": "plotId",
                     "type": "uint256"
-                },
-                {
-                    "internalType": "uint8",
-                    "name": "attribute",
-                    "type": "uint8"
                 },
                 {
                     "internalType": "uint256",
@@ -327,30 +297,18 @@
                 },
                 {
                     "indexed": false,
-                    "internalType": "uint8",
-                    "name": "downgradedTrait",
-                    "type": "uint8"
-                },
-                {
-                    "indexed": false,
                     "internalType": "uint256",
-                    "name": "traitLevel",
+                    "name": "level",
                     "type": "uint256"
                 },
                 {
                     "indexed": false,
                     "internalType": "uint256",
-                    "name": "costOfNextUpgrade",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "completedUpgrades",
+                    "name": "costOfNextLevelUp",
                     "type": "uint256"
                 }
             ],
-            "name": "PlotDowngraded",
+            "name": "PlotLeveledUp",
             "type": "event"
         },
         {
@@ -375,78 +333,6 @@
                 }
             ],
             "name": "PlotRegistered",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [{
-                    "indexed": false,
-                    "internalType": "uint8",
-                    "name": "plotType",
-                    "type": "uint8"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "plotId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "costOfNextUpgrade",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "completedUpgrades",
-                    "type": "uint256"
-                }
-            ],
-            "name": "PlotReset",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [{
-                    "indexed": false,
-                    "internalType": "uint8",
-                    "name": "plotType",
-                    "type": "uint8"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "plotId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint8",
-                    "name": "upgradedTrait",
-                    "type": "uint8"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "traitLevel",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "costOfNextUpgrade",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "completedUpgrades",
-                    "type": "uint256"
-                }
-            ],
-            "name": "PlotUpgraded",
             "type": "event"
         },
         {
@@ -507,21 +393,15 @@
                     "internalType": "uint256",
                     "name": "_plotId",
                     "type": "uint256"
-                },
-                {
-                    "internalType": "uint8",
-                    "name": "_attribute",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_currentLevel",
-                    "type": "uint256"
                 }
             ],
-            "name": "downgradePlot",
-            "outputs": [],
-            "stateMutability": "nonpayable",
+            "name": "getCurrentLevelUpCost",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -541,48 +421,6 @@
                 "internalType": "address",
                 "name": "",
                 "type": "address"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint8",
-                    "name": "_plotType",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_plotId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getCurrentResetCost",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint8",
-                    "name": "_plotType",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_plotId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getCurrentUpgradeCost",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
             }],
             "stateMutability": "view",
             "type": "function"
@@ -762,17 +600,7 @@
                     },
                     {
                         "internalType": "uint256",
-                        "name": "upgradeCost",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "resetCost",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "upgradesPerformed",
+                        "name": "levelUpCost",
                         "type": "uint256"
                     }
                 ],
@@ -854,17 +682,7 @@
                     },
                     {
                         "internalType": "uint256",
-                        "name": "upgradeCost",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "resetCost",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "upgradesPerformed",
+                        "name": "levelUpCost",
                         "type": "uint256"
                     }
                 ],
@@ -956,6 +774,28 @@
                 },
                 {
                     "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_currentLevel",
+                    "type": "uint256"
+                }
+            ],
+            "name": "levelUpPlot",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
                     "name": "_fromId",
                     "type": "uint256"
                 },
@@ -1006,23 +846,6 @@
         {
             "inputs": [],
             "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint8",
-                    "name": "_plotType",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_plotId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "resetPlotToBase",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -1094,33 +917,6 @@
                 "type": "address"
             }],
             "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "uint8",
-                    "name": "_plotType",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_plotId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint8",
-                    "name": "_attribute",
-                    "type": "uint8"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_currentLevel",
-                    "type": "uint256"
-                }
-            ],
-            "name": "upgradePlot",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
