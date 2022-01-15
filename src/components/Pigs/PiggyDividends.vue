@@ -172,10 +172,7 @@
                     const piggyDead = await this.tamagotchiContract.isDead(piggy.id);
                     if (piggyDead) throw `Piggy #${piggy.id} is dead`;
 
-                    const tx = await this.contract.registerPig(piggy.id, {
-                        gasLimit: 1000000,
-                        gasPrice: 1000000000
-                    });
+                    const tx = await this.contract.registerPig(piggy.id);
                     await tx.wait(1);
                     piggy.registered = true;
                     this.$toast.success(`Piggy #${piggy.id} has been registered!`);
@@ -191,10 +188,7 @@
 
                 try {
                     if (!this.lastEpochEnded) throw 'You must end the epoch before claiming rewards!';
-                    const tx = await this.contract.bulkClaimPig(piggyIds, {
-                        gasLimit: 1000000,
-                        gasPrice: 1000000000
-                    });
+                    const tx = await this.contract.bulkClaimPig(piggyIds);
                     await tx.wait(1);
                     await this.fetchPiggyData();
                 } catch (err) {
@@ -209,10 +203,7 @@
                 });
 
                 try {
-                    const tx = await this.contract.bulkRegisterPig(piggyIds, {
-                        gasPrice: 100000000000,
-                        gasLimit: 1000000
-                    });
+                    const tx = await this.contract.bulkRegisterPig(piggyIds);
                     await tx.wait(1);
                     this.$toast.success(`Your piggies have been registered!`);
                     await this.fetchPiggyData();
