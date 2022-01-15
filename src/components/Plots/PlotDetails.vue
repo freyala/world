@@ -1,6 +1,6 @@
 <template>
     <div class='h-full bg-dark overflow-x-hidden overflow-y-auto pb-28'
-        style='background-color: #222222; left: 20%; right: 0'>
+        style='background-color: #222222; left: 20.6%; right: 0'>
         <!--PLOT HEADER-->
         <div class='flex px-12 xl:w-8/10 w-full mx-auto mt-16' style='height: 400px'>
             <!--PLOT-->
@@ -36,7 +36,8 @@
                         Fertility
                     </p>
                     <p class='text-lg w-2/10 text-right mb-2'>
-                        {{ plot.fertility }} <span class='ml-4 opacity-75'>(+0)</span>
+                        {{ plotData.fertility }} <span class='ml-4 opacity-75'>(+
+                            {{ plotData.fertility - plotData.fertilityBase }})</span>
                     </p>
                 </div>
 
@@ -45,7 +46,7 @@
                         Defense
                     </p>
                     <p class='text-lg w-2/10 text-right mb-2'>
-                        {{ 1 }} <span class='ml-4 opacity-75'>(+0)</span>
+                        {{ 1 }} <span class='ml-4 opacity-75'>(+{{ plotData.defence - 1 }})</span>
                     </p>
                 </div>
 
@@ -54,7 +55,8 @@
                         CRIME
                     </p>
                     <p class='text-lg w-2/10 text-right mb-6'>
-                        {{ plot.crimeRate }} <span class='ml-4 opacity-75'>(+0)</span>
+                        {{ plotData.crimeRate }} <span
+                            class='ml-4 opacity-75'>(+{{ plotData.crimeRate - plotData.crimeRateBase }})</span>
                     </p>
                 </div>
 
@@ -67,8 +69,8 @@
                     <p class='text-3xl w-2/10'>
                         {{ plot.level }}
                     </p>
-                    <p class='w-6/10 xya-btn2 ml-20 text-center'>
-                        Level Up
+                    <p v-on:click='levelUpPlot(plot)' class='w-6/10 xya-btn2 ml-20 text-center'>
+                        Level Up - {{ plotData.levelUpCost }} XYA
                     </p>
                 </div>
             </div>
@@ -80,15 +82,26 @@
                 Excavator
             </h2>
             <div class='w-full h-full rounded-xl px-8 py-6 dark-panel'>
-                <div class='w-full h-auto flex flex-row justify-start items-center mb-4'>
+                <div v-if='!emitterStarted' class='w-full h-auto flex flex-row justify-start items-center mb-4'>
                     <p class='text-white text-2xl opacity-80  w-5/10'>
                         Excavator is deactivated
                     </p>
                     <p class='text-xl w-3/10'>
 
                     </p>
-                    <p class='w-2/10 xya-btn2 text-center mx-10'>
-                        Activate
+                    <p v-on:click='togglePlotEmitter(plot)' class='w-2/10 xya-btn2 text-center mx-10'>
+                        Start
+                    </p>
+                </div>
+                <div v-else class='w-full h-auto flex flex-row justify-start items-center mb-4'>
+                    <p class='text-white text-2xl opacity-80  w-5/10'>
+                        Excavator is running
+                    </p>
+                    <p class='text-xl w-3/10'>
+
+                    </p>
+                    <p v-on:click='togglePlotEmitter(plot)' class='w-2/10 xya-btn2 text-center mx-10'>
+                        Stop
                     </p>
                 </div>
 
@@ -112,7 +125,7 @@
                         Treasury
                     </p>
                     <p class='text-xl text-left w-3/10'>
-                        {{ plotTreasury }}
+                        {{ plotData.treasury }} XYA
                     </p>
                     <div class='w-2/10'></div>
                 </div>
@@ -142,14 +155,14 @@
             </h2>
             <div v-for='i in 3' :key='i' class='w-full h-full rounded-xl my-2 pr-12 pl-8 py-4 dark-panel'>
                 <div class='w-full h-auto flex flex-row justify-start items-center'>
-                    <div class='plot-slot w-2/10 empty rounded-xl mr-12'>
+                    <div v-on:click='prepareSlotPickerModal(i)' class='plot-slot w-2/10 empty rounded-xl mr-12'>
 
                     </div>
                     <div class='w-7/10 h-full flex-col'>
                         <h2 class='text-white h-full text-xl opacity-80'>Slot {{i}}</h2>
                         <p class='text-white h-full opacity-30 text-sm'>Empty</p>
                     </div>
-                    <div class='w-2/10 text-center text-xl xya-btn2 h-full'>
+                    <div v-on:click='prepareSlotPickerModal(i)' class='w-2/10 text-center text-xl xya-btn2 h-full'>
                         Add NFT
                     </div>
                 </div>
@@ -163,7 +176,8 @@
                 Plot Raids
             </h2>
             <div class='w-full h-full rounded-xl my-2 py-4 dark-panel'>
-                <div class='w-full h-auto flex flex-col justify-start items-center'>
+                <p class='text-white opacity-80 w-full text-center text-xl'>Coming soon...</p>
+                <div v-if='false' class='w-full h-auto flex flex-col justify-start items-center'>
                     <div class='w-full h-1/10 flex flex-row justify-center text-center items-center'>
                         <p class='text-2xl text-white opacity-80 w-2/10'>
                             Attacker
@@ -192,14 +206,17 @@
 
         </div>
 
-            <NFTPickerModal :slotNumber='1'>
+        <NFTPickerModal v-if='showSlotPickerModal' v-on:close='showSlotPickerModal = false' :slotNumber='slotIndex'>
 
-            </NFTPickerModal>
+        </NFTPickerModal>
     </div>
 </template>
 
 <script>
     import NFTPickerModal from './NFTPickerModal';
+    import {
+        mapGetters
+    } from "vuex"
 
     export default {
         name: 'PlotDetails',
@@ -208,9 +225,32 @@
                 type: Object,
                 default: ""
             },
+
             emitterContract: {
                 type: Object,
                 default: undefined
+            },
+
+            contract: {
+                type: Object,
+                default: undefined
+            },
+
+            plotEmitterContract: {
+                type: Object,
+                default: undefined
+            }
+
+        },
+
+        computed: {
+            ...mapGetters([
+                'metaMaskAccount',
+                'metaMaskWallet'
+            ]),
+
+            isPlotOwner(owner){
+                return owner.toLowerCase() == this.metaMaskAccount.toLowerCase();
             }
         },
 
@@ -224,27 +264,83 @@
                 emissionRate: 0,
                 emissionBonus: 0,
                 emissionPerDay: 0,
+                emitterStarted: false,
 
                 plotTreasury: 0,
                 plotTreasuryBonusPerDay: 0,
 
+                plotData: {},
                 plotSlot1: undefined,
                 plotSlot2: undefined,
                 plotSlot3: undefined,
 
-                raidHistory: []
+                raidHistory: [],
 
+                showSlotPickerModal: false,
+                slotIndex: 0,
             }
         },
 
-        mounted() {
-
+        async mounted() {
+            await this.getPlotData();
         },
 
         methods: {
+            async getPlotData() {
+                const plotData = await this.contract.getPlotData(this.plot.plot_type, this.plot.token_id * 1);
+                this.plotData = {
+                    crimeRate: plotData.crimeRate * 1,
+                    crimeRateBase: plotData.crimeRateBase * 1,
+                    defence: plotData.defence * 1,
+                    fertility: plotData.fertility * 1,
+                    fertilityBase: plotData.fertilityBase * 1,
+                    level: plotData.level * 1,
+                    plotId: plotData.plotId * 1,
+                    soilType: plotData.soilTypeBase * 1,
+                    levelUpCost: plotData.levelUpCost / 10 ** 18,
+                    treasury: plotData.amountOwnedByPlot / 10 ** 18
+                };
+
+                this.emitterStarted = await this.plotEmitterContract.isEmitting(this.plot.plot_type, this.plot
+                    .token_id * 1);;
+            },
+
+            async levelUpPlot(plot) {
+                try {
+                    const tx = await this.contract.levelUpPlot(plot.plot_type, plot.token_id * 1, this
+                        .plotData.level);
+                    await tx.wait(1);
+                    await this.getPlotData(plot);
+                } catch (err) {
+
+                }
+            },
+
+            async togglePlotEmitter(plot) {
+                try {
+                    const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
+                    console.log(isEmitting);
+                    const tx = !isEmitting ?
+                        await this.plotEmitterContract.startEmissions(plot.plot_type, plot.token_id * 1, {
+                            gasPrice: 200000000000,
+                            gasLimit: 2000000,
+                        }) :
+                        await this.plotEmitterContract.stopEmissions(plot.plot_type, plot.token_id * 1);
+                    await tx.wait(1);
+                    await this.getPlotData(plot);
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
             getPlotOwner(owner) {
                 if (!owner || owner.length < 10) return "Couldn't load owner.";
                 return owner.substring(0, 5) + "..." + owner.substring(owner.length - 5, owner.length);
+            },
+
+            prepareSlotPickerModal(slot) {
+                this.slotIndex = slot;
+                this.showSlotPickerModal = true;
             }
         }
     }

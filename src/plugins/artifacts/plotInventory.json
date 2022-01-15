@@ -1,5 +1,6 @@
 {
-    "address": "0xF7DdEC0625E071827D57Fe27C474b71f79EfeB9E",
+    "address1": "0x0290608532bcFb4af3a6955bAf89Bd94691Bbf56",
+    "address": "0x416A66a7b2842bf495E52edc822F692C220bEed9",
     "abi": [{
         "inputs": [{
                 "internalType": "uint8",

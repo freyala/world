@@ -19,7 +19,7 @@
                 <p v-else class='ml-36'>Plot #{{currentPlot.token_id}}</p>
             </div>
         </div>
-        <div class='h-2/10 flex flex-col py-4 px-4 relative mt-16'
+        <div class='h-2/10 flex flex-col py-4 px-4 relative mt-16 overflow-y-scroll'
             style="border-right: 1px solid #363636; width: 400px; z-index: 0; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15);">
             <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
                 Neighbourhood
@@ -33,9 +33,10 @@
             <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
                 Filter
             </p>
-            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 text-white dark-panel">
+            <div v-if='!showPlotDetails' class="w-full rounded-xl px-6 py-6 mb-4 text-white dark-panel">
                 <div class='flex flex-row mb-4 w-full'>
-                    <div class='checkbox mr-3'></div>
+                    <div v-bind:class='{"checked": filters.onlySales}'
+                        v-on:click='applySaleFilters()' class='checkbox mr-3 cursor-pointer'></div>
                     <p class='mb-2'>
                         On Sale
                     </p>
@@ -48,10 +49,12 @@
                 </div>
                 <div class='flex flex-row w-full mb-4'>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        <span class='opacity-60'>Min.</span> <input v-model='filters.minFertility'
+                            class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        <span class='opacity-60'>Max.</span> <input v-model='filters.maxFertility'
+                            class='w-5/10 ml-auto px-2 xya-input' type='number' />
                     </div>
                 </div>
                 <div class='flex flex-row w-full mb-2'>
@@ -61,10 +64,12 @@
                 </div>
                 <div class='flex flex-row w-full mb-4'>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        <span class='opacity-60'>Min.</span> <input v-model='filters.minCrimeRate'
+                            class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        <span class='opacity-60'>Max.</span> <input v-model='filters.maxCrimeRate'
+                            class='w-5/10 ml-auto px-2 xya-input' type='number' />
                     </div>
                 </div>
                 <div class='flex flex-row w-full mb-2'>
@@ -72,13 +77,21 @@
                         Level
                     </p>
                 </div>
-                <div class='flex flex-row w-full mb-4'>
+                <div class='flex flex-row w-full mb-8'>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        <span class='opacity-60'>Min.</span> <input v-model='filters.minLevel'
+                            class='w-5/10 ml-4 px-2 xya-input' type='number' />
                     </div>
                     <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        <span class='opacity-60'>Max.</span> <input v-model='filters.maxLevel'
+                            class='w-5/10 ml-auto px-2 xya-input' type='number' />
                     </div>
+                </div>
+                <div class='flex flex-row w-full text-center justify-center mb-4'>
+                    <p v-on:click='resetPlotFilters()'
+                        class='w-5/10 flex items-center text-base text-yellow hover:text-white cursor-pointer justify-center mr-4'>
+                        Reset Filters</p>
+                    <p v-on:click='applyPlotFilters()' class='xya-btn2 w-5/10 text-base'>Apply Filter</p>
                 </div>
             </div>
             <p class="p-1 text-xl mb-1 text-white opacity-80">
@@ -100,11 +113,15 @@
             </div>
         </div>
         <div class='w-8/10 h-full relative overflow-hidden z-5 mt-16'>
-            <div id='plots' class='relative' :style='"height:" + parseInt(plotData.length / 10) * 220 + "px"'
+            <div id='plots' class='relative' :style='"height:" + parseInt(plotData.length / 10 + 1) * 225 + "px"'
                 style='width: 2200px;'>
-                <div v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='index' class="absolute"
+                <div v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
                     style='width: 220px; height: 220px'
                     :style="'top: ' + (parseInt(index / 10) * 220) + 'px; left: ' + ((index % 10) * 220) + 'px'">
+                    <div v-if='!plot.isFiltered'
+                        class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-dark opacity-50'>
+
+                    </div>
                     <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
                     <img class="absolute top-0 left-0 w-full h-full"
                         :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
@@ -173,8 +190,9 @@
         </div>
 
         <transition name='slide-in'>
-            <PlotDetails v-if='showPlotDetails' v-on:close="showPlotDetails = false" class='fixed top-16'
-                style='z-index: 500; transition: all 0.25s;' :plot='currentPlot'>
+            <PlotDetails v-if='showPlotDetails' :contract='plotContract' :plotEmitterContract='plotEmitterContract'
+                v-on:close="showPlotDetails = false" class='fixed top-16' style='z-index: 500; transition: all 0.25s;'
+                :plot='currentPlot'>
 
             </PlotDetails>
         </transition>
@@ -186,6 +204,8 @@
 
     import wallet from "../../plugins/wallet"
     import plot from "../../plugins/artifacts/plothandler.json"
+    import plotEmitter from "../../plugins/artifacts/plotEmitter.json"
+
     import {
         ethers
     } from "ethers"
@@ -223,11 +243,17 @@
                     }
                 }
                 return neighbourhoods;
+            },
+
+            isFiltered() {
+                return this.filteredPlotData.length > 0;
             }
         },
+
         components: {
             PlotDetails
         },
+
         data() {
             return {
                 plotContracts: {
@@ -247,9 +273,11 @@
                 },
                 availablePlotsFromSnapshot: [],
                 plotContract: undefined,
+                plotEmitterContract: undefined,
                 plotsMounted: false,
                 neighbourhood: 0,
                 plotData: [],
+                filteredPlotData: [],
                 userPlots: [],
                 plotIds: [],
                 plotType: 0,
@@ -306,8 +334,23 @@
                 plotsInitialZoom: 1.75,
 
                 currentPlot: undefined,
+
+                filters: {
+                    minFertility: 0,
+                    maxFertility: 99,
+                    minCrimeRate: 0,
+                    maxCrimeRate: 99,
+                    minLevel: 0,
+                    maxLevel: 99,
+                    onlySales: false
+                },
+
+                constants: {
+                    MAX_PLOTS_QUERY: 45
+                }
             }
         },
+
         async created() {
             if (!this.$route.params.neighbourhood) {
                 await this.$router.push({
@@ -331,6 +374,7 @@
                 }
             }
         },
+
         watch: {
             async neighbourhood() {
                 if (this.plotsMounted) {
@@ -345,6 +389,7 @@
                 }
             },
         },
+
         async mounted() {
             [this.plotContracts.xya, this.plotContracts.yin, this.plotContracts.yang, this.tokenContracts.xya, this
                 .tokenContracts.yin, this.tokenContracts.yang, this.marketContracts.xya, this.marketContracts.yin,
@@ -360,52 +405,13 @@
                 new ethers.Contract(PlotsYinMarket.address, PlotsYinMarket.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(PlotsYangMarket.address, PlotsYangMarket.abi, this.metaMaskWallet
                     .signer)
-            ])
+            ]);
 
-            let averageLevel = 0;
-            let averageCrime = 0;
-            let averageFertility = 0;
-
-            let bestPlot = { level: 0, crime_rate: 0, fertility: 0};
-
-            let worstPlot = {level: 10, crime_rate: 0, fertility: 10};
-
-            let levelAboveAverage = 0;
-            let bestAverage = 0;
-
-            for (let i = 0; i < plotSnapshot.plots.length; i++) {
-                const plot = plotSnapshot.plots[i];
-
-                if(plot.level >= bestPlot.level && plot.crime_rate <= bestPlot.crime_rate && plot.fertility >= bestPlot.fertility){
-                    bestPlot = plot;
-                }
-
-                if(plot.level <= worstPlot.level && plot.crime_rate >= worstPlot.crime_rate && plot.fertility <= worstPlot.fertility){
-                    worstPlot = plot;
-                }
-
-                if(plot.level > 4){
-                    levelAboveAverage++;
-                    bestAverage += plot.level;
-                }
-
-                averageLevel += plotSnapshot.plots[i].level;
-                averageCrime += plotSnapshot.plots[i].crime_rate;
-                averageFertility += plotSnapshot.plots[i].fertility;
-            }
-
-            console.log("Plots with level above average: ", levelAboveAverage, bestAverage / levelAboveAverage);
-
-            console.log("Level:", (averageLevel / plotSnapshot.plots.length));
-            console.log("Fertility:", (averageFertility / plotSnapshot.plots.length));
-            console.log("Crime:", (averageCrime / plotSnapshot.plots.length));
-
-            console.log("Best Plot:", bestPlot);
-            console.log("Worst Plot:", worstPlot);
-
+            this.plotEmitterContract = await new ethers.Contract(plotEmitter.address, plotEmitter.abi, this
+                .metaMaskWallet.signer);
             this.plotContract = await new ethers.Contract(plot.address, plot.abi, this.metaMaskWallet.signer);
 
-            await this.getPlots()
+            await this.getPlots();
             this.plotsMounted = true;
 
 
@@ -448,7 +454,44 @@
 
             //window.addEventListener("resize", this.editPanZoom);
         },
+
         methods: {
+            applyPlotFilters() {
+                for (let i = 0; i < this.plotData.length; i++) {
+                    this.plotData[i].isFiltered = false;
+                }
+
+                if ((this.filters.fertilityMin + this.filters.minCrimeRate + this.filters.minLevel) === 0 &&
+                    this.filters.fertilityMax + this.filters.maxCrimeRate + this.filters.maxLevel >= this.contants
+                    .MAX_PLOTS_QUERY) {
+                    this.filteredPlotData = [];
+                }
+
+                const fertilityFilter = (value) => {
+                    return value >= this.filters.minFertility * 1 && value <= this.filters.maxFertility * 1
+                };
+                const crimeRateFilter = (value) => {
+                    return value >= this.filters.minCrimeRate * 1 && value <= this.filters.maxCrimeRate * 1
+                };
+                const levelFilter = (value) => {
+                    return value >= this.filters.minLevel * 1 && value <= this.filters.maxLevel * 1
+                };
+
+                let filteredPlotData = this.plotData.filter(c => fertilityFilter(c.fertility) && crimeRateFilter(c
+                    .crimeRate) && levelFilter(c.level) && (c.price > 0 || !this.filters.onlySales));
+
+                for (let i = 0; i < filteredPlotData.length; i++) {
+                    filteredPlotData[i].isFiltered = true;
+                }
+
+                this.plotData.splice(0, 0);
+            },
+
+            applySaleFilters() {
+                this.filters.onlySales = !this.filters.onlySales;
+                this.applyPlotFilters();
+            },
+
             getUserPlotsByNeighbourhood(neighbourhood) {
                 for (let i = 0; i < this.allNeighbourhoods.length; i++) {
                     if (this.allNeighbourhoods[i] === neighbourhood) {
@@ -457,6 +500,46 @@
                 }
                 return [];
             },
+
+            resetPlotFilters() {
+                this.filters = {
+                    minFertility: 0,
+                    maxFertility: 99,
+                    minCrimeRate: 0,
+                    maxCrimeRate: 99,
+                    minLevel: 0,
+                    maxLevel: 99,
+                    onlySales: false
+                };
+
+                this.applyPlotFilters();
+            },
+
+            async setTokenAllowance(amount) {
+                let actual = 0;
+                if (amount > 0) {
+                    actual = amount * 10 ** 18;
+                } else {
+                    actual = 0;
+                }
+                try {
+                    const arg = fromExponential(actual);
+                    let tempContract = new ethers.Contract("0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", Freyala
+                        .abi, this
+                        .metaMaskWallet.signer);
+                    const tx = await tempContract.approve(
+                        this.contract.address,
+                        arg
+                    );
+
+                    await tx.wait(1);
+                    this.$toast.success(`${token.key} ${amount > 0 ? 'approved' : 'disabled'}`);
+                } catch (err) {
+                    console.error(err);
+                    // this.handleError(err);
+                }
+            },
+
             async getMyPlots() {
                 const type0Ids = []
                 const type1Ids = []
@@ -464,29 +547,31 @@
 
                 let [type0, type1, type2] = await Promise.all([
                     this.plotContract.getTokensOwnedByOwner(0, this.metaMaskAccount),
-                    this.plotContract.getTokensOwnedByOwner(1, this.metaMaskAccount),
-                    this.plotContract.getTokensOwnedByOwner(2, this.metaMaskAccount)
-                ])
+                    //this.plotContract.getTokensOwnedByOwner(1, this.metaMaskAccount),
+                    //this.plotContract.getTokensOwnedByOwner(2, this.metaMaskAccount)
+                ]);
 
                 for (let i = 0; i < type0.length; i++) {
                     type0Ids.push(ethers.BigNumber.from(type0[i]._hex).toString())
                 }
 
+                /*
                 for (let i = 0; i < type1.length; i++) {
-                    type1Ids.push(ethers.BigNumber.from(type1[i]._hex).toString())
+                    //type1Ids.push(ethers.BigNumber.from(type1[i]._hex).toString())
                 }
 
                 for (let i = 0; i < type2.length; i++) {
-                    type2Ids.push(ethers.BigNumber.from(type2[i]._hex).toString())
+                    //type2Ids.push(ethers.BigNumber.from(type2[i]._hex).toString())
                 }
+                */
 
                 let [plot0Data, plot1Data, plot2Data] = await Promise.all([
                     this.plotContract.getPlotDataMultiple(0, type0Ids),
-                    this.plotContract.getPlotDataMultiple(1, type1Ids),
-                    this.plotContract.getPlotDataMultiple(2, type2Ids)
+                   // this.plotContract.getPlotDataMultiple(1, type1Ids),
+                   // this.plotContract.getPlotDataMultiple(2, type2Ids)
                 ])
 
-                let plotData = [...plot0Data, ...plot1Data, ...plot2Data];
+                let plotData = [...plot0Data];
                 let tempPlotData = [];
                 let plotPromises = [];
 
@@ -507,8 +592,9 @@
                             token_id: plot.plotId,
                             plot_number: plot.plotNumber,
                             plot_type: 0,
-                            plotOwner: '',
-                            ownerOf: false
+                            plotOwner: plot.plotOwner,
+                            ownerOf: false,
+                            isFiltered: true
                         }
 
                         if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
@@ -520,7 +606,7 @@
                             singlePlotData.plot_type = 0
                         }
 
-                        const sales = await this.marketContracts[singlePlotData
+                        /*const sales = await this.marketContracts[singlePlotData
                                 .plot_type === 0 ? 'xya' :
                                 singlePlotData.plot_type === 1 ? 'yin' : 'yang']
                             .getListing(plot.plotId);
@@ -534,10 +620,10 @@
                         }
 
                         if (sales[4]) {
-                            singlePlotData.sales.seller = sales[0]
-                            singlePlotData.sales.buyer = sales[1]
+                            singlePlotData.sales.seller = sales[0];
+                            singlePlotData.sales.buyer = sales[1];
                             singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
-                                .toString()
+                                .toString();
                             singlePlotData.sales.forSale = sales[4]
 
                             singlePlotData.plotOwner = await this.plotContracts[
@@ -545,7 +631,7 @@
                                 0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
                                 'yang'].ownerOf(
                                 plot.plotId)
-                        }
+                        }*/
 
                         tempPlotData.push(singlePlotData);
                         resolve();
@@ -553,6 +639,7 @@
                 });
 
                 await Promise.all(plotPromises).then(() => {
+                    console.log(plotPromises);
                     this.userPlots = tempPlotData.sort((a, b) => {
                         return a.neighbourhood - b.neighbourhood
                     });
@@ -602,8 +689,9 @@
                             token_id: plot.plotId,
                             plot_number: plot.plotNumber,
                             plot_type: 0,
-                            plotOwner: '',
-                            ownerOf: false
+                            plotOwner: plot.plotOwner,
+                            ownerOf: false,
+                            isFiltered: true
                         }
 
                         if (plot.neighbourhood === 18 || plot.neighbourhood === 19) {
@@ -615,7 +703,7 @@
                             singlePlotData.plot_type = 0
                         }
 
-                        const sales = await this.marketContracts[singlePlotData
+                       /* const sales = await this.marketContracts[singlePlotData
                                 .plot_type === 0 ? 'xya' :
                                 singlePlotData.plot_type === 1 ? 'yin' : 'yang']
                             .getListing(plot.plotId);
@@ -639,8 +727,7 @@
                         singlePlotData.plotOwner = await this.plotContracts[
                             singlePlotData.plot_type ===
                             0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
-                            'yang'].ownerOf(
-                            plot.plotId * 1)
+                            'yang'].ownerOf(plot.plotId);*/
 
                         tempPlotData.push(singlePlotData);
                         resolve();
@@ -852,9 +939,15 @@
     }
 
     .xya-input {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: #222222;
         border-radius: 4px;
-        border: 1px solid #000000aa;
+        border: 1px solid #191919;
+    }
+
+    .xya-input:focus {
+        outline: 0 !important;
+        border-radius: 4px;
+        border: 1px solid #54b67a7c;
     }
 
     .dark-panel {

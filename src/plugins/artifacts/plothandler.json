@@ -1,5 +1,6 @@
 {
-    "address": "0xDffBAbC28B705d515d7F1Bf7e9da8310760CB57d",
+    "address": "0xd03b3095211f71EAB352fD134298c35C1Ac92D53",
+    "address1": "0xA3bAD29303B1d850899368C0744E2c5d2c624abf",
     "abi": [{
             "inputs": [{
                     "internalType": "address",
@@ -300,12 +301,6 @@
                     "internalType": "uint256",
                     "name": "level",
                     "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "costOfNextLevelUp",
-                    "type": "uint256"
                 }
             ],
             "name": "PlotLeveledUp",
@@ -520,6 +515,11 @@
                         "internalType": "uint256",
                         "name": "crimeRateBase",
                         "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "defenceBase",
+                        "type": "uint256"
                     }
                 ],
                 "internalType": "struct IPlotHandler.PlotBaseDataView",
@@ -591,6 +591,11 @@
                     {
                         "internalType": "uint256",
                         "name": "crimeRate",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "defence",
                         "type": "uint256"
                     },
                     {
@@ -677,6 +682,11 @@
                     },
                     {
                         "internalType": "uint256",
+                        "name": "defence",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
                         "name": "amountOwnedByPlot",
                         "type": "uint256"
                     },
@@ -721,6 +731,11 @@
                         "internalType": "uint256",
                         "name": "crimeRate",
                         "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "defence",
+                        "type": "uint256"
                     }
                 ],
                 "internalType": "struct IPlotHandler.PlotStatsView",
@@ -758,6 +773,21 @@
                 "type": "uint8"
             }],
             "name": "getTotalSupplyOfPlots",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "name": "levelUpCosts",
             "outputs": [{
                 "internalType": "uint256",
                 "name": "",
