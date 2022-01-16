@@ -787,9 +787,9 @@
           this.keys[attribute.name]++;
 
           const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.paidPowerUp.index, {
-            gasLimit: 30000000,
-            gasPrice: 1000000000
-          });
+              gasLimit: 2000000,
+              gasPrice: 30000000000
+            });
           this.showPiggyCooldown = false;
 
           await tx.wait(1);
@@ -836,8 +836,8 @@
               }
             }
             const tx = await this.tamagotchiContract.buyPowerup(piggy.id, attribute.freePowerUp.index, {
-              gasLimit: 30000000,
-              gasPrice: 1000000000
+              gasLimit: 2000000,
+              gasPrice: 30000000000
             });
 
             await tx.wait(1);
@@ -888,8 +888,8 @@
 
           if (isDead) {
             const tx = await this.tamagotchiContract.revivePig(piggy.id, {
-              gasLimit: 30000000,
-              gasPrice: 1000000000
+              gasLimit: 2000000,
+              gasPrice: 30000000000
             });
 
             this.piggyLoading = true;
@@ -946,7 +946,7 @@
           this.piggySleeping = await this.tamagotchiContract.isOccupied(piggy.id, 'Sleep');
           if (this.piggySleeping) {
             let sleepsUntill = await this.tamagotchiContract.occupiedUntil(piggy.id, 'Sleep');
-            this.piggySleepingString = "Asleep for " + this.$timeStamper(sleepsUntill * 1000 - Date.now());
+            this.piggySleepingString = "Wakes up in " + this.$timeStamper(sleepsUntill * 1000 - Date.now());
           }
 
           const piggyName = await this.attributeManagerContract.getNameOfPig(piggy.id);
