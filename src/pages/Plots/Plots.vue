@@ -2,7 +2,7 @@
     <div style="width: 100vw; min-height:100vh; height: 100vh; background-color: #222222; z-index: 999"
         class="flex flex-row w-full h-full relative">
         <div class='absolute flex flex-row h-16 w-full top-0'
-            style="z-index: 0; border-bottom: 1px solid #363636; background-color: #282828; box-shadow: 0px 8px 8px rgba(0,0,0,0.15);">
+            style="z-index: 1000; border-bottom: 1px solid #363636; background-color: #282828; box-shadow: 0px 8px 8px rgba(0,0,0,0.15);">
             <div class='ml-6 mt-5 mb-4 text-xl cursor-pointer absolute'>
                 <i class='fa fa-arrow-left'>
 
@@ -19,107 +19,112 @@
                 <p v-else class='ml-36'>Plot #{{currentPlot.token_id}}</p>
             </div>
         </div>
-        <div class='h-2/10 flex flex-col py-4 px-4 relative mt-16 overflow-y-scroll'
-            style="border-right: 1px solid #363636; width: 400px; z-index: 0; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15);">
-            <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
-                Neighbourhood
-            </p>
-            <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 dark-panel">
-                <select class="p-1 rounded-xl cursor-pointer xya-input text-white text-lg" style='width: 100%'
-                    name="neighbourhood" id="neighbourhood-select" v-model="neighbourhood">
-                    <option v-for="(n, index) in allNeighbourhoods" :value="index" :key='index'>{{ n }}</option>
-                </select>
-            </div>
-            <p v-if='!showPlotDetails' class="p-1 text-xl mb-1 text-white opacity-80">
-                Filter
-            </p>
-            <div v-if='!showPlotDetails' class="w-full rounded-xl px-6 py-6 mb-4 text-white dark-panel">
-                <div class='flex flex-row mb-4 w-full'>
-                    <div v-bind:class='{"checked": filters.onlySales}'
-                        v-on:click='applySaleFilters()' class='checkbox mr-3 cursor-pointer'></div>
-                    <p class='mb-2'>
-                        On Sale
-                    </p>
-                </div>
-                <hr class='my-4' style='color: rgba(0,0,0,0.5);' />
-                <div class='flex flex-row w-full mb-2'>
-                    <p class='text-xl'>
-                        Fertility
-                    </p>
-                </div>
-                <div class='flex flex-row w-full mb-4'>
-                    <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input v-model='filters.minFertility'
-                            class='w-5/10 ml-4 px-2 xya-input' type='number' />
-                    </div>
-                    <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input v-model='filters.maxFertility'
-                            class='w-5/10 ml-auto px-2 xya-input' type='number' />
-                    </div>
-                </div>
-                <div class='flex flex-row w-full mb-2'>
-                    <p class='text-xl'>
-                        Crime Rate
-                    </p>
-                </div>
-                <div class='flex flex-row w-full mb-4'>
-                    <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input v-model='filters.minCrimeRate'
-                            class='w-5/10 ml-4 px-2 xya-input' type='number' />
-                    </div>
-                    <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input v-model='filters.maxCrimeRate'
-                            class='w-5/10 ml-auto px-2 xya-input' type='number' />
-                    </div>
-                </div>
-                <div class='flex flex-row w-full mb-2'>
-                    <p class='text-xl'>
-                        Level
-                    </p>
-                </div>
-                <div class='flex flex-row w-full mb-8'>
-                    <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Min.</span> <input v-model='filters.minLevel'
-                            class='w-5/10 ml-4 px-2 xya-input' type='number' />
-                    </div>
-                    <div class='w-5/10 flex flex-row'>
-                        <span class='opacity-60'>Max.</span> <input v-model='filters.maxLevel'
-                            class='w-5/10 ml-auto px-2 xya-input' type='number' />
-                    </div>
-                </div>
-                <div class='flex flex-row w-full text-center justify-center mb-4'>
-                    <p v-on:click='resetPlotFilters()'
-                        class='w-5/10 flex items-center text-base text-yellow hover:text-white cursor-pointer justify-center mr-4'>
-                        Reset Filters</p>
-                    <p v-on:click='applyPlotFilters()' class='xya-btn2 w-5/10 text-base'>Apply Filter</p>
-                </div>
-            </div>
-            <p class="p-1 text-xl mb-1 text-white opacity-80">
-                Your Plots
-            </p>
-            <div class="w-full rounded-xl p-4 mb-4 dark-panel">
-                <p v-if='userPlots.length === 0' class="p-1 text-lg opacity-80">
-                    You don't own any plots.
+        <div class='lg:relative absolute 2xl:w-1/5 xl:w-3/12 lg:w-4/12 w-6/12 xl:h-2/10 h-full flex flex-row py-4 px-4 pt-16 overflow-y-auto overflow-x-hidden'
+            style="border-right: 1px solid #363636; z-index: 0; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15); transition: all 0.15s linear">
+        
+
+            <div class='w-full h-full flex flex-col relative'>
+
+                <p v-if='!showPlotDetails' class="p-1 xl:text-xl text-lg mt-4 mb-1 text-white opacity-80">
+                    Neighbourhood
                 </p>
-                <div v-for='(neighbourhood, index) in myNeighbourhoods' :key='index'>
-                    <p class="p-1 text-lg mb-1 text-white opacity-80">
-                        {{neighbourhood}}
+                <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 dark-panel">
+                    <select class="p-1 rounded-xl cursor-pointer xya-input text-white xl:text-lg text-sm"
+                        style='width: 100%' name="neighbourhood" id="neighbourhood-select" v-model="neighbourhood">
+                        <option v-for="(n, index) in allNeighbourhoods" :value="index" :key='index'>{{ n }}</option>
+                    </select>
+                </div>
+                <p v-if='!showPlotDetails' class="p-1 xl:text-xl text-lg mb-1 text-white opacity-80">
+                    Filter
+                </p>
+                <div v-if='!showPlotDetails' class="w-full rounded-xl px-6 py-6 mb-4 text-white dark-panel">
+                    <div class='flex flex-row mb-4 w-full'>
+                        <div v-bind:class='{"checked": filters.onlySales}' v-on:click='applySaleFilters()'
+                            class='checkbox mr-3 cursor-pointer'></div>
+                        <p class='mb-2 xl:text-lg text-sm'>
+                            On Sale
+                        </p>
+                    </div>
+                    <hr class='my-4' style='color: rgba(0,0,0,0.5);' />
+                    <div class='flex flex-row w-full mb-2'>
+                        <p class='xl:text-lg text-sm'>
+                            Fertility
+                        </p>
+                    </div>
+                    <div class='flex flex-row w-full mb-4'>
+                        <div class='w-5/10 flex flex-row items-center'>
+                            <span class='opacity-60 xl:text-base text-xs'>Min.</span> <input
+                                v-model='filters.minFertility' class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        </div>
+                        <div class='w-5/10 flex flex-row items-center'>
+                            <span class='opacity-60 xl:text-base text-xs'>Max.</span> <input
+                                v-model='filters.maxFertility' class='w-5/10 ml-auto px-2 xya-input' type='number' />
+                        </div>
+                    </div>
+                    <div class='flex flex-row w-full mb-2 items-center'>
+                        <p class='xl:text-lg text-sm'>
+                            Crime Rate
+                        </p>
+                    </div>
+                    <div class='flex flex-row w-full mb-4'>
+                        <div class='w-5/10 flex flex-row items-center'>
+                            <span class='opacity-60 xl:text-base text-xs'>Min.</span> <input
+                                v-model='filters.minCrimeRate' class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        </div>
+                        <div class='w-5/10 flex flex-row items-center'>
+                            <span class='opacity-60 xl:text-base text-xs'>Max.</span> <input
+                                v-model='filters.maxCrimeRate' class='w-5/10 ml-auto px-2 xya-input' type='number' />
+                        </div>
+                    </div>
+                    <div class='flex flex-row w-full mb-2'>
+                        <p class='xl:text-lg text-sm'>
+                            Level
+                        </p>
+                    </div>
+                    <div class='flex flex-row w-full mb-8'>
+                        <div class='w-5/10 flex flex-row items-center'>
+                            <span class='opacity-60 xl:text-base text-xs'>Min.</span> <input v-model='filters.minLevel'
+                                class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                        </div>
+                        <div class='w-5/10 flex flex-row items-center'>
+                            <span class='opacity-60 xl:text-base text-xs'>Max.</span> <input v-model='filters.maxLevel'
+                                class='w-5/10 ml-auto px-2 xya-input' type='number' />
+                        </div>
+                    </div>
+                    <div class='flex flex-row w-full text-center justify-center xl:mb-4 mb-0'>
+                        <p v-on:click='resetPlotFilters()'
+                            class='w-5/10 flex items-center xl:text-base text-sm text-yellow hover:text-white cursor-pointer justify-center mr-4'>
+                            Reset Filters</p>
+                        <p v-on:click='applyPlotFilters()' class='xya-btn2 w-5/10 xl:text-base text-sm'>Apply Filter</p>
+                    </div>
+                </div>
+                <p class="p-1 xl:text-xl text-lg mb-1 text-white opacity-80" v-bind:class='{"mt-4": showPlotDetails}'>
+                    Your Plots
+                </p>
+                <div class="w-full rounded-xl p-4 mb-4 dark-panel">
+                    <p v-if='userPlots.length === 0' class="p-1 xl:text-lg text-sm opacity-80">
+                        You don't own any plots.
                     </p>
-                    <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
-                        :key='plot.token_id * 1' class='ml-2 text-lg mb-1 cursor-pointer'>
-                        <i class='fa fa-map mr-4'></i>Plot #{{plot.token_id}}
-                    </p>
+                    <div v-for='(neighbourhood, index) in myNeighbourhoods' :key='index'>
+                        <p class="p-1 xl:text-lg text-sm mb-1 text-white opacity-80">
+                            {{neighbourhood}}
+                        </p>
+                        <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
+                            :key='plot.token_id * 1' class='ml-2 xl:text-lg text-sm mb-1 cursor-pointer'>
+                            <i class='fa fa-map mr-4'></i>Plot #{{plot.token_id}}
+                        </p>
+                    </div>
                 </div>
             </div>
+
         </div>
-        <div class='w-8/10 h-full relative overflow-hidden z-5 mt-16'>
+        <div class='2xl:w-4/5 xl:w-9/12 lg:w-8/12 h-full relative overflow-hidden mt-16'>
             <div id='plots' class='relative' :style='"height:" + parseInt(plotData.length / 10 + 1) * 225 + "px"'
                 style='width: 2200px;'>
                 <div v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
                     style='width: 220px; height: 220px'
                     :style="'top: ' + (parseInt(index / 10) * 220) + 'px; left: ' + ((index % 10) * 220) + 'px'">
-                    <div v-if='!plot.isFiltered'
-                        class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-dark opacity-50'>
+                    <div v-if='!plot.isFiltered' class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-dark opacity-50'>
 
                     </div>
                     <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
@@ -347,7 +352,9 @@
 
                 constants: {
                     MAX_PLOTS_QUERY: 45
-                }
+                },
+
+                showSideBar: false
             }
         },
 
@@ -567,8 +574,8 @@
 
                 let [plot0Data, plot1Data, plot2Data] = await Promise.all([
                     this.plotContract.getPlotDataMultiple(0, type0Ids),
-                   // this.plotContract.getPlotDataMultiple(1, type1Ids),
-                   // this.plotContract.getPlotDataMultiple(2, type2Ids)
+                    // this.plotContract.getPlotDataMultiple(1, type1Ids),
+                    // this.plotContract.getPlotDataMultiple(2, type2Ids)
                 ])
 
                 let plotData = [...plot0Data];
@@ -703,31 +710,31 @@
                             singlePlotData.plot_type = 0
                         }
 
-                       /* const sales = await this.marketContracts[singlePlotData
-                                .plot_type === 0 ? 'xya' :
-                                singlePlotData.plot_type === 1 ? 'yin' : 'yang']
-                            .getListing(plot.plotId);
+                        /* const sales = await this.marketContracts[singlePlotData
+                                 .plot_type === 0 ? 'xya' :
+                                 singlePlotData.plot_type === 1 ? 'yin' : 'yang']
+                             .getListing(plot.plotId);
 
-                        singlePlotData.sales = {
-                            seller: 0,
-                            buyer: 0,
-                            tokenId: plot.plotId,
-                            price: 0,
-                            forSale: false,
-                        }
+                         singlePlotData.sales = {
+                             seller: 0,
+                             buyer: 0,
+                             tokenId: plot.plotId,
+                             price: 0,
+                             forSale: false,
+                         }
 
-                        if (sales[4]) {
-                            singlePlotData.sales.seller = sales[0]
-                            singlePlotData.sales.buyer = sales[1]
-                            singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
-                                .toString()
-                            singlePlotData.sales.forSale = sales[4]
-                        }
+                         if (sales[4]) {
+                             singlePlotData.sales.seller = sales[0]
+                             singlePlotData.sales.buyer = sales[1]
+                             singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
+                                 .toString()
+                             singlePlotData.sales.forSale = sales[4]
+                         }
 
-                        singlePlotData.plotOwner = await this.plotContracts[
-                            singlePlotData.plot_type ===
-                            0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
-                            'yang'].ownerOf(plot.plotId);*/
+                         singlePlotData.plotOwner = await this.plotContracts[
+                             singlePlotData.plot_type ===
+                             0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
+                             'yang'].ownerOf(plot.plotId);*/
 
                         tempPlotData.push(singlePlotData);
                         resolve();

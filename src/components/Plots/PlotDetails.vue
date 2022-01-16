@@ -1,10 +1,10 @@
 <template>
-    <div class='h-full bg-dark overflow-x-hidden overflow-y-auto pb-28'
-        style='background-color: #222222; left: 20.6%; right: 0'>
+    <div class='h-full 2xl:w-4/5 xl:w-9/12 lg:w-8/12 w-full bg-dark overflow-x-hidden overflow-y-auto pb-28'
+        style='background-color: #222222; right: 0'>
         <!--PLOT HEADER-->
-        <div class='flex px-12 xl:w-8/10 w-full mx-auto mt-16' style='height: 400px'>
+        <div class='2xl:w-8/10 w-full flex 2xl:px-12 2xl:h-3/6 h-2/6 px-14 mx-auto mt-16'>
             <!--PLOT-->
-            <div class='relative w-4/10 h-full mr-6'>
+            <div class='relative w-5/10 h-full mr-6'>
                 <img class="w-full h-full rounded-xl" src="/images/plots/base/0.png" alt="Base land">
                 <img class="absolute top-0 left-0 w-full h-full rounded-xl"
                     :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
@@ -17,9 +17,9 @@
             </div>
 
             <!--PLOT ATTRIBUTES-->
-            <div class='w-6/10 ml-6 h-full rounded-xl p-6 px-10 mb-12 dark-panel flex flex-col items-center'>
-                <h2 class='text-3xl w-full mb-2'>Plot #{{ plot.token_id }}</h2>
-                <p class='text-white w-full text-sm opacity-30 mb-2'>
+            <div class='w-6/10 ml-6 h-full rounded-xl xl:py-6 py-3 xl:px-10 px-5 mb-12 dark-panel flex flex-col items-center'>
+                <h2 class='xl:text-3xl text-xl w-full mb-2'>Plot #{{ plot.token_id }}</h2>
+                <p class='text-white w-full xl:text-sm text-xs opacity-30 mb-2'>
                     Owned by {{ getPlotOwner(plot.plotOwner)}}
                 </p>
                 <div class='w-full flex flex-row mt-2'>
@@ -77,7 +77,7 @@
         </div>
 
         <!--PLOT EMITTER-->
-        <div class='flex flex-col px-12 xl:w-8/10 w-full  mx-auto h-auto mt-12'>
+        <div class='2xl:w-8/10 w-full 2xl:px-12 px-14 flex flex-col mx-auto h-auto mt-12'>
             <h2 class='w-full text-white text-3xl opacity-80 mb-4'>
                 Excavator
             </h2>
@@ -149,7 +149,7 @@
         </div>
 
         <!--PLOT SLOTS-->
-        <div class='flex flex-col px-12 xl:w-8/10 w-full  mx-auto h-auto mt-12'>
+        <div class='2xl:w-8/10 w-full flex flex-col px-12 mx-auto h-auto mt-12'>
             <h2 class='w-full text-white text-3xl opacity-80 mb-4'>
                 Plot Slots
             </h2>
@@ -171,7 +171,7 @@
         </div>
 
         <!--PLOT RAIDS-->
-        <div class='flex flex-col px-12 xl:w-8/10 w-full mx-auto h-auto mt-12'>
+        <div class='2xl:w-8/10 w-full flex flex-col px-12 mx-auto h-auto mt-12'>
             <h2 class='w-full text-white text-3xl opacity-80 mb-4'>
                 Plot Raids
             </h2>
