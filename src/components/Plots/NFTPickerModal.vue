@@ -1,14 +1,14 @@
 <template>
     <div v-on:click='closeModal' class='fixed modal-overlay flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-opacity-50 bg-dark w-full h-full'
         style='z-index: 9999'>
-        <div v-if='!showCollection' class='w-6/12 h-auto py-12 rounded-xl flex flex-col justify-center items-center bg-dark dark-panel'>
-            <h2 class='text-white text-4xl opacity-80 text-center'>Plot Slot {{ slotNumber }}</h2>
-            <div class='h-16 mt-4 w-8/10 mx-auto text-xl text-center'>
+        <div v-if='!showCollection' class='xl:w-6/12 w-10/12 h-auto py-6 rounded-xl flex flex-col justify-start items-center bg-dark dark-panel'>
+            <h2 class='text-white lg:text-4xl text-3xl opacity-80 text-center mt-1'>Plot Slot {{ slotNumber }}</h2>
+            <div class='h-16 lg:mt-4 w-8/10 mx-auto lg:text-xl text-base text-center'>
                 Choose Collection
             </div>
-            <div class='w-full h-3/5 p-6 flex justify-space-around'>
+            <div class='w-full h-3/5 px-6 flex justify-space-around mb-6'>
                 <div v-on:click='openCollectionTab(collection)'
-                    class='w-4/12 h-full mx-6 dark-panel rounded-xl flex flex-col cursor-pointer'
+                    class='w-4/12 h-full lg:mx-6 mx-2 dark-panel rounded-xl flex flex-col cursor-pointer'
                     v-bind:class='{"opacity-25": !collection.active || collection.count === 0}'
                     style='border: 1px solid #22222;' v-for='(collection, index) in collections' :key='index'>
                     <img class='rounded-xl w-full h-3/5' v-bind:src='collection.image' />
@@ -21,12 +21,12 @@
                 </div>
             </div>
         </div>
-        <div v-else class='w-6/12 h-auto py-2 rounded-xl flex flex-col justify-start items-center bg-dark dark-panel'>
-            <h2 class='text-white text-4xl opacity-80 text-center mt-6'>Plot Slot {{ slotNumber }}</h2>
-            <div class='w-full h-20 relative flex items-center'>
+        <div v-else class='xl:w-6/12 w-10/12 h-auto py-2 rounded-xl flex flex-col justify-start items-center bg-dark dark-panel'>
+            <h2 class='text-white lg:text-4xl text-3xl opacity-80 text-center mt-6'>Plot Slot {{ slotNumber }}</h2>
+            <div class='w-full lg:h-20 h-12 lg:mb-0 mb-4 relative flex items-center'>
                 <i v-on:click='closeCollectionTab()'
                     class='absolute left-12 fa fa-arrow-left cursor-pointer text-3xl'></i>
-                <h2 class='text-3xl w-full text-center'>Your {{ currentCollection.name }}'s</h2>
+                <h2 class='lg:text-3xl text-xl w-full text-center'>Your {{ currentCollection.name }}'s</h2>
             </div>
             <div class="w-8/10 rounded-xl p-4 mb-6 dark-panel">
                 <select class="p-1 cursor-pointer xya-input rounded-xl text-lg" style='width: 100%' name="neighbourhood"
@@ -37,10 +37,10 @@
             </div>
             <div
                 class='w-8/10 h-72 flex flex-row justify-center items-center overflow-y-hidden overflow-x-hidden dark-panel rounded-xl relative mb-2'>
-                <div class='h-72 w-full flex flex-row justify-start items-center'>
-                    <img v-if='currentNFT' class='rounded-xl w-4/12 mx-4 h-5/5' v-bind:src='currentNFT.image' />
+                <div class='h-72 w-full flex lg:flex-row flex-col justify-start items-center'>
+                    <img v-if='currentNFT' class='rounded-xl w-4/12 mx-4 h-5/5 my-4' v-bind:src='currentNFT.image' />
                     <div class='w-7/12 h-4/5 items-start flex flex-col'>
-                        <h2 class='text-3xl'>{{ currentCollection.name }}</h2>
+                        <h2 class='lg:text-3xl text-xl'>{{ currentCollection.name }}</h2>
                         <hr class='w-full opacity-30' />
                         <p class='text-xl mt-2 text-white opacity-80'>Bonus - Katana</p>
                         <p class='text-xl mt-2'>+3 Plot Defense</p>
@@ -144,7 +144,6 @@
                 if (this.currentCollection.userNFTs.length === 0) return;
                 const currentNFT = this.currentCollection.userNFTs[newVal];
                 this.currentNFT = currentNFT;
-                console.log(currentNFT);
             }
         },
 

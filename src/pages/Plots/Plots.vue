@@ -1,10 +1,16 @@
 <template>
-    <div style="width: 100vw; min-height:100vh; height: 100vh; background-color: #222222; z-index: 999"
-        class="flex flex-row w-full h-full relative">
-        <div class='absolute flex flex-row h-16 w-full top-0'
-            style="z-index: 1000; border-bottom: 1px solid #363636; background-color: #282828; box-shadow: 0px 8px 8px rgba(0,0,0,0.15);">
-            <div class='ml-6 mt-5 mb-4 text-xl cursor-pointer absolute'>
-                <i class='fa fa-arrow-left'>
+    <div style="width: 100vw; min-height:100vh; height: 100vh; z-index: 999"
+        class="flex flex-row w-full h-full relative bg-dark">
+
+        <div v-show='!showSideBar' v-on:click='showSideBar = true'
+            class='h-16 w-8 dark-panel absolute flex items-center justify-center block xl:hidden rounded-r-xl'
+            style='top: 50%; left: 0%; z-index: 1'>
+            <i class='fa fa-arrow-right'></i>
+        </div>
+
+        <div class='absolute flex flex-row h-16 w-full top-0 dark-panel' style="z-index: 1000">
+            <div class='ml-6 mt-5 mb-4 w-auto text-xl cursor-pointer absolute z-50'>
+                <i class='fa fa-arrow-left mr-2' v-on:click='showPlotDetails = false'>
 
                 </i>
                 <span v-if='!showPlotDetails'>
@@ -14,17 +20,16 @@
                     Back to plots
                 </span>
             </div>
-            <div class='mt-3 w-full text-center text-3xl font-bold'>
-                <p v-if='!showPlotDetails' class='ml-36'>Plots of Land</p>
-                <p v-else class='ml-36'>Plot #{{currentPlot.token_id}}</p>
+            <div class='mt-3 w-full text-center text-3xl font-bold absolute'>
+                <p v-if='!showPlotDetails'>Plots of Land</p>
+                <p v-else >Plot #{{currentPlot.token_id}}</p>
             </div>
         </div>
-        <div class='lg:relative absolute 2xl:w-1/5 xl:w-3/12 lg:w-4/12 w-6/12 xl:h-2/10 h-full flex flex-row py-4 px-4 pt-16 overflow-y-auto overflow-x-hidden'
-            style="border-right: 1px solid #363636; z-index: 0; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15); transition: all 0.15s linear">
-        
+        <div class='xl:relative absolute 2xl:w-1/5 xl:w-3/12 lg:w-5/12 sm:w-6/12 w-full xl:h-2/10 h-full flex flex-row py-4 px-4 pt-16 overflow-y-auto overflow-x-hidden'
+        v-bind:style='{"left": (showSideBar ? 0 : -600) + "px"}'
+            style="border-right: 1px solid #363636; z-index: 1; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15); transition: all 0.15s linear">
 
             <div class='w-full h-full flex flex-col relative'>
-
                 <p v-if='!showPlotDetails' class="p-1 xl:text-xl text-lg mt-4 mb-1 text-white opacity-80">
                     Neighbourhood
                 </p>
@@ -54,11 +59,11 @@
                     <div class='flex flex-row w-full mb-4'>
                         <div class='w-5/10 flex flex-row items-center'>
                             <span class='opacity-60 xl:text-base text-xs'>Min.</span> <input
-                                v-model='filters.minFertility' class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                                v-model='filters.minFertility' class='w-5/10 mx-3 px-2 xya-input' type='number' />
                         </div>
                         <div class='w-5/10 flex flex-row items-center'>
                             <span class='opacity-60 xl:text-base text-xs'>Max.</span> <input
-                                v-model='filters.maxFertility' class='w-5/10 ml-auto px-2 xya-input' type='number' />
+                                v-model='filters.maxFertility' class='w-5/10 mx-3 px-2 xya-input' type='number' />
                         </div>
                     </div>
                     <div class='flex flex-row w-full mb-2 items-center'>
@@ -69,11 +74,11 @@
                     <div class='flex flex-row w-full mb-4'>
                         <div class='w-5/10 flex flex-row items-center'>
                             <span class='opacity-60 xl:text-base text-xs'>Min.</span> <input
-                                v-model='filters.minCrimeRate' class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                                v-model='filters.minCrimeRate' class='w-5/10 mx-3 px-2 xya-input' type='number' />
                         </div>
                         <div class='w-5/10 flex flex-row items-center'>
                             <span class='opacity-60 xl:text-base text-xs'>Max.</span> <input
-                                v-model='filters.maxCrimeRate' class='w-5/10 ml-auto px-2 xya-input' type='number' />
+                                v-model='filters.maxCrimeRate' class='w-5/10 mx-3 px-2 xya-input' type='number' />
                         </div>
                     </div>
                     <div class='flex flex-row w-full mb-2'>
@@ -84,16 +89,16 @@
                     <div class='flex flex-row w-full mb-8'>
                         <div class='w-5/10 flex flex-row items-center'>
                             <span class='opacity-60 xl:text-base text-xs'>Min.</span> <input v-model='filters.minLevel'
-                                class='w-5/10 ml-4 px-2 xya-input' type='number' />
+                                class='w-5/10 mx-3 px-2 xya-input' type='number' />
                         </div>
                         <div class='w-5/10 flex flex-row items-center'>
                             <span class='opacity-60 xl:text-base text-xs'>Max.</span> <input v-model='filters.maxLevel'
-                                class='w-5/10 ml-auto px-2 xya-input' type='number' />
+                                class='w-5/10 mx-3 px-2 xya-input' type='number' />
                         </div>
                     </div>
                     <div class='flex flex-row w-full text-center justify-center xl:mb-4 mb-0'>
                         <p v-on:click='resetPlotFilters()'
-                            class='w-5/10 flex items-center xl:text-base text-sm text-yellow hover:text-white cursor-pointer justify-center mr-4'>
+                            class='w-5/10 flex items-center xl:text-base text-sm text-yellow hover:text-white cursor-pointer justify-start'>
                             Reset Filters</p>
                         <p v-on:click='applyPlotFilters()' class='xya-btn2 w-5/10 xl:text-base text-sm'>Apply Filter</p>
                     </div>
@@ -117,8 +122,16 @@
                 </div>
             </div>
 
+
+            <div v-on:click='showSideBar = !showSideBar'
+                class='h-16 w-8 dark-panel absolute flex items-center justify-center block xl:hidden rounded-l-xl'
+                style='top: 50%; right: 0px'>
+                <i v-if='showSideBar' class='fa fa-arrow-left'></i>
+                <i v-else class='fa fa-arrow-right'></i>
+            </div>
+
         </div>
-        <div class='2xl:w-4/5 xl:w-9/12 lg:w-8/12 h-full relative overflow-hidden mt-16'>
+        <div class='2xl:w-4/5 xl:w-9/12 w-full h-full relative overflow-hidden mt-16'>
             <div id='plots' class='relative' :style='"height:" + parseInt(plotData.length / 10 + 1) * 225 + "px"'
                 style='width: 2200px;'>
                 <div v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
@@ -130,11 +143,14 @@
                     <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
                     <img class="absolute top-0 left-0 w-full h-full"
                         :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
-                    <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/level/${plot.level}.png`"
+
+                    <img class="absolute top-0 left-0 w-full h-full" :src="getPlotAttributeImage('l', plot.neighbourhood, plot.level)"
                         alt="Level">
+
                     <img class="absolute top-0 left-0 w-full h-full"
-                        :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
-                    <img class="absolute top-0 left-0 w-full h-full" :src="`/images/plots/crime/${plot.crimeRate}.png`"
+                        :src="getPlotAttributeImage('f', plot.neighbourhood, plot.fertility)" alt="Fertility">
+
+                    <img class="absolute top-0 left-0 w-full h-full" :src="getPlotAttributeImage('c', plot.neighbourhood, plot.crimeRate)"
                         alt="Crime">
 
                     <div class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
@@ -217,7 +233,8 @@
     import {
         mapGetters
     } from "vuex"
-    import plotSnapshot from "../../plugins/snapshots/plots.json"
+    import plotSnapshot from "../../plugins/snapshots/plots.json";
+    import plotRenderData from '../../plugins/snapshots/plotsRenderData.json';
 
     import PlotsYang from "../../plugins/artifacts/plotsyang.json";
     import PlotsYin from "../../plugins/artifacts/plotsyin.json";
@@ -354,7 +371,7 @@
                     MAX_PLOTS_QUERY: 45
                 },
 
-                showSideBar: false
+                showSideBar: true
             }
         },
 
@@ -458,11 +475,33 @@
 
             await this.getMyPlots();
 
+            //await this.setTokenAllowance(999999999999);
 
             //window.addEventListener("resize", this.editPanZoom);
+
+            console.log(plotRenderData);
         },
 
         methods: {
+            getPlotAttributeImage(attribute, neighbourhood, value){
+                const renderData = plotRenderData.filter(c => c.n.indexOf(neighbourhood * 1) > -1)[0];
+
+                if(!renderData) return '';
+                const folder = renderData['folder'];
+                const attributeName = attribute === 'l' ? 'Level' : attributeName === 'f' ? 'Fertility' : 'Crime';
+
+                if(attributeName === 'Level') {
+                    return `/plots/${folder}/${attributeName}_${value}.png`;
+                }
+
+                if(renderData[attribute].indexOf(value)){
+                    return `/plots/${folder}/${attributeName}_${value}.png`;
+                }
+                else{
+                    return `/plots/neutral/${attributeName}_${value}.png`;
+                }
+            },
+
             applyPlotFilters() {
                 for (let i = 0; i < this.plotData.length; i++) {
                     this.plotData[i].isFiltered = false;
@@ -535,7 +574,7 @@
                         .abi, this
                         .metaMaskWallet.signer);
                     const tx = await tempContract.approve(
-                        this.contract.address,
+                        "0x06705622555bB2Da76273480b3aF2b9B4f7E0544",
                         arg
                     );
 
@@ -584,6 +623,7 @@
 
                 plotData.forEach(async (plot) => {
                     plotPromises.push(new Promise(async (resolve, reject) => {
+                        console.log(plot);
                         let singlePlotData = {
                             resetCost: plot.resetCost,
                             crimeRateBase: plot.crimeRateBase,
@@ -599,8 +639,8 @@
                             token_id: plot.plotId,
                             plot_number: plot.plotNumber,
                             plot_type: 0,
-                            plotOwner: plot.plotOwner,
-                            ownerOf: false,
+                            ownerOf: true,
+                            plotOwner: this.metaMaskAccount,
                             isFiltered: true
                         }
 
@@ -613,7 +653,7 @@
                             singlePlotData.plot_type = 0
                         }
 
-                        /*const sales = await this.marketContracts[singlePlotData
+                        const sales = await this.marketContracts[singlePlotData
                                 .plot_type === 0 ? 'xya' :
                                 singlePlotData.plot_type === 1 ? 'yin' : 'yang']
                             .getListing(plot.plotId);
@@ -632,13 +672,7 @@
                             singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
                                 .toString();
                             singlePlotData.sales.forSale = sales[4]
-
-                            singlePlotData.plotOwner = await this.plotContracts[
-                                singlePlotData.plot_type ===
-                                0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
-                                'yang'].ownerOf(
-                                plot.plotId)
-                        }*/
+                        }
 
                         tempPlotData.push(singlePlotData);
                         resolve();
@@ -710,7 +744,7 @@
                             singlePlotData.plot_type = 0
                         }
 
-                        /* const sales = await this.marketContracts[singlePlotData
+                        const sales = await this.marketContracts[singlePlotData
                                  .plot_type === 0 ? 'xya' :
                                  singlePlotData.plot_type === 1 ? 'yin' : 'yang']
                              .getListing(plot.plotId);
@@ -734,7 +768,7 @@
                          singlePlotData.plotOwner = await this.plotContracts[
                              singlePlotData.plot_type ===
                              0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
-                             'yang'].ownerOf(plot.plotId);*/
+                             'yang'].ownerOf(plot.plotId);
 
                         tempPlotData.push(singlePlotData);
                         resolve();

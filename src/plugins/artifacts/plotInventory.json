@@ -1,5 +1,4 @@
 {
-    "address1": "0x0290608532bcFb4af3a6955bAf89Bd94691Bbf56",
     "address": "0x416A66a7b2842bf495E52edc822F692C220bEed9",
     "abi": [{
         "inputs": [{
@@ -37,19 +36,19 @@
                             "type": "address"
                         },
                         {
-                            "internalType": "bool",
+                            "internalType": "bool[]",
                             "name": "isBuff",
-                            "type": "bool"
+                            "type": "bool[]"
                         },
                         {
-                            "internalType": "uint256",
+                            "internalType": "uint256[]",
                             "name": "modifierValue",
-                            "type": "uint256"
+                            "type": "uint256[]"
                         },
                         {
-                            "internalType": "uint256",
+                            "internalType": "uint256[]",
                             "name": "modifiedAttribute",
-                            "type": "uint256"
+                            "type": "uint256[]"
                         }
                     ],
                     "internalType": "struct PlotInventory.InventorySlotView",
@@ -78,19 +77,19 @@
                             "type": "address"
                         },
                         {
-                            "internalType": "bool",
+                            "internalType": "bool[]",
                             "name": "isBuff",
-                            "type": "bool"
+                            "type": "bool[]"
                         },
                         {
-                            "internalType": "uint256",
+                            "internalType": "uint256[]",
                             "name": "modifierValue",
-                            "type": "uint256"
+                            "type": "uint256[]"
                         },
                         {
-                            "internalType": "uint256",
+                            "internalType": "uint256[]",
                             "name": "modifiedAttribute",
-                            "type": "uint256"
+                            "type": "uint256[]"
                         }
                     ],
                     "internalType": "struct PlotInventory.InventorySlotView",
@@ -119,23 +118,64 @@
                             "type": "address"
                         },
                         {
-                            "internalType": "bool",
+                            "internalType": "bool[]",
                             "name": "isBuff",
-                            "type": "bool"
+                            "type": "bool[]"
                         },
                         {
-                            "internalType": "uint256",
+                            "internalType": "uint256[]",
                             "name": "modifierValue",
-                            "type": "uint256"
+                            "type": "uint256[]"
                         },
                         {
-                            "internalType": "uint256",
+                            "internalType": "uint256[]",
                             "name": "modifiedAttribute",
-                            "type": "uint256"
+                            "type": "uint256[]"
                         }
                     ],
                     "internalType": "struct PlotInventory.InventorySlotView",
                     "name": "slotC",
+                    "type": "tuple"
+                },
+                {
+                    "components": [{
+                            "internalType": "uint256",
+                            "name": "assetType",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "tokenAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenId",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "owner",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bool[]",
+                            "name": "isBuff",
+                            "type": "bool[]"
+                        },
+                        {
+                            "internalType": "uint256[]",
+                            "name": "modifierValue",
+                            "type": "uint256[]"
+                        },
+                        {
+                            "internalType": "uint256[]",
+                            "name": "modifiedAttribute",
+                            "type": "uint256[]"
+                        }
+                    ],
+                    "internalType": "struct PlotInventory.InventorySlotView",
+                    "name": "slotD",
                     "type": "tuple"
                 }
             ],

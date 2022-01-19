@@ -1,6 +1,5 @@
 {
-    "address": "0x01eb05F8b92Be7Afc28CA863f4959aa86a972f1B",
-    "address1": "0x1187F55d731aF34e90dc1dfe243F2A1f93498484",
+    "address": "0x06705622555bB2Da76273480b3aF2b9B4f7E0544",
     "abi": [{
             "inputs": [{
                     "internalType": "address",
@@ -285,6 +284,17 @@
             "type": "function"
         },
         {
+            "inputs": [],
+            "name": "baseEmissionRatePerDay",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "inputs": [{
                     "internalType": "uint8",
                     "name": "_plotType",
@@ -342,17 +352,6 @@
             "name": "depositForEmissions",
             "outputs": [],
             "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "emissionRate",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -416,6 +415,28 @@
                     "type": "uint256"
                 }
             ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getLockedBalance",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getUnlockedBalance",
+            "outputs": [{
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
             "stateMutability": "view",
             "type": "function"
         },
@@ -542,6 +563,13 @@
                 "type": "address"
             }],
             "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "withdrawUnlockedEmitted",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

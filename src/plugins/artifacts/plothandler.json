@@ -1,6 +1,5 @@
 {
-    "address": "0xd03b3095211f71EAB352fD134298c35C1Ac92D53",
-    "address1": "0xA3bAD29303B1d850899368C0744E2c5d2c624abf",
+    "address": "0x44f66a5c2c9757eA3aa6cF759DF90e00b3C78d9a",
     "abi": [{
             "inputs": [{
                     "internalType": "address",
@@ -101,16 +100,16 @@
                 },
                 {
                     "internalType": "uint256",
-                    "name": "currentLevel",
+                    "name": "requiredFunds",
                     "type": "uint256"
                 },
                 {
                     "internalType": "uint256",
-                    "name": "specifiedLevel",
+                    "name": "currentFunds",
                     "type": "uint256"
                 }
             ],
-            "name": "CurrentLevelDidNotMatch",
+            "name": "InsufficientFundsSent",
             "type": "error"
         },
         {
@@ -331,16 +330,12 @@
             "type": "event"
         },
         {
-            "inputs": [{
-                "internalType": "address",
-                "name": "_addr",
-                "type": "address"
-            }],
-            "name": "_isAddressWhitelistedToModifyAttributes",
+            "inputs": [],
+            "name": "accumulatedBalance",
             "outputs": [{
-                "internalType": "bool",
+                "internalType": "uint256",
                 "name": "",
-                "type": "bool"
+                "type": "uint256"
             }],
             "stateMutability": "view",
             "type": "function"
@@ -374,6 +369,13 @@
                 }
             ],
             "name": "depositToPlot",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "emergencyWithdraw",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -808,14 +810,14 @@
                     "type": "uint256"
                 },
                 {
-                    "internalType": "uint256",
-                    "name": "_currentLevel",
-                    "type": "uint256"
+                    "internalType": "bool",
+                    "name": "_useTreasury",
+                    "type": "bool"
                 }
             ],
             "name": "levelUpPlot",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "payable",
             "type": "function"
         },
         {
@@ -893,17 +895,6 @@
         },
         {
             "inputs": [{
-                "internalType": "address",
-                "name": "_addr",
-                "type": "address"
-            }],
-            "name": "setAddressAllowedToWithdraw",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
                     "internalType": "uint8",
                     "name": "_plotType",
                     "type": "uint8"
@@ -942,11 +933,40 @@
         },
         {
             "inputs": [{
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "transferLockedToTreasury",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
                 "internalType": "address",
                 "name": "newOwner",
                 "type": "address"
             }],
             "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "withdrawAccumulatedBalance",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
