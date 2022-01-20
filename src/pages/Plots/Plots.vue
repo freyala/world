@@ -8,7 +8,7 @@
             <i class='fa fa-arrow-right'></i>
         </div>
 
-        <div class='absolute flex flex-row h-16 w-full top-0 dark-panel' style="z-index: 1000">
+        <div class='absolute flex flex-row h-16 w-full top-0 dark-panel items-center' style="z-index: 1000">
             <div class='ml-6 mt-5 mb-4 w-auto text-xl cursor-pointer absolute z-50'>
                 <i class='fa fa-arrow-left mr-2' v-on:click='showPlotDetails = false'>
 
@@ -20,13 +20,19 @@
                     Back to plots
                 </span>
             </div>
-            <div class='mt-3 w-full text-center text-3xl font-bold absolute'>
+            <div class='w-full text-center text-3xl font-bold absolute'>
                 <p v-if='!showPlotDetails'>Plots of Land</p>
-                <p v-else >Plot #{{currentPlot.token_id}}</p>
+                <p v-else>Plot #{{currentPlot.token_id}}</p>
+            </div>
+            <div class='absolute right-12'>
+                <i v-if='showPlotDetails' v-on:click='$modal.show("sendplot")'
+                    class='fas fa-paper-plane text-xl hover:text-white cursor-pointer mx-6'></i>
+                <i v-on:click='$modal.show("allowances")'
+                    class='fas fa-cog text-xl hover:text-white cursor-pointer'></i>
             </div>
         </div>
         <div class='xl:relative absolute 2xl:w-1/5 xl:w-3/12 lg:w-5/12 sm:w-6/12 w-full xl:h-2/10 h-full flex flex-row py-4 px-4 pt-16 overflow-y-auto overflow-x-hidden'
-        v-bind:style='{"left": (showSideBar ? 0 : -600) + "px"}'
+            v-bind:style='{"left": (showSideBar ? 0 : -600) + "px"}'
             style="border-right: 1px solid #363636; z-index: 1; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15); transition: all 0.15s linear">
 
             <div class='w-full h-full flex flex-col relative'>
@@ -144,14 +150,14 @@
                     <img class="absolute top-0 left-0 w-full h-full"
                         :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
 
-                    <img class="absolute top-0 left-0 w-full h-full" :src="getPlotAttributeImage('l', plot.neighbourhood, plot.level)"
-                        alt="Level">
+                    <img class="absolute top-0 left-0 w-full h-full"
+                        :src="getPlotAttributeImage('Level', plot.neighbourhood, plot.level)" alt="Level">
 
                     <img class="absolute top-0 left-0 w-full h-full"
-                        :src="getPlotAttributeImage('f', plot.neighbourhood, plot.fertility)" alt="Fertility">
+                        :src="getPlotAttributeImage('Fertility', plot.neighbourhood, plot.fertility)" alt="Fertility">
 
-                    <img class="absolute top-0 left-0 w-full h-full" :src="getPlotAttributeImage('c', plot.neighbourhood, plot.crimeRate)"
-                        alt="Crime">
+                    <img class="absolute top-0 left-0 w-full h-full"
+                        :src="getPlotAttributeImage('Crime', plot.neighbourhood, plot.crimeRate)" alt="Crime">
 
                     <div class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
                         style="line-height: 0.75;pointer-events: none;">
@@ -212,11 +218,101 @@
 
         <transition name='slide-in'>
             <PlotDetails v-if='showPlotDetails' :contract='plotContract' :plotEmitterContract='plotEmitterContract'
-                v-on:close="showPlotDetails = false" class='fixed top-16' style='z-index: 500; transition: all 0.25s;'
-                :plot='currentPlot'>
+                :plotInventoryContract='plotInventoryContract' v-on:close="showPlotDetails = false"
+                v-on:buy='buyPlot($event[0], $event[1], $event[2])' class='fixed top-16'
+                style='z-index: 500; transition: all 0.25s;' :plot='currentPlot'>
 
             </PlotDetails>
         </transition>
+
+        <window height='40%' width='80%' name='allowances'>
+            <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
+                <div class="w-full text-center">
+                    <div class="sm:text-3xl text-2xl">Contract Manager</div>
+                </div>
+                <div class="absolute right-6">
+                    <i @click="$modal.hide('allowances')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <hr class='w-full my-4' />
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'Plot Handler' Contract</span>
+
+                    <p v-on:click='setTokenAllowance(plotContract.address, allowances.plotHandler ? 0 : 999999999999, "plotHandler");'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.plotHandler'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'Plot Emitter' Contract</span>
+
+                    <p v-on:click='setTokenAllowance(plotEmitterContract.address, allowances.plotEmitter ? 0 : 999999999999, "plotEmitter")'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.plotEmitter'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+                <hr class='w-8/10 mx-4 my-6 opacity-30' />
+
+                <div class="flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'XYA Plots' Contract</span>
+
+                    <p v-on:click='approvePlotToSellNow(0, allowances.marketXyaPlots)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.marketXyaPlots'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'Yang Plots' Contract</span>
+
+                    <p v-on:click='approvePlotToSellNow(1, allowances.marketYangPlots)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.marketYangPlots'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'Yin Plots' Contract</span>
+
+                    <p v-on:click='approvePlotToSellNow(2, allowances.marketYinPlots)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.marketYinPlots'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+
+            </div>
+        </window>
+
+        <window height='10%' width='80%' name='sendplot'>
+            <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
+                <div class="w-full text-center">
+                    <div class="sm:text-3xl text-2xl">Send Plot</div>
+                </div>
+                <div class="absolute right-6">
+                    <i @click="$modal.hide('sendplot')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <hr class='w-full my-4 opacity-30' />
+                <div class='w-full mx-auto flex flex-row mt-2'>
+                    <p class='text-xl text-start w-4/10'>Receiver Address: </p>
+                    <input class='w-6/10 text-black px-2 rounded-lg' type="text" v-model='plotsSendTo' />
+                </div>
+                <div class="w-full flex flex-row items-center mt-6">
+                    <p class='ml-auto w-3/12 text-base'>Cancel</p>
+                    <button v-on:click="sendPlotNow(plotsSendTo, currentPlot.token_id, currentPlot.neighbourhood)"
+                        type="button" class="w-3/12 xya-btn2 text-base">
+                        <span>Confirm</span>
+                    </button>
+                </div>
+            </div>
+        </window>
+
     </div>
 </template>
 
@@ -226,6 +322,7 @@
     import wallet from "../../plugins/wallet"
     import plot from "../../plugins/artifacts/plothandler.json"
     import plotEmitter from "../../plugins/artifacts/plotEmitter.json"
+    import plotInventory from "../../plugins/artifacts/plotInventory.json"
 
     import {
         ethers
@@ -296,6 +393,7 @@
                 availablePlotsFromSnapshot: [],
                 plotContract: undefined,
                 plotEmitterContract: undefined,
+                plotInventoryContract: undefined,
                 plotsMounted: false,
                 neighbourhood: 0,
                 plotData: [],
@@ -354,6 +452,7 @@
                 plotsInitialX: 0,
                 plotsInitialY: 0,
                 plotsInitialZoom: 1.75,
+                plotsSendTo: "",
 
                 currentPlot: undefined,
 
@@ -371,7 +470,19 @@
                     MAX_PLOTS_QUERY: 45
                 },
 
-                showSideBar: true
+                showSideBar: true,
+
+                allowances: {
+                    xya: false,
+                    plotHandler: false,
+                    plotEmitter: false,
+                    xyaPlots: false,
+                    yinPlots: false,
+                    yangPlots: false,
+                    marketXyaPlots: false,
+                    marketYinPlots: false,
+                    marketYangPlots: false
+                },
             }
         },
 
@@ -434,6 +545,8 @@
             this.plotEmitterContract = await new ethers.Contract(plotEmitter.address, plotEmitter.abi, this
                 .metaMaskWallet.signer);
             this.plotContract = await new ethers.Contract(plot.address, plot.abi, this.metaMaskWallet.signer);
+            this.plotInventoryContract = await new ethers.Contract(plotInventory.address, plotInventory.abi, this
+                .metaMaskWallet.signer);
 
             await this.getPlots();
             this.plotsMounted = true;
@@ -474,31 +587,40 @@
             }, 5);
 
             await this.getMyPlots();
+            await this.getAllowances();
 
             //await this.setTokenAllowance(999999999999);
 
             //window.addEventListener("resize", this.editPanZoom);
 
-            console.log(plotRenderData);
         },
 
         methods: {
-            getPlotAttributeImage(attribute, neighbourhood, value){
+            createLoaderToast(message) {
+                let toastId = Date.now();
+                let toast = this.$toast(message, {
+                    timeout: 0,
+                    closeButton: "button",
+                    icon: "fa fa-gear fa-spin",
+                    id: toastId
+                });
+                return toast;
+            },
+
+            getPlotAttributeImage(attribute, neighbourhood, value) {
+                if (attribute !== 'Level' && value == 0) return '/plots/neutral/0.png';
                 const renderData = plotRenderData.filter(c => c.n.indexOf(neighbourhood * 1) > -1)[0];
+                if (!renderData) return '';
 
-                if(!renderData) return '';
                 const folder = renderData['folder'];
-                const attributeName = attribute === 'l' ? 'Level' : attributeName === 'f' ? 'Fertility' : 'Crime';
-
-                if(attributeName === 'Level') {
-                    return `/plots/${folder}/${attributeName}_${value}.png`;
+                if (attribute === 'Level') {
+                    return `/plots/${folder}/${attribute}_${value}.png`;
                 }
 
-                if(renderData[attribute].indexOf(value)){
-                    return `/plots/${folder}/${attributeName}_${value}.png`;
-                }
-                else{
-                    return `/plots/neutral/${attributeName}_${value}.png`;
+                if (renderData[attribute].indexOf(value) > -1) {
+                    return `/plots/${folder}/${attribute}_${value}.png`;
+                } else {
+                    return `/plots/neutral/${attribute}_${value}.png`;
                 }
             },
 
@@ -561,29 +683,66 @@
                 this.applyPlotFilters();
             },
 
-            async setTokenAllowance(amount) {
+            async getAllowances() {
+                const xyaContract = await new ethers.Contract("0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", Freyala
+                    .abi, this
+                    .metaMaskWallet.signer);
+                const yinContract = await new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer);
+                const yangContract = await new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer);
+
+                const xyaPlotsContract = await new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this
+                    .metaMaskWallet.signer);
+                const yinPlotsContract = await new ethers.Contract(PlotsYin.address, PlotsYin.abi, this
+                    .metaMaskWallet.signer);
+                const yangPlotsContract = await new ethers.Contract(PlotsYang.address, PlotsYang.abi, this
+                    .metaMaskWallet.signer);
+
+                this.allowances.plotHandler = await xyaContract.allowance(this
+                    .metaMaskAccount, plot.address) > 0;
+                this.allowances.plotEmitter = await xyaContract.allowance(this
+                    .metaMaskAccount, plotEmitter.address) > 0;
+
+                /*this.allowances.xyaPlots = await xyaContract.allowance(this.metaMaskAccount, PlotsFreyala.address) >
+                    0;
+                this.allowances.yinPlots = await yinContract.allowance(this.metaMaskAccount, PlotsYin.address) > 0;
+                this.allowances.yangPlots = await yangContract.allowance(this.metaMaskAccount, PlotsYang.address) >
+                    0;*/
+
+                this.allowances.marketXyaPlots = await xyaPlotsContract.isApprovedForAll(this.metaMaskAccount,
+                    PlotsMarket.address);
+                this.allowances.marketYinPlots = await yinPlotsContract.isApprovedForAll(this.metaMaskAccount,
+                    PlotsYinMarket.address);
+               // this.allowances.marketYangPlots = await yangPlotsContract.isApprovedForAll(this.metaMaskAccount,
+                //    PlotsYangMarket.address) > 0;
+            },
+
+            async setTokenAllowance(address, amount) {
                 let actual = 0;
                 if (amount > 0) {
                     actual = amount * 10 ** 18;
                 } else {
                     actual = 0;
                 }
+                let toast = undefined;
+
                 try {
                     const arg = fromExponential(actual);
                     let tempContract = new ethers.Contract("0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", Freyala
                         .abi, this
                         .metaMaskWallet.signer);
                     const tx = await tempContract.approve(
-                        "0x06705622555bB2Da76273480b3aF2b9B4f7E0544",
+                        address,
                         arg
                     );
-
+                    toast = this.createLoaderToast("Pending Transaction - Allowance");
+                    console.log(toast);
                     await tx.wait(1);
-                    this.$toast.success(`${token.key} ${amount > 0 ? 'approved' : 'disabled'}`);
+                    this.$toast.success(amount > 0 ? "Contract enabled" : "Contract disabled");
+                    await this.getAllowances();
                 } catch (err) {
-                    console.error(err);
-                    // this.handleError(err);
+                    this.handleError(err);
                 }
+                this.$toast.dismiss(toast);
             },
 
             async getMyPlots() {
@@ -593,23 +752,23 @@
 
                 let [type0, type1, type2] = await Promise.all([
                     this.plotContract.getTokensOwnedByOwner(0, this.metaMaskAccount),
-                    //this.plotContract.getTokensOwnedByOwner(1, this.metaMaskAccount),
-                    //this.plotContract.getTokensOwnedByOwner(2, this.metaMaskAccount)
+                    this.plotContract.getTokensOwnedByOwner(1, this.metaMaskAccount),
+                    this.plotContract.getTokensOwnedByOwner(2, this.metaMaskAccount)
                 ]);
 
                 for (let i = 0; i < type0.length; i++) {
                     type0Ids.push(ethers.BigNumber.from(type0[i]._hex).toString())
                 }
 
-                /*
+
                 for (let i = 0; i < type1.length; i++) {
-                    //type1Ids.push(ethers.BigNumber.from(type1[i]._hex).toString())
+                    type1Ids.push(ethers.BigNumber.from(type1[i]._hex).toString())
                 }
 
                 for (let i = 0; i < type2.length; i++) {
-                    //type2Ids.push(ethers.BigNumber.from(type2[i]._hex).toString())
+                    type2Ids.push(ethers.BigNumber.from(type2[i]._hex).toString())
                 }
-                */
+
 
                 let [plot0Data, plot1Data, plot2Data] = await Promise.all([
                     this.plotContract.getPlotDataMultiple(0, type0Ids),
@@ -745,30 +904,30 @@
                         }
 
                         const sales = await this.marketContracts[singlePlotData
-                                 .plot_type === 0 ? 'xya' :
-                                 singlePlotData.plot_type === 1 ? 'yin' : 'yang']
-                             .getListing(plot.plotId);
+                                .plot_type === 0 ? 'xya' :
+                                singlePlotData.plot_type === 1 ? 'yin' : 'yang']
+                            .getListing(plot.plotId);
 
-                         singlePlotData.sales = {
-                             seller: 0,
-                             buyer: 0,
-                             tokenId: plot.plotId,
-                             price: 0,
-                             forSale: false,
-                         }
+                        singlePlotData.sales = {
+                            seller: 0,
+                            buyer: 0,
+                            tokenId: plot.plotId,
+                            price: 0,
+                            forSale: false,
+                        }
 
-                         if (sales[4]) {
-                             singlePlotData.sales.seller = sales[0]
-                             singlePlotData.sales.buyer = sales[1]
-                             singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
-                                 .toString()
-                             singlePlotData.sales.forSale = sales[4]
-                         }
+                        if (sales[4]) {
+                            singlePlotData.sales.seller = sales[0]
+                            singlePlotData.sales.buyer = sales[1]
+                            singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
+                                .toString()
+                            singlePlotData.sales.forSale = sales[4]
+                        }
 
-                         singlePlotData.plotOwner = await this.plotContracts[
-                             singlePlotData.plot_type ===
-                             0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
-                             'yang'].ownerOf(plot.plotId);
+                        singlePlotData.plotOwner = await this.plotContracts[
+                            singlePlotData.plot_type ===
+                            0 ? 'xya' : singlePlotData.plot_type === 1 ? 'yin' :
+                            'yang'].ownerOf(plot.plotId);
 
                         tempPlotData.push(singlePlotData);
                         resolve();
@@ -780,10 +939,6 @@
                         return a.plot_number - b.plot_number
                     })
                 })
-            },
-
-            async getEmissionsData() {
-                const emissionsRate = await this.plotContracts.xyaEmitter.emissionRate();
             },
 
             changePlotModalViewState(state) {
@@ -800,117 +955,58 @@
             },
 
             async sendPlotNow(address, id, neighbourhood) {
-                if (neighbourhood === 18 || neighbourhood === 19) {
-                    this.loadingSendPlot = true
-                    const send = await this.plotContracts.yin.transferFrom(this.metaMaskAccount, address, id)
-                    await send.wait(1)
-                    this.loadingSendPlot = false
-
-                    window.location.reload(1)
-                } else if (neighbourhood === 16 || neighbourhood === 17) {
-                    this.loadingSendPlot = true
-                    const send = await this.plotContracts.yang.transferFrom(this.metaMaskAccount, address, id)
-                    await send.wait(1)
-                    this.loadingSendPlot = false
-
-                    window.location.reload(1)
-                } else {
-                    this.loadingSendPlot = true
-                    const send = await this.plotContracts.xya.transferFrom(this.metaMaskAccount, address, id)
-                    await send.wait(1)
-                    this.loadingSendPlot = false
-
-                    window.location.reload(1)
+                let toaster = undefined;
+                try {
+                    const contract = neighbourhood >= 18 ? 'yin' : neighbourhood >= 16 ? 'yang' : 'xya';
+                    const tx = await this.plotContracts[contract].transferFrom(this.metaMaskAccount, address, id);
+                    toaster = this.createLoaderToast("Pending - Sending Plot");
+                    await tx.wait(1);
+                } catch (err) {
+                    this.handleError(err);
                 }
+                this.$toaster.dismiss(toaster);
             },
 
             async cancelListing(id, neighbourhood) {
-                if (neighbourhood === 18 || neighbourhood === 19) {
-                    this.loadingCancelPlotListing = true
-                    const cancel = await this.marketContracts.yin.cancelListing(id)
-                    await cancel.wait(1)
-                    this.loadingCancelPlotListing = false
-
-                    window.location.reload(1)
-                } else if (neighbourhood === 16 || neighbourhood === 17) {
-                    this.loadingCancelPlotListing = true
-                    const cancel = await this.marketContracts.yang.cancelListing(id)
-                    await cancel.wait(1)
-                    this.loadingCancelPlotListing = false
-
-                    window.location.reload(1)
-                } else {
-                    this.loadingCancelPlotListing = true
-                    const cancel = await this.marketContracts.xya.cancelListing(id)
-                    await cancel.wait(1)
-                    this.loadingCancelPlotListing = false
-
-                    window.location.reload(1)
+                try {
+                    const contract = neighbourhood >= 18 ? 'yin' : neighbourhood >= 16 ? 'yang' : 'xya';
+                    const tx = await this.marketContracts[contract].cancelListing(id);
+                    await tx.wait(1);
+                } catch (err) {
+                    this.handleError(err);
                 }
             },
 
-            async approvePlotToSellNow(id, neighbourhood) {
-                if (neighbourhood === 18 || neighbourhood === 19) {
-                    this.loadingApproveSellPlot = true
-                    this.plotYinFreyalaContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this
-                        .metaMaskWallet.signer)
-                    const approve = await this.plotYinFreyalaContract.approve(PlotsYinMarket.address, id)
-                    await approve.wait(1)
-                    this.loadingApproveSellPlot = false
-                } else if (neighbourhood === 16 || neighbourhood === 17) {
-                    this.loadingApproveSellPlot = true
-                    this.plotYangFreyalaContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this
-                        .metaMaskWallet.signer)
-                    const approve = await this.plotYangFreyalaContract.approve(PlotsYangMarket.address, id)
-                    await approve.wait(1)
-                    this.loadingApproveSellPlot = false
-                } else {
-                    this.loadingApproveSellPlot = true
-                    this.plotContracts.xya = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this
-                        .metaMaskWallet.signer)
-                    const approve = await this.plotContracts.xya.approve(PlotsMarket.address, id)
-                    await approve.wait(1)
-                    this.loadingApproveSellPlot = false
-                }
-            },
             async sellPlotNow(amount, id, neighbourhood) {
-                if (neighbourhood === 18 || neighbourhood === 19) {
-                    this.loadingSellPlot = true
+                try {
+                    const contract = neighbourhood >= 18 ? 'yin' : neighbourhood >= 16 ? 'yang' : 'xya';
                     const actual = amount * (10 ** 18)
                     const arg = fromExponential(actual)
-                    const sales = await this.marketContracts.yin.createListing(id, arg)
-                    await sales.wait(1)
-                    this.loadingSellPlot = false
-
-                    window.location.reload(1)
-                } else if (neighbourhood === 16 || neighbourhood === 17) {
-                    this.loadingSellPlot = true
-                    const actual = amount * (10 ** 18)
-                    const arg = fromExponential(actual)
-                    const sales = await this.marketContracts.yang.createListing(id, arg)
-                    await sales.wait(1)
-                    this.loadingSellPlot = false
-
-                    window.location.reload(1)
-                } else {
-                    this.loadingSellPlot = true
-                    const actual = amount * (10 ** 18)
-                    const arg = fromExponential(actual)
-                    const sales = await this.marketContracts.xya.createListing(id, arg)
-                    await sales.wait(1)
-                    this.loadingSellPlot = false
-
-                    window.location.reload(1)
+                    const tx = await this.marketContracts[contract].createListing(id, arg);
+                    await tx.wait(1);
+                } catch (err) {
+                    this.handleError(err);
                 }
             },
-            async approvePlotNow(amount, neighbourhood) {
-                if (neighbourhood === 18 || neighbourhood === 19) {
+
+            async buyPlotNow(amount, id, neighbourhood) {
+                try {
+                    const contract = neighbourhood >= 18 ? 'yin' : neighbourhood >= 16 ? 'yang' : 'xya';
+                    const tx = await this.marketContracts[contract].buy(amount, id);
+                    await tx.wait(1);
+                } catch (err) {
+                    this.handleError(err);
+                }
+            },
+
+            async approvePlotNow(plotType, amount) {
+                if (plotType === 2) {
                     this.loadingApproveBuyPlot = true
                     const mainYinContract = new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer)
                     const approve = await mainYinContract.approve(PlotsYinMarket.address, amount)
                     await approve.wait(1)
                     this.loadingApproveBuyPlot = false
-                } else if (neighbourhood === 16 || neighbourhood === 17) {
+                } else if (plotType === 1) {
                     this.loadingApproveBuyPlot = true
                     const mainYangContract = new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer)
                     const approve = await mainYangContract.approve(PlotsYangMarket.address, amount)
@@ -925,35 +1021,53 @@
                     this.loadingApproveBuyPlot = false
                 }
             },
-            async buyPlotNow(amount, id, neighbourhood) {
-                if (neighbourhood === 18 || neighbourhood === 19) {
-                    this.loadingBuyPlot = true
-                    const sales = await this.marketContracts.yin.buy(amount, id)
-                    await sales.wait(1)
-                    this.loadingBuyPlot = false
 
-                    window.location.reload(1)
-                } else if (neighbourhood === 16 || neighbourhood === 17) {
-                    this.loadingBuyPlot = true
-                    const sales = await this.marketContracts.yang.buy(amount, id)
-                    await sales.wait(1)
-                    this.loadingBuyPlot = false
+            async approvePlotToSellNow(plotType, enable) {
+                let toast = undefined;
 
-                    window.location.reload(1)
+                if (plotType === 2) {
+                    this.plotYinFreyalaContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this
+                        .metaMaskWallet.signer)
+                    const approve = await this.plotYinFreyalaContract.setApprovalForAll(PlotsYinMarket.address,
+                        !enable)
+                    toast = this.createLoaderToast("Pending - Enable Contract");
+                    await approve.wait(1)
+                } else if (plotType === 1) {
+                    this.plotYangFreyalaContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this
+                        .metaMaskWallet.signer)
+                    const approve = await this.plotYangFreyalaContract.setApprovalForAll(PlotsYangMarket.address,
+                        !enable)
+                    toast = this.createLoaderToast("Pending - Enable Contract");
+                    await approve.wait(1)
                 } else {
-                    this.loadingBuyPlot = true
-                    const sales = await this.marketContracts.xya.buy(amount, id)
-                    await sales.wait(1)
-                    this.loadingBuyPlot = false
-
-                    window.location.reload(1)
+                    this.plotContracts.xya = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this
+                        .metaMaskWallet.signer)
+                    const approve = await this.plotContracts.xya.setApprovalForAll(PlotsMarket.address, !enable)
+                    toast = this.createLoaderToast("Pending - Enable Contract");
+                    await approve.wait(1)
                 }
+                this.$toast.dismiss(toast);
+                await this.getAllowances();
             },
 
             openPlot(plot) {
                 this.showPlotDetails = true;
                 this.currentPlot = plot;
-            }
+            },
+
+            handleError(error) {
+                const errorMessage =
+                    typeof error == "object" ? error.message : error.toLowerCase();
+                const lcMessage = errorMessage.toLowerCase();
+                if (lcMessage.indexOf("user denied") > -1) return;
+                if (lcMessage.indexOf("transaction failed") > -1) {
+                    this.$toast.error("Transaction Failed");
+                } else if (errorMessage.length < 100) {
+                    this.$toast.error(errorMessage);
+                } else {
+                    this.$toast.error('Transaction Failed');
+                }
+            },
         }
     }
 </script>

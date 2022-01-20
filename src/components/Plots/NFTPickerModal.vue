@@ -51,7 +51,7 @@
                 <p v-on:click='$emit("close")' class='w-3/10 text-xl opacity-80 hover:text-white cursor-pointer text-center mx-4'>
                     Cancel
                 </p>
-                <p class='w-3/10 xya-btn2 text-center'>
+                <p v-on:click='$emit("confirm", {address: currentCollection.address, token: currentNFT})' class='w-3/10 xya-btn2 text-center'>
                     Confirm
                 </p>
             </div>

@@ -6,21 +6,21 @@
             class='2xl:w-9/12 lg:w-11/12 w-full flex sm:flex-row flex-col 2xl:px-12 h-auto sm:px-14 px-6 mx-auto sm:mt-16 mt-12 panel-limiter'>
 
             <!--PLOT-->
-            <div class='relative sm:w-5/10 w-full lg:mr-6 mr-4'>
+            <div class='relative sm:w-5/12 w-full lg:mr-6 mr-4'>
                 <img class="w-full h-full rounded-xl" src="/images/plots/base/0.png" alt="Base land">
                 <img class="absolute top-0 left-0 w-full h-full rounded-xl"
                     :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
                 <img class="absolute top-0 left-0 w-full h-full rounded-xl"
-                    :src="`/images/plots/level/${plot.level}.png`" alt="Level">
+                    :src="getPlotAttributeImage('Level', plot.neighbourhood, plot.level)" alt="Level">
                 <img class="absolute top-0 left-0 w-full h-full rounded-xl"
-                    :src="`/images/plots/fertility/${plot.fertility}.png`" alt="Fertility">
+                    :src="getPlotAttributeImage('Fertility', plot.neighbourhood, plot.fertility)" alt="Fertility">
                 <img class="absolute top-0 left-0 w-full h-full rounded-xl"
-                    :src="`/images/plots/crime/${plot.crimeRate}.png`" alt="Crime">
+                    :src="getPlotAttributeImage('Crime', plot.neighbourhood, plot.crimeRate)" alt="Crime">
             </div>
 
             <!--PLOT ATTRIBUTES-->
             <div
-                class='sm:w-5/10 w-full lg:ml-6 sm:ml-4 ml-0 sm:mt-0 mt-12 rounded-xl xl:py-6 py-3 xl:px-10 px-5 dark-panel flex flex-col items-center'>
+                class='sm:w-7/12 w-full lg:ml-6 sm:ml-4 ml-0 sm:mt-0 mt-12 rounded-xl xl:py-6 py-3 xl:px-10 px-5 dark-panel flex flex-col items-center'>
                 <h2 class='xl:text-3xl sm:text-2xl text-xl w-full mb-2'>Plot #{{ plot.token_id }}</h2>
                 <p class='text-white w-full xl:text-sm text-xs opacity-30'>
                     Owned by {{ getPlotOwner(plot.plotOwner)}}
@@ -81,7 +81,7 @@
                     <p v-else class='xl:text-lg lg:text-base text-sm w-7/10 text-left'>
                         Maximum Level Reached
                     </p>
-                    <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot)'
+                    <p v-if='plotData.level < 9' v-on:click='showUpgradePlotModal(plot)'
                         class='w-3/10 xya-btn2 text-center xl:text-lg text-sm'>
                         <span class='sm:block hidden'>Level Up</span>
                         <span class='sm:hidden block'>Up</span>
@@ -104,9 +104,10 @@
         </div>
 
         <!--PLOT EMITTER-->
-        <div :key='keys.emitter' v-if='plot.ownerOf' class='2xl:w-9/12 lg:w-11/12 w-full 2xl:px-12 sm:px-14 px-6 flex flex-col mx-auto h-auto mt-12'>
+        <div :key='keys.emitter' v-if='plot.ownerOf'
+            class='2xl:w-9/12 lg:w-11/12 w-full 2xl:px-12 sm:px-14 px-6 flex flex-col mx-auto h-auto mt-12'>
             <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-4'>
-                Excavator
+                XYA Emitter
             </h2>
             <div class='w-full h-full rounded-xl sm:px-8 px-4 sm:py-6 py-6 dark-panel'>
                 <div v-if='!emitterStarted' class='w-full h-auto flex flex-row justify-start items-center mb-2'>
@@ -141,12 +142,12 @@
                         Emission Rate
                     </p>
                     <p class='xl:text-xl sm:text-lg text-xs sm:text-left text-right sm:w-3/10 w-5/10'>
-                        {{calculatePlotEmissionRate(plot)}} (+{{ calculatePlotEmissionBonus(plot) }}) / D
+                        {{calculatePlotEmissionRate(plot)}} (+{{ calculatePlotEmissionBonus(plot) }}) / day
                     </p>
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
                 </div>
                 <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
-                    ~ {{ (calculatePlotEmissionRate(plot) / 24).toFixed(2) }} XYA / H
+                    ~ {{ (calculatePlotEmissionRate(plot) / 24).toFixed(2) }} XYA / hour
                 </p>
 
                 <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
@@ -159,17 +160,18 @@
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
                 </div>
                 <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
-                    ~ {{ ((calculatePlotEmissionRate(plot) * (1 - emissionUnlockRate))).toFixed(2) }} XYA / D
+                    ~ {{ ((calculatePlotEmissionRate(plot) * (1 - emissionUnlockRate))).toFixed(2) }} XYA / day
                 </p>
 
                 <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
                     <p class='text-white xl:text-xl sm:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-5/10'>
                         Bounty
                     </p>
-                    <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10 mr-8'>
-                        {{ emissions.toFixed(2) }} XYA 
+                    <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
+                        {{ emissions.toFixed(2) }} XYA
                     </p>
-                    <p v-if='plot.ownerOf' class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
+                    <p v-if='plot.ownerOf' v-on:click='collectPlotEmissions(plot)'
+                        class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
                         Collect
                     </p>
                 </div>
@@ -239,14 +241,133 @@
 
         </div>
 
-        <NFTPickerModal v-if='showSlotPickerModal' v-on:close='showSlotPickerModal = false' :slotNumber='slotIndex'>
+        <NFTPickerModal v-on:confirm='addNftToSlot($event)' v-if='showSlotPickerModal'
+            v-on:close='showSlotPickerModal = false' :slotNumber='slotIndex'>
 
         </NFTPickerModal>
+
+
+        <window height='10%' width='80%' name='upgradeplot'>
+            <div class="flex flex-wrap p-6 bg-dark h-full">
+                <div class="w-full text-center">
+                    <div class="sm:text-3xl text-2xl">Upgrade Plot - Level</div>
+                </div>
+                <div class="absolute right-6">
+                    <i @click="$modal.hide('upgradeplot')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <hr class='w-full my-4' />
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>Pay -</span> {{plotData.levelUpCost}} XYA
+
+                    <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, false)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <span class='sm:block hidden'>Level Up</span>
+                        <span class='sm:hidden block'>Up</span>
+                    </p>
+                </div>
+                <p class='mt-4 opacity-80 text-sm'>
+                    or
+                </p>
+                <div class='mt-4 flex flex-row w-full items-start justify-start'>
+                    <span class='text-white opacity-80 mr-1 sm:text-lg text-sm'>Pay -</span>
+                    <span class=' sm:text-lg text-sm'>
+                        {{plotData.levelUpCost * 3}} XYA from Treasury
+                    </span>
+                    <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, true)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <span class='sm:block hidden'>Level Up</span>
+                        <span class='sm:hidden block'>Up</span>
+                    </p>
+                </div>
+                <p class='opacity-80 text-sm mt-2'>
+                    Paying using treasury funds is 3 times more expensive.
+                </p>
+            </div>
+        </window>
+
+        <window height='10%' width='80%' name='upgradeplot'>
+            <div class="flex flex-wrap p-6 bg-dark h-full">
+                <div class="w-full text-center">
+                    <div class="sm:text-3xl text-2xl">Upgrade Plot - Level</div>
+                </div>
+                <div class="absolute right-6">
+                    <i @click="$modal.hide('upgradeplot')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <hr class='w-full my-4' />
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>Pay -</span> {{plotData.levelUpCost}} XYA
+
+                    <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, false)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <span class='sm:block hidden'>Level Up</span>
+                        <span class='sm:hidden block'>Up</span>
+                    </p>
+                </div>
+                <p class='mt-4 opacity-80 text-sm'>
+                    or
+                </p>
+                <div class='mt-4 flex flex-row w-full items-start justify-start'>
+                    <span class='text-white opacity-80 mr-1 sm:text-lg text-sm'>Pay -</span>
+                    <span class=' sm:text-lg text-sm'>
+                        {{plotData.levelUpCost * 3}} XYA from Treasury
+                    </span>
+                    <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, true)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <span class='sm:block hidden'>Level Up</span>
+                        <span class='sm:hidden block'>Up</span>
+                    </p>
+                </div>
+                <p class='opacity-80 text-sm mt-2'>
+                    Paying using treasury funds is 3 times more expensive.
+                </p>
+            </div>
+        </window>
+
+        <window height='10%' width='80%' name='startemitter'>
+            <div class="flex flex-wrap p-6 bg-dark h-full">
+                <div class="w-full text-center">
+                    <div class="sm:text-3xl text-2xl">Upgrade Plot - Level</div>
+                </div>
+                <div class="absolute right-6">
+                    <i @click="$modal.hide('startemitter')" class="fas fa-times cursor-pointer text-xl"></i>
+                </div>
+                <hr class='w-full my-4' />
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>Pay -</span> {{plotData.levelUpCost}} XYA
+
+                    <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, false)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <span class='sm:block hidden'>Level Up</span>
+                        <span class='sm:hidden block'>Up</span>
+                    </p>
+                </div>
+                <p class='mt-4 opacity-80 text-sm'>
+                    or
+                </p>
+                <div class='mt-4 flex flex-row w-full items-start justify-start'>
+                    <span class='text-white opacity-80 mr-1 sm:text-lg text-sm'>Pay -</span>
+                    <span class=' sm:text-lg text-sm'>
+                        {{plotData.levelUpCost * 3}} XYA from Treasury
+                    </span>
+                    <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, true)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <span class='sm:block hidden'>Level Up</span>
+                        <span class='sm:hidden block'>Up</span>
+                    </p>
+                </div>
+                <p class='opacity-80 text-sm mt-2'>
+                    Paying using treasury funds is 3 times more expensive.
+                </p>
+            </div>
+        </window>
     </div>
 </template>
 
 <script>
     import NFTPickerModal from './NFTPickerModal';
+    import plotRenderData from '../../plugins/snapshots/plotsRenderData.json';
+    import plotInventory from '../../plugins/artifacts/plotInventory.json';
+
     import {
         mapGetters
     } from "vuex"
@@ -266,11 +387,6 @@
                 }
             },
 
-            emitterContract: {
-                type: Object,
-                default: undefined
-            },
-
             contract: {
                 type: Object,
                 default: undefined
@@ -279,7 +395,12 @@
             plotEmitterContract: {
                 type: Object,
                 default: undefined
-            }
+            },
+
+            plotInventoryContract: {
+                type: Object,
+                default: undefined
+            },
 
         },
 
@@ -316,6 +437,8 @@
                 plotSlot2: undefined,
                 plotSlot3: undefined,
 
+                plotReceiverAddress: "",
+
                 raidHistory: [],
 
                 showSlotPickerModal: false,
@@ -335,11 +458,36 @@
             this.updateInterval = setInterval(async () => {
                 await this.getPlotData();
             }, 15000);
-
-            console.log(this.plot);
         },
 
         methods: {
+            getPlotAttributeImage(attribute, neighbourhood, value) {
+                if (attribute !== 'Level' && value == 0) return '/plots/neutral/0.png';
+                const renderData = plotRenderData.filter(c => c.n.indexOf(neighbourhood * 1) > -1)[0];
+                if (!renderData) return '';
+
+                const folder = renderData['folder'];
+                if (attribute === 'Level') {
+                    return `/plots/${folder}/${attribute}_${value}.png`;
+                }
+
+                if (renderData[attribute].indexOf(value) > -1) {
+                    return `/plots/${folder}/${attribute}_${value}.png`;
+                } else {
+                    return `/plots/neutral/${attribute}_${value}.png`;
+                }
+            },
+
+            async addNftToSlot(slotData) {
+                try {
+                    const tx = await this.plotInventoryContract.addAssetToPlotInventory(0, 1829, slotData.address,
+                        slotData.token.id, 1);
+                    await tx.wait(1);
+                } catch (err) {
+                    console.error(err);
+                }
+            },
+
             async getPlotData() {
                 const plotData = await this.contract.getPlotData(this.plot.plot_type, this.plot.token_id * 1);
                 this.plotData = {
@@ -363,11 +511,11 @@
                 this.keys.emitter += 1;
             },
 
-            async levelUpPlot(plot) {
+            async levelUpPlot(plot, fromTreasury) {
                 try {
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
                     if (isEmitting) throw 'Excavator is running!';
-                    const tx = await this.contract.levelUpPlot(0, 1829, false, {
+                    const tx = await this.contract.levelUpPlot(0, 1829, fromTreasury, {
                         gasLimit: 20000000,
                         gasPrice: 30000000000
                     });
@@ -381,7 +529,7 @@
             async togglePlotEmitter(plot) {
                 try {
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
-                    const tx = isEmitting ?
+                    const tx = !isEmitting ?
                         await this.plotEmitterContract.startEmissions(plot.plot_type, plot.token_id * 1, {
                             gasPrice: 200000000000,
                             gasLimit: 2000000,
@@ -402,6 +550,21 @@
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
                     const tx =
                         await this.plotEmitterContract.startEmissions(plot.plot_type, plot.token_id * 1, {
+                            gasPrice: 200000000000,
+                            gasLimit: 2000000,
+                        });
+                    await tx.wait(1);
+                    await this.getPlotData(plot);
+                } catch (err) {
+                    this.handleError(err);
+                }
+            },
+
+            async collectPlotEmissions(plot) {
+                try {
+                    const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
+                    const tx =
+                        await this.plotEmitterContract.claimEmissions(plot.plot_type, plot.token_id * 1, {
                             gasPrice: 200000000000,
                             gasLimit: 2000000,
                         });
@@ -455,6 +618,10 @@
                     this.$toast.error('Transaction Failed');
                 }
             },
+
+            showUpgradePlotModal(plot) {
+                this.$modal.show("upgradeplot");
+            }
         }
     }
 </script>
@@ -480,29 +647,29 @@
     }
 
     .plot-slot {
-        width: 64px;
-        height: 64px;
+        width: 72px;
+        height: 72px;
         border: 2px solid #363636;
         opacity: 0.8;
         cursor: pointer;
     }
 
-    .panel-limiter{
+    .panel-limiter {
         max-height: 45vh;
     }
 
     @media only screen and (max-width: 1024px) {
-    .panel-limiter{
-        max-height: 100vh;
-    }
-    
-    .plot-slot {
-        width: 60px;
-        height: 56px;
-        border: 2px solid #363636;
-        opacity: 0.8;
-        cursor: pointer;
-    }
+        .panel-limiter {
+            max-height: 100vh;
+        }
+
+        .plot-slot {
+            width: 60px;
+            height: 56px;
+            border: 2px solid #363636;
+            opacity: 0.8;
+            cursor: pointer;
+        }
     }
 
     .plot-slot:hover {

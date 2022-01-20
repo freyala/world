@@ -867,10 +867,11 @@ h1 {
 }
 
 .vm--modal {
-  --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  background-color: #222222!important;
 
-  max-width: 500px;
+  width: auto!important;
+  max-width: 750px;
   margin-left: auto;
   margin-right: auto;
   transform: translate(-10vw, 0%);
@@ -878,7 +879,7 @@ h1 {
   height: auto !important;
 
 
-  border-radius: 15px !important;
-  border: 1px #54b67a solid;
+  border-radius: 12px !important;
+  border: 2px #54b67ac7 solid;
 }
 </style>
