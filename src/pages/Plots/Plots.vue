@@ -13,22 +13,22 @@
                 <i class='fa fa-arrow-left mr-2' v-on:click='showPlotDetails = false'>
 
                 </i>
-                <span v-if='!showPlotDetails'>
+                <span class='sm:block hidden' v-if='!showPlotDetails'>
                     Back
                 </span>
-                <span v-on:click='showPlotDetails = false' v-else>
+                <span class='sm:block hidden' v-on:click='showPlotDetails = false' v-else>
                     Back to plots
                 </span>
             </div>
-            <div class='w-full text-center text-3xl font-bold absolute'>
+            <div class='w-full text-center lg:text-3xl sm:text-xl text-xl font-bold absolute'>
                 <p v-if='!showPlotDetails'>Plots of Land</p>
                 <p v-else>Plot #{{currentPlot.token_id}}</p>
             </div>
-            <div class='absolute right-12'>
+            <div class='absolute sm:right-12 right-4'>
                 <i v-if='showPlotDetails' v-on:click='$modal.show("sendplot")'
-                    class='fas fa-paper-plane text-xl hover:text-white cursor-pointer mx-6'></i>
+                    class='fas fa-paper-plane sm:text-xl text-base hover:text-white cursor-pointer mx-6'></i>
                 <i v-on:click='$modal.show("allowances")'
-                    class='fas fa-cog text-xl hover:text-white cursor-pointer'></i>
+                    class='fas fa-cog sm:text-xl text-base hover:text-white cursor-pointer'></i>
             </div>
         </div>
         <div class='xl:relative absolute 2xl:w-1/5 xl:w-3/12 lg:w-5/12 sm:w-6/12 w-full xl:h-2/10 h-full flex flex-row py-4 px-4 pt-16 overflow-y-auto overflow-x-hidden'
@@ -234,10 +234,21 @@
                     <i @click="$modal.hide('allowances')" class="fas fa-times cursor-pointer text-xl"></i>
                 </div>
                 <hr class='w-full my-4' />
+
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'XYA-ONE LP' Token</span>
+
+                    <p v-on:click='setTokenAllowance(plotEmitterContract.address, allowances.xyaOne ? 0 : 999999999999, CONSTANTS.XYA_ONE);'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.xyaOne'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
                     <span class='text-white opacity-80 mr-1'>'Plot Handler' Contract</span>
 
-                    <p v-on:click='setTokenAllowance(plotContract.address, allowances.plotHandler ? 0 : 999999999999, "plotHandler");'
+                    <p v-on:click='setTokenAllowance(plotContract.address, allowances.plotHandler ? 0 : 999999999999);'
                         class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
                         <template v-if='!allowances.plotHandler'>Enable</template>
                         <template v-else>Disable</template>
@@ -247,9 +258,41 @@
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
                     <span class='text-white opacity-80 mr-1'>'Plot Emitter' Contract</span>
 
-                    <p v-on:click='setTokenAllowance(plotEmitterContract.address, allowances.plotEmitter ? 0 : 999999999999, "plotEmitter")'
+                    <p v-on:click='setTokenAllowance(plotEmitterContract.address, allowances.plotEmitter ? 0 : 999999999999)'
                         class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
                         <template v-if='!allowances.plotEmitter'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+                <hr class='w-8/10 mx-4 my-6 opacity-30' />
+
+                <div class="flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'XYA Plots' Contract</span>
+
+                    <p v-on:click='approvePlotToSellNow(0, allowances.marketXyaPlots)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.marketXyaPlots'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'Yang Plots' Contract</span>
+
+                    <p v-on:click='approvePlotToSellNow(1, allowances.marketYangPlots)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.marketYangPlots'>Enable</template>
+                        <template v-else>Disable</template>
+                    </p>
+                </div>
+
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
+                    <span class='text-white opacity-80 mr-1'>'Yin Plots' Contract</span>
+
+                    <p v-on:click='approvePlotToSellNow(2, allowances.marketYinPlots)'
+                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        <template v-if='!allowances.marketYinPlots'>Enable</template>
                         <template v-else>Disable</template>
                     </p>
                 </div>
@@ -304,7 +347,8 @@
                     <input class='w-6/10 text-black px-2 rounded-lg' type="text" v-model='plotsSendTo' />
                 </div>
                 <div class="w-full flex flex-row items-center mt-6">
-                    <p class='ml-auto w-3/12 text-base'>Cancel</p>
+                    <p @click="$modal.hide('sendplot')"
+                        class='ml-auto w-3/12 text-base cursor-pointer hover:text-white'>Cancel</p>
                     <button v-on:click="sendPlotNow(plotsSendTo, currentPlot.token_id, currentPlot.neighbourhood)"
                         type="button" class="w-3/12 xya-btn2 text-base">
                         <span>Confirm</span>
@@ -473,6 +517,7 @@
                 showSideBar: true,
 
                 allowances: {
+                    xyaOne: false,
                     xya: false,
                     plotHandler: false,
                     plotEmitter: false,
@@ -483,6 +528,14 @@
                     marketYinPlots: false,
                     marketYangPlots: false
                 },
+
+                CONSTANTS: {
+                    XYA_ONE: "0xc74eaf04777f784a7854e8950daeb27559111b85",
+                    XYA: "0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2"
+                },
+                
+                isPanzoom: false,
+                lastTimeStamp: 0
             }
         },
 
@@ -578,6 +631,18 @@
                 })
             });
 
+            elem.addEventListener('panzoomstart', (e) => {
+                this.isPanzoom = true;
+                this.lastTimeStamp = e.timeStamp;
+            });
+
+            elem.addEventListener('panzoomend', (e) => {
+                if(e.timestamp - this.lastTimeStamp < 250) this.isPanzoom = false;
+                setTimeout(() => {
+                    this.isPanzoom = false;
+                },250);
+            });
+
             setTimeout(() => {
                 panzoom.pan(this.plotsInitialX, this.plotsInitialY);
             });
@@ -645,8 +710,8 @@
                     return value >= this.filters.minLevel * 1 && value <= this.filters.maxLevel * 1
                 };
 
-                let filteredPlotData = this.plotData.filter(c => fertilityFilter(c.fertility) && crimeRateFilter(c
-                    .crimeRate) && levelFilter(c.level) && (c.price > 0 || !this.filters.onlySales));
+                let filteredPlotData = this.plotData.filter(c => (fertilityFilter(c.fertility) && crimeRateFilter(c
+                    .crimeRate) && levelFilter(c.level)) && (c.sales.price > 0 || !this.filters.onlySales));
 
                 for (let i = 0; i < filteredPlotData.length; i++) {
                     filteredPlotData[i].isFiltered = true;
@@ -684,7 +749,10 @@
             },
 
             async getAllowances() {
-                const xyaContract = await new ethers.Contract("0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", Freyala
+                const xyaOneContract = await new ethers.Contract(this.CONSTANTS.XYA_ONE, Freyala
+                    .abi, this
+                    .metaMaskWallet.signer);
+                const xyaContract = await new ethers.Contract(this.CONSTANTS.XYA, Freyala
                     .abi, this
                     .metaMaskWallet.signer);
                 const yinContract = await new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer);
@@ -699,6 +767,8 @@
 
                 this.allowances.plotHandler = await xyaContract.allowance(this
                     .metaMaskAccount, plot.address) > 0;
+                this.allowances.xyaOne = await xyaOneContract.allowance(this.metaMaskAccount, plotEmitter.address) >
+                    0;
                 this.allowances.plotEmitter = await xyaContract.allowance(this
                     .metaMaskAccount, plotEmitter.address) > 0;
 
@@ -712,11 +782,11 @@
                     PlotsMarket.address);
                 this.allowances.marketYinPlots = await yinPlotsContract.isApprovedForAll(this.metaMaskAccount,
                     PlotsYinMarket.address);
-               // this.allowances.marketYangPlots = await yangPlotsContract.isApprovedForAll(this.metaMaskAccount,
+                // this.allowances.marketYangPlots = await yangPlotsContract.isApprovedForAll(this.metaMaskAccount,
                 //    PlotsYangMarket.address) > 0;
             },
 
-            async setTokenAllowance(address, amount) {
+            async setTokenAllowance(address, amount, token = CONSTANTS.XYA) {
                 let actual = 0;
                 if (amount > 0) {
                     actual = amount * 10 ** 18;
@@ -727,7 +797,7 @@
 
                 try {
                     const arg = fromExponential(actual);
-                    let tempContract = new ethers.Contract("0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", Freyala
+                    let tempContract = new ethers.Contract(token, Freyala
                         .abi, this
                         .metaMaskWallet.signer);
                     const tx = await tempContract.approve(
@@ -735,7 +805,6 @@
                         arg
                     );
                     toast = this.createLoaderToast("Pending Transaction - Allowance");
-                    console.log(toast);
                     await tx.wait(1);
                     this.$toast.success(amount > 0 ? "Contract enabled" : "Contract disabled");
                     await this.getAllowances();
@@ -772,8 +841,8 @@
 
                 let [plot0Data, plot1Data, plot2Data] = await Promise.all([
                     this.plotContract.getPlotDataMultiple(0, type0Ids),
-                    // this.plotContract.getPlotDataMultiple(1, type1Ids),
-                    // this.plotContract.getPlotDataMultiple(2, type2Ids)
+                    this.plotContract.getPlotDataMultiple(1, type1Ids),
+                    this.plotContract.getPlotDataMultiple(2, type2Ids)
                 ])
 
                 let plotData = [...plot0Data];
@@ -955,16 +1024,20 @@
             },
 
             async sendPlotNow(address, id, neighbourhood) {
-                let toaster = undefined;
+                let toast = undefined;
                 try {
                     const contract = neighbourhood >= 18 ? 'yin' : neighbourhood >= 16 ? 'yang' : 'xya';
                     const tx = await this.plotContracts[contract].transferFrom(this.metaMaskAccount, address, id);
-                    toaster = this.createLoaderToast("Pending - Sending Plot");
+                    toast = this.createLoaderToast("Pending - Sending Plot");
+                    this.$modal.hide("sendplot");
+                    this.currentPlot = undefined;
+                    this.showPlotDetails = false;
                     await tx.wait(1);
+                    await this.getMyPlots();
                 } catch (err) {
                     this.handleError(err);
                 }
-                this.$toaster.dismiss(toaster);
+                this.$toast.dismiss(toast);
             },
 
             async cancelListing(id, neighbourhood) {
@@ -1051,7 +1124,9 @@
             },
 
             openPlot(plot) {
+                if(this.isPanzoom) return;
                 this.showPlotDetails = true;
+                console.log(plot);
                 this.currentPlot = plot;
             },
 

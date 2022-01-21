@@ -131,3 +131,11 @@
     }
   }
 </script>
+
+<style>
+.Vue-Toastification__icon{
+  width: auto!important;
+  max-width: 20px!important;
+}
+
+</style>
