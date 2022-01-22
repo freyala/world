@@ -25,7 +25,8 @@
                 <p class='text-white w-full xl:text-sm text-xs opacity-30'>
                     Owned by {{ getPlotOwner(plot.plotOwner)}}
                 </p>
-                <div class='w-full flex flex-row xl:mb-4 lg:mb-3 mb-2' v-bind:class='{"mt-auto": !plot.ownerOf, "mt-2": plot.ownerOf}'>
+                <div class='w-full flex flex-row xl:mb-4 lg:mb-3 mb-2'
+                    v-bind:class='{"mt-auto": !plot.ownerOf, "mt-2": plot.ownerOf}'>
                     <p class='text-white sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
                         Soil
                     </p>
@@ -82,7 +83,7 @@
                     <p v-else class='xl:text-lg lg:text-base text-sm w-7/10 text-left'>
                         Maximum Level Reached
                     </p>
-                    <p v-if='plotData.level < 9' v-on:click='showUpgradePlotModal(plot)'
+                    <p v-if='plotData.level < 9' v-on:click='$modal.show("upgradeplot")'
                         class='w-3/10 xya-btn2 text-center xl:text-lg text-sm'>
                         <span class='sm:block hidden'>Level Up</span>
                         <span class='sm:hidden block'>Up</span>
@@ -92,46 +93,6 @@
         </div>
 
         <!--LISTING-->
-        <div v-if='!plot.ownerOf && plot.sales.forSale'
-            class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
-            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-4'>
-                Listing Info
-            </h2>
-            <div class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4'>
-                <div class='w-full h-auto flex flex-row justify-start items-center'>
-                    <p class='text-white xl:text-xl sm:text-lg sm:text-sm text-xs opacity-80 sm:w-5/10 w-4/10'>
-                        For Sale
-                    </p>
-                    <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-center sm:w-5/10 w-5/10'>
-                        {{ (plot.sales.price / 10 ** 18) }} XYA
-                    </p>
-                    <p v-on:click='buyPlot(plot)'
-                        class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
-                        Buy
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div v-else
-            class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
-            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-4'>
-                Listing Info
-            </h2>
-            <div class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4'>
-                <div class='w-full h-auto flex flex-row justify-start items-center'>
-                    <p class='text-white xl:text-xl sm:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-5/10'>
-                        Unlocked Emission
-                    </p>
-                    <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
-                        {{ unlockedEmissions.toFixed(2) }} XYA
-                    </p>
-                    <p v-if='plot.ownerOf' v-on:click='collectPlotUnlockedEmissions(plot)'
-                        class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
-                        Collect
-                    </p>
-                </div>
-            </div>
-        </div>
 
         <!--PLOT EMITTER-->
         <div :key='keys.emitter' v-if='plot.ownerOf'
@@ -167,7 +128,7 @@
 
                 <hr class='lg:my-6 my-4' style='color: #00000055' />
 
-                <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
+                <div :key='keys.emitter' class='w-full h-auto flex flex-row justify-start items-center mb-2'>
                     <p class='text-white xl:text-xl sm:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
                         Emission Rate
                     </p>
@@ -185,7 +146,12 @@
                         Treasury
                     </p>
                     <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-3/10 w-5/10'>
-                        {{ plotData.treasury }} XYA
+                        <template v-if='plotData.treasury'>
+                            {{ plotData.treasury.toFixed(2) }} XYA
+                        </template>
+                        <template v-else>
+                            0 XYA
+                        </template>
                     </p>
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
                 </div>
@@ -198,7 +164,7 @@
                         Emissions
                     </p>
                     <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
-                        {{ emissions.toFixed(2) }} XYA
+                        {{ emissions.toFixed(2) }} / {{ emissionMaxAllowed.toFixed(2) }} XYA
                     </p>
                     <p v-if='plot.ownerOf' v-on:click='collectPlotEmissions(plot)'
                         class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
@@ -208,20 +174,28 @@
                 <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
                     ~ {{ ((calculatePlotEmissionRate(plot) * emissionUnlockRate)).toFixed(2) }} XYA / Day
                 </p>
+                <p v-if='emissions >= emissionMaxAllowed && emitterStarted' style='color: rgba(200,150,0,1)' class='sm:text-sm text-xs opacity-90 mt-4'>
+                    <i class='fas fa-exclamation-triangle text-xl mr-2'></i>The Emitter is clogged and doesn't work anymore! Please collect the current emissions in order to
+                    start emitting again!
+                </p>
 
             </div>
         </div>
 
+
         <div v-if='plot.ownerOf' class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
-            <div class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4'>
-                <div class='w-full h-auto flex flex-row justify-start items-center'>
+            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
+                Unlocked Treasury
+            </h2>
+            <div class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
                     <p class='text-white xl:text-xl sm:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-5/10'>
-                        Unlocked Emission
+                        Unlocked Xya
                     </p>
                     <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
                         {{ unlockedEmissions.toFixed(2) }} XYA
                     </p>
-                    <p v-if='plot.ownerOf' v-on:click='collectPlotUnlockedEmissions(plot)'
+                    <p v-if='plot.ownerOf' v-on:click='withdrawUnlockedEmissions(plot)'
                         class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
                         Collect
                     </p>
@@ -257,7 +231,8 @@
         </div>
 
         <!--PLOT RAIDS-->
-        <div class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
+        <div v-show='false'
+            class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
             <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
                 Plot Raids
             </h2>
@@ -289,7 +264,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <NFTPickerModal v-on:confirm='addNftToSlot($event)' v-if='showSlotPickerModal'
@@ -420,6 +394,7 @@
                     fertility: 0,
                     fertilityBase: 0,
                     defense: 0,
+                    treasury: 0
                 }
             },
 
@@ -437,6 +412,11 @@
                 type: Object,
                 default: undefined
             },
+
+            allowances: {
+                type: Object,
+                default: {}
+            }
 
         },
 
@@ -457,13 +437,13 @@
 
         data() {
             return {
-                emissionBaseRate: 8,
+                emissionBaseRate: 4,
                 emissionUnlockRate: 0.25,
                 emissions: 0,
                 unlockedEmissions: 0,
                 emissionRate: 0,
                 emissionBonus: 0,
-                emissionPerDay: 0,
+                emissionMaxAllowed: 0,
                 emitterStarted: false,
                 emitterStartFee: 0,
 
@@ -476,6 +456,7 @@
                 plotSlot3: undefined,
 
                 plotReceiverAddress: "",
+                plotListPrice: 0,
 
                 raidHistory: [],
 
@@ -494,6 +475,8 @@
             await this.getPlotData();
 
             this.emitterStartFee = await this.plotEmitterContract.feeToEmit() / 10 ** 18;
+            this.emissionBaseRate = await this.plotEmitterContract.baseEmissionRatePerDay() / 10 ** 18;
+            this.emissionMaxAllowed = await this.plotEmitterContract.maxAllowedToEmitUntilClog() / 10 ** 18;
             this.updateInterval = setInterval(async () => {
                 await this.getPlotData();
             }, 15000);
@@ -565,13 +548,23 @@
             async levelUpPlot(plot, fromTreasury) {
                 let toast = undefined;
                 try {
+
+                    if (!this.allowances.plotHandler) {
+                        this.$modal.hide('upgradeplot');
+                        this.$emit('allowanceError', {
+                            message: "Please enable the 'Plot Handler' contract!"
+                        });
+                        return;
+                    }
+
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
-                    if (isEmitting) throw 'Excavator is running!';
-                    const tx = await this.contract.levelUpPlot(0, 1829, fromTreasury, {
-                        gasLimit: 20000000,
-                        gasPrice: 30000000000
+                    if (isEmitting) throw 'Emitter is running!';
+                    const tx = await this.contract.levelUpPlot(plot.plot_type, plot.token_id * 1, fromTreasury, {
+                        gasPrice: 30000000000,
+                        gasLimit: 3000000,
                     });
                     toast = this.createLoaderToast("Pending - Level Up");
+                    this.$modal.hide('upgradeplot');
                     await tx.wait(1);
                     await this.getPlotData(plot);
                 } catch (err) {
@@ -589,6 +582,14 @@
                     if (!paidFee && !force) {
                         this.$modal.show('startemitter');
                         return;
+                    } else if (!paidFee && force) {
+                        if (!this.allowances.plotEmitter) {
+                            this.$modal.hide('startemitter');
+                            this.$emit('allowanceError', {
+                                message: "Please enable the 'Plot Emitter' contract!"
+                            });
+                            return;
+                        }
                     }
 
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
@@ -619,10 +620,27 @@
                             gasLimit: 3000000,
                         });
                     await tx.wait(1);
-                    await this.getPlotData(plot);
+                    await this.getPlotData();
                 } catch (err) {
                     this.handleError(err);
                 }
+            },
+
+            async withdrawUnlockedEmissions() {
+                let toast = undefined;
+                try {
+                    const tx =
+                        await this.plotEmitterContract.withdrawUnlockedEmitted({
+                            gasPrice: 30000000000,
+                            gasLimit: 3000000,
+                        });
+                    toast = this.createLoaderToast("Pending - Collect Unlocked XYA");
+                    await tx.wait(1);
+                    await this.getPlotData();
+                } catch (err) {
+                    this.handleError(err);
+                }
+                this.$toast.dismiss(toast);
             },
 
             async collectPlotEmissions(plot) {
@@ -635,19 +653,6 @@
                         });
                     toast = this.createLoaderToast("Pending - Collect Emissions");
                     await tx.wait(1);
-                    await this.getPlotData(plot);
-                } catch (err) {
-                    this.handleError(err);
-                }
-                this.$toast.dismiss(toast);
-            },
-
-            async collectPlotUnlockedEmissions() {
-                let toast = undefined;
-                try {
-                    const tx = await this.plotEmitterContract.withdrawUnlockedEmitted();
-                    await tx.wait(1);
-                    toast = this.createLoaderToast("Pending - Withdraw Emissions");
                     await this.getPlotData(plot);
                 } catch (err) {
                     this.handleError(err);
@@ -675,6 +680,22 @@
                 return Math.max(1, emissionRate);
             },
 
+            emitListPlot(plot, price) {
+                this.$emit('listplot', {
+                    id: plot.token_id * 1,
+                    neighbourhood: plot.neighbourhood,
+                    amount: price
+                });
+            },
+
+            emitBuyPlot(plot, price) {
+                this.$emit('buyplot', {
+                    id: plot.token_id * 1,
+                    neighbourhood: plot.neighbourhood,
+                    amount: price
+                });
+            },
+
             calculatePlotEmissionBonus(plot) {
                 const fertility = Math.floor((plot.fertility - plot.fertilityBase) / 3);
                 const crime = Math.floor((plot.crimeRate - plot.crimeRateBase) / 2);
@@ -698,10 +719,6 @@
                     this.$toast.error('Transaction Failed');
                 }
             },
-
-            showUpgradePlotModal(plot) {
-                this.$modal.show("upgradeplot");
-            }
         }
     }
 </script>
