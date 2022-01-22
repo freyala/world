@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="$router.name !== 'login'" class="absolute w-full top-0 left-0 opacity-25"
+    <div v-if="$router.name !== 'login'" class="absolute w-full top-0 left-0 opacity-0"
       style="background: url('/images/map/world.png') no-repeat; background-size: cover; min-height: 100vh"></div>
 
     <div style="width: 0; height: 0">
@@ -25,7 +25,7 @@
 
     <transition name="fade" mode="out-in">
       <div v-show="!loading && $route.name !== 'world-map'" style='transition: opacity 1s'
-        class='md:absolute lg:block hidden mb-8 top-12 lg:ml-6 ml-2 w-auto mt-6 transition-all'>
+        class='opacity-0 md:absolute lg:block hidden mb-8 top-12 lg:ml-6 ml-2 w-auto mt-6 transition-all'>
         <AudioManagerInterface></AudioManagerInterface>
       </div>
     </transition>
@@ -131,3 +131,11 @@
     }
   }
 </script>
+
+<style>
+.Vue-Toastification__icon{
+  width: auto!important;
+  max-width: 20px!important;
+}
+
+</style>

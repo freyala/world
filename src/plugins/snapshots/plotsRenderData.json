@@ -1,0 +1,56 @@
+[{
+    "n": [8],
+    "folder": "brown",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [8]
+}, {
+    "n": [9],
+    "folder": "gray",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [3, 6, 8]
+}, {
+    "n": [19],
+    "folder": "grayveins",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [3, 6, 8]
+}, {
+    "n": [7, 14],
+    "folder": "orange",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [8]
+}, {
+    "n": [10],
+    "folder": "purple",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [8]
+}, {
+    "n": [11],
+    "folder": "teal",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [3, 6, 8]
+}, {
+    "n": [17, 18],
+    "folder": "veins",
+    "Fertility": [],
+    "Crime": []
+}, {
+    "n": [5],
+    "folder": "white",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [3, 6, 8]
+}, {
+    "n": [16],
+    "folder": "whiteveins",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [3, 6, 8]
+}, {
+    "n": [3, 15],
+    "folder": "yellow",
+    "Fertility": [1, 2, 3, 4, 5, 7, 8, 9],
+    "Crime": [8]
+}, {
+    "n": [0, 1, 2, 4, 6, 12, 13],
+    "folder": "neutral",
+    "Fertility": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "Crime": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+}]

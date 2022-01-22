@@ -1,0 +1,648 @@
+{
+    "address": "0x3b1fBcADE9D7428Dd2344567a6565263500A7C34",
+    "abi": [{
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "_plotHandlerAddr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_cooldownAddr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_buffHandlerAddr",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "token",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "cooldownEnd",
+                    "type": "uint256"
+                }
+            ],
+            "name": "AssetOnCooldown",
+            "type": "error"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "slot",
+                    "type": "uint8"
+                }
+            ],
+            "name": "EmptyInventorySlotCannotBeWithdrawnFrom",
+            "type": "error"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint8",
+                "name": "slot",
+                "type": "uint8"
+            }],
+            "name": "InventorySlotAlreadyFull",
+            "type": "error"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint8",
+                "name": "slot",
+                "type": "uint8"
+            }],
+            "name": "InventorySlotDoesNotExist",
+            "type": "error"
+        },
+        {
+            "inputs": [{
+                "internalType": "uint8",
+                "name": "slot",
+                "type": "uint8"
+            }],
+            "name": "InventorySlotNotFilled",
+            "type": "error"
+        },
+        {
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "tokenAddr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "tokenId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "caller",
+                    "type": "address"
+                }
+            ],
+            "name": "NotNftOwner",
+            "type": "error"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "PlotIsBeingUtilised",
+            "type": "error"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "caller",
+                    "type": "address"
+                }
+            ],
+            "name": "PlotNotOwnedByCaller",
+            "type": "error"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": false,
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "assetAddress",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "assetId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint8",
+                    "name": "slot",
+                    "type": "uint8"
+                }
+            ],
+            "name": "NewAssetAdded",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "previousOwner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "OwnershipTransferred",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [{
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "receiver",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "assetAddress",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "assetId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "WithdrawNft",
+            "type": "event"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_assetAddr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_assetId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "_slot",
+                    "type": "uint8"
+                }
+            ],
+            "name": "addAssetToPlotInventory",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_assetAddr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_assetId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "addSpecialToPlotInventory",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "buffHandlerAddress",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "_addr",
+                "type": "address"
+            }],
+            "name": "checkAssetsInLimbo",
+            "outputs": [{
+                "components": [{
+                        "internalType": "uint8",
+                        "name": "plotType",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "plotId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "tokenAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "tokenId",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct IPlotInventory.LimboAssetsView[]",
+                "name": "",
+                "type": "tuple[]"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "cooldownAddress",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getPlotInventory",
+            "outputs": [{
+                "components": [{
+                        "components": [{
+                                "internalType": "uint256",
+                                "name": "assetType",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "tokenAddress",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "tokenId",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "owner",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "bool[]",
+                                "name": "isBuff",
+                                "type": "bool[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifierValue",
+                                "type": "uint256[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifiedAttribute",
+                                "type": "uint256[]"
+                            }
+                        ],
+                        "internalType": "struct IPlotInventory.InventorySlotView",
+                        "name": "slotA",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "uint256",
+                                "name": "assetType",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "tokenAddress",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "tokenId",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "owner",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "bool[]",
+                                "name": "isBuff",
+                                "type": "bool[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifierValue",
+                                "type": "uint256[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifiedAttribute",
+                                "type": "uint256[]"
+                            }
+                        ],
+                        "internalType": "struct IPlotInventory.InventorySlotView",
+                        "name": "slotB",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "uint256",
+                                "name": "assetType",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "tokenAddress",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "tokenId",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "owner",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "bool[]",
+                                "name": "isBuff",
+                                "type": "bool[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifierValue",
+                                "type": "uint256[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifiedAttribute",
+                                "type": "uint256[]"
+                            }
+                        ],
+                        "internalType": "struct IPlotInventory.InventorySlotView",
+                        "name": "slotC",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [{
+                                "internalType": "uint256",
+                                "name": "assetType",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "tokenAddress",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "tokenId",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "owner",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "bool[]",
+                                "name": "isBuff",
+                                "type": "bool[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifierValue",
+                                "type": "uint256[]"
+                            },
+                            {
+                                "internalType": "uint256[]",
+                                "name": "modifiedAttribute",
+                                "type": "uint256[]"
+                            }
+                        ],
+                        "internalType": "struct IPlotInventory.InventorySlotView",
+                        "name": "slotD",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct IPlotInventory.InventoryView",
+                "name": "",
+                "type": "tuple"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bytes",
+                    "name": "",
+                    "type": "bytes"
+                }
+            ],
+            "name": "onERC721Received",
+            "outputs": [{
+                "internalType": "bytes4",
+                "name": "",
+                "type": "bytes4"
+            }],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [{
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }],
+            "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "_slot",
+                    "type": "uint8"
+                }
+            ],
+            "name": "withdrawAsset",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "address",
+                    "name": "_addr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address[]",
+                    "name": "_tokenAddress",
+                    "type": "address[]"
+                },
+                {
+                    "internalType": "uint256[]",
+                    "name": "_tokenIds",
+                    "type": "uint256[]"
+                }
+            ],
+            "name": "withdrawLimboAssetsForUser",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "withdrawSpecialAsset",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ]
+}
