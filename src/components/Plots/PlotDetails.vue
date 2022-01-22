@@ -174,8 +174,10 @@
                 <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
                     ~ {{ ((calculatePlotEmissionRate(plot) * emissionUnlockRate)).toFixed(2) }} XYA / Day
                 </p>
-                <p v-if='emissions >= emissionMaxAllowed && emitterStarted' style='color: rgba(200,150,0,1)' class='sm:text-sm text-xs opacity-90 mt-4'>
-                    <i class='fas fa-exclamation-triangle text-xl mr-2'></i>The Emitter is clogged and doesn't work anymore! Please collect the current emissions in order to
+                <p v-if='emissions >= emissionMaxAllowed && emitterStarted' style='color: rgba(200,150,0,1)'
+                    class='sm:text-sm text-xs opacity-90 mt-4'>
+                    <i class='fas fa-exclamation-triangle text-xl mr-2'></i>The Emitter is clogged and doesn't work
+                    anymore! Please collect the current emissions in order to
                     start emitting again!
                 </p>
 
@@ -183,7 +185,8 @@
         </div>
 
 
-        <div v-if='plot.ownerOf' class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
+        <div v-if='plot.ownerOf'
+            class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
             <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
                 Unlocked Treasury
             </h2>
@@ -368,6 +371,9 @@
                         class='w-3/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>Start Emitter
                     </p>
                 </div>
+                <a class='mt-2'
+                    href="https://game.defikingdoms.com/#/add/ONE/0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4">Buy
+                    XYA-ONE LP here</a>
             </div>
         </window>
     </div>
