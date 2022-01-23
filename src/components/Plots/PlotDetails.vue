@@ -6,7 +6,7 @@
             class='2xl:w-9/12 lg:w-11/12 w-full flex sm:flex-row flex-col 2xl:px-12 h-auto sm:px-14 px-6 mx-auto sm:mt-16 mt-12 panel-limiter'>
 
             <!--PLOT-->
-            <div class='relative sm:w-5/12 w-full lg:mr-6 mr-4'>
+            <div class='relative sm:w-6/12 w-full lg:mr-6 mr-4'>
                 <img class="w-full h-full rounded-xl" src="/images/plots/base/0.png" alt="Base land">
                 <img class="absolute top-0 left-0 w-full h-full rounded-xl"
                     :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
@@ -27,11 +27,11 @@
                 </p>
                 <div class='w-full flex flex-row xl:mb-4 lg:mb-3 mb-2'
                     v-bind:class='{"mt-auto": !plot.ownerOf, "mt-2": plot.ownerOf}'>
-                    <p class='text-white sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
+                    <p class='text-white sm:w-8/10 w-6/10 xl:text-lg text-small text-sm opacity-80'>
                         Soil
                     </p>
                     <p class='xl:text-lg lg:text-base text-sm sm:w-2/10 w-4/10 text-right'>
-                        Loam
+                        {{ plotData.soilType }}
                     </p>
                 </div>
 
@@ -39,7 +39,7 @@
                     <p class='text-white sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
                         Fertility
                     </p>
-                    <p class='xl:text-lg lg:text-base text-sm sm:w-2/10 w-4/10 text-right'>
+                    <p class='xl:text-lg text-sm sm:w-2/10 w-4/10 text-right'>
                         {{ plotData.fertility }} <span
                             class='ml-4 opacity-75'>(+{{ plotData.fertility - plotData.fertilityBase }})</span>
                     </p>
@@ -73,20 +73,19 @@
                     </p>
                 </div>
 
-                <hr v-if='plot.ownerOf' class='my-2 xl:mb-6 mb-0 w-full' style='color: #00000055' />
-                <hr v-else class='my-auto xl:mb-6 mb-0 w-full' style='color: #00000055' />
+                <hr v-if='plot.ownerOf' class='my-2 xl:mb-4 mb-2 w-full' style='color: #00000055' />
+                <hr v-else class='my-auto xl:mb-4 mb-4 w-full' style='color: #00000055' />
 
-                <div v-if='plot.ownerOf' class='w-full flex flex-row items-center my-auto sm:h-auto h-16'>
-                    <p v-if='plotData.level < 9' class='xl:text-lg lg:text-base text-xs sm:w-7/10 w-7/10 text-left'>
+                <div v-if='plot.ownerOf' class='w-full flex flex-row justify-center items-center xl:py-0 py-2 lg:h-16 h-16'>
+                    <p v-if='plotData.level < 9' class='xl:text-lg lg:text-base text-xs sm:w-7/10 w-5/10 text-left sm:block hidden'>
                         Level Up {{ plotData.levelUpCost }} XYA
                     </p>
-                    <p v-else class='xl:text-lg lg:text-base text-sm w-7/10 text-left'>
+                    <p v-else class='xl:text-lg lg:text-base text-sm w-5/10 text-left'>
                         Maximum Level Reached
                     </p>
                     <p v-if='plotData.level < 9' v-on:click='$modal.show("upgradeplot")'
-                        class='w-3/10 xya-btn2 text-center xl:text-lg text-sm'>
-                        <span class='sm:block hidden'>Level Up</span>
-                        <span class='sm:hidden block'>Up</span>
+                        class='w-5/10 xya-btn2 text-center xl:text-lg sm:text-lg text-xs'>
+                        <span>Level Up</span>
                     </p>
                 </div>
             </div>
@@ -121,18 +120,18 @@
 
                     </p>
                     <p v-if='plot.ownerOf' v-on:click='togglePlotEmitter(plot)'
-                        class='w-2/10 xya-btn2 text-center xl:text-xl text-lg'>
+                        class='sm:w-2/10 w-4/10 sm:ml-0 ml-10 xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
                         Stop
                     </p>
                 </div>
 
                 <hr class='lg:my-6 my-4' style='color: #00000055' />
 
-                <div :key='keys.emitter' class='w-full h-auto flex flex-row justify-start items-center mb-2'>
-                    <p class='text-white xl:text-xl sm:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
+                <div :key='keys.emitter' class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
+                    <p class='text-white xl:text-xl lg:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
                         Emission Rate
                     </p>
-                    <p class='xl:text-xl sm:text-lg text-xs sm:text-left text-right sm:w-3/10 w-5/10'>
+                    <p class='xl:text-xl lg:text-lg text-sm sm:text-left text-right sm:w-3/10 w-5/10'>
                         {{calculatePlotEmissionRate(plot)}} (+{{ calculatePlotEmissionBonus(plot) }}) / day
                     </p>
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
@@ -141,11 +140,11 @@
                     ~ {{ (calculatePlotEmissionRate(plot) / 24).toFixed(2) }} XYA / hour
                 </p>
 
-                <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
-                    <p class='text-white xl:text-xl sm:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
+                <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
+                    <p class='text-white xl:text-xl lg:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
                         Treasury
                     </p>
-                    <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-3/10 w-5/10'>
+                    <p class='xl:text-xl lg:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-3/10 w-5/10'>
                         <template v-if='plotData.treasury'>
                             {{ plotData.treasury.toFixed(2) }} XYA
                         </template>
@@ -159,11 +158,11 @@
                     ~ {{ ((calculatePlotEmissionRate(plot) * (1 - emissionUnlockRate))).toFixed(2) }} XYA / day
                 </p>
 
-                <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
-                    <p class='text-white xl:text-xl sm:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-5/10'>
+                <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
+                    <p class='text-white xl:text-xl lg:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-3/10'>
                         Emissions
                     </p>
-                    <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
+                    <p class='xl:text-xl lg:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
                         {{ emissions.toFixed(2) }} / {{ emissionMaxAllowed.toFixed(2) }} XYA
                     </p>
                     <p v-if='plot.ownerOf' v-on:click='collectPlotEmissions(plot)'
@@ -171,7 +170,7 @@
                         Collect
                     </p>
                 </div>
-                <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
+                <p class='text-white sm:text-sm text-xs opacity-40 sm:mb-2 mb-0'>
                     ~ {{ ((calculatePlotEmissionRate(plot) * emissionUnlockRate)).toFixed(2) }} XYA / Day
                 </p>
                 <p v-if='emissions >= emissionMaxAllowed && emitterStarted' style='color: rgba(200,150,0,1)'
@@ -181,28 +180,6 @@
                     start emitting again!
                 </p>
 
-            </div>
-        </div>
-
-
-        <div v-if='plot.ownerOf'
-            class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
-            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
-                Unlocked Treasury
-            </h2>
-            <div class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
-                <div class='w-full h-auto flex flex-row justify-start items-center mb-2'>
-                    <p class='text-white xl:text-xl sm:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-5/10'>
-                        Unlocked Xya
-                    </p>
-                    <p class='xl:text-xl sm:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
-                        {{ unlockedEmissions.toFixed(2) }} XYA
-                    </p>
-                    <p v-if='plot.ownerOf' v-on:click='withdrawUnlockedEmissions(plot)'
-                        class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
-                        Collect
-                    </p>
-                </div>
             </div>
         </div>
 
@@ -400,7 +377,8 @@
                     fertility: 0,
                     fertilityBase: 0,
                     defense: 0,
-                    treasury: 0
+                    treasury: 0,
+                    plotType: "Loam"
                 }
             },
 
@@ -456,7 +434,16 @@
                 plotTreasury: 0,
                 plotTreasuryBonusPerDay: 0,
 
-                plotData: {},
+                plotData: {
+                    level: 0,
+                    crimeRate: 0,
+                    crimeBase: 0,
+                    fertility: 0,
+                    fertilityBase: 0,
+                    defense: 0,
+                    treasury: 0,
+                    plotType: "Loam"
+                },
                 plotSlot1: undefined,
                 plotSlot2: undefined,
                 plotSlot3: undefined,
@@ -472,7 +459,8 @@
                 updateInterval: undefined,
 
                 keys: {
-                    emitter: 0
+                    emitter: 0,
+                    currentPlot: 0
                 }
             }
         },
@@ -528,6 +516,7 @@
             },
 
             async getPlotData() {
+                const soilTypes = ['Clay', 'Loam', 'Sand', 'Silt'];
                 const plotData = await this.contract.getPlotData(this.plot.plot_type, this.plot.token_id * 1);
                 this.plotData = {
                     crimeRate: plotData.crimeRate * 1,
@@ -537,15 +526,16 @@
                     fertilityBase: plotData.fertilityBase * 1,
                     level: plotData.level * 1,
                     plotId: plotData.plotId * 1,
-                    soilType: plotData.soilTypeBase * 1,
+                    soilType: soilTypes[plotData.soilTypeBase * 1],
                     levelUpCost: plotData.levelUpCost / 10 ** 18,
                     treasury: plotData.amountOwnedByPlot / 10 ** 18
                 };
 
                 this.emitterStarted = await this.plotEmitterContract.isEmitting(this.plot.plot_type, this.plot
                     .token_id * 1);
-                this.emissions = await this.plotEmitterContract.calculateClaimableEmissions(this.plot.plot_type,
-                    this.plot.token_id * 1) / 10 ** 18;
+                this.emissions = !this.emitterStarted ? 0 : await this.plotEmitterContract
+                    .calculateClaimableEmissions(this.plot.plot_type,
+                        this.plot.token_id * 1) / 10 ** 18;
                 this.unlockedEmissions = await this.plotEmitterContract.getUnlockedBalance() / 10 ** 18;
 
                 this.keys.emitter += 1;
@@ -611,6 +601,7 @@
                     toast = this.createLoaderToast("Pending - " + (!isEmitting ? "Start Emitter" : "Stop Emitter"));
                     this.$modal.hide('startemitter');
                     await tx.wait(1);
+                    plot.isEmitting = !isEmitting;
                     await this.getPlotData(plot);
                 } catch (err) {
                     this.handleError(err);

@@ -35,11 +35,10 @@
                         Back
                     </router-link>
                 </span>
-                <span class='sm:block hidden' v-on:click='showPlotDetails = false' v-else>
+                <span class="flex items-center" v-on:click='showPlotDetails = false' v-else>
                     <i class='fa fa-arrow-left mr-2' v-on:click='showPlotDetails = false'>
-
                     </i>
-                    Back to plots
+                    <span class='sm:block hidden'>Back</span>
                 </span>
             </div>
             <div class='w-full text-center lg:text-3xl sm:text-xl text-xl font-bold absolute'>
@@ -47,7 +46,7 @@
                 <p v-else>Plot #{{currentPlot.token_id}}</p>
             </div>
             <div class='absolute sm:right-12 right-4'>
-                <i v-if='showPlotDetails' v-on:click='$modal.show("sendplot")'
+                <i v-if='showPlotDetails && currentPlot.ownerOf' v-on:click='$modal.show("sendplot")'
                     class='fas fa-paper-plane sm:text-xl text-base hover:text-white cursor-pointer mx-6'></i>
                 <i v-on:click='$modal.show("allowances")'
                     class='fas fa-cog sm:text-xl text-base hover:text-white cursor-pointer'></i>
@@ -58,7 +57,7 @@
             style="border-right: 1px solid #363636; z-index: 1; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15); transition: all 0.15s linear">
 
             <div class='w-full h-full flex flex-col relative'>
-                <p v-if='!showPlotDetails' class="p-1 xl:text-xl text-lg mt-4 mb-1 text-white opacity-80">
+                <p v-if='!showPlotDetails' class="p-1 lg:text-xl text-lg mt-4 mb-1 text-white opacity-80">
                     Neighbourhood
                 </p>
                 <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 dark-panel">
@@ -68,7 +67,7 @@
                     </select>
                 </div>
 
-                <p v-if='!showPlotDetails' class="p-1 xl:text-xl text-lg mb-1 text-white opacity-80">
+                <p v-if='!showPlotDetails' class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
                     Filter
                 </p>
                 <div v-if='!showPlotDetails' class="w-full rounded-xl px-6 py-6 mb-4 text-white dark-panel">
@@ -129,24 +128,57 @@
                         <p v-on:click='resetPlotFilters()'
                             class='w-5/10 flex items-center xl:text-base text-sm text-yellow hover:text-white cursor-pointer justify-start'>
                             Reset Filters</p>
-                        <p v-on:click='applyPlotFilters()' class='xya-btn2 w-5/10 xl:text-base text-sm'>Apply Filter</p>
+                        <p v-on:click='applyPlotFilters()' class='xya-btn2 w-5/10 xl:text-base text-sm'>Apply Filters
+                        </p>
                     </div>
                 </div>
 
-                <p class="p-1 xl:text-xl text-lg mb-1 text-white opacity-80" v-bind:class='{"mt-4": showPlotDetails}'>
+                <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80" v-bind:class='{"mt-4": showPlotDetails}'>
+                    Unlocked Treasury
+                </p>
+                <div class="w-full rounded-xl p-4 mb-4 dark-panel">
+                    <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
+                        <i class='fa fa-gear fa-spin'></i> Loading...
+                    </p>
+                    <div v-else class='w-full h-full flex items-center xl:text-lg text-sm'>
+                        <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
+                            XYA
+                        </p>
+                        <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
+                            {{unlockedEmissions}}
+                        </p>
+                        <p class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                            Collect
+                        </p>
+                    </div>
+                </div>
+
+                <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
                     Your Plots
                 </p>
                 <div class="w-full rounded-xl p-4 mb-4 dark-panel">
                     <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
                         <i class='fa fa-gear fa-spin mt-2'></i> Loading...
                     </p>
+                    <p v-if='!loadingMyPlots && userPlots.length === 0' class="p-1 xl:text-lg text-sm opacity-80">
+                        You have no plots.
+                    </p>
                     <div v-for='(neighbourhood, index) in myNeighbourhoods' :key='index'>
-                        <p class="p-1 xl:text-lg text-sm mb-1 text-white opacity-80">
+                        <p class="p-1 lg:text-lg text-sm mb-1 text-white opacity-80">
                             {{neighbourhood}}
                         </p>
                         <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
-                            :key='plot.token_id * 1' class='ml-2 xl:text-lg text-sm mb-1 cursor-pointer'>
-                            <i class='fa fa-map mr-4'></i>Plot #{{plot.token_id}}
+                            :key='plot.token_id * 1' class='ml-4 lg:text-lg text-sm mb-1 cursor-pointer relative'>
+                            <i class='fa fa-map mr-4'></i>#{{plot.token_id}} - {{ plot.emissions}} XYA
+
+                            <i v-if='plot.token_id === currentPlot.token_id && showPlotDetails'
+                                class='fas fa-map-marker-alt lg:text-lg text-sm absolute right-4 flex top-0 items-center text-white opacity-80'></i>
+                            <i v-if='plot.isEmitting'
+                                class='fa fa-bolt absolute lg:text-lg text-sm absoluteflex top-0 items-center'
+                                v-bind:class='{"right-12": showPlotDetails, "right-4": !showPlotDetails}'></i>
+                            <i v-if='plot.isClogged'
+                                class='fas fa-exclamation-triangle absolute lg:text-lg text-sm absoluteflex top-0 items-center'
+                                v-bind:class='{"right-20": showPlotDetails, "right-12": !showPlotDetails}'></i>
                         </p>
                     </div>
                 </div>
@@ -164,7 +196,7 @@
         <div class='2xl:w-4/5 xl:w-9/12 w-full h-full relative overflow-hidden mt-16'>
             <div id='plots' class='relative' :style='"height:" + parseInt(plotData.length / 10 + 1) * 225 + "px"'
                 style='width: 2200px;'>
-                <div v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
+                <div v-bind:class='{"plot-owner": plot.ownerOf}' v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
                     style='width: 220px; height: 220px'
                     :style="'top: ' + (parseInt(index / 10) * 220) + 'px; left: ' + ((index % 10) * 220) + 'px'">
                     <div v-if='!plot.isFiltered' class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-dark opacity-50'>
@@ -219,9 +251,9 @@
         </div>
 
         <transition name='slide-in'>
-            <PlotDetails :key='currentPlot' v-if='showPlotDetails' :contract='plotContract' :plotEmitterContract='plotEmitterContract'
-                :plotInventoryContract='plotInventoryContract' :allowances='allowances'
-                v-on:close="showPlotDetails = false"
+            <PlotDetails :key='currentPlot.token_id' v-if='showPlotDetails' :contract='plotContract'
+                :plotEmitterContract='plotEmitterContract' :plotInventoryContract='plotInventoryContract'
+                :allowances='allowances' v-on:close="showPlotDetails = false"
                 v-on:allowanceError='manageAllowanceError($event)' class='fixed top-16'
                 style='z-index: 500; transition: all 0.25s;' :plot='currentPlot'>
 
@@ -231,28 +263,29 @@
         <window height='10%' width='80%' name='allowances'>
             <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
                 <div class="w-full text-center">
-                    <div class="sm:text-3xl text-2xl">Contract Manager</div>
+                    <div class="sm:text-3xl text-xl">Contract Manager</div>
                 </div>
                 <div class="absolute right-6">
-                    <i @click="$modal.hide('allowances')" class="fas fa-times cursor-pointer text-xl"></i>
+                    <i @click="$modal.hide('allowances')"
+                        class="fas fa-times cursor-pointer sm:text-xl text-base sm:mt-0 mt-1"></i>
                 </div>
                 <hr class='w-full my-4' />
 
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
-                    <span class='text-white opacity-80 mr-1'>'Plot Handler' Contract</span>
+                    <span class='text-white opacity-80 mr-1 sm:text-base text-xs'>'Plot Handler' Contract</span>
 
                     <p v-on:click='setTokenAllowance(plotContract.address, allowances.plotHandler ? 0 : 999999999999);'
-                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='sm:w-2/10 w-5/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
                         <template v-if='!allowances.plotHandler'>Enable</template>
                         <template v-else>Disable</template>
                     </p>
                 </div>
 
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
-                    <span class='text-white opacity-80 mr-1'>'Plot Emitter' Contract</span>
+                    <span class='text-white opacity-80 mr-1 sm:text-base text-xs'>'Plot Emitter' Contract</span>
 
                     <p v-on:click='setTokenAllowance(plotEmitterContract.address, allowances.plotEmitter ? 0 : 999999999999,  CONSTANTS.XYA_ONE)'
-                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='sm:w-2/10 w-5/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
                         <template v-if='!allowances.plotEmitter'>Enable</template>
                         <template v-else>Disable</template>
                     </p>
@@ -428,7 +461,9 @@
                 plotsInitialZoom: 1.75,
                 plotsSendTo: "",
 
-                currentPlot: undefined,
+                currentPlot: {
+                    id: -1
+                },
 
                 filters: {
                     minFertility: 0,
@@ -537,9 +572,9 @@
 
             this.unlockedEmissions = (await this.plotEmitterContract.getUnlockedBalance() / 10 ** 18).toFixed(2);
             this.unlockedEmissionsInterval = setInterval(async () => {
-                this.unlockedEmissions = (await this.plotEmitterContract.getUnlockedBalance() / 10 **
-                    18).toFixed(2);
-            }, 5000);
+                this.getMyPlots();
+            }, 60000);
+
             await this.getPlots();
             this.initializePanZoom();
             this.plotsMounted = true;
@@ -722,7 +757,6 @@
 
                 try {
                     const arg = fromExponential(actual);
-                    console.log(address, token);
                     let tempContract = new ethers.Contract(token, Freyala.abi, this.metaMaskWallet.signer);
                     const tx = await tempContract.approve(address, arg);
                     toast = this.createLoaderToast("Pending Transaction - Allowance");
@@ -752,9 +786,10 @@
             },
 
             async getMyPlots() {
-                const type0Ids = []
-                const type1Ids = []
-                const type2Ids = []
+                const type0Ids = [];
+                const type1Ids = [];
+                const type2Ids = [];
+                const clogThreshold = await this.plotEmitterContract.maxAllowedToEmitUntilClog() / 10 ** 18;
 
                 let [type0, type1, type2] = await Promise.all([
                     this.plotContract.getTokensOwnedByOwner(0, this.metaMaskAccount),
@@ -765,7 +800,6 @@
                 for (let i = 0; i < type0.length; i++) {
                     type0Ids.push(ethers.BigNumber.from(type0[i]._hex).toString())
                 }
-
 
                 for (let i = 0; i < type1.length; i++) {
                     type1Ids.push(ethers.BigNumber.from(type1[i]._hex).toString())
@@ -800,36 +834,26 @@
                             soilType: plot.soilTypeBase,
 
                             neighbourhood: plot.neighbourhood * 1,
-                            token_id: plot.plotId,
+                            token_id: plot.plotId * 1,
                             plot_number: plot.plotNumber,
                             plot_type: plot.neighbourhood >= 18 ? 1 : plot
                                 .neighbourhood >= 16 ? 2 : 0,
                             ownerOf: true,
                             plotOwner: this.metaMaskAccount,
-                            isFiltered: true
+                            isFiltered: true,
+                            isEmitting: false,
+                            emissions: 0,
+                            isClogged: false
                         }
 
-                        const sales = await this.marketContracts[singlePlotData
-                                .plot_type === 0 ? 'xya' :
-                                singlePlotData.plot_type === 1 ? 'yin' : 'yang']
-                            .getListing(plot.plotId);
-
-                        singlePlotData.sales = {
-                            seller: 0,
-                            buyer: 0,
-                            tokenId: plot.plotId,
-                            price: 0,
-                            forSale: false,
-                        }
-
-                        if (sales[4]) {
-                            singlePlotData.sales.seller = sales[0];
-                            singlePlotData.sales.buyer = sales[1];
-                            singlePlotData.sales.price = ethers.BigNumber.from(sales[3])
-                                .toString();
-                            singlePlotData.sales.forSale = sales[4]
-                        }
-
+                        singlePlotData.isEmitting = await this.plotEmitterContract
+                            .isEmitting(singlePlotData.plot_type, singlePlotData
+                                .token_id * 1);
+                        singlePlotData.emissions = (await this.plotEmitterContract
+                            .calculateClaimableEmissions(singlePlotData.plot_type,
+                                singlePlotData.token_id * 1) / 10 ** 18).toFixed(2);
+                        singlePlotData.isClogged = singlePlotData.emissions >=
+                            clogThreshold;
                         tempPlotData.push(singlePlotData);
                         resolve();
                     }));
@@ -848,19 +872,13 @@
                 this.plotIds = [];
                 this.plotData = [];
 
-                plotSnapshot.plots.map((plot) => {
+                plotSnapshot.plots.forEach((plot) => {
                     if (this.neighbourhood === plot.neighbourhood) {
                         this.plotIds.push(plot.token_id)
                     }
-                })
+                });
 
-                if (this.neighbourhood === 18 || this.neighbourhood === 19) {
-                    this.plotType = 1
-                } else if (this.neighbourhood === 16 || this.neighbourhood === 17) {
-                    this.plotType = 2
-                } else {
-                    this.plotType = 0
-                }
+                this.plotType = this.neighbourhood < 16 ? 0 : this.neighbourhood < 18 ? 2 : 1;
 
                 let [plotData] = await Promise.all([
                     this.plotContract.getPlotDataMultiple(this.plotType, this.plotIds),
@@ -914,19 +932,6 @@
                 })
             },
 
-            changePlotModalViewState(state) {
-                if (state !== 'trade' && state !== 'manage' && state !== 'utility') {
-                    this.plotModalState = "trade"
-                    return
-                }
-
-                this.plotModalState = state
-            },
-
-            modalClose() {
-                this.plotModalReason = ''
-            },
-
             async sendPlotNow(address, id, neighbourhood) {
                 let toast = undefined;
                 try {
@@ -942,100 +947,6 @@
                     this.handleError(err);
                 }
                 this.$toast.dismiss(toast);
-            },
-
-            async cancelListing(id, neighbourhood) {
-                try {
-                    const contract = neighbourhood >= 18 ? 'yin' : neighbourhood >= 16 ? 'yang' : 'xya';
-                    const tx = await this.marketContracts[contract].cancelListing(id);
-                    await tx.wait(1);
-                } catch (err) {
-                    this.handleError(err);
-                }
-            },
-
-            async sellPlotNow(data) {
-                try {
-                    const contract = data.neighbourhood >= 18 ? 'yin' : data.neighbourhood >= 16 ? 'yang' : 'xya';
-                    const actual = data.amount * (10 ** 18)
-                    const arg = fromExponential(actual)
-                    const tx = await this.marketContracts[contract].createListing(data.id, arg, {
-                        gasPrice: 30000000000,
-                        gasLimit: 3000000,
-                    });
-                    await tx.wait(1);
-                } catch (err) {
-                    this.handleError(err);
-                }
-            },
-
-            async buyPlotNow(data) {
-                try {
-                    const contract = data.neighbourhood >= 18 ? 'yin' : data.neighbourhood >= 16 ? 'yang' : 'xya';
-                    const tx = await this.marketContracts[contract].buy(data.amount, data.id);
-                    await tx.wait(1);
-                } catch (err) {
-                    this.handleError(err);
-                }
-            },
-
-            async approvePlotNow(plotType, amount) {
-                if (plotType === 2) {
-                    this.loadingApproveBuyPlot = true
-                    const mainYinContract = new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer)
-                    const approve = await mainYinContract.approve(PlotsYinMarket.address, amount)
-                    await approve.wait(1)
-                    this.loadingApproveBuyPlot = false
-                } else if (plotType === 1) {
-                    this.loadingApproveBuyPlot = true
-                    const mainYangContract = new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer)
-                    const approve = await mainYangContract.approve(PlotsYangMarket.address, amount)
-                    await approve.wait(1)
-                    this.loadingApproveBuyPlot = false
-                } else {
-                    this.loadingApproveBuyPlot = true
-                    this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet
-                        .signer)
-                    const approve = await this.mainContract.approve(PlotsMarket.address, amount)
-                    await approve.wait(1)
-                    this.loadingApproveBuyPlot = false
-                }
-            },
-
-            async approvePlotToSellNow(plotType, enable) {
-                let toast = undefined;
-
-                if (plotType === 2) {
-                    this.plotYinFreyalaContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this
-                        .metaMaskWallet.signer)
-                    const approve = await this.plotYinFreyalaContract.setApprovalForAll(PlotsYinMarket.address,
-                        true);
-
-                    // const approve = await this.plotYinFreyalaContract.approve(PlotsYinMarket.address,
-                    //     35)
-
-                    toast = this.createLoaderToast("Pending - Enable Contract");
-                    await approve.wait(1)
-                } else if (plotType === 1) {
-                    this.plotYangFreyalaContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this
-                        .metaMaskWallet.signer)
-                    const approve = await this.plotYangFreyalaContract.setApprovalForAll(PlotsYangMarket.address,
-                        true)
-                    toast = this.createLoaderToast("Pending - Enable Contract");
-                    await approve.wait(1)
-                } else {
-                    this.plotContracts.xya = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this
-                        .metaMaskWallet.signer)
-                    // const approve = await this.plotContracts.xya.setApprovalForAll(PlotsMarket.address, !enable)
-
-                    const approve = await this.plotContracts.xya.approve(PlotsFreyala.address,
-                        1829)
-
-                    toast = this.createLoaderToast("Pending - Enable Contract");
-                    await approve.wait(1)
-                }
-                this.$toast.dismiss(toast);
-                await this.getAllowances();
             },
 
             openPlot(plot) {
@@ -1069,6 +980,11 @@
 
 
 <style>
+.plot-owner
+{
+    border: 6px solid rgba(255,255,255,90%);
+    border-radius: 3px;
+}
     .checkbox {
         height: 24px;
         width: 24px;
