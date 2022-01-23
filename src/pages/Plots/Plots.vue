@@ -147,7 +147,7 @@
                         <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
                             {{unlockedEmissions}}
                         </p>
-                        <p class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                        <p v-on:click='withdrawUnlockedEmissions()' class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
                             Collect
                         </p>
                     </div>
@@ -778,7 +778,7 @@
                     const tx = await this.plotEmitterContract.withdrawUnlockedEmitted();
                     await tx.wait(1);
                     toast = this.createLoaderToast("Pending - Withdraw Emissions");
-                    await this.getPlotData(plot);
+                    this.unlockedEmissions = 0;
                 } catch (err) {
                     this.handleError(err);
                 }
