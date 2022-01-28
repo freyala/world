@@ -27,12 +27,12 @@
 
         <div class='absolute flex flex-row h-16 w-full top-0 dark-panel items-center' style="z-index: 1000">
             <div class='ml-6 mt-5 mb-4 w-auto text-xl cursor-pointer absolute z-50 w-2/5 flex flex-row items-center'>
-                <span class='sm:block hidden' v-if='!showPlotDetails'>
-                    <router-link :to="{ name: 'world-map' }">
+                <span v-if='!showPlotDetails'>
+                    <router-link class='flex items-center'  :to="{ name: 'world-map' }">
                         <i class='fa fa-arrow-left mr-2' v-on:click='showPlotDetails = false'>
 
                         </i>
-                        Back
+                        <span class='sm:block hidden'>Back</span>
                     </router-link>
                 </span>
                 <span class="flex items-center" v-on:click='showPlotDetails = false' v-else>
@@ -625,15 +625,6 @@
                 this.loadingPlots = false;
             }, 250);
 
-            const xyaPlots = plotSnapshot.plots.filter(c => c.neighbourhood < 16);
-
-            const yangPlots = plotSnapshot.plots.filter(c => c.neighbourhood >= 16 && c.neighbourhood < 18);
-
-            const yinPlots = plotSnapshot.plots.filter(c => c.neighbourhood >= 18);
-
-            console.log("XYA", xyaPlots);
-            console.log('YANG', yangPlots);
-            console.log("YIN", yinPlots);
             //window.addEventListener("resize", this.initializePanZoom);
         },
 
