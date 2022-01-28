@@ -1,0 +1,28 @@
+[{
+    "name": "Crypto Pig",
+    "address": "0xE5Fd335819EDb8DA8395F8Ec48beCA747a0790aB",
+    "count": 0,
+    "image": "https://ipfs.io/ipfs/QmaacTD6EMZvJVkcVjNrzob58srQ88dxoSGNANDNeY6SY6",
+    "active": true,
+    "metadata": "https://api.cryptopigs.one/meta/list?items=",
+    "userNFTs": []
+},
+{
+    "name": "Frey",
+    "address": "0xd9d6b8c7f63cc2f5d5df5f3a77b2f596a66230d2",
+    "count": 0,
+    "image": "https://frey.freyala.com/images/3820.png",
+    "active": true,
+    "metadata": "https://frey.freyala.com/meta/list?items=",
+    "userNFTs": []
+},
+{
+    "name": "Orcs",
+    "address": "",
+    "count": 0,
+    "image": "https://frey.freyala.com/images/3820.png",
+    "active": false,
+    "metadata": "",
+    "userNFTs": []
+}
+]

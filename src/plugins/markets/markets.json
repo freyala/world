@@ -20,9 +20,36 @@
         "collectionName": "Dingos",
         "tokenName": "Dingo",
         "image": "https://api.dingosbowlsclub.one/images/147.png",
+        "status": "OPEN",
+        "token": "0x577bf396818f14868641045e93b0248f5550d892",
+        "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
+        "thumbnail": "none"
+    },
+    {
+        "collectionName": "Freyala Plots",
+        "tokenName": "Plot",
+        "image": "/images/freyalaPlots.png",
         "status": "SOON",
-        "token": "",
-        "metadata": "",
+        "token": "0x577BF396818F14868641045e93b0248f5550D892",
+        "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
+        "thumbnail": "none"
+    },
+    {
+        "collectionName": "Yang Plots",
+        "tokenName": "Yang Plot",
+        "image": "/images/yangPlots.png",
+        "status": "SOON",
+        "token": "0x577BF396818F14868641045e93b0248f5550D892",
+        "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
+        "thumbnail": "none"
+    },    
+    {
+        "collectionName": "Yin Plots",
+        "tokenName": "Yin Plot",
+        "image": "/images/yinPlots.png",
+        "status": "SOON",
+        "token": "0x577BF396818F14868641045e93b0248f5550D892",
+        "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
         "thumbnail": "none"
     }
 ]
