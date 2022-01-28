@@ -204,7 +204,7 @@
                         <div class='sm:w-7/10 w-5/10 h-full flex-col'>
                             <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
                                 Slot
-                                {{index + 3}}</h2>
+                                {{index}}</h2>
                             <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
                                 {{ getTokenName(slot) }}
                                 #{{ slot.tokenId }}</h2>
@@ -252,7 +252,7 @@
                         <div class='sm:w-7/10 w-5/10 h-full flex-col'>
                             <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
                                 Slot
-                                {{index + 3}}</h2>
+                                {{index + 4}}</h2>
                             <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
                                 {{ getTokenName(slot) }}
                                 #{{ slot.tokenId }}</h2>
