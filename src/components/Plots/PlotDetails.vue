@@ -50,7 +50,7 @@
                         Defense
                     </p>
                     <p class='xl:text-lg lg:text-base text-sm sm:w-2/10 w-4/10 text-right'>
-                        {{ 1 }} <span class='ml-4 opacity-75'>(+{{ (plotData.defence) }})</span>
+                        {{ plotData.defence }} <span class='ml-4 opacity-75'>(+{{ (plotData.defence - 1) }})</span>
                     </p>
                 </div>
 
@@ -76,11 +76,13 @@
                 <hr v-if='plot.ownerOf' class='my-2 xl:mb-4 mb-2 w-full' style='color: #00000055' />
                 <hr v-else class='my-auto xl:mb-4 mb-4 w-full' style='color: #00000055' />
 
-                <div v-if='plot.ownerOf' class='w-full flex flex-row justify-center items-center xl:py-0 py-2 lg:h-16 h-16'>
-                    <p v-if='plotData.level < 9' class='xl:text-lg lg:text-base text-xs sm:w-7/10 w-5/10 text-left sm:block hidden'>
+                <div v-if='plot.ownerOf'
+                    class='w-full flex flex-row justify-center items-center xl:py-0 py-2 lg:h-16 h-16'>
+                    <p v-if='plotData.level < 9'
+                        class='xl:text-lg lg:text-base text-xs sm:w-7/10 w-5/10 text-left sm:block hidden'>
                         Level Up {{ plotData.levelUpCost }} XYA
                     </p>
-                    <p v-else class='xl:text-lg lg:text-base text-sm w-5/10 text-left'>
+                    <p v-else class='xl:text-lg lg:text-base text-sm w-full text-left'>
                         Maximum Level Reached
                     </p>
                     <p v-if='plotData.level < 9' v-on:click='$modal.show("upgradeplot")'
@@ -127,17 +129,18 @@
 
                 <hr class='lg:my-6 my-4' style='color: #00000055' />
 
-                <div :key='keys.emitter' class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
+                <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
                     <p class='text-white xl:text-xl lg:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
                         Emission Rate
                     </p>
-                    <p class='xl:text-xl lg:text-lg text-sm sm:text-left text-right sm:w-3/10 w-5/10'>
-                        {{calculatePlotEmissionRate(plot)}} (+{{ calculatePlotEmissionBonus(plot) }}) / day
+                    <p :key='emissionsPerDay'
+                        class='xl:text-xl lg:text-lg text-sm sm:text-left text-right sm:w-3/10 w-5/10'>
+                        {{emissionsPerDay}} (+{{ emissionsBonus }}) / day
                     </p>
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
                 </div>
                 <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
-                    ~ {{ (calculatePlotEmissionRate(plot) / 24).toFixed(2) }} XYA / hour
+                    ~ {{ (emissionsPerDay / 24).toFixed(2) }} XYA / hour
                 </p>
 
                 <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
@@ -155,7 +158,7 @@
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
                 </div>
                 <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
-                    ~ {{ ((calculatePlotEmissionRate(plot) * (1 - emissionUnlockRate))).toFixed(2) }} XYA / day
+                    ~ {{ ((emissionsPerDay * (1 - emissionUnlockRate))).toFixed(2) }} XYA / day
                 </p>
 
                 <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
@@ -171,7 +174,7 @@
                     </p>
                 </div>
                 <p class='text-white sm:text-sm text-xs opacity-40 sm:mb-2 mb-0'>
-                    ~ {{ ((calculatePlotEmissionRate(plot) * emissionUnlockRate)).toFixed(2) }} XYA / Day
+                    ~ {{ ((emissionsPerDay * emissionUnlockRate)).toFixed(2) }} XYA / Day
                 </p>
                 <p v-if='emissions >= emissionMaxAllowed && emitterStarted' style='color: rgba(200,150,0,1)'
                     class='sm:text-sm text-xs opacity-90 mt-4'>
@@ -184,27 +187,98 @@
         </div>
 
         <!--PLOT SLOTS-->
-        <div class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
+        <div :key='keys.inventorySlots'
+            class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
             <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
                 Plot Slots
             </h2>
-            <div v-for='i in 3' :key='i' class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
-                <div class='absolute flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-dark rounded-xl'>
-                    <i class='fas fa-lock mr-4 sm:text-xl text-base text-white opacity-80'></i>
-                    <p class='sm:text-xl text-base text-white opacity-80'>Slot is locked</p>
+            <div v-for='(slot, index) in simpleInventorySlots' :key='index'
+                class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                <div class='w-full h-auto flex flex-row justify-start items-center'>
+                    <template v-if='slot.token'>
+                        <div v-on:click='prepareSlotPickerModal(index)'
+                            v-bind:class='{"dfk": slot.tokenId === "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C"}'
+                            class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
+                            <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-lazy='slot.image' />
+                        </div>
+                        <div class='sm:w-7/10 w-5/10 h-full flex-col'>
+                            <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                Slot
+                                {{index + 3}}</h2>
+                            <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                {{ getTokenName(slot) }}
+                                #{{ slot.tokenId }}</h2>
+                            <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>Empty
+                            </p>
+                            <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
+                            </p>
+                        </div>
+                        <div v-if='slot.token * 1 === 0 && plot.ownerOf' v-on:click='prepareSlotPickerModal(index)'
+                            class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
+                            Add NFT
+                        </div>
+                        <div v-on:click='withdrawNFTFromSlot(plot, index)' v-else-if='plot.ownerOf'
+                            class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                            Remove NFT
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div
+                            class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                            <i class='fa fa-gear fa-spin'></i>
+                        </div>
+                        <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                            Loading...
+                        </div>
+                    </template>
                 </div>
-                <div class='w-full h-auto flex flex-row justify-start items-center opacity-20'>
-                    <div class='plot-slot w-1/10 empty rounded-xl mr-6'>
+            </div>
 
-                    </div>
-                    <div class='sm:w-7/10 w-5/10 h-full flex-col'>
-                        <h2 class='text-white h-full sm:text-xl text-base opacity-80'>Slot {{i}}</h2>
-                        <p class='text-white h-full opacity-30 sm:text-sm text-xs'>Empty</p>
-                    </div>
-                    <div v-if='plot.ownerOf'
-                        class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
-                        Add NFT
-                    </div>
+        </div>
+
+        <div class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
+            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
+                Special Slot
+            </h2>
+            <div v-for='(slot, index) in specialInventorySlots' :key='index'
+                class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                <div v-on:click='prepareSlotPickerModal(index + 3)'
+                    class='w-full h-auto flex flex-row justify-start items-center relative'>
+                    <template v-if='slot.token'>
+                        <div class='absolute plot-slot dfk z-50' style='left: -3px;'></div>
+                        <div class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
+                            <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-bind:src='slot.image' />
+                        </div>
+                        <div class='sm:w-7/10 w-5/10 h-full flex-col'>
+                            <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                Slot
+                                {{index + 3}}</h2>
+                            <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                {{ getTokenName(slot) }}
+                                #{{ slot.tokenId }}</h2>
+                            <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>Empty
+                            </p>
+                            <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
+                            </p>
+                        </div>
+                        <div v-if='slot.token * 1 === 0 && plot.ownerOf' v-on:click='prepareSlotPickerModal(index + 3)'
+                            class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
+                            Add NFT
+                        </div>
+                        <div v-on:click='withdrawNFTFromSlot(plot, index + 3)' v-else-if='plot.ownerOf'
+                            class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                            Remove NFT
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div
+                            class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                            <i class='fa fa-gear fa-spin'></i>
+                        </div>
+                        <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                            Loading...
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -233,7 +307,7 @@
                     <hr class='my-6 w-9/10' style='color: #00000077' />
                     <div class='w-full h-1/10 flex flex-row justify-center text-center items-center'>
                         <p class='text-xl text-white opacity-80 w-2/10'>
-                            0xs...124
+                            0xs...124s
                         </p>
                         <p class='text-xl w-6/10'>
                             DEFENDED
@@ -246,8 +320,9 @@
             </div>
         </div>
 
-        <NFTPickerModal v-on:confirm='addNftToSlot($event)' v-if='showSlotPickerModal'
-            v-on:close='showSlotPickerModal = false' :slotNumber='slotIndex'>
+        <NFTPickerModal :collections='collections' :operator='plotInventoryContract.address'
+            v-on:confirm='addNFTToSlot($event)' v-if='showSlotPickerModal' v-on:close='showSlotPickerModal = false'
+            :slotNumber='slotIndex'>
 
         </NFTPickerModal>
 
@@ -357,9 +432,12 @@
 </template>
 
 <script>
+    import HRC721 from '../../plugins/artifacts/HRC721.json';
+    import {
+        ethers
+    } from "ethers";
     import NFTPickerModal from './NFTPickerModal';
     import plotRenderData from '../../plugins/snapshots/plotsRenderData.json';
-    import plotInventory from '../../plugins/artifacts/plotInventory.json';
 
     import {
         mapGetters
@@ -412,6 +490,14 @@
 
             isPlotOwner(owner) {
                 return owner.toLowerCase() == this.metaMaskAccount.toLowerCase();
+            },
+
+            simpleInventorySlots() {
+                return this.inventorySlots.filter(c => c.index < 3);
+            },
+
+            specialInventorySlots() {
+                return this.inventorySlots.filter(c => c.index === 3);
             }
         },
 
@@ -426,7 +512,8 @@
                 emissions: 0,
                 unlockedEmissions: 0,
                 emissionRate: 0,
-                emissionBonus: 0,
+                emissionsPerDay: 0,
+                emissionsBonus: 0,
                 emissionMaxAllowed: 0,
                 emitterStarted: false,
                 emitterStartFee: 0,
@@ -437,17 +524,16 @@
                 plotData: {
                     level: 0,
                     crimeRate: 0,
-                    crimeBase: 0,
+                    crimeRateBase: 0,
                     fertility: 0,
                     fertilityBase: 0,
-                    defense: 0,
+                    defence: 0,
                     treasury: 0,
-                    plotType: "Loam"
+                    plotType: "Loading..."
                 },
-                plotSlot1: undefined,
-                plotSlot2: undefined,
-                plotSlot3: undefined,
 
+                inventorySlots: [],
+                loadingInventorySlots: true,
                 plotReceiverAddress: "",
                 plotListPrice: 0,
 
@@ -460,23 +546,122 @@
 
                 keys: {
                     emitter: 0,
-                    currentPlot: 0
-                }
+                    currentPlot: 0,
+                    inventorySlots: 1000
+                },
+
+                attributes: [
+                    "Fertility",
+                    "Level",
+                    "Crime",
+                    "Defense",
+                ],
+
+                collections: [{
+                        name: "Crypto Pigs",
+                        alias: "Crypto Pig",
+                        address: "0xE5Fd335819EDb8DA8395F8Ec48beCA747a0790aB",
+                        count: 0,
+                        image: "https://ipfs.io/ipfs/QmaacTD6EMZvJVkcVjNrzob58srQ88dxoSGNANDNeY6SY6",
+                        active: true,
+                        metadata: "https://api.cryptopigs.one/meta/list?items=",
+                        userNFTs: [],
+                        special: false
+                    },
+                    {
+                        name: "The Frey",
+                        alias: "Frey",
+                        address: "0xd9d6b8c7f63cc2f5d5df5f3a77b2f596a66230d2",
+                        count: 0,
+                        image: "https://frey.freyala.com/images/3820.png",
+                        active: true,
+                        metadata: "https://frey.freyala.com/meta/list?items=",
+                        userNFTs: [],
+                        special: false
+                    },
+                    {
+                        name: "Orcs",
+                        alias: "Orc",
+                        address: "",
+                        count: 0,
+                        image: "https://pbs.twimg.com/media/FC2dnRUWEAMKbId?format=jpg&name=small",
+                        active: false,
+                        metadata: "",
+                        userNFTs: [],
+                        special: false
+                    },
+                    {
+                        name: "DFK Heroes",
+                        alias: "Hero",
+                        address: "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C",
+                        count: 0,
+                        image: "/images/dfkhero.png",
+                        active: true,
+                        metadata: "",
+                        userNFTs: [],
+                        special: true
+                    },
+                ]
             }
         },
 
         async mounted() {
-            await this.getPlotData();
+            new Promise(async (resolve, reject) => {
+                try {
+                    await this.getPlotInventory();
+                } catch (err) {
+                    this.loadingInventorySlots = false;
+                }
+                this.loadingInventorySlots = false;
+                resolve();
+            });
 
             this.emitterStartFee = await this.plotEmitterContract.feeToEmit() / 10 ** 18;
             this.emissionBaseRate = await this.plotEmitterContract.baseEmissionRatePerDay() / 10 ** 18;
             this.emissionMaxAllowed = await this.plotEmitterContract.maxAllowedToEmitUntilClog() / 10 ** 18;
             this.updateInterval = setInterval(async () => {
-                await this.getPlotData();
+                await this.refreshPlot(this.plot);
             }, 15000);
+
+            await this.refreshPlot(this.plot);
+
+            await this.getUserNFTCollections();
+            this.keys.inventorySlots++;
         },
 
         methods: {
+            generateSpecialAsset(collection, token) {
+                return {
+                    image: collection.image,
+                    tokenId: token,
+                    name: collection.alias + " #" + token
+                };
+            },
+
+            async fetchUserNFTs(metadataApi, ids) {
+                try {
+                    const userNFTs = await this.$http.get(`${metadataApi}${ids}`);
+                    return userNFTs.data;
+                } catch (err) {
+                    return [];
+                }
+            },
+
+            getTokenImage(slot) {
+                if (slot.token * 1 === 0 || !slot.token) // slot is empty
+                    return "";
+                const collection = this.collections.filter(c => c.address.toLowerCase() === slot.token.toLowerCase())[
+                    0];
+                return slot.image;
+            },
+
+            getTokenName(slot) {
+                if (!slot.token) return "";
+                const collection = this.collections.filter(c => c.address.toLowerCase() === slot.token.toLowerCase())[
+                    0];
+                return collection.alias;
+            },
+
             createLoaderToast(message) {
                 let toastId = Date.now();
                 let toast = this.$toast(message, {
@@ -490,6 +675,7 @@
 
             getPlotAttributeImage(attribute, neighbourhood, value) {
                 if (attribute !== 'Level' && value == 0) return '/plots/neutral/0.png';
+                value = Math.min(9, value);
                 const renderData = plotRenderData.filter(c => c.n.indexOf(neighbourhood * 1) > -1)[0];
                 if (!renderData) return '';
 
@@ -505,14 +691,134 @@
                 }
             },
 
-            async addNftToSlot(slotData) {
-                try {
-                    const tx = await this.plotInventoryContract.addAssetToPlotInventory(0, 1829, slotData.address,
-                        slotData.token.id, 1);
-                    await tx.wait(1);
-                } catch (err) {
-                    console.error(err);
+            async getUserNFTCollections() {
+                for (let i = 0; i < this.collections.length; i++) {
+                    if (!this.collections[i].active) continue;
+
+                    const contract = await new ethers.Contract(this.collections[i].address, HRC721.abi, this
+                        .metaMaskWallet.signer);
+
+                    let tokens = [];
+                    const balance = await contract.balanceOf(this.metaMaskAccount);
+                    if (this.collections[i].name === "DFK Heroes") {
+                        const tokens = await contract.getUserHeroes(this.metaMaskAccount);
+                        tokens.forEach((token) => {
+                            this.collections[i].userNFTs.push(this.generateSpecialAsset(this.collections[i],
+                                token));
+                        });
+                    } else {
+                        tokens = await contract.tokensOfOwner(this.metaMaskAccount);
+                        let ids = tokens.map((token) => token * 1);
+                        this.collections[i].userNFTs = await this.fetchUserNFTs(this.collections[i].metadata, ids);
+                    }
+                    this.collections[i].count = balance * 1;
                 }
+            },
+
+            async addNFTToSlot(slotData) {
+                let toast = undefined;
+                let collection = this.collections.filter(c => c.address.toLowerCase() === slotData.address
+                    .toLowerCase())[0];
+
+                try {
+                    const isEmitting = await this.plotEmitterContract.isEmitting(this.plot.plot_type, this.plot
+                        .token_id * 1);
+                    if (isEmitting) throw 'Emitter is running!';
+                    const tx = await this.plotInventoryContract.addAssetToPlotInventory(this.plot.plot_type, this
+                        .plot.token_id * 1, slotData.address,
+                        slotData.tokenId, slotData.slotNumber, {
+                            gasPrice: 30000000000,
+                            gasLimit: 3000000,
+                        });
+                    toast = this.createLoaderToast("Pending - Add NFT");
+                    this.showSlotPickerModal = false;
+                    collection.userNFTs = collection.userNFTs.filter(c => c.id !== slotData.tokenId * 1 && c
+                        .tokenId !== slotData.tokenId);
+                    collection.count--;
+                    await tx.wait(1);
+                    await this.getPlotInventory();
+                    await this.getUserNFTCollections();
+                    await this.refreshPlot(this.plot);
+                } catch (err) {
+                    await this.getUserNFTCollections();
+                    this.handleError(err);
+                }
+                this.$toast.dismiss(toast);
+            },
+
+            async withdrawNFTFromSlot(plot, slot) {
+                let toast = undefined;
+                try {
+                    const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
+                    if (isEmitting) throw 'Emitter is running!';
+                    const tx = await this.plotInventoryContract.withdrawAsset(plot.plot_type, plot.token_id, slot);
+                    toast = this.createLoaderToast("Pending - Withdraw NFT");
+                    await tx.wait(1);
+                    await this.refreshPlot(plot);
+                    await this.getPlotInventory();
+                    await this.getUserNFTCollections();
+                } catch (err) {
+                    this.handleError(err);
+                }
+                this.$toast.dismiss(toast);
+            },
+
+            async getPlotInventory() {
+                const plotInventory = await this.plotInventoryContract.getPlotInventory(this.plot.plot_type, this
+                    .plot.token_id * 1);
+
+                this.inventorySlots = [];
+
+                plotInventory.forEach(async (slot, index) => {
+                    let image = "";
+
+                    let newSlot = {
+                        token: slot.tokenAddress,
+                        tokenId: slot.tokenId * 1,
+                        attributeBonusString: "",
+                        image: "/images/LOADING.png",
+                        loading: true,
+                        index: index
+                    };
+
+                    //create a string containing all the bonuses provided by the nft
+                    let bonusString = "",
+                        values = 0;
+                    for (let i = 0; i < 4; i++) {
+                        if (!slot.modifierValue[i] || slot.modifierValue[i] * 1 === 0) continue;
+                        if (window.innerWidth > 512) {
+                            bonusString +=
+                                `${values > 0 ? '; ' : ''} +${slot.modifierValue[i] * 1} ${this.attributes[slot.modifiedAttribute[i]]}`;
+                        } else {
+                            bonusString +=
+                                `${values > 0 ? '; ' : ''} +${slot.modifierValue[i] * 1} ${this.attributes[slot.modifiedAttribute[i]][0]}`;
+                        }
+                        values++;
+                    }
+                    newSlot.attributeBonusString = bonusString;
+                    this.inventorySlots.push(newSlot);
+                    this.inventorySlots.sort((a, b) => a.index > b.index ? 1 : a.index < b.index ? -1 :
+                        0);
+
+                    if (slot.tokenAddress * 1 !== 0) {
+                        const collection = this.collections.filter(c => c.address.toLowerCase() === slot
+                            .tokenAddress.toLowerCase())[0];
+
+                        if (collection.name === "DFK Heroes") {
+                            newSlot.image = collection.image;
+                        } else {
+                            new Promise(async (resolve, reject) => {
+                                const nft = await this.fetchUserNFTs(collection.metadata, [
+                                    slot
+                                    .tokenId *
+                                    1
+                                ]);
+                                newSlot.image = nft[0].image;
+                                resolve();
+                            });
+                        }
+                    }
+                });
             },
 
             async getPlotData() {
@@ -525,6 +831,7 @@
                     fertility: plotData.fertility * 1,
                     fertilityBase: plotData.fertilityBase * 1,
                     level: plotData.level * 1,
+                    levelBase: this.plot.levelBase * 1,
                     plotId: plotData.plotId * 1,
                     soilType: soilTypes[plotData.soilTypeBase * 1],
                     levelUpCost: plotData.levelUpCost / 10 ** 18,
@@ -537,8 +844,6 @@
                     .calculateClaimableEmissions(this.plot.plot_type,
                         this.plot.token_id * 1) / 10 ** 18;
                 this.unlockedEmissions = await this.plotEmitterContract.getUnlockedBalance() / 10 ** 18;
-
-                this.keys.emitter += 1;
             },
 
             async levelUpPlot(plot, fromTreasury) {
@@ -562,7 +867,7 @@
                     toast = this.createLoaderToast("Pending - Level Up");
                     this.$modal.hide('upgradeplot');
                     await tx.wait(1);
-                    await this.getPlotData(plot);
+                    await this.refreshPlot(plot);
                 } catch (err) {
                     this.handleError(err);
                 }
@@ -602,7 +907,7 @@
                     this.$modal.hide('startemitter');
                     await tx.wait(1);
                     plot.isEmitting = !isEmitting;
-                    await this.getPlotData(plot);
+                    await this.getPlotData();
                 } catch (err) {
                     this.handleError(err);
                 }
@@ -650,11 +955,18 @@
                         });
                     toast = this.createLoaderToast("Pending - Collect Emissions");
                     await tx.wait(1);
-                    await this.getPlotData(plot);
+                    await this.getPlotData();
                 } catch (err) {
                     this.handleError(err);
                 }
                 this.$toast.dismiss(toast);
+            },
+
+            async refreshPlot(plot) {
+                await this.getPlotData();
+                this.calculatePlotEmissionRate(this.plotData);
+                this.calculatePlotEmissionBonus(this.plotData);
+                this.keys.emitter++;
             },
 
             getPlotOwner(owner) {
@@ -662,19 +974,19 @@
                 return owner.substring(0, 5) + "..." + owner.substring(owner.length - 5, owner.length);
             },
 
-            prepareSlotPickerModal(slot) {
-                this.slotIndex = slot;
-                this.showSlotPickerModal = true;
-            },
+            async prepareSlotPickerModal(slot) {
+                try {
+                    if (this.inventorySlots[slot].token * 1 !== 0) return;
+                    const isEmitting = await this.plotEmitterContract.isEmitting(this.plot.plot_type, this.plot
+                        .token_id * 1);
+                    if (isEmitting)
+                        if (isEmitting) throw 'Emitter is running!';;
 
-            calculatePlotEmissionRate(plot) {
-                const fertility = Math.floor(plot.fertility / 3);
-                const crime = Math.floor(plot.crimeRate / 3);
-                const level = plot.level;
-
-                let emissionRate = this.emissionBaseRate + (fertility - crime) * this.emissionBaseRate + level * this
-                    .emissionBaseRate;
-                return Math.max(1, emissionRate);
+                    this.slotIndex = slot;
+                    this.showSlotPickerModal = true;
+                } catch (err) {
+                    this.handleError(err);
+                }
             },
 
             emitListPlot(plot, price) {
@@ -700,7 +1012,19 @@
                     level = plot.level;
                 let emissionBonus = (fertility - crime) * this.emissionBaseRate + (level - baseLevel) * this
                     .emissionBaseRate;
-                return Math.max(0, emissionBonus);
+                this.emissionsBonus = Math.max(0, emissionBonus);
+                return this.emissionBonus;
+            },
+
+            calculatePlotEmissionRate(plot) {
+                const fertility = Math.floor(plot.fertility / 3);
+                const crime = Math.floor(plot.crimeRate / 3);
+                const level = plot.level * 1;
+
+                let emissionRate = this.emissionBaseRate + (fertility - crime) * this.emissionBaseRate + level * this
+                    .emissionBaseRate;
+                this.emissionsPerDay = Math.max(1, emissionRate);
+                return this.emissionsPerDay;
             },
 
             handleError(error) {
@@ -748,6 +1072,15 @@
         cursor: pointer;
     }
 
+    .plot-slot.dfk {
+        width: 80px;
+        height: 80px;
+        background-image: url("/images/dfkHeroFrame.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        border: 2px solid #36363600;
+    }
+
     .panel-limiter {
         max-height: 45vh;
     }
@@ -764,13 +1097,17 @@
             opacity: 0.8;
             cursor: pointer;
         }
+
+        .plot-slot.dfk {
+            display: none;
+        }
     }
 
     .plot-slot:hover {
         opacity: 1;
     }
 
-    .plot-slot.empty {
+    .plot-slot.empty::not(.dfk) {
         background-color: #b8b8b811;
     }
 </style>

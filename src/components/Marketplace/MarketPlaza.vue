@@ -224,7 +224,7 @@
                                     ...{{ item.highestBidder.slice(item.highestBidder.length - 5) }}
                                 </span>
                             </div>
-                            <img loading='lazy' v-bind:src='getNftImage(item)' />
+                            <img loading='lazy' v-lazy='getNftImage(item)' />
                         </div>
                         <div class='px-1 market-item-body' slot='body'>
                             <div class='mt-2 w-full ml-2 mr-2 flex opacity-50'>

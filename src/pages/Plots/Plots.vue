@@ -147,9 +147,31 @@
                         <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
                             {{unlockedEmissions}}
                         </p>
-                        <p v-on:click='withdrawUnlockedEmissions()' class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                        <p v-on:click='withdrawUnlockedEmissions()'
+                            class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
                             Collect
                         </p>
+                    </div>
+                </div>
+
+                <p v-if='getLimboAssetTotalCount() > 0' class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
+                    Stuck NFTS
+                </p>
+                <div :key='keys.limboAssets' v-if='getLimboAssetTotalCount() > 0' class="w-full rounded-xl p-4 mb-4 dark-panel">
+                    <div class='my-4' v-for='(asset, index) in limboAssets' :key='index'>
+                        <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
+                            <i class='fa fa-gear fa-spin'></i> Loading...
+                        </p>
+                        <div v-else class='w-full h-full flex items-center xl:text-lg text-sm'>
+                            <p class='text-white opacity-80 sm:w-6/10 w-10/10'>
+                                {{asset.count}} {{asset.name}}
+                            </p>
+
+                            <p v-on:click='withdrawLimboNFTs(asset.address, asset.userNFTs)'
+                                class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                                Withdraw
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -196,7 +218,8 @@
         <div class='2xl:w-4/5 xl:w-9/12 w-full h-full relative overflow-hidden mt-16'>
             <div id='plots' class='relative' :style='"height:" + parseInt(plotData.length / 10 + 1) * 225 + "px"'
                 style='width: 2200px;'>
-                <div v-bind:class='{"plot-owner": plot.ownerOf}' v-on:click='openPlot(plot)' v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
+                <div v-bind:class='{"plot-owner": plot.ownerOf}' v-on:click='openPlot(plot)'
+                    v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
                     style='width: 220px; height: 220px'
                     :style="'top: ' + (parseInt(index / 10) * 220) + 'px; left: ' + ((index % 10) * 220) + 'px'">
                     <div v-if='!plot.isFiltered' class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-dark opacity-50'>
@@ -217,30 +240,6 @@
 
                     <div class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
                         style="line-height: 0.75;pointer-events: none;">
-
-                        <div class="absolute top-0 pt-2">
-                            <small>
-                                {{ allNeighbourhoods[plot.neighbourhood] }}
-                            </small>
-                        </div>
-
-                        <div class="absolute bottom-0 pb-2">
-                            <small>
-                                Soil: {{ soilTypes[plot.soilType] }}
-                            </small>
-                            <br>
-                            <small>
-                                F: {{ plot.fertility }}
-                            </small>
-
-                            <small>
-                                L: {{ plot.level}}
-                            </small>
-
-                            <small>
-                                C: {{ plot.crimeRate }}
-                            </small>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -290,7 +289,6 @@
                         <template v-else>Disable</template>
                     </p>
                 </div>
-
             </div>
         </window>
 
@@ -337,6 +335,8 @@
     } from "vuex"
     import plotSnapshot from "../../plugins/snapshots/plots.json";
     import plotRenderData from '../../plugins/snapshots/plotsRenderData.json';
+
+    import HRC721 from '../../plugins/artifacts/HRC721.json';
 
     import PlotsYang from "../../plugins/artifacts/plotsyang.json";
     import PlotsYin from "../../plugins/artifacts/plotsyin.json";
@@ -496,15 +496,47 @@
                 allowanceFocus: '',
 
                 CONSTANTS: {
-                    XYA_ONE: "0xc74eaf04777f784a7854e8950daeb27559111b85",
-                    XYA: "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4"
+                    XYA_ONE: "0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", // "0xc74eaf04777f784a7854e8950daeb27559111b85",
+                    XYA: "0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2" // "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4"
                 },
 
                 isPanzoom: false,
                 lastTimeStamp: 0,
 
                 loadingPlots: true,
-                loadingMyPlots: true
+                loadingMyPlots: true,
+
+                limboAssets: [{
+                        name: "Crypto Pigs",
+                        address: "0xE5Fd335819EDb8DA8395F8Ec48beCA747a0790aB",
+                        count: 0,
+                        userNFTs: [],
+                    },
+                    {
+                        name: "The Frey",
+                        address: "0xd9d6b8c7f63cc2f5d5df5f3a77b2f596a66230d2",
+                        count: 0,
+                        userNFTs: [],
+                    },
+                    {
+                        name: "Orcs",
+                        address: "",
+                        count: 0,
+                        userNFTs: [],
+                    },
+                    {
+                        name: "DFK Heroes",
+                        address: "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C",
+                        count: 0,
+                        userNFTs: [],
+                    },
+
+                ],
+
+                keys: {
+                    limboAssets: 0
+                }
+
             }
         },
 
@@ -545,6 +577,12 @@
                     await this.getPlots()
                 }
             },
+
+            'metaMaskAccount': async function (newVal) {
+                if (newVal !== this.metamaskAccount) {
+                    location.reload();
+                }
+            },
         },
 
         async mounted() {
@@ -581,11 +619,21 @@
 
             await this.getMyPlots();
             await this.getAllowances();
+            await this.getLimboAssets();
 
             setTimeout(() => {
                 this.loadingPlots = false;
             }, 250);
 
+            const xyaPlots = plotSnapshot.plots.filter(c => c.neighbourhood < 16);
+
+            const yangPlots = plotSnapshot.plots.filter(c => c.neighbourhood >= 16 && c.neighbourhood < 18);
+
+            const yinPlots = plotSnapshot.plots.filter(c => c.neighbourhood >= 18);
+
+            console.log("XYA", xyaPlots);
+            console.log('YANG', yangPlots);
+            console.log("YIN", yinPlots);
             //window.addEventListener("resize", this.initializePanZoom);
         },
 
@@ -667,6 +715,10 @@
                 } else {
                     return `/plots/neutral/${attribute}_${value}.png`;
                 }
+            },
+
+            getLimboAssetTotalCount() {
+                return this.limboAssets.filter(c => c.count > 0).length > 0;
             },
 
             applyPlotFilters() {
@@ -783,6 +835,50 @@
                     this.handleError(err);
                 }
                 this.$toast.dismiss(toast);
+            },
+
+            async withdrawLimboNFTs(tokenAddress, tokenIds) {
+                let toast = undefined;
+                try {
+                    let tokenAddresses = [];
+                    for (let i = 0; i < tokenIds.length; i++) {
+                        tokenAddresses.push(tokenAddress);
+                    }
+                    const tx = await this.plotInventoryContract.withdrawLimboAssetsForUser(this.metaMaskAccount,
+                        tokenAddresses, tokenIds, {
+                            gasPrice: 30000000000,
+                            gasLimit: 3000000,
+                        });
+                    await tx.wait(1);
+                    toast = this.createLoaderToast("Pending - Withdraw NFT's");
+                    this.unlockedEmissions = 0;
+                    await this.getLimboAssets();
+                } catch (err) {
+                    this.handleError(err);
+                }
+                this.$toast.dismiss(toast);
+            },
+
+            async getLimboAssets() {
+                const limboAssets = await this.plotInventoryContract.checkAssetsInLimbo(this.metaMaskAccount);
+
+                this.limboAssets.forEach((limbo) => {
+                    limbo.userNFTs = [];
+                    limbo.count = 0;
+                });
+
+                for (let i = 0; i < limboAssets.length; i++) {
+                    const asset = this.limboAssets.filter(c => c.address.toLowerCase() === limboAssets[i]
+                        .tokenAddress
+                        .toLowerCase())[0];
+                    if (!asset) continue;
+
+                    asset.count++;
+                    asset.userNFTs.push(limboAssets[i].tokenId * 1);
+                }
+
+                this.limboAssets = this.limboAssets.filter(c => c.count > 0);
+                this.keys.limboAssets++;
             },
 
             async getMyPlots() {
@@ -939,10 +1035,13 @@
                     const tx = await this.plotContracts[contract].transferFrom(this.metaMaskAccount, address, id);
                     toast = this.createLoaderToast("Pending - Sending Plot");
                     this.$modal.hide("sendplot");
-                    this.currentPlot = undefined;
+                    this.currentPlot = {
+                        tokenId: -1
+                    };
                     this.showPlotDetails = false;
                     await tx.wait(1);
                     await this.getMyPlots();
+                    await this.getLimboAssets();
                 } catch (err) {
                     this.handleError(err);
                 }
@@ -980,11 +1079,11 @@
 
 
 <style>
-.plot-owner
-{
-    border: 6px solid rgba(255,255,255,90%);
-    border-radius: 3px;
-}
+    .plot-owner {
+        border: 6px solid rgba(255, 255, 255, 90%);
+        border-radius: 3px;
+    }
+
     .checkbox {
         height: 24px;
         width: 24px;
