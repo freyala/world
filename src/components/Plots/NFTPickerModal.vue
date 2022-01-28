@@ -210,6 +210,7 @@
             },
 
             resolveTokenId(nft) {
+                if(nft["tokenId"] == 0 || nft["id"] == 0) return 0;
                 if (nft["tokenId"]) return nft["tokenId"];
                 if (nft["id"]) return nft["id"];
                 return "";
