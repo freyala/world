@@ -1007,24 +1007,21 @@
 
             calculatePlotEmissionBonus(plot) {
                 const fertility = Math.floor((plot.fertility - plot.fertilityBase) / 3);
-                const crime = Math.floor((plot.crimeRate - plot.crimeRateBase) / 2);
                 const baseLevel = plot.levelBase,
                     level = plot.level;
-                let emissionBonus = (fertility - crime) * this.emissionBaseRate + (level - baseLevel) * this
+                let emissionBonus = fertility * this.emissionBaseRate + (level - baseLevel) * this
                     .emissionBaseRate;
                 this.emissionsBonus = Math.max(0, emissionBonus);
                 return this.emissionBonus;
             },
 
             calculatePlotEmissionRate(plot) {
-                //const fertility = Math.floor(plot.fertility / 3);
-                //const level = plot.level * 1;
-                //const crime = plot.crimeRate < plot.defence ? 0 : Math.floor((plot.crimeRate - plot.defence) / 2);
-
-                let level = 9, crime = 1, fertility = 2;
-
+                const fertility = Math.floor(plot.fertility / 3);
+                const level = plot.level * 1;
+                const crime = plot.crimeRate <= plot.defence ? 0 : Math.max(0, Math.floor((plot.crimeRate - plot
+                    .defence) / 2));
                 let emissionRate = (1 + level + fertility - crime) * this.emissionBaseRate;
-                
+
                 this.emissionsPerDay = Math.max(1, emissionRate);
                 return this.emissionsPerDay;
             },
