@@ -1017,17 +1017,14 @@
             },
 
             calculatePlotEmissionRate(plot) {
-                const fertility = Math.floor(plot.fertility / 3);
-                const level = plot.level * 1;
-                let crime = 0;
+                //const fertility = Math.floor(plot.fertility / 3);
+                //const level = plot.level * 1;
+                //const crime = plot.crimeRate < plot.defence ? 0 : Math.floor((plot.crimeRate - plot.defence) / 2);
 
-                if(plot.crimeRate < plot.defence) crime = 0;
-                else {
-                    crime = Math.floor((plot.crimeRate - plot.defence) / 3);
-                }
+                let level = 9, crime = 1, fertility = 2;
 
-                let emissionRate = this.emissionBaseRate + (fertility - crime) * this.emissionBaseRate + level * this
-                    .emissionBaseRate;
+                let emissionRate = (1 + level + fertility - crime) * this.emissionBaseRate;
+                
                 this.emissionsPerDay = Math.max(1, emissionRate);
                 return this.emissionsPerDay;
             },
