@@ -664,7 +664,7 @@
                 elem.addEventListener('panzoomend', (e) => {
                     if (Math.abs(this.lastTimeStamp - e.timeStamp) < 150) {
                         this.isPanzoom = false;
-                        this.showPlotDetails = true;
+                        //this.showPlotDetails = true;
                     }
                     setTimeout(() => {
                         this.isPanzoom = false;
@@ -693,6 +693,7 @@
 
             getPlotAttributeImage(attribute, neighbourhood, value) {
                 if (attribute !== 'Level' && value == 0) return '/plots/neutral/0.png';
+                value = Math.min(9, value);
                 const renderData = plotRenderData.filter(c => c.n.indexOf(neighbourhood * 1) > -1)[0];
                 if (!renderData) return '';
 
