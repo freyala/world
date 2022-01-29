@@ -496,8 +496,8 @@
                 allowanceFocus: '',
 
                 CONSTANTS: {
-                    XYA_ONE: "0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2", // "0xc74eaf04777f784a7854e8950daeb27559111b85",
-                    XYA: "0xc963cb270b96d8d34f5d31aab36bc1a33b3caba2" // "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4"
+                    XYA_ONE: "0xc74eaf04777f784a7854e8950daeb27559111b85",
+                    XYA: "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4"
                 },
 
                 isPanzoom: false,
