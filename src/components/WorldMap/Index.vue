@@ -203,7 +203,7 @@
                 </router-link>
               </div>
 
-              
+
               <div @mouseenter="hovering = 'pigsty'" @mouseleave="hovering = ''">
                 <router-link :to="{ name: 'pigs' }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
@@ -310,11 +310,26 @@
       <div class='absolute mb-8 md:top-36 top-32 left-0 md:ml-12 ml-0 w-auto md:mt-4'>
         <AudioManagerInterface></AudioManagerInterface>
       </div>
-      <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
-        <a href="https://docs.freyala.com/freyala" target="_blank">
-          PROJECT INFO
-        </a>
-      </button>
+      <div v-if="claimableSalary > 0">
+        <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
+          <div @click="$modal.show('salary')">
+            CLAIM SALARY: {{ claimableSalary }} XYA
+          </div>
+        </button>
+        <button class="absolute left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn" style="bottom: 50px">
+          <a href="https://docs.freyala.com/freyala" target="_blank">
+            PROJECT INFO
+          </a>
+        </button>
+      </div>
+      <div v-else>
+
+        <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
+          <a href="https://docs.freyala.com/freyala" target="_blank">
+            PROJECT INFO
+          </a>
+        </button>
+      </div>
 
       <div id="modals">
         <window name="1" width="80%">
@@ -678,6 +693,46 @@
             </div>
           </div>
         </window>
+
+        <window height='10%' width='80%' name='salary'>
+          <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
+            <div class="w-full text-center">
+              <div class="sm:text-3xl text-xl">Claimable salary</div>
+            </div>
+            <div class="absolute right-6">
+              <i @click="$modal.hide('salary')"
+                 class="fas fa-times cursor-pointer sm:text-xl text-base sm:mt-0 mt-1"></i>
+            </div>
+            <hr class='w-full my-4'/>
+
+            <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
+
+              Claimable amount: {{ claimableSalary }} XYA
+
+            </div>
+
+            <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
+              <input class='w-full text-black px-2 rounded-lg' type="number" v-model='tokensToClaim'/>
+              <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
+                <button v-if="!claimingSalary" v-on:click="claimSalary()" type="button"
+                        class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                  <span>Claim</span>
+                </button>
+
+                <button v-else type="button"
+                        class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                  <span>Claiming</span>
+                </button>
+              </div>
+            </div>
+
+            <hr class='w-full my-4'/>
+
+            <div class="text-center py-2">
+              <em>History transactions coming soon</em>
+            </div>
+          </div>
+        </window>
       </div>
     </main>
   </div>
@@ -689,12 +744,21 @@ import AudioManagerInterface from '../../components/Plugins/AudioManagerInterfac
 import wallet from '../../plugins/wallet';
 import Panzoom from '@panzoom/panzoom'
 import {mapGetters} from "vuex";
+import {ethers} from "ethers";
+import Freyala from "../../plugins/artifacts/freyala.json";
+import Salary from "../../plugins/artifacts/slry.json";
+import fromExponential from "from-exponential";
 
 export default {
   name: 'WorldMap',
   mixins: [wallet],
   data() {
     return {
+      claimingSalary: false,
+      mainContract: undefined,
+      salaryContract: undefined,
+      claimableSalary: 0,
+      tokensToClaim: 0,
       event: {},
       window: undefined,
       hovering: '',
@@ -707,7 +771,9 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'firstTime'
+      'firstTime',
+      'metaMaskAccount',
+      'metaMaskWallet'
     ])
   },
   created() {
@@ -716,43 +782,49 @@ export default {
   destroyed() {
     window.removeEventListener("resize", this.editPanZoom);
   },
-  mounted() {
-      this.$nextTick(() => {
-        const elem = document.getElementById('world-map')
-        let panzoom = undefined
+  async mounted() {
+    this.mainContract = await new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+    this.salaryContract = await new ethers.Contract(Salary.address, Salary.abi, this.metaMaskWallet.signer)
 
-        if (window.innerWidth < 1024) {
-          panzoom = Panzoom(elem, {
-            maxScale: 10,
-            minScale: 1,
-            steps: 1,
-            contain: 'outside',
-            initialZoom: 1
-          })
-        } else {
-          panzoom = Panzoom(elem, {
-            maxScale: 10,
-            minScale: 1,
-            contain: 'outside',
-            initialZoom: 1
-          })
-        }
+    const salary = (await this.salaryContract.allowance(this.metaMaskAccount)) * 1
+    this.claimableSalary = salary / 1e18
 
-        elem.parentElement.addEventListener('wheel', (e) => {
-          const el = e.target.closest('#world-map');
-          if (el && !el.length) {
-            panzoom.zoomWithWheel(e)
-          }
+    this.$nextTick(() => {
+      const elem = document.getElementById('world-map')
+      let panzoom = undefined
+
+      if (window.innerWidth < 1024) {
+        panzoom = Panzoom(elem, {
+          maxScale: 10,
+          minScale: 1,
+          steps: 1,
+          contain: 'outside',
+          initialZoom: 1
         })
-
-        setTimeout(() => {
-          panzoom.zoom(1, {animate: false})
+      } else {
+        panzoom = Panzoom(elem, {
+          maxScale: 10,
+          minScale: 1,
+          contain: 'outside',
+          initialZoom: 1
         })
+      }
 
-        if (this.firstTime === true) {
-          this.$modal.show('tutorial')
+      elem.parentElement.addEventListener('wheel', (e) => {
+        const el = e.target.closest('#world-map');
+        if (el && !el.length) {
+          panzoom.zoomWithWheel(e)
         }
-      });
+      })
+
+      setTimeout(() => {
+        panzoom.zoom(1, {animate: false})
+      })
+
+      if (this.firstTime === true) {
+        this.$modal.show('tutorial')
+      }
+    });
   },
   methods: {
     editPanZoom() {
@@ -798,7 +870,62 @@ export default {
     },
     onInit: function (panzoomInstance, id) {
       panzoomInstance.setTransformOrigin(null)
-    }
+    },
+    async claimSalary() {
+      let actual = 0;
+
+      if (this.tokensToClaim > 0) {
+        actual = this.tokensToClaim * 10 ** 18;
+      } else {
+        actual = 0;
+      }
+
+      let toast = undefined;
+
+      try {
+        const arg = fromExponential(actual);
+        const tx = await this.salaryContract.withdrawMoney(this.metaMaskAccount, arg)
+        toast = this.createLoaderToast("Pending Transaction - Salary");
+
+        this.claimingSalary = true
+        await tx.wait(1);
+        this.claimingSalary = false
+
+        this.$toast.success("Salary successfully claimed")
+
+        const salary = (await this.salaryContract.allowance(this.metaMaskAccount)) * 1
+        this.claimableSalary = salary / 1e18
+      } catch (err) {
+        this.handleError(err);
+      }
+
+      this.$toast.dismiss(toast)
+    },
+
+    createLoaderToast(message) {
+      let toastId = Date.now();
+      let toast = this.$toast(message, {
+        timeout: 0,
+        closeButton: "button",
+        icon: "fa fa-gear fa-spin",
+        id: toastId
+      });
+      return toast;
+    },
+
+    handleError(error) {
+      const errorMessage =
+          typeof error == "object" ? error.message : error.toLowerCase();
+      const lcMessage = errorMessage.toLowerCase();
+      if (lcMessage.indexOf("user denied") > -1) return;
+      if (lcMessage.indexOf("transaction failed") > -1) {
+        this.$toast.error("Transaction Failed");
+      } else if (errorMessage.length < 100) {
+        this.$toast.error(errorMessage);
+      } else {
+        this.$toast.error('Transaction Failed');
+      }
+    },
   }
 }
 </script>
@@ -868,9 +995,9 @@ h1 {
 
 .vm--modal {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  background-color: #222222!important;
+  background-color: #222222 !important;
 
-  width: auto!important;
+  width: auto !important;
   max-width: 750px;
   margin-left: auto;
   margin-right: auto;

@@ -44,13 +44,13 @@ export default new Vuex.Store({
 
     getters: {
         firstTime(state) {
-           return state.FIRST_TIME
+            return state.FIRST_TIME
         },
         chainStatus(state) {
-           return state.CHAIN_STATUS
+            return state.CHAIN_STATUS
         },
         chainID(state) {
-           return state.CHAIN_ID
+            return state.CHAIN_ID
         },
         favourites(state) {
             return state.FAVOURITES

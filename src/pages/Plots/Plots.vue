@@ -590,7 +590,7 @@
                 .tokenContracts.yin, this.tokenContracts.yang, this.marketContracts.xya, this.marketContracts.yin,
                 this.marketContracts.yang
             ] = await Promise.all([
-                new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer),
+                j,
                 new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer),
