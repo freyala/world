@@ -112,7 +112,8 @@
                             Date
                         </div>
                     </div>
-                    <div class='flex w-full md:text-left text-center sm:text-sm text-xs md:text-base items-center flex-col'>
+                    <div
+                        class='flex w-full md:text-left text-center sm:text-sm text-xs md:text-base items-center flex-col'>
                         <div v-for='sale in item.bidHistory' :key='sale.timestamp'
                             class='flex w-full py-2 px-4 items-center justify-evenly'>
                             <div class='w-full text-white opacity-75'>
@@ -137,6 +138,10 @@
 
 
 <script>
+    import {
+        mapGetters
+    } from "vuex";
+
     export default {
         name: 'MarketModal',
         props: {
@@ -157,7 +162,7 @@
             return {
                 expandAttributes: false,
                 expandSales: false,
-                expandDetails: false
+                expandDetails: false,
             };
         },
         methods: {
@@ -174,9 +179,9 @@
                 return '...' + id.slice(id.length - 5);
             },
 
-            getTokenSymbol(id){
+            getTokenSymbol(id) {
                 const token = this.tokens.filter(c => c.value === id)[0];
-                if(!token) return '';
+                if (!token) return '';
                 return token.key;
             },
 
@@ -186,8 +191,12 @@
                 var month = ("0" + (date.getMonth() + 1)).slice(-2);
                 var day = ("0" + date.getDate()).slice(-2);
                 return month + '/' + day + '/' + year;
-            }
-        }
+            },
+        },
+
+        computed: {
+            ...mapGetters(["metaMaskAccount", "metaMaskWallet"]),
+        },
     }
 </script>
 
