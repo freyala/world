@@ -694,7 +694,7 @@
           </div>
         </window>
 
-        <window height='10%' width='80%' name='salary'>
+        <window @before-open="beforeSalaryModalOpen()" height='10%' width='80%' name='salary'>
           <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
             <div class="w-full text-center">
               <div class="sm:text-3xl text-xl">Claimable salary</div>
@@ -728,8 +728,17 @@
 
             <hr class='w-full my-4'/>
 
-            <div class="text-center py-2">
-              <em>History transactions coming soon</em>
+            <div class="mt-4 flex flex-wrap w-full items-start justify-start">
+              <p class="w-full mb-2" :key="tx._toAddress + index" v-for="(tx, index) in transactionHistory">
+                Block {{ tx._blockNumber }}: <br> Paid out: {{ tx._amount }} XYA (<a :href="tx._transactionHash"
+                                                                                     target="_blank">
+                {{ tx._transactionHash | compressAddress }} </a>)
+              </p>
+
+              <div v-if="!finishedGettingTransactions" class="w-full flex">
+                <img class="w-8 h-8 m-auto" src="/images/XYA.png" alt="XYA logo"
+                     style="animation: rotation 2s infinite linear;">
+              </div>
             </div>
           </div>
         </window>
@@ -752,6 +761,17 @@ import fromExponential from "from-exponential";
 export default {
   name: 'WorldMap',
   mixins: [wallet],
+  filters: {
+    compressAddress(address) {
+      if (address !== undefined) {
+        return (
+            address.substr(0, 10) +
+            "..." +
+            address.substr(address.length - 5, address.length)
+        )
+      }
+    },
+  },
   data() {
     return {
       claimingSalary: false,
@@ -762,7 +782,9 @@ export default {
       event: {},
       window: undefined,
       hovering: '',
-      tutorialWindow: 1
+      tutorialWindow: 1,
+      transactionHistory: [],
+      finishedGettingTransactions: false
     }
   },
   components: {
@@ -902,15 +924,55 @@ export default {
       this.$toast.dismiss(toast)
     },
 
+    async beforeSalaryModalOpen() {
+      const provider = new ethers.providers.WebSocketProvider(
+          "wss://ws.s0.t.hmny.io/"
+      );
+
+      const contract = new ethers.Contract(Salary.address, Salary.abi, provider);
+
+      const initialBlockNumber = 22398099
+      const maxBlocks = 1024
+      let blockNumber = await provider.getBlockNumber()
+
+      while (
+          blockNumber > initialBlockNumber
+          ) {
+        console.log(
+            `loading events from block ${blockNumber} to ${blockNumber + maxBlocks}`
+        );
+
+        const events = await contract.queryFilter(
+            contract.filters.MoneySent(this.metaMaskAccount),
+            blockNumber,
+            blockNumber + maxBlocks
+        );
+
+        events.map((event) => {
+          const transaction = {
+            _toAddress: event.args[0],
+            _amount: (parseInt(event.args[1]) / 1e18),
+            _blockNumber: event.blockNumber,
+            _transactionHash: event.transactionHash
+          }
+
+          this.transactionHistory.push(transaction)
+        })
+
+        blockNumber -= maxBlocks
+      }
+
+      this.finishedGettingTransactions = true
+    },
+
     createLoaderToast(message) {
       let toastId = Date.now();
-      let toast = this.$toast(message, {
+      return this.$toast(message, {
         timeout: 0,
         closeButton: "button",
         icon: "fa fa-gear fa-spin",
         id: toastId
       });
-      return toast;
     },
 
     handleError(error) {
