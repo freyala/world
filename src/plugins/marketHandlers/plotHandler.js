@@ -2,6 +2,7 @@ import {
     ethers
 } from 'ethers';
 import PLOT_HANDLER from '../artifacts/plothandler.json';
+import PLOT_EMITTER from '../artifacts/plotEmitter.json';
 
 async function manage(signer, item) {
     try{
@@ -10,7 +11,10 @@ async function manage(signer, item) {
         const plotType = neighbourhood < 16 ? 0 : neighbourhood >= 16 && neighbourhood < 18 ? 2 : 1;
         
         const contract = await new ethers.Contract(PLOT_HANDLER.address, PLOT_HANDLER.abi, signer);
+        const plotEmitter = await new ethers.Contract(PLOT_EMITTER.address, PLOT_EMITTER.abi, signer);
+
         const data = await contract.getPlotData(plotType, tokenId);
+        const paidFee = await plotEmitter.hasPlotPaidOneTimeFee(plotType, tokenId);
     
         const [baseLevel, level] = [data.levelBase * 1, data.level * 1];
         const [baseFertility, fertility] = [data.fertilityBase * 1, data.fertility * 1]; 
@@ -37,6 +41,11 @@ async function manage(signer, item) {
                 attribute.value = `${level}  (+${level - baseLevel})`;
             }
         }
+
+        item.attributes.push({
+            trait_type: "Paid Feed",
+            value: paidFee
+        });
     }
     catch(err){
         return;
