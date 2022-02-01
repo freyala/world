@@ -5,7 +5,8 @@
         "status": "OPEN",
         "token": "0xd9d6b8c7f63cc2f5d5df5f3a77b2f596a66230d2",
         "metadata": "https://frey.freyala.com/meta/list?items=",
-        "thumbnail": "none"
+        "thumbnail": "none",
+        "handler": "buffHandler"
     },
     {
         "collectionName": "Crypto Pigs",
@@ -14,7 +15,8 @@
         "status": "OPEN",
         "token": "0xe5fd335819edb8da8395f8ec48beca747a0790ab",
         "metadata": "https://api.cryptopigs.one/meta/list?items=",
-        "thumbnail": "none"
+        "thumbnail": "none",
+        "handler": "buffHandler"
     },
     {
         "collectionName": "Dingos",
@@ -23,33 +25,37 @@
         "status": "OPEN",
         "token": "0x577bf396818f14868641045e93b0248f5550d892",
         "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
-        "thumbnail": "none"
+        "thumbnail": "none",
+        "handler": "none"
     },
     {
-        "collectionName": "Freyala Plots",
+        "collectionName": "XYA Plots",
         "tokenName": "Plot",
-        "image": "/images/freyalaPlots.png",
-        "status": "SOON",
-        "token": "0x577BF396818F14868641045e93b0248f5550D892",
-        "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
-        "thumbnail": "none"
+        "image": "images/xyaPlots.png",
+        "status": "OPEN",
+        "token": "0x66173da60415857fc1d50fb1d502060ad09d1bf2",
+        "metadata": "https://plots-api.freyala.com/xya/list?items=",
+        "thumbnail": "none",
+        "handler": "plotHandler"
     },
     {
         "collectionName": "Yang Plots",
         "tokenName": "Yang Plot",
-        "image": "/images/yangPlots.png",
-        "status": "SOON",
-        "token": "0x577BF396818F14868641045e93b0248f5550D892",
-        "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
-        "thumbnail": "none"
+        "image": "images/yangPlots.png",
+        "status": "OPEN",
+        "token": "0xEa30c1a83C7DA733C8031C3659B47AD1e6b46F94",
+        "metadata": "https://plots-api.freyala.com/yang/list?items=",
+        "thumbnail": "none",
+        "handler": "plotHandler"
     },    
     {
         "collectionName": "Yin Plots",
         "tokenName": "Yin Plot",
-        "image": "/images/yinPlots.png",
-        "status": "SOON",
-        "token": "0x577BF396818F14868641045e93b0248f5550D892",
-        "metadata": "https://api.dingosbowlsclub.one/meta/list?items=",
-        "thumbnail": "none"
+        "image": "images/yinPlots.png",
+        "status": "OPEN",
+        "token": "0x40ad4aef3a74c57d0c4829de97184d909bebc09f",
+        "metadata": "https://plots-api.freyala.com/yin/list?items=",
+        "thumbnail": "none",
+        "handler": "plotHandler"
     }
 ]

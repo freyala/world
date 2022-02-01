@@ -650,7 +650,8 @@
                     </p>
                 </div>
                 <div class="mt-4 flex md:flex-row flex-col w-full items-center justify-start">
-                    <select v-model='collectionSaleToken' class="w-full md:w-9/12 h-12 border rounded-lg border-yellow px-4 bg-dark">
+                    <select v-model='collectionSaleToken'
+                        class="w-full md:w-9/12 h-12 border rounded-lg border-yellow px-4 bg-dark">
                         <option v-for='(token, index) in acceptedTokens' v-bind:value="token.value" :key='index'>
                             {{ token.key }}</option>
                     </select>
@@ -1328,6 +1329,11 @@
                 item.attributes = marketData.attributes;
                 item.saleHistory = marketData.sales;
                 item.bidHistory = marketData.auctions;
+
+                if (this.market.handler !== "none") {
+                    require(`../../plugins/marketHandlers/${this.market.handler}`).default(this
+                        .metaMaskWallet.signer, item);
+                };
             },
 
             showMakeBidModal(item) {
@@ -1392,6 +1398,7 @@
             async fetchUserNFTs() {
                 try {
                     const NFTs = await this.marketNFTContract.tokensOfOwner(this.metaMaskAccount);
+                    if(NFTs.length === 0) return;
 
                     let ids = await NFTs.map(async (frey) => {
                         return frey._isBigNumber ? ethers.BigNumber.from(frey._hex).toString() : frey
@@ -1411,6 +1418,7 @@
                                     c.description = c.rarity;
                                     c.tokenId = c.id;
                                 }
+                                c.token = this.market.token;
                             })
 
                             this.userTokens = userNFTs.data;
@@ -1565,6 +1573,9 @@
                     this.marketAttributes = result.data.data.markets[0].attributes;
 
                     for (let i = 0; i < this.marketAttributes.length; i++) {
+
+                        this.marketAttributes[i].values = this.marketAttributes[i].values.sort((a, b) => a > b ? 1 :
+                            a < b ? -1 : 0);
                         this.marketSelectedFilters.push("");
                     }
                 } catch (err) {
@@ -1946,14 +1957,13 @@
                 }
             },
 
-            async forceCancelNFT(tokenId){
-                try{
+            async forceCancelNFT(tokenId) {
+                try {
                     const tx = await this.contract.cancelSell(this.market.token, tokenId);
                     this.$modal.hide('force-withdraw');
                     this.forceCancelSellTokenId = 0;
                     await tx.wait(1);
-                }
-                catch(err){
+                } catch (err) {
                     this.handleError(err);
                 }
             },
