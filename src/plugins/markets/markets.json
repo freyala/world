@@ -43,7 +43,7 @@
         "tokenName": "Yang Plot",
         "image": "images/yangPlots.png",
         "status": "OPEN",
-        "token": "0xEa30c1a83C7DA733C8031C3659B47AD1e6b46F94",
+        "token": "0xfe1ef7984f0051e00eac463e7f57ebf2fc2798b0",
         "metadata": "https://plots-api.freyala.com/yang/list?items=",
         "thumbnail": "none",
         "handler": "plotHandler"
