@@ -310,10 +310,10 @@
       <div class='absolute mb-8 md:top-36 top-32 left-0 md:ml-12 ml-0 w-auto md:mt-4'>
         <AudioManagerInterface></AudioManagerInterface>
       </div>
-      <div v-if="claimableSalary > 0">
+      <div v-if="claimableDrop > 0">
         <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
-          <div @click="$modal.show('salary')">
-            CLAIM SALARY: {{ claimableSalary }} XYA
+          <div @click="$modal.show('drop')">
+            CLAIM DROP: {{ claimableDrop }} XYA
           </div>
         </button>
         <button class="absolute left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn" style="bottom: 50px">
@@ -694,27 +694,27 @@
           </div>
         </window>
 
-        <window @before-open="beforeSalaryModalOpen()" height='10%' width='80%' name='salary'>
+        <window @before-open="beforeDropModalOpen()" height='10%' width='80%' name='drop'>
           <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
             <div class="w-full text-center">
-              <div class="sm:text-3xl text-xl">Claimable salary</div>
+              <div class="sm:text-3xl text-xl">Claimable drop</div>
             </div>
             <div class="absolute right-6">
-              <i @click="$modal.hide('salary')"
+              <i @click="$modal.hide('drop')"
                  class="fas fa-times cursor-pointer sm:text-xl text-base sm:mt-0 mt-1"></i>
             </div>
             <hr class='w-full my-4'/>
 
             <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
 
-              Claimable amount: {{ claimableSalary }} XYA
+              Claimable amount: {{ claimableDrop }} XYA
 
             </div>
 
             <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
               <input class='w-full text-black px-2 rounded-lg' type="number" v-model='tokensToClaim'/>
               <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
-                <button v-if="!claimingSalary" v-on:click="claimSalary()" type="button"
+                <button v-if="!claimingDrop" v-on:click="claimDrop()" type="button"
                         class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
                   <span>Claim</span>
                 </button>
@@ -755,7 +755,7 @@ import Panzoom from '@panzoom/panzoom'
 import {mapGetters} from "vuex";
 import {ethers} from "ethers";
 import Freyala from "../../plugins/artifacts/freyala.json";
-import Salary from "../../plugins/artifacts/slry.json";
+import Drop from "../../plugins/artifacts/slry.json";
 import fromExponential from "from-exponential";
 
 export default {
@@ -774,10 +774,10 @@ export default {
   },
   data() {
     return {
-      claimingSalary: false,
+      claimingDrop: false,
       mainContract: undefined,
-      salaryContract: undefined,
-      claimableSalary: 0,
+      dropContract: undefined,
+      claimableDrop: 0,
       tokensToClaim: 0,
       event: {},
       window: undefined,
@@ -806,10 +806,10 @@ export default {
   },
   async mounted() {
     this.mainContract = await new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
-    this.salaryContract = await new ethers.Contract(Salary.address, Salary.abi, this.metaMaskWallet.signer)
+    this.dropContract = await new ethers.Contract(Drop.address, Drop.abi, this.metaMaskWallet.signer)
 
-    const salary = (await this.salaryContract.allowance(this.metaMaskAccount)) * 1
-    this.claimableSalary = salary / 1e18
+    const drop = (await this.dropContract.allowance(this.metaMaskAccount)) * 1
+    this.claimableDrop = drop / 1e18
 
     this.$nextTick(() => {
       const elem = document.getElementById('world-map')
@@ -893,7 +893,7 @@ export default {
     onInit: function (panzoomInstance, id) {
       panzoomInstance.setTransformOrigin(null)
     },
-    async claimSalary() {
+    async claimDrop() {
       let actual = 0;
 
       if (this.tokensToClaim > 0) {
@@ -906,17 +906,17 @@ export default {
 
       try {
         const arg = fromExponential(actual);
-        const tx = await this.salaryContract.withdrawMoney(this.metaMaskAccount, arg)
-        toast = this.createLoaderToast("Pending Transaction - Salary");
+        const tx = await this.dropContract.withdrawMoney(this.metaMaskAccount, arg)
+        toast = this.createLoaderToast("Pending Transaction - Drop");
 
-        this.claimingSalary = true
+        this.claimingDrop = true
         await tx.wait(1);
-        this.claimingSalary = false
+        this.claimingDrop = false
 
-        this.$toast.success("Salary successfully claimed")
+        this.$toast.success("Drop successfully claimed")
 
-        const salary = (await this.salaryContract.allowance(this.metaMaskAccount)) * 1
-        this.claimableSalary = salary / 1e18
+        const drop = (await this.dropContract.allowance(this.metaMaskAccount)) * 1
+        this.claimableDrop = drop / 1e18
       } catch (err) {
         this.handleError(err);
       }
@@ -924,12 +924,12 @@ export default {
       this.$toast.dismiss(toast)
     },
 
-    async beforeSalaryModalOpen() {
+    async beforeDropModalOpen() {
       const provider = new ethers.providers.WebSocketProvider(
           "wss://ws.s0.t.hmny.io/"
       );
 
-      const contract = new ethers.Contract(Salary.address, Salary.abi, provider);
+      const contract = new ethers.Contract(Drop.address, Drop.abi, provider);
 
       const initialBlockNumber = 22398099
       const maxBlocks = 1024
