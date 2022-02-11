@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="w-1/5 md:hidden flex flex-wrap">
+    <div class="w-1/5 flex flex-wrap">
       <drop-down-menu></drop-down-menu>
     </div>
 

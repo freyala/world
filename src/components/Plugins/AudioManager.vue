@@ -1,6 +1,6 @@
 <template>
     <div>
-        <audio :key='key' type='audio/mpeg' loop autoplay muted id='audio-player'>
+        <audio v-if='currentAudio != undefined' :key='key' type='audio/mpeg' loop autoplay muted id='audio-player'>
             <source v-bind:src='getCurrentAudio'>
         </audio>
     </div>
@@ -26,7 +26,8 @@
                     'world-map': 'Freya_Theme.mp3',
                     'casino': 'Luderion.mp3',
                     'marketplace': 'Marketplace.mp3',
-                    'pigs': 'PiggyTamagotchi.mp3'
+                    'pigs': 'PiggyTamagotchi.mp3',
+                    'plots': 'Plots.mp3'
                 }
             };
         },

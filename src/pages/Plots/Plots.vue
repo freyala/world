@@ -28,7 +28,7 @@
         <div class='absolute flex flex-row h-16 w-full top-0 dark-panel items-center' style="z-index: 1000">
             <div class='ml-6 mt-5 mb-4 w-auto text-xl cursor-pointer absolute z-50 w-2/5 flex flex-row items-center'>
                 <span v-if='!showPlotDetails'>
-                    <router-link class='flex items-center'  :to="{ name: 'world-map' }">
+                    <router-link class='flex items-center' :to="{ name: 'world-map' }">
                         <i class='fa fa-arrow-left mr-2' v-on:click='showPlotDetails = false'>
 
                         </i>
@@ -157,7 +157,8 @@
                 <p v-if='getLimboAssetTotalCount() > 0' class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
                     Stuck NFTS
                 </p>
-                <div :key='keys.limboAssets' v-if='getLimboAssetTotalCount() > 0' class="w-full rounded-xl p-4 mb-4 dark-panel">
+                <div :key='keys.limboAssets' v-if='getLimboAssetTotalCount() > 0'
+                    class="w-full rounded-xl p-4 mb-4 dark-panel">
                     <div class='my-4' v-for='(asset, index) in limboAssets' :key='index'>
                         <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
                             <i class='fa fa-gear fa-spin'></i> Loading...
@@ -175,9 +176,15 @@
                     </div>
                 </div>
 
-                <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
-                    Your Plots
-                </p>
+                <div class='flex w-full items-center h-auto'>
+                    <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
+                        Your Plots
+                    </p>
+                    <p v-show='userPlots.length > 0' v-on:click='claimAllPlotsEmissions()'
+                        class='sm:w-5/10 w-3/10 ml-auto text-base text-right text-center cursor-pointer'>
+                        Claim All
+                    </p>
+                </div>
                 <div class="w-full rounded-xl p-4 mb-4 dark-panel">
                     <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
                         <i class='fa fa-gear fa-spin mt-2'></i> Loading...
@@ -225,6 +232,7 @@
                     <div v-if='!plot.isFiltered' class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-dark opacity-50'>
 
                     </div>
+
                     <img class="w-full h-full" src="/images/plots/base/0.png" alt="Base land">
                     <img class="absolute top-0 left-0 w-full h-full"
                         :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
@@ -241,12 +249,35 @@
                     <div class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
                         style="line-height: 0.75;pointer-events: none;">
                     </div>
+
+                    <div class="absolute bottom-0 left-4 text-white opacity-80 pb-2">
+                        <small>
+                            Soil: {{ soilTypes[plot.soilType] }}
+                        </small>
+                        <br>
+                        <small>
+                            F: {{ plot.fertility }}
+                        </small>
+
+                        <small>
+                            L: {{ plot.level }}
+                        </small>
+
+                        <small>
+                            C: {{ plot.crimeRate }}
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div v-show='showPlotDetails' class='absolute bottom-0 top-0 left-0 right-0 bg-dark'>
 
+        </div>
+
+        <div v-show='!showPlotDetails' class='absolute mb-8 bottom-2 md:right-6 right-0 md:ml-12 ml-0 w-auto md:mt-4'
+            style='transform: rotateY(180deg)'>
+            <AudioManagerInterface></AudioManagerInterface>
         </div>
 
         <transition name='slide-in'>
@@ -350,6 +381,7 @@
 
     import Panzoom from '@panzoom/panzoom'
     import PlotDetails from '../../components/Plots/PlotDetails.vue';
+    import AudioManagerInterface from '../../components/Plugins/AudioManagerInterface.vue';
 
     export default {
         name: 'Plots',
@@ -375,7 +407,8 @@
         },
 
         components: {
-            PlotDetails
+            PlotDetails,
+            AudioManagerInterface
         },
 
         data() {
@@ -1040,6 +1073,35 @@
                 this.$toast.dismiss(toast);
             },
 
+            async claimAllPlotsEmissions() {
+                let toast = undefined;
+                try {
+                    let txs = [];
+                    toast = this.createLoaderToast("Pending - Collect All Emissions");
+                    for (let i = 0; i < this.userPlots.length; i++) {
+                        txs.push(new Promise(async (resolve, reject) => {
+                            const plot = this.userPlots[i];
+                            const tx =
+                                await this.plotEmitterContract.claimEmissions(plot.plot_type, plot
+                                    .token_id * 1, {
+                                        gasPrice: 30000000000,
+                                        gasLimit: 3000000,
+                                    });
+
+                            await tx.wait(1);
+                            resolve();
+                        }));
+                    }
+                    await Promise.all(txs).then(async () => {
+                        await this.getMyPlots();
+                        this.$toast.dismiss(toast);
+                    });
+                } catch (err) {
+                    this.handleError(err);
+                    this.$toast.dismiss(toast);
+                }
+            },
+
             openPlot(plot) {
                 this.currentPlot = plot;
 
@@ -1074,42 +1136,6 @@
     .plot-owner {
         border: 6px solid rgba(255, 255, 255, 90%);
         border-radius: 3px;
-    }
-
-    .checkbox {
-        height: 24px;
-        width: 24px;
-        border-radius: 4px;
-        border: 1px solid #54B67A;
-        position: relative;
-    }
-
-    .checkbox.checked::before {
-        position: absolute;
-        content: "";
-        width: 16px;
-        height: 16px;
-        top: 3px;
-        left: 3px;
-        border-radius: 2px;
-        background-color: #54B67A;
-    }
-
-    .xya-input {
-        background-color: #222222;
-        border-radius: 4px;
-        border: 1px solid #191919;
-    }
-
-    .xya-input:focus {
-        outline: 0 !important;
-        border-radius: 4px;
-        border: 1px solid #54b67a7c;
-    }
-
-    .dark-panel {
-        background-color: #262626;
-        border: 1px solid #363636;
     }
 
     .slide-in-enter-active,
