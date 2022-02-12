@@ -75,13 +75,13 @@
                     <select :key='marketSelectedCurrency' v-model='marketSortBy'
                         class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
                         <option v-bind:value='""'>Order By</option>
-                        <option value="price-asc-ONE">Price ascending - ONE
+                        <option v-if='marketSelectedCurrency === "ALL"' value="price-asc-ONE">Price ascending - ONE
                         </option>
-                        <option value="price-desc-ONE">Price descending - ONE
+                        <option v-if='marketSelectedCurrency === "ALL"' value="price-desc-ONE">Price descending - ONE
                         </option>
-                        <option value="price-asc-XYA">Price ascending - XYA
+                        <option v-if='marketSelectedCurrency === "ALL"' value="price-asc-XYA">Price ascending - XYA
                         </option>
-                        <option value="price-desc-XYA">Price descending - XYA
+                        <option  v-if='marketSelectedCurrency === "ALL"' value="price-desc-XYA">Price descending - XYA
                         </option>
                         <option value="price-asc">Price ascending
                         </option>
@@ -178,13 +178,13 @@
                         <select :key='marketSelectedCurrency' v-on:change='initiateMarketSearch()'
                             v-model='marketSortBy' class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
                             <option v-bind:value='""'>Order By</option>
-                            <option value="ONE_price-asc">Price ascending - ONE
+                            <option v-if='marketSelectedCurrency === "ALL"' value="ONE_price-asc">Price ascending - ONE
                             </option>
-                            <option value="ONE_price-desc">Price descending - ONE
+                            <option v-if='marketSelectedCurrency === "ALL"' value="ONE_price-desc">Price descending - ONE
                             </option>
-                            <option value="XYA_price-asc">Price ascending - XYA
+                            <option v-if='marketSelectedCurrency === "ALL"' value="XYA_price-asc">Price ascending - XYA
                             </option>
-                            <option value="XYA_price-desc">Price descending - XYA
+                            <option v-if='marketSelectedCurrency === "ALL"' value="XYA_price-desc">Price descending - XYA
                             </option>
                             <option value="tokenId-asc">ID ascending</option>
                             <option value="tokenId-desc">ID descending</option>

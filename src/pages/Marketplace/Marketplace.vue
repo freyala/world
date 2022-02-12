@@ -376,4 +376,18 @@
     width: 100%;
     border: 1px solid rgba(84, 182, 122, 0.75);
   }
+
+    .slide-in-right-enter-active,
+    .slide-in-right-leave-active {
+        opacity: 1;
+        transform: translateX(0px);
+        transition: all 0.25s;
+    }
+
+    .slide-in-right-enter,
+    .slide-in-right-leave-to {
+        opacity: 0;
+        transform: translateX(300px);
+    }
+
 </style>

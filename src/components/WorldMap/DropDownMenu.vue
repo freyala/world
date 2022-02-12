@@ -19,6 +19,8 @@
       <hr class="my-3">
       <router-link :to="{ name: 'governance' }">Everglen Castle</router-link>
       <hr class="my-3">
+      <router-link :to="{ name: 'frey-nft' }">Frey Barracks</router-link>
+      <hr class="my-3">
       <router-link :to="{ name: 'pigs' }">Pigsty</router-link>
       <hr class="my-3">
       <router-link :to="{ name: 'marketplace' }">Marketplace</router-link>
