@@ -5,7 +5,7 @@
 ### Clones the repository
 
 ```text
-git clone git@github.com:freyala/web.git freyala
+git clone git@github.com:gameficrossing/web.git gameficrossing
 ```
 
 ### Installs all dependencies
