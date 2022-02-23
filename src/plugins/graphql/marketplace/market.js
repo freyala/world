@@ -16,7 +16,7 @@ export const FetchMarketStats = (tokenId) => {
     return `
     {
       markets(where:{token:"${tokenId}"}){
-        items: totalNfts
+        items: totalSales
         currencyStats{
           volume
           floor

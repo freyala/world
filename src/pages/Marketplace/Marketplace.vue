@@ -17,7 +17,7 @@
             <hr class='w-4/10 opacity-25 absolute z-0'>
             <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
               <h2 class='text-white bold'>{{getFancyNumber(marketStats.items)}}</h2>
-              <h2 class='text-sm'>Items</h2>
+              <h2 class='text-sm'>Sold</h2>
             </div>
             <div style='background-color: #1c1c1c;' class='w-auto mx-4 p-2 z-10 cursor-pointer'>
               <h2 class='text-white bold'>{{getFancyNumber(marketStats.volume)}}</h2>
