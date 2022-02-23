@@ -128,7 +128,7 @@
         </div>
       </section>
 
-      <div class="xl:pr-4 pr-0 pl-0 py-8 h-5/6 relative overflow-y-auto">
+      <div class="xl:pr-4 pr-0 pl-0 h-5/6 relative overflow-y-auto">
         <div v-if='!isMarketOpen'
           class='lg:px-8 lg:py-4 md:px-8 md:py-0 px-4 py-4 w-full h-full flex items-start justify-center'>
           <div class='xl:w-6/12 lg:w-full w-11/12 flex justify-center flex-wrap'>
