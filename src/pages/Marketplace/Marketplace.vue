@@ -28,7 +28,7 @@
             <div class='w-11/12 mt-4 mx-auto px-4 flex flex-col dark-panel rounded-xl'>
               <div class='w-full flex flex-row justify-evenly items-center h-12 rounded-t-xl sm:text-xl text-sm'>
                 <div class='w-2/12 mx-2 mr-8 sm:mr-0 sh-auto text-start'>
-                  <p>Event</p>
+                  <p>Time</p>
                 </div>
                 <div class='w-3/12 sm:block hidden mx-2 h-auto text-start'>
                   <p>Collection</p>
@@ -45,8 +45,8 @@
               style='min-height: 80vh; max-height: 80vh'>
               <div class='sm:text-lg text-sm' v-for='(sale, index) in activityList' :key='index'>
                 <div class='w-full flex flex-row justify-evenly items-center h-12 rounded-xl'>
-                  <div class='w-2/12 sm:mx-2 mr-8 sm:mr-0 h-auto text-start'>
-                    <p>{{ sale.type }}</p>
+                  <div class='w-2/12 sm:mx-2 mr-8 sm:mr-0 h-auto text-sm text-start'>
+                    <p>{{ $timeStamper((Date.now() - sale.timestamp * 1000)) }}</p>
                   </div>
                   <div class='w-3/12 sm:block hidden sm:mx-2 mx-4 h-auto text-start'
                     style='color: rgba(255,255,255,0.8)'>
