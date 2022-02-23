@@ -579,7 +579,7 @@
         <window name="tutorial" height="auto" width="80%">
           <div v-if="tutorialWindow === 1" class="flex flex-wrap p-6 bg-dark h-full">
             <div class="w-4/5">
-              <div class="text-2xl">WELCOME TO FREYALA!</div>
+              <div class="text-2xl">WELCOME TO XANGAEA!</div>
             </div>
             <div class="w-1/5 text-right">
               <i @click="hideWindow('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
