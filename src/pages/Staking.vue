@@ -151,7 +151,7 @@
             <hr>
             <br>
             <p class="text-xl md:text-lg pb-24">
-              The vast cave system beneath the kingdom of Freyala had been untouched for centuries. There had always
+              The vast cave system beneath the kingdom of Xangaea had been untouched for centuries. There had always
               been
               rumors that these caves was where the world had been drawing magic from, with creatures naturally being
               drawn
@@ -202,7 +202,7 @@ import {mapGetters} from "vuex"
 import {ethers} from "ethers"
 
 import wallet from "../plugins/wallet"
-import Freyala from "../plugins/artifacts/freyala.json"
+import Xangaea from "../plugins/artifacts/xangaea.json"
 import Staking from "../plugins/artifacts/staking.json"
 
 export default {
@@ -245,7 +245,7 @@ export default {
     }
   },
   async mounted() {
-    this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+    this.mainContract = new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
     this.stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
 
     await this.fetchData()

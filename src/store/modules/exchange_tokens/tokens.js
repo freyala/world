@@ -8,7 +8,7 @@ export const tokens = {
 	},
 	XYA: {
 		Symbol: "XYA",
-		name: "Freyala",
+		name: "Xangaea",
 		oneZeroXAddress: "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4",
 		decimals: 18,
 		imgSrc: "https://firebasestorage.googleapis.com/v0/b/defi-kingdoms.appspot.com/o/tokens%2FXYA.png?alt=media"

@@ -3,7 +3,7 @@
     <main style="height: 100vh; position: relative">
       <div id="world-map">
         <div class="relative" style="cursor: grab">
-          <img src="/images/map/world.png" alt="Freyala worldmap">
+          <img src="/images/map/world.png" alt="Xangaea worldmap">
 
           <!--          ICONS-->
           <div class="absolute w-full h-full" style="top: -1.5vw; left: -1.75vw;">
@@ -21,11 +21,11 @@
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
 
                        style="left: 61.90625%; top: 27.395833333333336%; width: 6vw;" src="/images/map/Barracks.png"
-                       alt="FreyalaPlots">
+                       alt="XangaeaPlots">
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 61.90625%; top: 27.395833333333336%; width: 6vw;">
                     <div class="relative">
-                      <img class="w-full" src="/images/map/Barracks_MO.png" alt="FreyalaPlots">
+                      <img class="w-full" src="/images/map/Barracks_MO.png" alt="XangaeaPlots">
                     </div>
                   </div>
                   <p :class="hovering === 'nft' ? 'md:opacity-90' : 'md:opacity-70'"
@@ -41,11 +41,11 @@
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
 
                        style="left: 47.90625%; top: 49.895833333333336%; width: 5vw;" src="/images/map/Auction.png"
-                       alt="FreyalaPlots">
+                       alt="XangaeaPlots">
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 47.90625%; top: 49.895833333333336%; width: 5vw;">
                     <div class="relative">
-                      <img class="w-full" src="/images/map/Auction_MO.png" alt="FreyalaPlots">
+                      <img class="w-full" src="/images/map/Auction_MO.png" alt="XangaeaPlots">
                     </div>
                   </div>
                   <p :class="hovering === 'marketplace' ? 'md:opacity-90' : 'md:opacity-70'"
@@ -60,12 +60,12 @@
                 <router-link :to="{ name: 'plots', params: {neighbourhood: '0'} }">
                   <img class="cursor-pointer opacity-90 hover:opacity-0 absolute"
 
-                       style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;" src="/images/map/FreyalaPlots.png"
-                       alt="FreyalaPlots">
+                       style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;" src="/images/map/XangaeaPlots.png"
+                       alt="XangaeaPlots">
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 38.6171875%;top: 38.78472222222222%; width: 3vw;">
                     <div class="relative">
-                      <img class="w-full" src="/images/map/FreyalaPlots_MO.png" alt="FreyalaPlots">
+                      <img class="w-full" src="/images/map/XangaeaPlots_MO.png" alt="XangaeaPlots">
                     </div>
                   </div>
                   <p :class="hovering === 'plots' ? 'md:opacity-90' : 'md:opacity-70'"
@@ -98,11 +98,11 @@
               <div @mouseenter="hovering = 'harmons'" @mouseleave="hovering = ''">
                 <router-link :to="{ name: 'sneak-peek' }">
                   <img class="cursor-pointer absolute" style="left: 80.6172%; top: 37.6319%; width: 7vw;"
-                       src="/images/map/FreyalaTree.png" alt="FreyalaTree">
+                       src="/images/map/XangaeaTree.png" alt="XangaeaTree">
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 80.6172%; top: 37.6319%; width: 7vw;">
                     <div class="relative">
-                      <img class="w-full" src="/images/map/FreyalaTree_MO.png" alt="FreyalaTree">
+                      <img class="w-full" src="/images/map/XangaeaTree_MO.png" alt="XangaeaTree">
                     </div>
                   </div>
                   <p :class="hovering === 'harmons' ? 'md:opacity-100' : 'md:opacity-80'"
@@ -120,7 +120,7 @@
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 42.3555%; top: 51.1806%; width: 5vw;">
                     <div class="relative">
-                      <img class="w-full" src="/images/map/Soup_MO.png" alt="FreyalaTree">
+                      <img class="w-full" src="/images/map/Soup_MO.png" alt="XangaeaTree">
                     </div>
                   </div>
                   <p :class="hovering === 'faucet' ? 'md:opacity-90' : 'md:opacity-70'"
@@ -138,7 +138,7 @@
                   <div class="cursor-pointer opacity-0 hover:opacity-90 absolute"
                        style="left: 71.0156%; top: 47.6111%; width: 4.54vw;">
                     <div class="relative">
-                      <img class="w-full" src="/images/map/Drill_MO.png" alt="FreyalaTree">
+                      <img class="w-full" src="/images/map/Drill_MO.png" alt="XangaeaTree">
                     </div>
                   </div>
                   <p :class="hovering === 'staking' ? 'md:opacity-90' : 'md:opacity-70'"
@@ -341,7 +341,7 @@
               <i @click="hideWindow('1')" class="fas fa-times cursor-pointer text-xl"></i>
             </div>
             <p class="w-full mt-4">
-              This small camp near the coast of Projar is secluded from the kingdom of Freyala. Not much is known
+              This small camp near the coast of Projar is secluded from the kingdom of Xangaea. Not much is known
               besides that Projar, who was a former member of the monarch, is supposedly living out the rest of his days
               as a fisherman here.
             </p>
@@ -433,7 +433,7 @@
             </div>
             <p class="w-full mt-4">
               Ardenia is a plentiful town populated by mostly farmers, sourcing a large portion of the produce and crops
-              for the Freyala kingdom. Ardenia is known to be a safe haven that welcomes people from all walks of life.
+              for the Xangaea kingdom. Ardenia is known to be a safe haven that welcomes people from all walks of life.
               There are rumors that magical creatures reside in the village.
             </p>
           </div>
@@ -585,8 +585,8 @@
               <i @click="hideWindow('tutorial')" class="fas fa-times cursor-pointer text-xl"></i>
             </div>
             <p class="w-full mt-4">
-              This app showcases the world of Freyala, allowing easy access to different decentralized applications and
-              features in our ecosystem. Explore what Freyala has to offer with ease and uncover hidden lore.
+              This app showcases the world of Xangaea, allowing easy access to different decentralized applications and
+              features in our ecosystem. Explore what Xangaea has to offer with ease and uncover hidden lore.
             </p>
             <div class="flex w-full mt-8 mb-2">
               <div class="w-1/2 pr-2">
@@ -673,7 +673,7 @@
             <p class="w-full mt-4">
               Small building icons, also known as minor locations, can be found all over the map. While these minor
               locations are not decentralized apps, they each provide small pieces of lore when clicked that help bring
-              together the story of Freyala.
+              together the story of Xangaea.
             </p>
             <div class="flex w-full mt-8 mb-2">
               <div class="w-1/2 pr-2">
@@ -754,7 +754,7 @@ import wallet from '../../plugins/wallet';
 import Panzoom from '@panzoom/panzoom'
 import {mapGetters} from "vuex";
 import {ethers} from "ethers";
-import Freyala from "../../plugins/artifacts/freyala.json";
+import Xangaea from "../../plugins/artifacts/xangaea.json";
 import Drop from "../../plugins/artifacts/slry.json";
 import fromExponential from "from-exponential";
 
@@ -805,7 +805,7 @@ export default {
     window.removeEventListener("resize", this.editPanZoom);
   },
   async mounted() {
-    this.mainContract = await new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+    this.mainContract = await new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
     this.dropContract = await new ethers.Contract(Drop.address, Drop.abi, this.metaMaskWallet.signer)
 
     const drop = (await this.dropContract.allowance(this.metaMaskAccount)) * 1

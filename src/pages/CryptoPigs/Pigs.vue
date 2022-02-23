@@ -522,7 +522,7 @@
   import Piggy from "../../plugins/artifacts/frey.json";
   import AttributeManager from "../../plugins/artifacts/piggyAttributeManager.json";
   import PiggyTamagotchi from "../../plugins/artifacts/piggyTamagotchi.json";
-  import Token from '../../plugins/artifacts/freyala.json';
+  import Token from '../../plugins/artifacts/xangaea.json';
   import fromExponential from "from-exponential";
 
   import PiggyBar from '../../components/Pigs/PiggyBar.vue';

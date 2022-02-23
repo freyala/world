@@ -1,5 +1,5 @@
 // import IUniswapV2Router02 from "../plugins/artifacts/IUniswapV2Router02.json"
-// import IERC20 from "../plugins/artifacts/freyala.json"
+// import IERC20 from "../plugins/artifacts/xangaea.json"
 //
 // import {ethers} from "ethers"
 // import {mapActions, mapGetters} from 'vuex'

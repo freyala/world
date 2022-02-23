@@ -356,8 +356,8 @@ import plotSnapshot from "../plugins/snapshots/plots.json"
 
 import PlotsYang from "../plugins/artifacts/plotsyang.json";
 import PlotsYin from "../plugins/artifacts/plotsyin.json";
-import PlotsFreyala from "../plugins/artifacts/plotsfreyala.json";
-import Freyala from "../plugins/artifacts/freyala.json";
+import PlotsXangaea from "../plugins/artifacts/plotsxangaea.json";
+import Xangaea from "../plugins/artifacts/xangaea.json";
 import Yin from "../plugins/artifacts/yin.json";
 import Yang from "../plugins/artifacts/yang.json";
 import PlotsMarket from "../plugins/artifacts/plotsmarket.json";
@@ -483,10 +483,10 @@ export default {
   },
   async mounted() {
     [this.plotContracts.xya, this.plotContracts.yin, this.plotContracts.yang, this.tokenContracts.xya, this.tokenContracts.yin, this.tokenContracts.yang, this.marketContracts.xya, this.marketContracts.yin, this.marketContracts.yang] = await Promise.all([
-      new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer),
+      new ethers.Contract(PlotsXangaea.address, PlotsXangaea.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer),
-      new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer),
+      new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer),
       new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer),
       new ethers.Contract(PlotsMarket.address, PlotsMarket.abi, this.metaMaskWallet.signer),
@@ -748,19 +748,19 @@ export default {
     async approvePlotToSellNow(id, neighbourhood) {
       if (neighbourhood === 18 || neighbourhood === 19) {
         this.loadingApproveSellPlot = true
-        this.plotYinFreyalaContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
-        const approve = await this.plotYinFreyalaContract.approve(PlotsYinMarket.address, id)
+        this.plotYinXangaeaContract = new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer)
+        const approve = await this.plotYinXangaeaContract.approve(PlotsYinMarket.address, id)
         await approve.wait(1)
         this.loadingApproveSellPlot = false
       } else if (neighbourhood === 16 || neighbourhood === 17) {
         this.loadingApproveSellPlot = true
-        this.plotYangFreyalaContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
-        const approve = await this.plotYangFreyalaContract.approve(PlotsYangMarket.address, id)
+        this.plotYangXangaeaContract = new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer)
+        const approve = await this.plotYangXangaeaContract.approve(PlotsYangMarket.address, id)
         await approve.wait(1)
         this.loadingApproveSellPlot = false
       } else {
         this.loadingApproveSellPlot = true
-        this.plotContracts.xya = new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer)
+        this.plotContracts.xya = new ethers.Contract(PlotsXangaea.address, PlotsXangaea.abi, this.metaMaskWallet.signer)
         const approve = await this.plotContracts.xya.approve(PlotsMarket.address, id)
         await approve.wait(1)
         this.loadingApproveSellPlot = false
@@ -811,7 +811,7 @@ export default {
         this.loadingApproveBuyPlot = false
       } else {
         this.loadingApproveBuyPlot = true
-        this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+        this.mainContract = new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
         const approve = await this.mainContract.approve(PlotsMarket.address, amount)
         await approve.wait(1)
         this.loadingApproveBuyPlot = false

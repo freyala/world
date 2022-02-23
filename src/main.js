@@ -44,7 +44,7 @@ Vue.use(VueLazyload, {
 new Vue({
     head: {
         title: {
-            inner: 'Freyala'
+            inner: 'Xangaea'
         }
     },
     render: h => h(App),

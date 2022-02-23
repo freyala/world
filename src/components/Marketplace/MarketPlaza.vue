@@ -944,7 +944,7 @@
     import MarketPlazaItem from './MarketPlazaItem';
     import MarketModal from './MarketModal';
     import HRC721 from '../../plugins/artifacts/HRC721.json';
-    import HRC20 from '../../plugins/artifacts/freyala.json';
+    import HRC20 from '../../plugins/artifacts/xangaea.json';
     import FreyRegistry from '../../plugins/artifacts/freyRegistry.json';
     import fromExponential from "from-exponential";
 

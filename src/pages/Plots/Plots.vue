@@ -340,8 +340,8 @@
 
     import PlotsYang from "../../plugins/artifacts/plotsyang.json";
     import PlotsYin from "../../plugins/artifacts/plotsyin.json";
-    import PlotsFreyala from "../../plugins/artifacts/plotsfreyala.json";
-    import Freyala from "../../plugins/artifacts/freyala.json";
+    import PlotsXangaea from "../../plugins/artifacts/plotsxangaea.json";
+    import Xangaea from "../../plugins/artifacts/xangaea.json";
     import Yin from "../../plugins/artifacts/yin.json";
     import Yang from "../../plugins/artifacts/yang.json";
     import PlotsMarket from "../../plugins/artifacts/plotsmarket.json";
@@ -590,10 +590,10 @@
                 .tokenContracts.yin, this.tokenContracts.yang, this.marketContracts.xya, this.marketContracts.yin,
                 this.marketContracts.yang
             ] = await Promise.all([
-                new ethers.Contract(PlotsFreyala.address, PlotsFreyala.abi, this.metaMaskWallet.signer),
+                new ethers.Contract(PlotsXangaea.address, PlotsXangaea.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(PlotsYin.address, PlotsYin.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(PlotsYang.address, PlotsYang.abi, this.metaMaskWallet.signer),
-                new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer),
+                new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(Yin.address, Yin.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(Yang.address, Yang.abi, this.metaMaskWallet.signer),
                 new ethers.Contract(PlotsMarket.address, PlotsMarket.abi, this.metaMaskWallet.signer),
@@ -773,10 +773,10 @@
             },
 
             async getAllowances() {
-                const xyaOneContract = await new ethers.Contract(this.CONSTANTS.XYA_ONE, Freyala
+                const xyaOneContract = await new ethers.Contract(this.CONSTANTS.XYA_ONE, Xangaea
                     .abi, this
                     .metaMaskWallet.signer);
-                const xyaContract = await new ethers.Contract(this.CONSTANTS.XYA, Freyala
+                const xyaContract = await new ethers.Contract(this.CONSTANTS.XYA, Xangaea
                     .abi, this
                     .metaMaskWallet.signer);
 
@@ -801,7 +801,7 @@
 
                 try {
                     const arg = fromExponential(actual);
-                    let tempContract = new ethers.Contract(token, Freyala.abi, this.metaMaskWallet.signer);
+                    let tempContract = new ethers.Contract(token, Xangaea.abi, this.metaMaskWallet.signer);
                     const tx = await tempContract.approve(address, arg);
                     toast = this.createLoaderToast("Pending Transaction - Allowance");
                     await tx.wait(1);

@@ -97,7 +97,7 @@
 
 <script>
   import Frey from "../../plugins/artifacts/frey.json";
-  import Freyala from "../../plugins/artifacts/freyala.json";
+  import Xangaea from "../../plugins/artifacts/xangaea.json";
   import Staking from "../../plugins/artifacts/staking.json";
   import Avatar from "../../plugins/artifacts/avatar.json";
   import {
@@ -141,7 +141,7 @@
       ])
     },
     async mounted() {
-      this.mainContract = await new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+      this.mainContract = await new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
       this.stakingContract = await new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
       this.freyContract = await new ethers.Contract(Frey.address, Frey.abi, this.metaMaskWallet.signer)
       this.avatarContract = await new ethers.Contract(Avatar.address, Avatar.abi, this.metaMaskWallet.signer)

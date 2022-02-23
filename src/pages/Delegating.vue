@@ -31,7 +31,7 @@
          <p class="md:text-lg pb-24">
            Seeing the limitless possibilities XYA had to offer, Regent Carroway sought out to harness all the magical power
            from the world’s core. He ordered a beacon to be constructed, which siphoned the world’s magic and shot up a
-           blinding light to the sky, forever making the Freyala kingdom’s presence known. The regent proudly showed this
+           blinding light to the sky, forever making the Xangaea kingdom’s presence known. The regent proudly showed this
            beacon to Zarius, the village elder and his dear friend. Zarius was shocked to see these elaborate schemes that
            Carroway had been planning. The village elder turned his back away, determined to inform the public of his
            findings, and how Carroway was attempting to seize ultimate power.

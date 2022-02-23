@@ -42,7 +42,7 @@
   import AudioManagerInterface from '@/components/Plugins/AudioManagerInterface'
 
   export default {
-    name: 'Freyala',
+    name: 'Xangaea',
     components: {
       AudioManagerInterface
     },

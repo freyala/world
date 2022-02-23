@@ -20,7 +20,7 @@ export default {
 
     allTokens: [ 
       { 
-        name: 'Freyala Ecosystem Tokens',
+        name: 'Xangaea Ecosystem Tokens',
         icon: 'https://firebasestorage.googleapis.com/v0/b/defi-kingdoms.appspot.com/o/tokens%2FXYA.png?alt=media',
         tokens: tokens
       }

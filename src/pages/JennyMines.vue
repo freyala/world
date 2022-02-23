@@ -114,7 +114,7 @@ import wallet from "../plugins/wallet"
 import {mapGetters} from "vuex";
 import {ethers} from "ethers";
 import jennyMineContract from "../plugins/artifacts/jennymines.json";
-import Freyala from "../plugins/artifacts/freyala.json";
+import Xangaea from "../plugins/artifacts/xangaea.json";
 
 export default {
   name: 'JennyMines',
@@ -146,7 +146,7 @@ export default {
     }
   },
   async mounted() {
-    this.mainContract = new ethers.Contract(Freyala.address, Freyala.abi, this.metaMaskWallet.signer)
+    this.mainContract = new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
     this.jennyMineContract = new ethers.Contract(jennyMineContract.address, jennyMineContract.abi, this.metaMaskWallet.signer)
 
     await this.fetchData()
