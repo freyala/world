@@ -47,6 +47,33 @@ export const FetchMarketNFTs = (marketToken, filters, pagination = undefined, or
   `
 };
 
+export const FetchMarketSalesNFTs = () => {
+  return `
+  {
+    sales(orderBy: timestamp, orderDirection: desc){
+      id,
+      nft{
+        tokenId
+        token
+        image
+      }
+      price
+      timestamp
+    }
+    auctions(orderBy: timestamp, orderDirection: desc){
+          id,
+      nft{
+        tokenId
+        token
+        image
+      }
+      price
+      timestamp
+    }
+}
+  `
+};
+
 export const FetchNFTData = (market, tokenId) => {
     return `
   {

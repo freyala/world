@@ -29,6 +29,18 @@
             </div>
             <div :key='keys.filters' class="overflow-y-auto text-center flex py-4 mx-2 my-4 flex-col bg-light"
                 style='height: calc(100% - 120px)'>
+                <!--
+                <div class='w-full mb-2'>
+                    <div v-on:click='bools.onlySales = !bools.onlySales' class='flex w-9/12 mx-auto'>
+                        <div v-bind:class='{"checked": bools.onlySales}' class='checkbox cursor-pointer'>
+                        </div>
+                        <div class='mb-1 ml-4'>
+                            Show Recent Sales
+                        </div>
+                    </div>
+                </div>
+                <hr class='w-9/12 opacity-75 mx-auto my-6'>
+                !-->
                 <div class='w-full mb-2'>
                     <div class='mb-1'>
                         Search by #
@@ -63,27 +75,38 @@
                     <select :key='marketSelectedCurrency' v-model='marketSortBy'
                         class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
                         <option v-bind:value='""'>Order By</option>
-                        <option v-if='marketSelectedCurrency !== "All"' value="price-asc">Price ascending
+                        <option v-if='marketSelectedCurrency === "ALL"' value="price-asc-ONE">Price ascending - ONE
                         </option>
-                        <option v-if='marketSelectedCurrency !== "All"' value="price-desc">Price descending
+                        <option v-if='marketSelectedCurrency === "ALL"' value="price-desc-ONE">Price descending - ONE
+                        </option>
+                        <option v-if='marketSelectedCurrency === "ALL"' value="price-asc-XYA">Price ascending - XYA
+                        </option>
+                        <option  v-if='marketSelectedCurrency === "ALL"' value="price-desc-XYA">Price descending - XYA
+                        </option>
+                        <option value="price-asc">Price ascending
+                        </option>
+                        <option value="price-desc">Price descending
                         </option>
                         <option value="tokenId-asc">ID ascending</option>
                         <option value="tokenId-desc">ID descending</option>
                     </select>
                 </div>
-                <hr class='w-9/12 opacity-75 mx-auto my-6'>
-                <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
-                    <div class='mb-1'>
-                        {{ attribute.key }}
+                <hr v-if='!bools.onlySales' class='w-9/12 opacity-75 mx-auto my-6'>
+                <template v-if='!bools.onlySales'>
+                    <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
+                        <div class='mb-1'>
+                            {{ attribute.key }}
+                        </div>
+                        <select v-model='marketSelectedFilters[index]'
+                            class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
+                            v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
+                            <option v-bind:value='""'>None</option>
+                            <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values'
+                                :key='itemIndex + 10'>
+                                {{ item }}</option>
+                        </select>
                     </div>
-                    <select v-model='marketSelectedFilters[index]'
-                        class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
-                        v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
-                        <option v-bind:value='""'>None</option>
-                        <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values' :key='itemIndex + 10'>
-                            {{ item }}</option>
-                    </select>
-                </div>
+                </template>
             </div>
         </div>
 
@@ -110,6 +133,18 @@
                 <div :key='keys.filters' class="text-center overflow-y-auto flex py-4 mx-2 flex-col bg-light"
                     style='height: calc(100% - 120px)'>
                     <div class='w-full mb-2'>
+                        <!--
+                        <div class='w-full mb-2'>
+                            <div v-on:click='bools.onlySales = !bools.onlySales' class='flex w-9/12 mx-auto'>
+                                <div v-bind:class='{"checked": bools.onlySales}' class='checkbox cursor-pointer'>
+                                </div>
+                                <div class='mb-1 ml-4'>
+                                    Show Recent Sales
+                                </div>
+                            </div>
+                        </div>
+                        <hr class='w-9/12 opacity-75 mx-auto my-6'>
+                        !-->
                         <div class='mb-1'>
                             Search by #
                         </div>
@@ -143,28 +178,34 @@
                         <select :key='marketSelectedCurrency' v-on:change='initiateMarketSearch()'
                             v-model='marketSortBy' class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark">
                             <option v-bind:value='""'>Order By</option>
-                            <option v-if='marketSelectedCurrency !== "All"' value="price-asc">Price ascending
+                            <option v-if='marketSelectedCurrency === "ALL"' value="ONE_price-asc">Price ascending - ONE
                             </option>
-                            <option v-if='marketSelectedCurrency !== "All"' value="price-desc">Price descending
+                            <option v-if='marketSelectedCurrency === "ALL"' value="ONE_price-desc">Price descending - ONE
+                            </option>
+                            <option v-if='marketSelectedCurrency === "ALL"' value="XYA_price-asc">Price ascending - XYA
+                            </option>
+                            <option v-if='marketSelectedCurrency === "ALL"' value="XYA_price-desc">Price descending - XYA
                             </option>
                             <option value="tokenId-asc">ID ascending</option>
                             <option value="tokenId-desc">ID descending</option>
                         </select>
                     </div>
-                    <hr class='w-9/12 opacity-75 mx-auto my-6'>
-                    <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
-                        <div class='mb-1'>
-                            {{ attribute.key }}
+                    <hr v-if='!bools.onlySales' class='w-9/12 opacity-75 mx-auto my-6'>
+                    <template v-if='!bools.onlySales'>
+                        <div v-for='(attribute, index) in marketAttributes' :key='index' class="w-full mb-2">
+                            <div class='mb-1'>
+                                {{ attribute.key }}
+                            </div>
+                            <select v-model='marketSelectedFilters[index]'
+                                class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
+                                v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
+                                <option v-bind:value='""'>None</option>
+                                <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values'
+                                    :key='itemIndex + 10'>
+                                    {{ item }}</option>
+                            </select>
                         </div>
-                        <select v-model='marketSelectedFilters[index]'
-                            class="w-9/12 border rounded-lg border-yellow py-2 px-4 bg-dark"
-                            v-bind:class='{"text-white": marketSelectedFilters[index] !== ""}'>
-                            <option v-bind:value='""'>None</option>
-                            <option v-bind:value='item' v-for='(item, itemIndex) in attribute.values'
-                                :key='itemIndex + 10'>
-                                {{ item }}</option>
-                        </select>
-                    </div>
+                    </template>
                 </div>
             </div>
         </transition>
@@ -1048,7 +1089,8 @@
                     marketCard: false,
                     cardAttributes: false,
                     cardSales: false,
-                    cardDetails: false
+                    cardDetails: false,
+                    onlySales: false
                 },
 
                 tokens: [{
@@ -1071,7 +1113,8 @@
                     SALES_TAB: 3,
 
                     GRAPH_API: "https://marketplace-api.freyala.com/graphql/",
-                    ONE_TOKEN: "0x0000000000000000000000000000000000000000"
+                    ONE_TOKEN: "0x0000000000000000000000000000000000000000",
+                    XYA_TOKEN: "0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4"
                 },
 
                 tutorial: {
@@ -1136,6 +1179,10 @@
             'marketStats': function () {
                 this.$emit('updateStats', this.marketStats);
             },
+
+            'bools.onlySales': async function(){
+                this.resetMarketFilters();
+            }
         },
 
         methods: {
@@ -1398,7 +1445,7 @@
             async fetchUserNFTs() {
                 try {
                     const NFTs = await this.marketNFTContract.tokensOfOwner(this.metaMaskAccount);
-                    if(NFTs.length === 0) return;
+                    if (NFTs.length === 0) return;
 
                     let ids = await NFTs.map(async (frey) => {
                         return frey._isBigNumber ? ethers.BigNumber.from(frey._hex).toString() : frey
@@ -1493,6 +1540,10 @@
             async fetchMarketSales() {
                 try {
                     this.loaders.fetchSales = true;
+
+                    const pagination = this.getPaginationInfo();
+                    const orderInfo = this.getOrderQuery();
+
                     const filters = {
                         attributeFilter: this.generateMarketFilterQuery(),
                         currency: this.getCurrencyQuery(),
@@ -1500,13 +1551,19 @@
                         tokenIdComparator: this.marketIdQueryComparator
                     };
 
-                    const pagination = this.getPaginationInfo();
-                    const orderInfo = this.getOrderQuery();
+                    let result = undefined;
 
-                    const result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
-                        query: NFTQueryBuilder.FetchMarketNFTs(this.market.token, filters, pagination,
-                            orderInfo)
-                    });
+                    if (this.bools.onlySales) {
+                        result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
+                            query: NFTQueryBuilder.FetchMarketNFTs(this.market.token, filters, pagination,
+                                orderInfo)
+                        });
+                    } else {
+                        result = await this.$http.post(this.CONSTANTS.GRAPH_API, {
+                            query: NFTQueryBuilder.FetchMarketNFTs(this.market.token, filters, pagination,
+                                orderInfo)
+                        });
+                    }
 
                     const marketSales = result.data.data.listings.filter(c => c.seller.id !== this.metaMaskAccount
                         .toLowerCase());
@@ -2111,6 +2168,11 @@
             },
 
             getCurrencyQuery() {
+                if (this.marketSortBy.indexOf('ONE') > -1) {
+                    this.marketSelectedCurrency = this.CONSTANTS.ONE_TOKEN;
+                } else if (this.marketSortBy.indexOf('XYA') > -1) {
+                    this.marketSelectedCurrency = this.CONSTANTS.XYA_TOKEN;
+                }
                 if (this.marketSelectedCurrency === 'All') return undefined;
                 return this.marketSelectedCurrency;
             },
