@@ -198,14 +198,14 @@
                         </p>
                         <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
                             :key='plot.token_id * 1' class='ml-4 lg:text-lg text-sm mb-1 cursor-pointer relative'>
-                            <i class='fa fa-map mr-4'></i>#{{plot.token_id}} - {{ plot.emissions}} XYA
+                            <i class='fa fa-map mr-4'></i>#{{plot.token_id}} - {{ plot.isEmitting ? plot.emissions : 0.00 }} XYA
 
                             <i v-if='plot.token_id === currentPlot.token_id && showPlotDetails'
                                 class='fas fa-map-marker-alt lg:text-lg text-sm absolute right-4 flex top-0 items-center text-white opacity-80'></i>
                             <i v-if='plot.isEmitting'
                                 class='fa fa-bolt absolute lg:text-lg text-sm absoluteflex top-0 items-center'
                                 v-bind:class='{"right-12": showPlotDetails, "right-4": !showPlotDetails}'></i>
-                            <i v-if='plot.isClogged'
+                            <i v-if='plot.isClogged && plot.isEmitting'
                                 class='fas fa-exclamation-triangle absolute lg:text-lg text-sm absoluteflex top-0 items-center'
                                 v-bind:class='{"right-20": showPlotDetails, "right-12": !showPlotDetails}'></i>
                         </p>
