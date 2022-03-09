@@ -168,7 +168,7 @@
                     <p class='xl:text-xl lg:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
                         {{ emissions.toFixed(2) }} / {{ emissionMaxAllowed.toFixed(2) }} XYA
                     </p>
-                    <p v-if='plot.ownerOf' v-on:click='collectPlotEmissions(plot)'
+                    <p v-if='parseInt(emissions) > 0 && plot.ownerOf' v-on:click='collectPlotEmissions(plot)'
                         class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
                         Collect
                     </p>
