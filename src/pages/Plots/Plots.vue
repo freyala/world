@@ -180,10 +180,10 @@
                     <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
                         Your Plots
                     </p>
-                    <p v-show='userPlots.length > 0' v-on:click='claimAllPlotsEmissions()'
-                        class='sm:w-5/10 w-3/10 ml-auto text-base text-right text-center cursor-pointer'>
-                        Claim All
-                    </p>
+<!--                    <p v-show='userPlots.length > 0' v-on:click='claimAllPlotsEmissions()'-->
+<!--                        class='sm:w-5/10 w-3/10 ml-auto text-base text-right text-center cursor-pointer'>-->
+<!--                        Claim All-->
+<!--                    </p>-->
                 </div>
                 <div class="w-full rounded-xl p-4 mb-4 dark-panel">
                     <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
