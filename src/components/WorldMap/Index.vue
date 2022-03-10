@@ -310,10 +310,10 @@
       <div class='absolute mb-8 md:top-36 top-32 left-0 md:ml-12 ml-0 w-auto md:mt-4'>
         <AudioManagerInterface></AudioManagerInterface>
       </div>
-      <div v-if="claimableDrop > 0">
+      <div v-if="claimableDrop > 0 || claimableUsdc > 0">
         <button class="absolute bottom-0 left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn">
           <div @click="$modal.show('drop')">
-            CLAIM DROP: {{ claimableDrop }} XYA
+            CLAIM DROP
           </div>
         </button>
         <button class="absolute left-0 mb-4 ml-4 md:mb-8 md:ml-8 w-auto xya-btn" style="bottom: 50px">
@@ -707,7 +707,7 @@
 
             <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
 
-              Claimable amount: {{ claimableDrop }} XYA
+              Claimable xya: {{ claimableDrop }} XYA
 
             </div>
 
@@ -728,18 +728,27 @@
 
             <hr class='w-full my-4'/>
 
-            <div class="mt-4 flex flex-wrap w-full items-start justify-start">
-              <p class="w-full mb-2" :key="tx._toAddress + index" v-for="(tx, index) in transactionHistory">
-                Block {{ tx._blockNumber }}: <br> Paid out: {{ tx._amount }} XYA (<a :href="tx._transactionHash"
-                                                                                     target="_blank">
-                {{ tx._transactionHash | compressAddress }} </a>)
-              </p>
+            <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
 
-              <div v-if="!finishedGettingTransactions" class="w-full flex">
-                <img class="w-8 h-8 m-auto" src="/images/XYA.png" alt="XYA logo"
-                     style="animation: rotation 2s infinite linear;">
+              Claimable usdc: {{ claimableUsdc }} USDC
+
+            </div>
+
+            <div class="mt-4 flex md:flex-row flex-row w-full items-start justify-start">
+              <input class='w-full text-black px-2 rounded-lg' type="number" v-model='usdcToClaim'/>
+              <div class="text-right md:text-center md:w-9/12 w-5/12 mx-2 md:mx-0">
+                <button v-if="!claimingUsdc" v-on:click="claimUsdc()" type="button"
+                        class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                  <span>Claim</span>
+                </button>
+
+                <button v-else type="button"
+                        class="w-full md:w-10/12 md:text-base text-sm rounded-lg border border-primary-alt bg-transparent hover:bg-primary-alt hover:text-white px-2 mx-2 py-0">
+                  <span>Claiming</span>
+                </button>
               </div>
             </div>
+
           </div>
         </window>
       </div>
@@ -775,10 +784,13 @@ export default {
   data() {
     return {
       claimingDrop: false,
+      claimingUsdc: false,
       mainContract: undefined,
       dropContract: undefined,
       claimableDrop: 0,
+      claimableUsdc: 0,
       tokensToClaim: 0,
+      usdcToClaim: 0,
       event: {},
       window: undefined,
       hovering: '',
@@ -808,8 +820,11 @@ export default {
     this.mainContract = await new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
     this.dropContract = await new ethers.Contract(Drop.address, Drop.abi, this.metaMaskWallet.signer)
 
-    const drop = (await this.dropContract.allowance(this.metaMaskAccount)) * 1
+    const drop = (await this.dropContract.tokenAllowance(this.metaMaskAccount)) * 1
+    const usdc = (await this.dropContract.usdcAllowance(this.metaMaskAccount)) * 1
+
     this.claimableDrop = drop / 1e18
+    this.claimableUsdc = usdc / 1e18
 
     this.$nextTick(() => {
       const elem = document.getElementById('world-map')
@@ -906,7 +921,7 @@ export default {
 
       try {
         const arg = fromExponential(actual);
-        const tx = await this.dropContract.withdrawMoney(this.metaMaskAccount, arg)
+        const tx = await this.dropContract.withdrawToken(this.metaMaskAccount, arg)
         toast = this.createLoaderToast("Pending Transaction - Drop");
 
         this.claimingDrop = true
@@ -915,8 +930,38 @@ export default {
 
         this.$toast.success("Drop successfully claimed")
 
-        const drop = (await this.dropContract.allowance(this.metaMaskAccount)) * 1
+        const drop = (await this.dropContract.tokenAllowance(this.metaMaskAccount)) * 1
         this.claimableDrop = drop / 1e18
+      } catch (err) {
+        this.handleError(err);
+      }
+
+      this.$toast.dismiss(toast)
+    },
+    async claimUsdc() {
+      let actual = 0;
+
+      if (this.usdcToClaim > 0) {
+        actual = this.usdcToClaim * 10 ** 6;
+      } else {
+        actual = 0;
+      }
+
+      let toast = undefined;
+
+      try {
+        const arg = fromExponential(actual);
+        const tx = await this.dropContract.withdrawUsdc(this.metaMaskAccount, arg)
+        toast = this.createLoaderToast("Pending Transaction - Usdc");
+
+        this.claimingUsdc = true
+        await tx.wait(1);
+        this.claimingUsdc = false
+
+        this.$toast.success("Usdc successfully claimed")
+
+        const usdc = (await this.dropContract.usdcAllowance(this.metaMaskAccount)) * 1
+        this.claimableUsdc = usdc / 1e18
       } catch (err) {
         this.handleError(err);
       }
