@@ -824,7 +824,7 @@ export default {
     const usdc = (await this.dropContract.usdcAllowance(this.metaMaskAccount)) * 1
 
     this.claimableDrop = drop / 1e18
-    this.claimableUsdc = usdc / 1e18
+    this.claimableUsdc = usdc / 1e6
 
     this.$nextTick(() => {
       const elem = document.getElementById('world-map')
