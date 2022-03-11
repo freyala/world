@@ -140,17 +140,38 @@
                     <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
                         <i class='fa fa-gear fa-spin'></i> Loading...
                     </p>
-                    <div v-else class='w-full h-full flex items-center xl:text-lg text-sm'>
-                        <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
-                            XYA
-                        </p>
-                        <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
-                            {{unlockedEmissions}}
-                        </p>
-                        <p v-on:click='withdrawUnlockedEmissions()'
-                            class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
-                            Collect
-                        </p>
+                    <div v-else class='w-full h-full flex items-center xl:text-lg text-sm flex flex-col'>
+                        <template v-if='unlockedOldEmissions > 0'>
+                            <p class="w-full text-white opacity-20 text-sm">
+                                Old Emissions
+                            </p>
+                            <hr class="w-full text-white opacity-20 my-2" />
+                            <div class="w-full flex flex-row mb-4">
+                                <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
+                                    XYA
+                                </p>
+                                <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
+                                    {{unlockedOldEmissions}}
+                                </p>
+                                <p v-on:click='withdrawUnlockedEmissions(true)'
+                                    class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                                    Collect
+                                </p>
+                            </div>
+                        </template>
+
+                        <div class="w-full flex flex-row items-center">
+                            <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
+                                XYA
+                            </p>
+                            <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
+                                {{unlockedEmissions}}
+                            </p>
+                            <p v-on:click='withdrawUnlockedEmissions()'
+                                class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                                Collect
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -568,8 +589,13 @@
 
                 keys: {
                     limboAssets: 0
-                }
+                },
 
+
+                //temporary
+
+                plotEmitterOldContract: undefined,
+                unlockedOldEmissions: 0,
             }
         },
 
@@ -635,6 +661,8 @@
                     .signer)
             ]);
 
+            this.plotEmitterOldContract = await new ethers.Contract(plotEmitter.oldAddress, plotEmitter.abi, this
+                .metaMaskWallet.signer);
             this.plotEmitterContract = await new ethers.Contract(plotEmitter.address, plotEmitter.abi, this
                 .metaMaskWallet.signer);
             this.plotContract = await new ethers.Contract(plot.address, plot.abi, this.metaMaskWallet.signer);
@@ -642,6 +670,9 @@
                 .metaMaskWallet.signer);
 
             this.unlockedEmissions = (await this.plotEmitterContract.getUnlockedBalance() / 10 ** 18).toFixed(2);
+            this.unlockedOldEmissions = (await this.plotEmitterOldContract.getUnlockedBalance() / 10 ** 18).toFixed(
+                2);
+
             this.unlockedEmissionsInterval = setInterval(async () => {
                 this.getMyPlots();
             }, 60000);
@@ -659,6 +690,7 @@
             }, 250);
 
             //window.addEventListener("resize", this.initializePanZoom);
+
         },
 
         methods: {
@@ -846,13 +878,16 @@
                 this.$toast.dismiss(toast);
             },
 
-            async withdrawUnlockedEmissions() {
+            async withdrawUnlockedEmissions(isOldContract = false) {
                 let toast = undefined;
                 try {
-                    if (this.unlockedEmissions <= 0) {
+                    if ((!isOldContract && this.unlockedEmissions <= 0) || (isOldContract && this
+                            .unlockedOldEmissions <= 0)) {
                         this.handleError("Your treasury is empty");
+                        return;
                     }
-                    const tx = await this.plotEmitterContract.withdrawUnlockedEmitted();
+                    const tx = !isOldContract ? await this.plotEmitterContract.withdrawUnlockedEmitted() :
+                        await this.plotEmitterOldContract.withdrawUnlockedEmitted();
                     await tx.wait(1);
                     toast = this.createLoaderToast("Pending - Withdraw Emissions");
                     this.unlockedEmissions = 0;
@@ -1076,30 +1111,26 @@
             async claimAllPlotsEmissions() {
                 let toast = undefined;
                 try {
-                    let txs = [];
+                    let plotTypes = [],
+                        plotIds = [];
+
                     toast = this.createLoaderToast("Pending - Collect All Emissions");
                     for (let i = 0; i < this.userPlots.length; i++) {
-                        txs.push(new Promise(async (resolve, reject) => {
-                            const plot = this.userPlots[i];
-                            const tx =
-                                await this.plotEmitterContract.claimEmissions(plot.plot_type, plot
-                                    .token_id * 1, {
-                                        gasPrice: 30000000000,
-                                        gasLimit: 3000000,
-                                    });
-
-                            await tx.wait(1);
-                            resolve();
-                        }));
+                        plotTypes.push(this.userPlots[i].plot_type);
+                        plotIds.push(this.userPlots[i].token_id);
                     }
-                    await Promise.all(txs).then(async () => {
-                        await this.getMyPlots();
-                        this.$toast.dismiss(toast);
+
+                    const tx = await this.plotEmitterContract.claimAll(plotTypes, plotIds, {
+                        gasPrice: 30000000000,
+                        gasLimit: 3000000,
                     });
+
+                    await tx.wait(1);
+
                 } catch (err) {
                     this.handleError(err);
-                    this.$toast.dismiss(toast);
                 }
+                this.$toast.dismiss(toast);
             },
 
             openPlot(plot) {
