@@ -961,7 +961,7 @@ export default {
         this.$toast.success("Usdc successfully claimed")
 
         const usdc = (await this.dropContract.usdcAllowance(this.metaMaskAccount)) * 1
-        this.claimableUsdc = usdc / 1e18
+        this.claimableUsdc = usdc / 1e6
       } catch (err) {
         this.handleError(err);
       }
