@@ -675,7 +675,7 @@
 
             this.unlockedEmissionsInterval = setInterval(async () => {
                 this.getMyPlots();
-            }, 60000);
+            }, 10000);
 
             await this.getPlots();
             this.initializePanZoom();
@@ -890,8 +890,8 @@
                         await this.plotEmitterOldContract.withdrawUnlockedEmitted();
                     await tx.wait(1);
                     toast = this.createLoaderToast("Pending - Withdraw Emissions");
-                    
-                    if(isOldContract) this.unlockedOldEmissions = 0;
+
+                    if (isOldContract) this.unlockedOldEmissions = 0;
                     this.unlockedEmissions = 0;
                 } catch (err) {
                     this.handleError(err);
@@ -1128,6 +1128,9 @@
                     });
 
                     await tx.wait(1);
+                    await this.getMyPlots();
+                    this.unlockedEmissions = (await this.plotEmitterContract.getUnlockedBalance() / 10 ** 18)
+                        .toFixed(2);
 
                 } catch (err) {
                     this.handleError(err);

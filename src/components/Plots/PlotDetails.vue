@@ -884,7 +884,8 @@
                 let toast = undefined;
                 try {
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
-                    if ((isEmitting && !isOldContract) || (this.oldEmitterStarted && isOldContract)) throw 'Emitter is running!';
+                    if ((isEmitting && !isOldContract) || (this.oldEmitterStarted && isOldContract))
+                    throw 'Emitter is running!';
 
                     const tx = isOldContract ? await this.oldPlotInventoryContract.withdrawAsset(plot.plot_type,
                         plot.token_id, slot) : await this.plotInventoryContract.withdrawAsset(plot.plot_type,
@@ -1066,6 +1067,12 @@
                     }
 
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
+                    if (isEmitting) {
+                        if(this.emissions <= 0.5){
+                            throw "Please collect emissions before pausing the emitter!";
+                        }
+                    }
+
                     const tx = !isEmitting ?
                         await this.plotEmitterContract.startEmissions(plot.plot_type, plot.token_id * 1, {
                             gasPrice: 30000000000,
