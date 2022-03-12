@@ -890,6 +890,8 @@
                         await this.plotEmitterOldContract.withdrawUnlockedEmitted();
                     await tx.wait(1);
                     toast = this.createLoaderToast("Pending - Withdraw Emissions");
+                    
+                    if(isOldContract) this.unlockedOldEmissions = 0;
                     this.unlockedEmissions = 0;
                 } catch (err) {
                     this.handleError(err);
