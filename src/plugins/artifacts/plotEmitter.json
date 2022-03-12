@@ -1,696 +1,721 @@
 {
-    "address": "0xDaf3344bb0d1E0EBBCfC57026bfFbcC58aaF64Fb",
-    "abi": [{
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_xyaAddr",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "_xyaOneAddr",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "plotId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address",
-                "name": "caller",
-                "type": "address"
-            }
-        ],
-        "name": "CallerDoesNotOwnThePlot",
-        "type": "error"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "requiredFunds",
-                "type": "uint256"
-            }
-        ],
-        "name": "InsufficientLPTokenBalance",
-        "type": "error"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "requiredAllowance",
-                "type": "uint256"
-            }
-        ],
-        "name": "LPTokenAllowanceNotSet",
-        "type": "error"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "PlotIsAlreadyEmitting",
-        "type": "error"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "PlotIsNotEligibleForEmissions",
-        "type": "error"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "PlotIsNotEmitting",
-        "type": "error"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "blocktime",
-                "type": "uint256"
-            }
-        ],
-        "name": "ChangedPlotHandlerAddress",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "blocktime",
-                "type": "uint256"
-            }
-        ],
-        "name": "ChangedPlotInventoryAddress",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint8",
-                "name": "plotType",
-                "type": "uint8"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "plotId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "claimedBy",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amountClaimed",
-                "type": "uint256"
-            }
-        ],
-        "name": "ClaimedEmissions",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "newLimit",
-                "type": "uint256"
-            }
-        ],
-        "name": "ClogLimitChanged",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "newRate",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "blockNumber",
-                "type": "uint256"
-            }
-        ],
-        "name": "EmissionRateChanged",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amountAdded",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "totalEmissionsLeft",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "blockNumber",
-                "type": "uint256"
-            }
-        ],
-        "name": "EmissionsDepositedToPool",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "newFee",
-                "type": "uint256"
-            }
-        ],
-        "name": "OneTimeFeeChanged",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "previousOwner",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
-        ],
-        "name": "OwnershipTransferred",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint8",
-                "name": "plotType",
-                "type": "uint8"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "plotId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "startedBy",
-                "type": "address"
-            }
-        ],
-        "name": "StartedEmissions",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint8",
-                "name": "plotType",
-                "type": "uint8"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "plotId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "stoppedBy",
-                "type": "address"
-            }
-        ],
-        "name": "StoppedEmissions",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "addEmissionsFromTreasury",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "baseEmissionRatePerDay",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "calculateClaimableEmissions",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "claimEmissions",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "currentPlotsEmitting",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "depositForEmissions",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "emissionsLeft",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "feeToEmit",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            }
-        ],
-        "name": "getAllEmittingPlots",
-        "outputs": [
-            {
-                "internalType": "uint256[]",
-                "name": "",
-                "type": "uint256[]"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "getCompleteEmissionStats",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getUnlockedBalance",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "hasPlotPaidOneTimeFee",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "isEmitting",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "maxAllowedToEmitUntilClog",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "owner",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_rate",
-                "type": "uint256"
-            }
-        ],
-        "name": "setEmissionRate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "setMaxEmitUntilClog",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "setOneTimeFee",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_addr",
-                "type": "address"
-            }
-        ],
-        "name": "setPlotHandlerAddress",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "startEmissions",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint8",
-                "name": "_plotType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_plotId",
-                "type": "uint256"
-            }
-        ],
-        "name": "stopEmissions",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
-        ],
-        "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "withdrawLpTokens",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "withdrawUnlockedEmitted",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }
+    "address": "0xeFAB889EE65dF158286555F384c71de80f4930a7",
+    "oldAddress": "0xDaf3344bb0d1E0EBBCfC57026bfFbcC58aaF64Fb",
+    "abi":[
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_xyaAddr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_xyaOneAddr",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "caller",
+                    "type": "address"
+                }
+            ],
+            "name": "CallerDoesNotOwnThePlot",
+            "type": "error"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "requiredFunds",
+                    "type": "uint256"
+                }
+            ],
+            "name": "InsufficientLPTokenBalance",
+            "type": "error"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "requiredAllowance",
+                    "type": "uint256"
+                }
+            ],
+            "name": "LPTokenAllowanceNotSet",
+            "type": "error"
+        },
+        {
+            "inputs": [],
+            "name": "NothingToClaim",
+            "type": "error"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "PlotIsAlreadyEmitting",
+            "type": "error"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "PlotIsNotEligibleForEmissions",
+            "type": "error"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "PlotIsNotEmitting",
+            "type": "error"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "blocktime",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ChangedPlotHandlerAddress",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "blocktime",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ChangedPlotInventoryAddress",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "claimedBy",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "amountClaimed",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ClaimedEmissions",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "newLimit",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ClogLimitChanged",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "newRate",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "blockNumber",
+                    "type": "uint256"
+                }
+            ],
+            "name": "EmissionRateChanged",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "amountAdded",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "totalEmissionsLeft",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "blockNumber",
+                    "type": "uint256"
+                }
+            ],
+            "name": "EmissionsDepositedToPool",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "newFee",
+                    "type": "uint256"
+                }
+            ],
+            "name": "OneTimeFeeChanged",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "previousOwner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "OwnershipTransferred",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "startedBy",
+                    "type": "address"
+                }
+            ],
+            "name": "StartedEmissions",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint8",
+                    "name": "plotType",
+                    "type": "uint8"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "plotId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "stoppedBy",
+                    "type": "address"
+                }
+            ],
+            "name": "StoppedEmissions",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "addEmissionsFromTreasury",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "baseEmissionRatePerDay",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "calculateClaimableEmissions",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8[]",
+                    "name": "_claimPlotTypes",
+                    "type": "uint8[]"
+                },
+                {
+                    "internalType": "uint256[]",
+                    "name": "_claimPlotIds",
+                    "type": "uint256[]"
+                }
+            ],
+            "name": "claimAll",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "claimEmissions",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "currentPlotsEmitting",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "depositForEmissions",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "emissionsLeft",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "feeToEmit",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                }
+            ],
+            "name": "getAllEmittingPlots",
+            "outputs": [
+                {
+                    "internalType": "uint256[]",
+                    "name": "",
+                    "type": "uint256[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getCompleteEmissionStats",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getUnlockedBalance",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "hasPlotPaidOneTimeFee",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "isEmitting",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "maxAllowedToEmitUntilClog",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_rate",
+                    "type": "uint256"
+                }
+            ],
+            "name": "setEmissionRate",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "setMaxEmitUntilClog",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "setOneTimeFee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_addr",
+                    "type": "address"
+                }
+            ],
+            "name": "setPlotHandlerAddress",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "startEmissions",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "_plotType",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_plotId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "stopEmissions",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "withdrawLpTokens",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "withdrawUnlockedEmitted",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
     ]
 }

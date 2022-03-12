@@ -189,50 +189,109 @@
         <!--PLOT SLOTS-->
         <div :key='keys.inventorySlots'
             class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
-            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
-                Plot Slots
-            </h2>
-            <div v-for='(slot, index) in simpleInventorySlots' :key='index'
-                class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
-                <div class='w-full h-auto flex flex-row justify-start items-center'>
-                    <template v-if='slot.token'>
-                        <div v-on:click='prepareSlotPickerModal(index)'
-                            v-bind:class='{"dfk": slot.tokenId === "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C"}'
-                            class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
-                            <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-lazy='slot.image' />
-                        </div>
-                        <div class='sm:w-7/10 w-5/10 h-full flex-col'>
-                            <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
-                                Slot
-                                {{index + 1}}</h2>
-                            <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
-                                {{ getTokenName(slot) }}
-                                #{{ slot.tokenId }}</h2>
-                            <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>Empty
-                            </p>
-                            <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
-                            </p>
-                        </div>
-                        <div v-if='slot.token * 1 === 0 && plot.ownerOf' v-on:click='prepareSlotPickerModal(index)'
-                            class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
-                            Add NFT
-                        </div>
-                        <div v-on:click='withdrawNFTFromSlot(plot, index)' v-else-if='plot.ownerOf'
-                            class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
-                            Remove NFT
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div
-                            class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
-                            <i class='fa fa-gear fa-spin'></i>
-                        </div>
-                        <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
-                            Loading...
-                        </div>
-                    </template>
-                </div>
+            <div class="w-full h-auto flex items-center">
+                <h2 class='w-3/12 text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
+                    Plot Slots
+                </h2>
+
+                <p v-on:click='inventoryTab = "CURRENT"' v-bind:class='{"opacity-80": inventoryTab === "CURRENT"}'
+                    class="text ml-auto mr-4 xl:text-2xl sm:text-xl text-lg opacity-20 cursor-pointer">
+                    Current
+                </p>
+                <p v-on:click='inventoryTab = "OLD"' v-bind:class='{"opacity-80": inventoryTab === "OLD"}'
+                    class="text xl:text-2xl sm:text-xl text-lg opacity-20 text-xl cursor-pointer">
+                    Old
+                </p>
             </div>
+
+            <template v-if='inventoryTab === "CURRENT"'>
+                <div v-for='(slot, index) in simpleInventorySlots' :key='index'
+                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    <div class='w-full h-auto flex flex-row justify-start items-center'>
+                        <template v-if='slot.token'>
+                            <div v-on:click='prepareSlotPickerModal(index)'
+                                v-bind:class='{"dfk": slot.tokenId === "0x8Fbf172AF6ef78e00202AF56fa0De9A0C0ea4b80"}'
+                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-lazy='slot.image' />
+                            </div>
+                            <div class='sm:w-7/10 w-5/10 h-full flex-col'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                    Slot
+                                    {{index + 1}}</h2>
+                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                    {{ getTokenName(slot) }}
+                                    #{{ slot.tokenId }}</h2>
+                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                    Empty
+                                </p>
+                                <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
+                                </p>
+                            </div>
+                            <div v-if='slot.token * 1 === 0 && plot.ownerOf' v-on:click='prepareSlotPickerModal(index)'
+                                class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
+                                Add NFT
+                            </div>
+                            <div v-on:click='withdrawNFTFromSlot(plot, index)' v-else-if='plot.ownerOf'
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                Remove NFT
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div
+                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                <i class='fa fa-gear fa-spin'></i>
+                            </div>
+                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                                Loading...
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <template v-if='inventoryTab === "OLD"'>
+                <p class="text-white opacity-80 lg:text-xl sm:text-lg text-sm" v-if='oldEmitterStarted'>The old emitter
+                    is still active. Click <a v-on:click='deactivateOldEmitter(plot)' class="text-yellow"
+                        href='javascript:;'>here</a> to
+                    deactive it!</p>
+                <div v-for='(slot, index) in simpleOldInventorySlots' :key='index'
+                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    <div class='w-full h-auto flex flex-row justify-start items-center'>
+                        <template v-if='slot.token'>
+                            <div v-bind:class='{"dfk": slot.tokenId === "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C"}'
+                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-lazy='slot.image' />
+                            </div>
+                            <div class='sm:w-7/10 w-5/10 h-full flex-col'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                    Slot
+                                    {{index + 1}}</h2>
+                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                    {{ getTokenName(slot) }}
+                                    #{{ slot.tokenId }}</h2>
+                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                    Empty
+                                </p>
+                                <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
+                                </p>
+                            </div>
+                            <div v-on:click='withdrawNFTFromSlot(plot, index, true)' v-if='plot.ownerOf'
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                Remove NFT
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div
+                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                <i class='fa fa-gear fa-spin'></i>
+                            </div>
+                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                                Loading...
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
 
         </div>
 
@@ -240,47 +299,94 @@
             <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
                 Special Slot
             </h2>
-            <div v-for='(slot, index) in specialInventorySlots' :key='index'
-                class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
-                <div v-on:click='prepareSlotPickerModal(index + 3)'
-                    class='w-full h-auto flex flex-row justify-start items-center relative'>
-                    <template v-if='slot.token'>
-                        <div class='absolute plot-slot dfk z-50' style='left: -3px;'></div>
-                        <div class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
-                            <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-bind:src='slot.image' />
-                        </div>
-                        <div class='sm:w-7/10 w-5/10 h-full flex-col'>
-                            <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
-                                Slot
-                                {{index + 4}}</h2>
-                            <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
-                                {{ getTokenName(slot) }}
-                                #{{ slot.tokenId }}</h2>
-                            <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>Empty
-                            </p>
-                            <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
-                            </p>
-                        </div>
-                        <div v-if='slot.token * 1 === 0 && plot.ownerOf' v-on:click='prepareSlotPickerModal(index + 3)'
-                            class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
-                            Add NFT
-                        </div>
-                        <div v-on:click='withdrawNFTFromSlot(plot, index + 3)' v-else-if='plot.ownerOf'
-                            class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
-                            Remove NFT
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div
-                            class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
-                            <i class='fa fa-gear fa-spin'></i>
-                        </div>
-                        <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
-                            Loading...
-                        </div>
-                    </template>
+            <template v-if='inventoryTab === "CURRENT"'>
+                <div v-for='(slot, index) in specialInventorySlots' :key='index'
+                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    <div v-on:click='prepareSlotPickerModal(index + 3)'
+                        class='w-full h-auto flex flex-row justify-start items-center relative'>
+                        <template v-if='slot.token'>
+                            <div class='absolute plot-slot dfk z-50' style='left: -3px;'></div>
+                            <div class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl'
+                                    v-bind:src='slot.image' />
+                            </div>
+                            <div class='sm:w-7/10 w-5/10 h-full flex-col'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                    Slot
+                                    {{index + 4}}</h2>
+                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                    {{ getTokenName(slot) }}
+                                    #{{ slot.tokenId }}</h2>
+                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                    Empty
+                                </p>
+                                <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
+                                </p>
+                            </div>
+                            <div v-if='slot.token * 1 === 0 && plot.ownerOf'
+                                v-on:click='prepareSlotPickerModal(index + 3)'
+                                class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
+                                Add NFT
+                            </div>
+                            <div v-on:click='withdrawNFTFromSlot(plot, index + 3)' v-else-if='plot.ownerOf'
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                Remove NFT
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div
+                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                <i class='fa fa-gear fa-spin'></i>
+                            </div>
+                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                                Loading...
+                            </div>
+                        </template>
+                    </div>
                 </div>
-            </div>
+            </template>
+
+            <template v-if='inventoryTab === "OLD"'>
+                <div v-for='(slot, index) in specialOldInventorySlots' :key='index'
+                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    <div class='w-full h-auto flex flex-row justify-start items-center relative'>
+                        <template v-if='slot.token'>
+                            <div class='absolute plot-slot dfk z-50' style='left: -3px;'></div>
+                            <div class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl'
+                                    v-bind:src='slot.image' />
+                            </div>
+                            <div class='sm:w-7/10 w-5/10 h-full flex-col'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                    Slot
+                                    {{index + 4}}</h2>
+                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                    {{ getTokenName(slot) }}
+                                    #{{ slot.tokenId }}</h2>
+                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                    Empty
+                                </p>
+                                <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
+                                </p>
+                            </div>
+                            <div v-on:click='withdrawNFTFromSlot(plot, index + 3, true)' v-if='plot.ownerOf'
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                Remove NFT
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div
+                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                <i class='fa fa-gear fa-spin'></i>
+                            </div>
+                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                                Loading...
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+            </template>
 
         </div>
 
@@ -433,6 +539,8 @@
 
 <script>
     import HRC721 from '../../plugins/artifacts/HRC721.json';
+    import PlotsInventory from '../../plugins/artifacts/plotInventory.json';
+    import PlotsEmitter from '../../plugins/artifacts/plotEmitter.json';
     import {
         ethers
     } from "ethers";
@@ -496,8 +604,16 @@
                 return this.inventorySlots.filter(c => c.index < 3);
             },
 
+            simpleOldInventorySlots() {
+                return this.oldInventorySlots.filter(c => c.index < 3);
+            },
+
             specialInventorySlots() {
                 return this.inventorySlots.filter(c => c.index === 3);
+            },
+
+            specialOldInventorySlots() {
+                return this.oldInventorySlots.filter(c => c.index === 3);
             }
         },
 
@@ -507,6 +623,8 @@
 
         data() {
             return {
+                inventoryTab: "CURRENT",
+
                 emissionBaseRate: 4,
                 emissionUnlockRate: 0.25,
                 emissions: 0,
@@ -533,6 +651,8 @@
                 },
 
                 inventorySlots: [],
+                oldInventorySlots: [],
+                oldInventoryPlotEmitting: false,
                 loadingInventorySlots: true,
                 plotReceiverAddress: "",
                 plotListPrice: 0,
@@ -543,7 +663,6 @@
                 slotIndex: 0,
 
                 updateInterval: undefined,
-
                 keys: {
                     emitter: 0,
                     currentPlot: 0,
@@ -601,14 +720,29 @@
                         userNFTs: [],
                         special: true
                     },
-                ]
+                ],
+
+                //temporary
+
+                oldPlotInventoryContract: undefined,
+                oldPlotEmitterContract: undefined,
+                oldEmitterStarted: false
             }
         },
 
         async mounted() {
+            this.oldPlotInventoryContract = await new ethers.Contract(PlotsInventory.oldAddress, PlotsInventory.abi,
+                this
+                .metaMaskWallet.signer);
+            this.oldPlotEmitterContract = await new ethers.Contract(PlotsEmitter.oldAddress, PlotsEmitter.abi, this
+                .metaMaskWallet.signer);
+
             new Promise(async (resolve, reject) => {
                 try {
                     await this.getPlotInventory();
+                    await this.getPlotInventory(true);
+                    this.oldEmitterStarted = await this.oldPlotEmitterContract.isEmitting(this
+                        .plot.plot_type, this.plot.token_id * 1);
                 } catch (err) {
                     this.loadingInventorySlots = false;
                 }
@@ -746,16 +880,21 @@
                 this.$toast.dismiss(toast);
             },
 
-            async withdrawNFTFromSlot(plot, slot) {
+            async withdrawNFTFromSlot(plot, slot, isOldContract = false) {
                 let toast = undefined;
                 try {
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
-                    if (isEmitting) throw 'Emitter is running!';
-                    const tx = await this.plotInventoryContract.withdrawAsset(plot.plot_type, plot.token_id, slot);
+                    if ((isEmitting && !isOldContract) || (this.oldEmitterStarted && isOldContract))
+                    throw 'Emitter is running!';
+
+                    const tx = isOldContract ? await this.oldPlotInventoryContract.withdrawAsset(plot.plot_type,
+                        plot.token_id, slot) : await this.plotInventoryContract.withdrawAsset(plot.plot_type,
+                        plot.token_id, slot);
+
                     toast = this.createLoaderToast("Pending - Withdraw NFT");
                     await tx.wait(1);
                     await this.refreshPlot(plot);
-                    await this.getPlotInventory();
+                    await this.getPlotInventory(isOldContract);
                     await this.getUserNFTCollections();
                 } catch (err) {
                     this.handleError(err);
@@ -763,11 +902,20 @@
                 this.$toast.dismiss(toast);
             },
 
-            async getPlotInventory() {
-                const plotInventory = await this.plotInventoryContract.getPlotInventory(this.plot.plot_type, this
-                    .plot.token_id * 1);
+            async getPlotInventory(isOldContract = false) {
+                let plotInventory = [];
 
-                this.inventorySlots = [];
+                if (isOldContract) {
+                    this.oldInventorySlots = [];
+                    plotInventory = await this.oldPlotInventoryContract.getPlotInventory(this.plot.plot_type, this
+                        .plot
+                        .token_id * 1);
+
+                } else {
+                    this.inventorySlots = [];
+                    plotInventory = await this.plotInventoryContract.getPlotInventory(this.plot.plot_type, this.plot
+                        .token_id * 1);
+                }
 
                 plotInventory.forEach(async (slot, index) => {
                     let image = "";
@@ -796,9 +944,18 @@
                         values++;
                     }
                     newSlot.attributeBonusString = bonusString;
-                    this.inventorySlots.push(newSlot);
-                    this.inventorySlots.sort((a, b) => a.index > b.index ? 1 : a.index < b.index ? -1 :
-                        0);
+
+                    if (isOldContract) {
+                        this.oldInventorySlots.push(newSlot);
+                        this.oldInventorySlots.sort((a, b) => a.index > b.index ? 1 : a.index < b
+                            .index ? -1 :
+                            0);
+                    } else {
+                        this.inventorySlots.push(newSlot);
+                        this.inventorySlots.sort((a, b) => a.index > b.index ? 1 : a.index < b.index ? -
+                            1 :
+                            0);
+                    }
 
                     if (slot.tokenAddress * 1 !== 0) {
                         const collection = this.collections.filter(c => c.address.toLowerCase() === slot
@@ -874,6 +1031,22 @@
                 this.$toast.dismiss(toast);
             },
 
+            async deactivateOldEmitter(plot) {
+                let toast = undefined;
+                try {
+                    const tx = await this.oldPlotEmitterContract.stopEmissions(plot.plot_type, plot.token_id * 1, {
+                        gasPrice: 30000000000,
+                        gasLimit: 3000000,
+                    });
+                    toast = this.createLoaderToast("Pending - Stop Emitter");
+                    await tx.wait(1);
+                    this.oldEmitterStarted = false;
+                } catch (err) {
+                    this.handleError(err);
+                }
+                this.$toast.dismiss(toast);
+            },
+
             async togglePlotEmitter(plot, force = false) {
                 let toast = undefined;
                 try {
@@ -894,6 +1067,12 @@
                     }
 
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
+                    if (isEmitting) {
+                        if(this.emissions > 0.5){
+                            throw "Please collect emissions before pausing the emitter!";
+                        }
+                    }
+
                     const tx = !isEmitting ?
                         await this.plotEmitterContract.startEmissions(plot.plot_type, plot.token_id * 1, {
                             gasPrice: 30000000000,
