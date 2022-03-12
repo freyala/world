@@ -1068,7 +1068,7 @@
 
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
                     if (isEmitting) {
-                        if(this.emissions <= 0.5){
+                        if(this.emissions > 0.5){
                             throw "Please collect emissions before pausing the emitter!";
                         }
                     }
