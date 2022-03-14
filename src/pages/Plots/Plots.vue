@@ -141,25 +141,6 @@
                         <i class='fa fa-gear fa-spin'></i> Loading...
                     </p>
                     <div v-else class='w-full h-full flex items-center xl:text-lg text-sm flex flex-col'>
-                        <template v-if='unlockedOldEmissions > 0'>
-                            <p class="w-full text-white opacity-20 text-sm">
-                                Old Emissions
-                            </p>
-                            <hr class="w-full text-white opacity-20 my-2" />
-                            <div class="w-full flex flex-row mb-4">
-                                <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
-                                    XYA
-                                </p>
-                                <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
-                                    {{unlockedOldEmissions}}
-                                </p>
-                                <p v-on:click='withdrawUnlockedEmissions(true)'
-                                    class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
-                                    Collect
-                                </p>
-                            </div>
-                        </template>
-
                         <div class="w-full flex flex-row items-center">
                             <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
                                 XYA
