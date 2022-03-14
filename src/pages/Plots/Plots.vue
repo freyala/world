@@ -141,6 +141,25 @@
                         <i class='fa fa-gear fa-spin'></i> Loading...
                     </p>
                     <div v-else class='w-full h-full flex items-center xl:text-lg text-sm flex flex-col'>
+                        <template v-if='unlockedOldEmissions > 0'>
+                            <p class="w-full text-white opacity-20 text-sm">
+                                Old Emissions
+                            </p>
+                            <hr class="w-full text-white opacity-20 my-2" />
+                            <div class="w-full flex flex-row mb-4">
+                                <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
+                                    XYA
+                                </p>
+                                <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
+                                    {{unlockedOldEmissions}}
+                                </p>
+                                <p v-on:click='withdrawUnlockedEmissions(true)'
+                                    class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                                    Collect
+                                </p>
+                            </div>
+                        </template>
+                        
                         <div class="w-full flex flex-row items-center">
                             <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
                                 XYA
@@ -182,10 +201,10 @@
                     <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
                         Your Plots
                     </p>
-                  <p v-on:click='claimAllPlotsEmissions()'
-                       class='sm:w-5/10 w-3/10 ml-auto text-base text-right text-center cursor-pointer'>
+                    <p v-on:click='claimAllPlotsEmissions()'
+                        class='sm:w-5/10 w-3/10 ml-auto text-base text-right text-center cursor-pointer'>
                         Claim All
-                   </p>
+                    </p>
                 </div>
                 <div class="w-full rounded-xl p-4 mb-4 dark-panel">
                     <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
@@ -200,7 +219,8 @@
                         </p>
                         <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
                             :key='plot.token_id * 1' class='ml-4 lg:text-lg text-sm mb-1 cursor-pointer relative'>
-                            <i class='fa fa-map mr-4'></i>#{{plot.token_id}} - {{ plot.isEmitting ? plot.emissions : 0.00 }} XYA
+                            <i class='fa fa-map mr-4'></i>#{{plot.token_id}} -
+                            {{ plot.isEmitting ? plot.emissions : 0.00 }} XYA
 
                             <i v-if='plot.token_id === currentPlot.token_id && showPlotDetails'
                                 class='fas fa-map-marker-alt lg:text-lg text-sm absolute right-4 flex top-0 items-center text-white opacity-80'></i>
