@@ -76,7 +76,7 @@
 
           <div v-show='!isMarketOpen' class='w-full h-auto flex flex-row justify-center items-center'>
             <p title='Recent Sales' v-on:click='showLastSales()'
-              class='sm:text-xl text-smffffffffffffffffffffffffffffffffffffffffffffffffffffffffff cursor-pointer mt-4 hover:text-white mx-2'>Recent Sales</p>
+              class='sm:text-xl text-sm cursor-pointer mt-4 hover:text-white mx-2'>Recent Sales</p>
             <span class='text-2xl mt-4'>|</span>
             <p title='Recent Auctions' v-on:click='showLastAuctions()'
               class='sm:text-xl text-sm cursor-pointer mt-4 hover:text-white mx-2'>Recent Auctions</p>

@@ -1125,7 +1125,7 @@
 
                     const tx = await this.plotEmitterContract.claimAll(plotTypes, plotIds, {
                         gasPrice: 30000000000,
-                        gasLimit: 3000000,
+                        gasLimit: 10000000,
                     });
 
                     await tx.wait(1);
