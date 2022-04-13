@@ -2,24 +2,21 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import WorldMap from "../components/WorldMap/Index";
 
-import Casino from "../pages/Casino/Index";
-
 import Harmons from "../pages/Harmons/Index";
 import CryptoPigs from "../pages/CryptoPigs/Pigs";
 import Marketplace from "../pages/Marketplace/Marketplace";
 
-import FreyNFT from "../pages/Frey/Home";
-import FreyCollection from "../pages/Frey/Collection";
-import FreyGallery from "../pages/Frey/Gallery";
-import FreyAttributes from "../pages/Frey/Attributes";
+import FreyNFT from "../pages/Barracks/Home";
+import FreyCollection from "../pages/Barracks/Collection";
+import FreyGallery from "../pages/Barracks/Gallery";
+import FreyAttributes from "../pages/Barracks/Attributes";
 
 import Login from "../pages/Login";
-import Delegating from "../pages/Delegating";
+import Beacon from "../pages/Beacon";
 import Faucet from "../pages/Faucet";
-import Governance from "../pages/Governance";
-import JennyMines from "../pages/JennyMines";
+import Wiki from "../pages/Wiki";
+import Tree from "../pages/Tree";
 import Staking from "../pages/Staking";
-//import Plots from "../pages/Plots";
 import Plots from "../pages/Plots/Plots";
 Vue.use(Router)
 
@@ -52,29 +49,24 @@ export default new Router({
             component: Login
         },
         {
-            path: '/frey/home',
-            name: 'frey-nft',
+            path: '/barracks',
+            name: 'barracks',
             component: FreyNFT
         },
         {
-            path: '/frey/attributes',
-            name: 'frey-attributes',
+            path: '/barracks/attributes',
+            name: 'barracks-attributes',
             component: FreyAttributes
         },
         {
-            path: '/frey/gallery',
-            name: 'frey-gallery',
+            path: '/barracks/gallery',
+            name: 'barracks-gallery',
             component: FreyGallery
         },
         {
-            path: '/frey/collection',
-            name: 'frey-collection',
+            path: '/barracks/collection',
+            name: 'barracks-collection',
             component: FreyCollection
-        },
-        {
-            path: '/casino',
-            name: 'casino',
-            component: Casino
         },
         {
             path: '/sneak-peek',
@@ -82,9 +74,9 @@ export default new Router({
             component: Harmons
         },
         {
-            path: '/delegating',
-            name: 'delegating',
-            component: Delegating
+            path: '/beacon',
+            name: 'beacon',
+            component: Beacon
         },
         {
             path: '/faucet',
@@ -92,14 +84,14 @@ export default new Router({
             component: Faucet
         },
         {
-            path: '/governance',
-            name: 'governance',
-            component: Governance
+            path: '/wiki',
+            name: 'wiki',
+            component: Wiki
         },
         {
-            path: '/jenny-mines',
-            name: 'jennymines',
-            component: JennyMines
+            path: '/tree',
+            name: 'tree',
+            component: Tree
         },
         {
             path: '/staking',

@@ -3,7 +3,7 @@
     <p class="dark:text-gray-300 text-el">Slippage Rate &nbsp</p>
     <div class="flex items-center ss:space-x-1 xs:space-x-2">
       <div class="flex">
-        <div class="flex pr-1 items-center rounded-lg text-yellow">
+        <div class="flex pr-1 items-center text-primary-head">
           <p>{{ getSlippageRate }}%</p>
         </div>
       </div>

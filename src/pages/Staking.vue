@@ -1,198 +1,165 @@
 <template>
-  <section style="background: url('/images/map/worldmap_small.png') no-repeat; background-size: cover; min-height: 100vh"
-           class="flex p-4 md:p-16 lg:px-32">
-    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto;" class="screen rounded-2xl w-full">
-      <section id="section-i-1" class="border-b-4 border-bbrown"
-               style="background: url('/images/SVG/homepage-bg-top.svg') no-repeat top right">
-        <div class="container mx-auto text-center pt-16 md:pt-24 pb-16 md:pb-20">
-          <h1 class="text-2xl md:text-5xl text-primary-alt font-semibold">
-            Extraction Site
-          </h1>
-        </div>
-      </section>
+  <div style="width: 100vw; min-height:100vh; height: 100vh; z-index: 999"
+       class="flex flex-row w-full h-full relative bg-detail-bg">
 
-      <div v-if="stakingMounted" class="p-4 md:p-8 relative">
-        <div class="absolute top-0 left-0 p-4 md:p-8">
-          <router-link :to="{ name: 'world-map' }">
-            <i class="fas fa-long-arrow-alt-left"></i> Back
-          </router-link>
-        </div>
-
-        <div class="flex">
-          <div class="w-full md:w-4/5 lg:w-3/5 mx-auto">
-            <div class="flex mt-8 md:mt-0 flex-wrap">
-              <div class="w-full">
-                <p class="md:text-xl text-center">
-                  Extractor information
-                </p>
-              </div>
-              <div class="w-full md:w-1/2 mt-4 md:mt-0">
-                <p class="text-center">
-                  Gems left in pool
-                </p>
-                <p v-if="parseInt(rewardPool) === 0" class="text-center">Fetching...</p>
-                <p v-else class="text-center">{{ parseFloat(rewardPool).toFixed(4) }} XYA</p>
-              </div>
-              <div class="w-full md:w-1/2 mt-4 md:mt-0">
-                <p class="text-center">
-                  Gems actively extracting
-                </p>
-                <p v-if="parseInt(totalStaked) === 0" class="text-center">Fetching...</p>
-                <p class="text-center">{{ parseFloat(totalStaked).toFixed(4) }} XYA</p>
-              </div>
-
-              <div class="w-full">
-                <br>
-                <hr>
-                <br>
-              </div>
-
-              <div class="w-full">
-                <p class="md:text-xl text-center">
-                  User info
-                </p>
-              </div>
-              <div class="w-full md:w-1/2 mt-4 md:mt-0">
-                <p class="text-center">
-                  In wallet
-                </p>
-                <p class="text-center">{{ walletBalance }} XYA</p>
-              </div>
-              <div class="w-full md:w-1/2 mt-4 md:mt-0">
-                <p class="text-center">
-                  In extractor
-                <p class="text-center">{{ stakingBalance }} XYA</p>
-              </div>
-            </div>
-
-            <br>
-            <br>
-
-            <div class="flex flex-wrap">
-              <div class="w-full" v-if="parseInt(allowance) > 0">
-                <button class="w-full mx-auto xya-btn"
-                        @click="addAllowance(0)">
-                  Disable extractor <small class="hidden md:inline">(contract will no longer have rights to use your XYA)</small> <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
-                </button>
-              </div>
-
-              <div class="w-full" v-else>
-                <button class="w-full mx-auto xya-btn"
-                        @click="addAllowance(999999999999.9999)">
-                  Enable extractor <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
-                </button>
-              </div>
-            </div>
-
-            <br>
-
-            <div class="flex flex-wrap" v-if="parseInt(allowance) > 0">
-              <button v-if="rewardBalance === '0.0'"
-                      class="w-full mx-auto xya-btn">
-                No rewards yet
-              </button>
-              <button v-else class="w-full mx-auto xya-btn"
-                      @click="withdrawEarnings(false)">
-                Claim <span class="hidden md:inline">{{ rewardBalance }} XYA</span> <span class="md:hidden">rewards</span>  <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
-              </button>
-            </div>
-
-            <br>
-
-            <div v-if="parseInt(allowance) > 0">
-              <div class="flex flex-wrap">
-                <small class="w-full">Max: {{ walletBalance }} XYA</small>
-
-                <div class="w-1/3 md:w-1/2 pr-2">
-                  <input class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 h-12" v-model="amountToStake"
-                         type="number">
-                </div>
-                <div class="w-2/3 md:w-1/2 pl-2">
-                  <button class="w-full mx-auto xya-btn mb-2"
-                          @click="stake(false)">
-                    Deposit <i v-if="loading.staking" class="fas fa-cog fa-spin"></i>
-                  </button>
-                </div>
-
-                <button class="w-full mx-auto xya-btn mb-2"
-                        @click="stake(true)">
-                  Deposit all <i v-if="loading.stakingAll" class="fas fa-cog fa-spin"></i>
-                </button>
-              </div>
-
-              <br>
-
-              <div class="flex flex-wrap">
-                <small class="w-full">Max: {{ stakingBalance }} XYA</small>
-
-                <div class="w-1/3 md:w-1/2 pr-2">
-                  <input class="w-full border border-bbrown rounded-xl bg-transparent hover:bg-bbrown hover:text-white px-4 py-2 h-12" v-model="amountToUnstake"
-                         type="number">
-                </div>
-                <div class="w-2/3 md:w-1/2 pl-2">
-                  <button class="w-full mx-auto xya-btn mb-2" @click="unstake(false)">
-                    Withdraw <i v-if="loading.unstaking" class="fas fa-cog fa-spin"></i>
-                  </button>
-                </div>
-
-                <button class="w-full mx-auto xya-btn mb-2" @click="unstake(true)">
-                  Withdraw all <i v-if="loading.unstakingAll" class="fas fa-cog fa-spin"></i>
-                </button>
-
-                <div class="text-center w-full">
-                  <small>A small 0.5% tax fee will be charged upon withdrawal. This fee will be sent back to the staking contract.</small>
-                </div>
-              </div>
-            </div>
-
-
-            <br>
-            <br>
-            <hr>
-            <br>
-            <p class="text-xl md:text-lg pb-24">
-              The vast cave system beneath the kingdom of Xangaea had been untouched for centuries. There had always
-              been
-              rumors that these caves was where the world had been drawing magic from, with creatures naturally being
-              drawn
-              to
-              the entrances. A group of miners led by Payne, a man known for his talent in acquiring the rarest of
-              jewels,
-              had
-              discovered a mystical ore unlike anything seen before.
-              <br>
-              <br>
-              Payne immediately sought out the village elder, Zarius. Once the regent learned of this ore’s existence,
-              he
-              named it ‘XYA’ after his deceased daughter and quickly became obsessed with studying this ore, in hopes of
-              finding the key to immortality. Apart from the most loyal servants of Regent Carroway, not a single person
-              was
-              allowed to step foot into the mines. Regent Carroway seemed to be immensely thankful, promising power and
-              riches
-              to Payne’s crew.
-              <br>
-              <br>
-              Extraction sites were shortly constructed to excavate the cave and increase the monarch’s possession of
-              XYA.
-              Anyone that neared these caves, Freyfolk or not, were ordered to be killed on sight. There have been no
-              traces
-              of Payne’s crew since.
-            </p>
-          </div>
-        </div>
+    <div class='absolute flex flex-row h-16 w-full top-0 dark-panel items-center' style="z-index: 1000">
+      <div class='ml-6 mt-5 mb-4 w-auto text-xl cursor-pointer absolute z-50 w-2/5 flex flex-row items-center'>
+        <router-link class='flex items-center' :to="{ name: 'world-map' }">
+          <i class='fa fa-arrow-left mr-2'></i>
+          <span class='sm:block hidden'>Back</span>
+        </router-link>
       </div>
-      <div v-else class="p-4 md:p-8 relative mt-12">
-        <div class="m-auto text-center">
-          <div class="w-full flex">
-            <img class="w-24 h-24 m-auto" src="/images/XYA.png" alt="XYA logo"
-                 style="animation: rotation 2s infinite linear;">
+      <div class='w-full text-center lg:text-3xl sm:text-xl text-xl font-bold absolute'>
+        <p>Staking</p>
+      </div>
+
+    </div>
+
+    <div class="w-full flex flex-wrap mt-24">
+      <div class='lg:px-8 lg:py-4 md:px-8 md:py-0 px-4 py-4 w-full h-full flex items-start justify-center overflow-y-auto'>
+
+        <div class='w-4/5 flex justify-center flex-wrap'>
+          <div v-if="stakingMounted" class="relative">
+            <div class="container items-center space-x-4 lg:flex-row">
+              <div class="flex mt-8 md:mt-0 flex-wrap">
+                <div class="w-full md:w-1/2 mt-4 md:mt-0">
+                  <p class="text-center text-primary-head">
+                    Gems left in pool
+                  </p>
+                  <p v-if="parseInt(rewardPool) === 0" class="font-poppins text-center">Fetching...</p>
+                  <p v-else class="font-poppins text-center">{{ parseFloat(rewardPool).toFixed(4) }} XYA</p>
+                </div>
+                <div class="w-full md:w-1/2 mt-4 md:mt-0">
+                  <p class="text-center text-primary-head">
+                    Gems actively extracting
+                  </p>
+                  <p v-if="parseInt(totalStaked) === 0" class="font-poppins text-center">Fetching...</p>
+                  <p class="font-poppins text-center">{{ parseFloat(totalStaked).toFixed(4) }} XYA</p>
+                </div>
+
+                <div class="w-full md:w-1/2 mt-4 md:mt-4">
+                  <p class="text-center text-primary-head">
+                    In wallet
+                  </p>
+                  <p class="font-poppins text-center">{{ walletBalance }} XYA</p>
+                </div>
+                <div class="w-full md:w-1/2 mt-4 md:mt-4">
+                  <p class="text-center text-primary-head">
+                    In extractor
+                  <p class="font-poppins text-center">{{ stakingBalance }} XYA</p>
+                </div>
+              </div>
+
+              <br>
+              <br>
+
+              <div class="flex flex-wrap">
+                <div class="w-full" v-if="parseInt(allowance) > 0">
+                  <button class="w-full mx-auto text-white xya-btn relative"
+                          @click="addAllowance(0)">
+                    Disable extractor <small class="hidden md:inline font-poppins">(contract will no longer have rights to
+                    use
+                    your XYA)</small> <i v-if="loading.allowance" class="fas fa-cog fa-spin"></i>
+                  </button>
+                </div>
+
+                <div class="w-full" v-else>
+                  <button class="w-full mx-auto text-white xya-btn relative"
+                          @click="addAllowance(999999999999.9999)">
+                    Enable extractor <i v-if="loading.maxAllowance" class="fas fa-cog fa-spin"></i>
+                  </button>
+                </div>
+              </div>
+
+              <br>
+
+              <div class="flex flex-wrap" v-if="parseInt(allowance) > 0">
+                <button v-if="rewardBalance === '0.0'"
+                        class="w-full text-white mx-auto xya-btn relative">
+                  No rewards yet
+                </button>
+                <button v-else class="w-full text-white mx-auto xya-btn relative"
+                        @click="withdrawEarnings(false)">
+                  Claim <span class="hidden md:inline">{{ rewardBalance }} XYA</span> <span
+                    class="md:hidden">rewards</span>
+                  <i v-if="loading.withdrawing" class="fas fa-cog fa-spin"></i>
+                </button>
+              </div>
+
+              <br>
+              <br>
+              <br>
+              <br>
+
+              <div v-if="parseInt(allowance) > 0">
+                <div class="flex flex-wrap">
+                  <small class="w-full text-primary-head">Max: {{ walletBalance }} XYA</small>
+
+                  <div class="w-1/3 md:w-2/3 pr-2">
+                    <input class="w-full border border-primary-head bg-transparent px-4 h-12" v-model="amountToStake"
+                           type="number">
+                  </div>
+                  <div class="w-2/3 md:w-1/3 pl-2">
+                    <button v-if="rewardBalance > 0" class="w-full border border-primary-head bg-transparent px-4 h-12"
+                            @click="withdrawEarnings(false)">
+                      <span v-if="loading.staking">Claiming</span>
+                      <span v-else>Claim rewards first!</span>
+                    </button>
+                    <button v-else class="w-full border border-primary-head bg-transparent px-4 h-12"
+                            @click="stake(false)">
+                      <span v-if="loading.staking">Depositing</span>
+                      <span v-else>Deposit</span>
+                    </button>
+                  </div>
+                </div>
+
+                <br>
+
+                <div class="flex flex-wrap">
+                  <small class="w-full text-primary-head">Max: {{ stakingBalance }} XYA</small>
+
+                  <div class="w-1/3 md:w-2/3 pr-2">
+                    <input class="w-full border border-primary-head bg-transparent px-4 h-12" v-model="amountToUnstake"
+                           type="number">
+                  </div>
+                  <div class="w-2/3 md:w-1/3 pl-2">
+                    <button v-if="rewardBalance > 0" class="w-full border border-primary-head bg-transparent px-4 h-12"
+                            @click="withdrawEarnings(false)">
+                      <span v-if="loading.staking">Claiming</span>
+                      <span v-else>Claim rewards first!</span>
+                    </button>
+                    <button v-else class="w-full border border-primary-head bg-transparent px-4 h-12"
+                            @click="unstake(false)">
+                      <span v-if="loading.unstaking">Withdrawing</span>
+                      <span v-else>Withdraw</span>
+                    </button>
+                  </div>
+
+                  <div class="text-center w-full">
+                    <small>A small 0.5% tax fee will be charged upon withdrawal. This fee will be sent back to the staking
+                      contract.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <br>
-          <p class="text-2xl">Loading...</p>
+          <div v-else class="p-4 md:p-8 relative mt-12">
+            <div v-if="installMetamask">
+              <div class="m-auto text-center">
+                <div class="w-full flex">
+                  <img class="w-24 h-24 m-auto" src="/images/GFXLogoHalf.svg" alt="XYA logo"
+                       style="animation: rotation 2s infinite linear;">
+                </div>
+                <br>
+                <p class="text-2xl">Please install metamask...</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -206,7 +173,6 @@ import Xangaea from "../plugins/artifacts/xangaea.json"
 import Staking from "../plugins/artifacts/staking.json"
 
 export default {
-  name: 'Staking',
   mixins: [wallet],
   computed: {
     ...mapGetters([
@@ -216,6 +182,11 @@ export default {
   },
   data() {
     return {
+      showSideBar: false,
+      navOpen: false,
+      BreadcrumbTitle: "Staking",
+      BreadcrumbSubTitle: "staking",
+      paddingTop: "",
       mainContract: {},
       stakingContract: {},
       dataInterval: undefined,
@@ -241,19 +212,22 @@ export default {
         stakingAll: false,
         unstaking: false,
         unstakingAll: false
-      }
+      },
+      installMetamask: false
     }
   },
   async mounted() {
-    this.mainContract = new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
-    this.stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
+    try {
+      await this.connectWallet()
 
-    await this.fetchData()
-    this.stakingMounted = true
+      this.mainContract = new ethers.Contract(Xangaea.address, Xangaea.abi, this.metaMaskWallet.signer)
+      this.stakingContract = new ethers.Contract(Staking.address, Staking.abi, this.metaMaskWallet.signer)
 
-    this.dataInterval = setInterval(() => {
-      this.fetchData()
-    }, 4000)
+      await this.fetchData()
+      this.stakingMounted = true
+    } catch (err) {
+      this.installMetamask = true
+    }
   },
   beforeDestroy() {
     clearInterval(this.dataInterval)
@@ -355,6 +329,8 @@ export default {
 
           await tx.wait(1)
 
+          await this.fetchData()
+
           this.loading.staking = false
           this.loading.stakingAll = false
         } else {
@@ -364,11 +340,11 @@ export default {
 
           await tx.wait(1)
 
+          await this.fetchData()
+
           this.loading.staking = false
           this.loading.stakingAll = false
         }
-
-        this.amountToStake = 0
 
       } catch (err) {
         if (err.code !== 4001) {
@@ -387,7 +363,7 @@ export default {
     async unstake(all) {
       this.error = ''
 
-      if (parseInt(this.stakingBalance) === 0) {
+      if ((!parseFloat(this.stakingBalance) > 0)) {
         this.error = "You don't have any staked XYA yet!"
         console.error("You don't have any staked XYA yet!")
         return
@@ -413,7 +389,8 @@ export default {
         this.loading.unstaking = false
         this.loading.unstakingAll = false
 
-        this.amountToUnstake = 0
+        await this.fetchData()
+
       } catch (err) {
         if (err.code !== 4001) {
           this.error = err.data ? err.data.message : err
@@ -427,7 +404,7 @@ export default {
     async withdrawEarnings() {
       this.error = ''
 
-      if (parseInt(this.rewardBalance) === 0) {
+      if (!(parseFloat(this.rewardBalance) > 0)) {
         this.error = "No earnings yet!"
         console.error("No earnings yet!")
         return
@@ -438,6 +415,8 @@ export default {
         const tx = await this.stakingContract.withdrawEarnings()
 
         await tx.wait(1)
+
+        await this.fetchData()
 
         this.loading.withdrawing = false
       } catch (err) {

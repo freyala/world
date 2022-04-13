@@ -15,10 +15,10 @@
         <div class="grab-attention-glowing"></div>
         <div class="grab-attention cursor-pointer st5">
           <div class="flex flex-1 items-center justify-center">
-            <p class="text-sm text-yellow-dark dark:text-yellow group-hover:text-gray-50 dark:group-hover:text-Dark-gray">
+            <p class="text-sm text-primary-head-dark dark:text-primary-head group-hover:text-gray-50 dark:group-hover:text-Dark-gray">
               Swap</p>
           </div>
-          <i class="las la-random text-xl text-yellow-dark dark:text-yellow group-hover:text-gray-50 dark:group-hover:text-Dark-gray"></i>
+          <i class="las la-random text-xl text-primary-head-dark dark:text-primary-head group-hover:text-gray-50 dark:group-hover:text-Dark-gray"></i>
         </div>
       </div>
     </transition>
@@ -28,10 +28,10 @@
         <div class="grab-attention-glowing"></div>
         <div class="grab-attention cursor-wait st5">
           <div class="flex flex-1 items-center justify-center">
-            <p class="text-sm text-yellow-dark dark:text-yellow group-hover:text-gray-50 dark:group-hover:text-Dark-gray">
+            <p class="text-sm text-primary-head-dark dark:text-primary-head group-hover:text-gray-50 dark:group-hover:text-Dark-gray">
               Swapping</p>
           </div>
-          <i class="las la-sync text-xl animate-spin text-yellow-dark dark:text-yellow group-hover:text-gray-50 dark:group-hover:text-Dark-gray"></i>
+          <i class="las la-sync text-xl animate-spin text-primary-head-dark dark:text-primary-head group-hover:text-gray-50 dark:group-hover:text-Dark-gray"></i>
         </div>
       </div>
     </transition>
@@ -41,10 +41,10 @@
         <div class="grab-attention-glowing"></div>
         <div class="grab-attention cursor-wait st5">
           <div class="flex flex-1 items-center justify-center">
-            <p class="text-sm text-yellow-dark dark:text-yellow group-hover:text-gray-50 dark:group-hover:text-Dark-gray">
+            <p class="text-sm text-primary-head-dark dark:text-primary-head group-hover:text-gray-50 dark:group-hover:text-Dark-gray">
               Fetching</p>
           </div>
-          <i class="las la-sync text-xl animate-spin text-yellow-dark dark:text-yellow group-hover:text-gray-50 dark:group-hover:text-Dark-gray"></i>
+          <i class="las la-sync text-xl animate-spin text-primary-head-dark dark:text-primary-head group-hover:text-gray-50 dark:group-hover:text-Dark-gray"></i>
         </div>
       </div>
     </transition>
@@ -53,9 +53,9 @@
       <div v-if="this.getBtnState({swap: 'swapped'})"
            class="flex w-28 st5 justify-between items-center border border-yellow glow-yellow-light-md space-x-1 p-2 pl-3 rounded-full dark:bg-Dark-gray bg-gray-100 cursor-default">
         <div class="flex flex-1 items-center justify-center">
-          <p class="text-sm text-yellow">Swapped</p>
+          <p class="text-sm text-primary-head">Swapped</p>
         </div>
-        <i class="las la-check-circle text-xl text-yellow"></i>
+        <i class="las la-check-circle text-xl text-primary-head"></i>
       </div>
     </transition>
   </div>

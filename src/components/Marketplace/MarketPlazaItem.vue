@@ -1,12 +1,12 @@
 <template>
     <div v-on:click='onClick()' class='market-item'>
         <div v-if='busy' style='background-color: rgba(0,0,0,0.5); z-index: 9999'
-            class='rounded-xl flex flex-col justify-center items-center absolute top-0 bottom-0 right-0 left-0 '>
+            class='flex flex-col justify-center items-center absolute top-0 bottom-0 right-0 left-0 '>
             <div class='w-16 h-16 opacity-75'>
                 <img class="w-12 h-12 m-auto" src="/images/XYA.png" alt="XYA logo"
                     style="animation: rotation 2s infinite linear;">
             </div>
-            <h2 class='text-base mt-4 text-white'>
+            <h2 class='text-base mt-4 text-primary-head'>
                 Processing...
             </h2>
         </div>
@@ -61,14 +61,13 @@
     .market-item {
         position: relative;
         width: 250px;
-        height: 400px;
+        height: 550px;
         box-shadow: 0 5px 10px rgba(#000, .8);
         transform-origin: center top;
         transform-style: preserve-3d;
         transform: translateZ(0);
         overflow: hidden;
         transition: .3s;
-        border-radius: 12px;
         cursor: pointer;
         box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.45);
     }
@@ -107,10 +106,10 @@
 
     .market-item img {
         padding: 8px;
-        border-radius: 12px;
         width: 100%;
         height: 100%;
         background-size: cover;
+        object-fit: cover;
     }
 
     .market-item:hover .caption {

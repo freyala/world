@@ -5,9 +5,9 @@
         <i class="las la-random text-xl dark:text-gray-300"></i>
         <p class="text-sm dark:text-gray-300">Swap</p>
       </div>
-      <div class="flex flex-col st5 dark:bg-Dark-gray bg-gray-100 rounded-2xl">
-        <div class="flex flex-col st5 dark:bg-Dark-gray bg-gray-100 rounded-2xl">
-          <div class="flex shadow-lg flex-col space-y-3 st5 dark:bg-Dark-gray bg-gray-100 p-3 rounded-2xl">
+      <div class="flex flex-col st5 dark:bg-Dark-gray bg-gray-100 absolute bottom-0 left-4 text-white opacity-80 pb-2">
+        <div class="flex flex-col st5 dark:bg-Dark-gray bg-gray-100 absolute bottom-0 left-4 text-white opacity-80 pb-2">
+          <div class="flex shadow-lg flex-col space-y-3 st5 dark:bg-Dark-gray bg-gray-100 p-3 absolute bottom-0 left-4 text-white opacity-80 pb-2">
             <SwapperToken0 />
             <SwapperToken1 />
           </div>

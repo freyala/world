@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap h-16 absolute z-50 top-0 w-full left-0 p-4 md:p-8 opacity-90">
     <div class="w-auto md:w-full flex flex-wrap">
-      <div class="hidden md:block w-auto rounded-full bg-dark p-2 z-20">
+      <div class="hidden md:block w-auto rounded-full bg-detail-bg p-2 z-20">
         <div @mouseenter="hoverUser = true" @mouseleave="hoverUser = false"
           class="w-16 md:w-24 h-16 md:h-24 cursor-pointer relative" @click="$modal.show('settings')">
           <img v-if="avatar !== undefined" class="rounded-full" :src="`https://frey.freyala.com/images/${avatar}.png`"
@@ -15,26 +15,26 @@
       </div>
       <div class="w-auto -ml-14 z-10 md:h-12 pt-3">
         <div class="my-auto w-full flex">
-          <p class="text-lg bg-dark pl-16">
+          <p class="text-lg bg-detail-bg pl-16">
             Balance
           </p>
-          <p class="w-auto md:text-lg bg-dark rounded-r-lg px-4">
+          <p class="w-auto md:text-lg bg-detail-bg  px-4">
             {{ loadingBalances ? 'fetching...' : `${walletBalance}` }} XYA
           </p>
         </div>
-        <div class="w-full my-auto py-1 flex rounded-r-lg">
-          <p class="text-lg bg-dark pl-16">
+        <div class="w-full my-auto py-1 flex ">
+          <p class="text-lg bg-detail-bg pl-16">
             Staked
           </p>
-          <p class="w-auto md:text-lg bg-dark rounded-r-lg px-4">
+          <p class="w-auto md:text-lg bg-detail-bg  px-4">
             {{ loadingBalances ? 'fetching...' : `${stakingBalance}` }} XYA
           </p>
         </div>
-        <div class="w-full my-auto flex rounded-r-lg">
-          <p class="text-lg bg-dark pl-16">
+        <div class="w-full my-auto flex ">
+          <p class="text-lg bg-detail-bg pl-16">
             Rewards
           </p>
-          <p class="w-auto md:text-lg bg-dark rounded-r-lg px-4">
+          <p class="w-auto md:text-lg bg-detail-bg  px-4">
             {{ loadingBalances ? 'fetching...' : `${rewardBalance}` }} XYA
           </p>
         </div>
@@ -45,7 +45,7 @@
     </div>
 
     <window name="settings" width="80%">
-      <div class="flex flex-wrap p-6 bg-dark h-full">
+      <div class="flex flex-wrap p-6 bg-detail-bg h-full">
         <div class="w-full flex mb-4">
           <div class="w-full flex">
             <div class="inline text-2xl">Select avatar:</div>
@@ -59,7 +59,7 @@
         </div>
         <div v-if="yourFrey.length > 0 && loading === false" class="w-full flex flex-wrap"
           style="max-height: 30vh; overflow: auto">
-          <div v-if="yourFrey[0] === 'You do not own any Frey NFT.'">
+          <div v-if="yourFrey[0] === 'You do not own any Barracks NFT.'">
             <p>
               You do not own any Frey NFT.
               <br>
@@ -74,7 +74,7 @@
 
             <div class="absolute top-0 flex left-0 w-full h-full opacity-0 hover:opacity-100 cursor-pointer"
               style="background: rgba(0,0,0,.5)">
-              <p class="m-auto text-white font-black">
+              <p class="m-auto text-primary-head font-black">
                 Select
               </p>
             </div>
@@ -196,7 +196,7 @@
               this.yourFrey = yourFrey.data
             })
         } else {
-          this.yourFrey.push('You do not own any Frey NFT.')
+          this.yourFrey.push('You do not own any Barracks NFT.')
         }
       },
       async removeFrey() {

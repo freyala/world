@@ -2,7 +2,7 @@
   <div class="relative">
     <div @click="toggleCustomRate"
          :class="checkCustom ? 'border-l-2 border-yellow' : 'hover:bg-gray-50 dark:hover:bg-slightDark'"
-         class="flex items-center justify-center cursor-pointer w-8 h-6 relative hover:bg-gray-50 dark:hover:bg-slightDark dark:bg-Dark-gray bg-gray-100 rounded-lg focus:outline-none">
+         class="flex items-center justify-center cursor-pointer w-8 h-6 relative hover:bg-gray-50 dark:hover:bg-slightDark dark:bg-Dark-gray bg-gray-100 focus:outline-none">
       <i class="las la-sliders-h text-lg absolute dark:text-gray-300"></i>
     </div>
 
@@ -18,13 +18,13 @@
     >
       <div class="absolute z-50 w-48 mt-2 right-0" v-if="isOpen">
         <div
-            class="bg-dark relative flex flex-col space-y-2 py-2 border-l-2 border-yellow shadow-lg rounded-lg p-1 px-2 bg-gray-100 dark:bg-slightDark">
+            class="bg-detail-bg relative flex flex-col space-y-2 py-2 border-l-2 border-yellow shadow-lg p-1 px-2 bg-gray-100 dark:bg-slightDark">
           <div class="flex items-center space-x-2">
             <p class="dark:text-gray-300">Custom Rate</p>
           </div>
           <InputWithValidation @keyup.enter="toggleCustomRate" :input="amount" :errors="errors"
-                               @catchInput="inputAmount" :rounded="'rounded-lg'" :placeholder="'%'" :errorTop="'pt-8'">
-            <p class="flex items-center justify-center text-xs z-30 right-0 absolute bg-gray-100 dark:bg-Dark-gray rounded-xl px-3 h-8">
+                               @catchInput="inputAmount" :rounded="'absolute bottom-0 left-4 text-white opacity-80 pb-2'" :placeholder="'%'" :errorTop="'pt-8'">
+            <p class="flex items-center justify-center text-xs z-30 right-0 absolute bg-gray-100 dark:bg-Dark-gray px-3 h-8">
               %</p>
           </InputWithValidation>
         </div>

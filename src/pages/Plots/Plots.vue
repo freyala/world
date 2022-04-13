@@ -1,10 +1,10 @@
 <template>
     <div style="width: 100vw; min-height:100vh; height: 100vh; z-index: 999"
-        class="flex flex-row w-full h-full relative bg-dark">
+        class="flex flex-row w-full h-full relative bg-detail-bg">
 
         <div v-show='loadingPlots' class='absolute top-0 right-0 left-0 bottom-0'
             style='background-image: url(/images/plots_loading.png); background-size: cover'>
-            <div class='absolute top-0 right-0 left-0 bottom-0 bg-dark opacity-30 flex items-center justify-center'>
+            <div class='absolute top-0 right-0 left-0 bottom-0 bg-detail-bg opacity-30 flex items-center justify-center'>
             </div>
 
             <div class='h-full w-full flex items-center justify-center'>
@@ -14,13 +14,13 @@
                             style="animation: rotation 2s infinite linear;">
                     </div>
                     <br>
-                    <p class="text-2xl text-white">Loading...</p>
+                    <p class="text-2xl text-primary-head">Loading...</p>
                 </div>
             </div>
         </div>
 
         <div v-show='!showSideBar' v-on:click='showSideBar = true'
-            class='h-16 w-8 dark-panel absolute flex items-center justify-center block xl:hidden rounded-r-xl'
+            class='h-16 w-8 dark-panel absolute flex items-center justify-center block xl:hidden '
             style='top: 50%; left: 0%; z-index: 1'>
             <i class='fa fa-arrow-right'></i>
         </div>
@@ -47,30 +47,31 @@
             </div>
             <div class='absolute sm:right-12 right-4'>
                 <i v-if='showPlotDetails && currentPlot.ownerOf' v-on:click='$modal.show("sendplot")'
-                    class='fas fa-paper-plane sm:text-xl text-base hover:text-white cursor-pointer mx-6'></i>
+                    class='fas fa-paper-plane sm:text-xl text-base hover:text-primary-head cursor-pointer mx-6'></i>
                 <i v-on:click='$modal.show("allowances")'
-                    class='fas fa-cog sm:text-xl text-base hover:text-white cursor-pointer'></i>
+                    class='fas fa-cog sm:text-xl text-base hover:text-primary-head cursor-pointer'></i>
             </div>
         </div>
+
         <div class='xl:relative absolute 2xl:w-1/5 xl:w-3/12 lg:w-5/12 sm:w-6/12 w-full h-full flex flex-row py-4 px-4 pt-16 overflow-y-auto overflow-x-hidden'
             v-bind:style='{"left": (showSideBar ? 0 : -600) + "px"}'
-            style="border-right: 1px solid #363636; z-index: 1; background-color: #282828; box-shadow: 8px 0px 8px rgba(0,0,0,0.15); transition: all 0.15s linear">
+            style="border-right: 1px solid #363636; z-index: 1; background-color: #ebecc5; box-shadow: 8px 0px 8px rgba(0,0,0,0.15); transition: all 0.15s linear">
 
             <div class='w-full h-full flex flex-col relative'>
-                <p v-if='!showPlotDetails' class="p-1 lg:text-xl text-lg mt-4 mb-1 text-white opacity-80">
+                <p v-if='!showPlotDetails' class="p-1 lg:text-xl text-lg mt-4 mb-1 text-primary-head opacity-80">
                     Neighbourhood
                 </p>
-                <div v-if='!showPlotDetails' class="w-full rounded-xl p-4 mb-4 dark-panel">
-                    <select class="p-1 rounded-xl cursor-pointer xya-input text-white xl:text-lg text-sm"
+                <div v-if='!showPlotDetails' class="w-full p-4 mb-4 dark-panel">
+                    <select class="p-1 cursor-pointer xya-input text-primary-head xl:text-lg text-sm"
                         style='width: 100%' name="neighbourhood" id="neighbourhood-select" v-model="neighbourhood">
                         <option v-for="(n, index) in allNeighbourhoods" :value="index" :key='index'>{{ n }}</option>
                     </select>
                 </div>
 
-                <p v-if='!showPlotDetails' class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
+                <p v-if='!showPlotDetails' class="p-1 lg:text-xl text-lg mb-1 text-primary-head opacity-80">
                     Filter
                 </p>
-                <div v-if='!showPlotDetails' class="w-full rounded-xl px-6 py-6 mb-4 text-white dark-panel">
+                <div v-if='!showPlotDetails' class="w-full px-6 py-6 mb-4 text-primary-head dark-panel">
                     <!-- <div class='flex flex-row mb-4 w-full'>
                         <div v-bind:class='{"checked": filters.onlySales}' v-on:click='applySaleFilters()'
                             class='checkbox mr-3 cursor-pointer'></div>
@@ -126,71 +127,71 @@
                     </div>
                     <div class='flex flex-row w-full text-center justify-center xl:mb-4 mb-0'>
                         <p v-on:click='resetPlotFilters()'
-                            class='w-5/10 flex items-center xl:text-base text-sm text-yellow hover:text-white cursor-pointer justify-start'>
+                            class='w-5/10 flex items-center xl:text-base text-sm text-primary-head hover:text-primary-head cursor-pointer justify-start'>
                             Reset Filters</p>
-                        <p v-on:click='applyPlotFilters()' class='xya-btn2 w-5/10 xl:text-base text-sm'>Apply Filters
+                        <p v-on:click='applyPlotFilters()' class='cursor-pointer w-5/10 xl:text-base text-sm'>Apply Filters
                         </p>
                     </div>
                 </div>
 
-                <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80" v-bind:class='{"mt-4": showPlotDetails}'>
+                <p class="p-1 lg:text-xl text-lg mb-1 text-primary-head opacity-80" v-bind:class='{"mt-4": showPlotDetails}'>
                     Unlocked Treasury
                 </p>
-                <div class="w-full rounded-xl p-4 mb-4 dark-panel">
+                <div class="w-full p-4 mb-4 dark-panel">
                     <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
                         <i class='fa fa-gear fa-spin'></i> Loading...
                     </p>
                     <div v-else class='w-full h-full flex items-center xl:text-lg text-sm flex flex-col'>
                         <template v-if='unlockedOldEmissions > 0'>
-                            <p class="w-full text-white opacity-20 text-sm">
+                            <p class="w-full text-primary-head text-sm">
                                 Old Emissions
                             </p>
-                            <hr class="w-full text-white opacity-20 my-2" />
+                            <hr class="w-full border-support-vis-black my-2" />
                             <div class="w-full flex flex-row mb-4">
-                                <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
+                                <p class='text-primary-head opacity-80 sm:w-3/10 w-5/10'>
                                     XYA
                                 </p>
                                 <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
                                     {{unlockedOldEmissions}}
                                 </p>
                                 <p v-on:click='withdrawUnlockedEmissions(true)'
-                                    class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                                    class='sm:w-5/10 w-3/10 ml-auto cursor-pointer text-center'>
                                     Collect
                                 </p>
                             </div>
                         </template>
                         
                         <div class="w-full flex flex-row items-center">
-                            <p class='text-white opacity-80 sm:w-3/10 w-5/10'>
+                            <p class='text-primary-head opacity-80 sm:w-3/10 w-5/10'>
                                 XYA
                             </p>
                             <p class='sm:text-left text-center sm:w-3/10 w-5/10'>
                                 {{unlockedEmissions}}
                             </p>
                             <p v-on:click='withdrawUnlockedEmissions()'
-                                class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                                class='sm:w-5/10 w-3/10 ml-auto cursor-pointer text-center'>
                                 Collect
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <p v-if='getLimboAssetTotalCount() > 0' class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
+                <p v-if='getLimboAssetTotalCount() > 0' class="p-1 lg:text-xl text-lg mb-1 text-primary-head opacity-80">
                     Stuck NFTS
                 </p>
                 <div :key='keys.limboAssets' v-if='getLimboAssetTotalCount() > 0'
-                    class="w-full rounded-xl p-4 mb-4 dark-panel">
+                    class="w-full p-4 mb-4 dark-panel">
                     <div class='my-4' v-for='(asset, index) in limboAssets' :key='index'>
                         <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
                             <i class='fa fa-gear fa-spin'></i> Loading...
                         </p>
                         <div v-else class='w-full h-full flex items-center xl:text-lg text-sm'>
-                            <p class='text-white opacity-80 sm:w-6/10 w-10/10'>
+                            <p class='text-primary-head opacity-80 sm:w-6/10 w-10/10'>
                                 {{asset.count}} {{asset.name}}
                             </p>
 
                             <p v-on:click='withdrawLimboNFTs(asset.address, asset.userNFTs)'
-                                class='sm:w-5/10 w-3/10 ml-auto xya-btn2 text-center'>
+                                class='sm:w-5/10 w-3/10 ml-auto cursor-pointer text-center'>
                                 Withdraw
                             </p>
                         </div>
@@ -198,7 +199,7 @@
                 </div>
 
                 <div class='flex w-full items-center h-auto'>
-                    <p class="p-1 lg:text-xl text-lg mb-1 text-white opacity-80">
+                    <p class="p-1 lg:text-xl text-lg mb-1 text-primary-head opacity-80">
                         Your Plots
                     </p>
                     <p v-on:click='claimAllPlotsEmissions()'
@@ -206,7 +207,7 @@
                         Claim All
                     </p>
                 </div>
-                <div class="w-full rounded-xl p-4 mb-4 dark-panel">
+                <div class="w-full p-4 mb-4 dark-panel">
                     <p v-if='loadingMyPlots' class="p-1 xl:text-lg text-sm opacity-80">
                         <i class='fa fa-gear fa-spin mt-2'></i> Loading...
                     </p>
@@ -214,7 +215,7 @@
                         You have no plots.
                     </p>
                     <div v-for='(neighbourhood, index) in myNeighbourhoods' :key='index'>
-                        <p class="p-1 lg:text-lg text-sm mb-1 text-white opacity-80">
+                        <p class="p-1 lg:text-lg text-sm mb-1 text-primary-head opacity-80">
                             {{neighbourhood}}
                         </p>
                         <p v-on:click='openPlot(plot)' v-for='plot in getUserPlotsByNeighbourhood(neighbourhood)'
@@ -223,7 +224,7 @@
                             {{ plot.isEmitting ? plot.emissions : 0.00 }} XYA
 
                             <i v-if='plot.token_id === currentPlot.token_id && showPlotDetails'
-                                class='fas fa-map-marker-alt lg:text-lg text-sm absolute right-4 flex top-0 items-center text-white opacity-80'></i>
+                                class='fas fa-map-marker-alt lg:text-lg text-sm absolute right-4 flex top-0 items-center text-primary-head opacity-80'></i>
                             <i v-if='plot.isEmitting'
                                 class='fa fa-bolt absolute lg:text-lg text-sm absoluteflex top-0 items-center'
                                 v-bind:class='{"right-12": showPlotDetails, "right-4": !showPlotDetails}'></i>
@@ -251,7 +252,7 @@
                     v-for="(plot, index) in plotData" :key='plot.plotId' class="absolute"
                     style='width: 220px; height: 220px'
                     :style="'top: ' + (parseInt(index / 10) * 220) + 'px; left: ' + ((index % 10) * 220) + 'px'">
-                    <div v-if='!plot.isFiltered' class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-dark opacity-50'>
+                    <div v-if='!plot.isFiltered' class='z-50 absolute top-0 right-0 bottom-0 left-0 bg-detail-bg opacity-50'>
 
                     </div>
 
@@ -268,7 +269,7 @@
                     <img class="absolute top-0 left-0 w-full h-full"
                         :src="getPlotAttributeImage('Crime', plot.neighbourhood, plot.crimeRate)" alt="Crime">
 
-                    <div class="opacity-50 absolute top-0 left-0 text-white p-2 cursor-pointer w-full h-full"
+                    <div class="opacity-50 absolute top-0 left-0 text-primary-head p-2 cursor-pointer w-full h-full"
                         style="line-height: 0.75;pointer-events: none;">
                     </div>
 
@@ -293,7 +294,7 @@
             </div>
         </div>
 
-        <div v-show='showPlotDetails' class='absolute bottom-0 top-0 left-0 right-0 bg-dark'>
+        <div v-show='showPlotDetails' class='absolute bottom-0 top-0 left-0 right-0 bg-detail-bg'>
 
         </div>
 
@@ -313,7 +314,7 @@
         </transition>
 
         <window height='10%' width='80%' name='allowances'>
-            <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
+            <div class="flex flex-wrap justify-center p-6 px-12 bg-detail-bg h-full">
                 <div class="w-full text-center">
                     <div class="sm:text-3xl text-xl">Contract Manager</div>
                 </div>
@@ -324,20 +325,20 @@
                 <hr class='w-full my-4' />
 
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
-                    <span class='text-white opacity-80 mr-1 sm:text-base text-xs'>'Plot Handler' Contract</span>
+                    <span class='text-primary-head opacity-80 mr-1 sm:text-base text-xs'>'Plot Handler' Contract</span>
 
                     <p v-on:click='setTokenAllowance(plotContract.address, allowances.plotHandler ? 0 : 999999999999);'
-                        class='sm:w-2/10 w-5/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='sm:w-2/10 w-5/10 cursor-pointer text-center xl:text-lg text-sm ml-auto'>
                         <template v-if='!allowances.plotHandler'>Enable</template>
                         <template v-else>Disable</template>
                     </p>
                 </div>
 
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
-                    <span class='text-white opacity-80 mr-1 sm:text-base text-xs'>'Plot Emitter' Contract</span>
+                    <span class='text-primary-head opacity-80 mr-1 sm:text-base text-xs'>'Plot Emitter' Contract</span>
 
                     <p v-on:click='setTokenAllowance(plotEmitterContract.address, allowances.plotEmitter ? 0 : 999999999999,  CONSTANTS.XYA_ONE)'
-                        class='sm:w-2/10 w-5/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='sm:w-2/10 w-5/10 cursor-pointer text-center xl:text-lg text-sm ml-auto'>
                         <template v-if='!allowances.plotEmitter'>Enable</template>
                         <template v-else>Disable</template>
                     </p>
@@ -346,7 +347,7 @@
         </window>
 
         <window height='10%' width='80%' name='sendplot'>
-            <div class="flex flex-wrap justify-center p-6 px-12 bg-dark h-full">
+            <div class="flex flex-wrap justify-center p-6 px-12 bg-detail-bg h-full">
                 <div class="w-full text-center">
                     <div class="sm:text-3xl text-2xl">Send Plot</div>
                 </div>
@@ -356,13 +357,13 @@
                 <hr class='w-full my-4 opacity-30' />
                 <div class='w-full mx-auto flex flex-row mt-2'>
                     <p class='text-xl text-start w-4/10'>Receiver Address: </p>
-                    <input class='w-6/10 text-black px-2 rounded-lg' type="text" v-model='plotsSendTo' />
+                    <input class='w-6/10 text-black px-2 absolute bottom-0 left-4 text-white opacity-80 pb-2' type="text" v-model='plotsSendTo' />
                 </div>
                 <div class="w-full flex flex-row items-center mt-6">
                     <p @click="$modal.hide('sendplot')"
-                        class='ml-auto w-3/12 text-base cursor-pointer hover:text-white'>Cancel</p>
+                        class='ml-auto w-3/12 text-base cursor-pointer hover:text-primary-head'>Cancel</p>
                     <button v-on:click="sendPlotNow(plotsSendTo, currentPlot.token_id, currentPlot.neighbourhood)"
-                        type="button" class="w-3/12 xya-btn2 text-base">
+                        type="button" class="w-3/12 cursor-pointer text-base">
                         <span>Confirm</span>
                     </button>
                 </div>
@@ -477,7 +478,7 @@
                     'Carroway District',
                     'Arixa Estate',
                     'Josiro Retreat',
-                    'Frey Oasis',
+                    'Barracks Oasis',
                     'Xera Settlement (YANG)',
                     'Sora Gardens (YANG)',
                     'Halis Ruins (YIN)',
@@ -568,7 +569,7 @@
                         userNFTs: [],
                     },
                     {
-                        name: "The Frey",
+                        name: "The Barracks",
                         address: "0xd9d6b8c7f63cc2f5d5df5f3a77b2f596a66230d2",
                         count: 0,
                         userNFTs: [],
@@ -1172,7 +1173,6 @@
 <style>
     .plot-owner {
         border: 6px solid rgba(255, 255, 255, 90%);
-        border-radius: 3px;
     }
 
     .slide-in-enter-active,

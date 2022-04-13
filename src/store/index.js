@@ -19,6 +19,10 @@ export default new Vuex.Store({
     },
 
     state: {
+        USER: {
+            TOKEN: [],
+            NFT: []
+        },
         FIRST_TIME: true,
         CHAIN_STATUS: '',
         CHAIN_ID: 0,
@@ -43,6 +47,12 @@ export default new Vuex.Store({
     },
 
     getters: {
+        userTokens(state) {
+            return state.USER.TOKEN
+        },
+        userNFT(state) {
+            return state.USER.NFT
+        },
         firstTime(state) {
             return state.FIRST_TIME
         },
@@ -94,6 +104,12 @@ export default new Vuex.Store({
     },
 
     mutations: {
+        SET_USER_TOKEN(state, value) {
+            state.USER.TOKEN = value
+        },
+        SET_USER_NFT(state, value) {
+            state.USER.NFT = value
+        },
         SET_FIRST_TIME(state, value) {
             state.FIRST_TIME = value
         },

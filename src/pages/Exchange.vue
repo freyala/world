@@ -1,7 +1,7 @@
 <template>
   <section style="background: url('/images/map/worldmap_small.png') no-repeat; background-size: cover; min-height: 100vh"
            class="flex p-4 md:p-16 lg:px-32">
-    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto" class="screen rounded-2xl w-full">
+    <div style="background: #1c1c1c; z-index: 9999; overflow-y: auto" class="screen absolute bottom-0 left-4 text-white opacity-80 pb-2w-full">
       <div id="exchange" class="relative max-w-screen-xl mx-auto items-center flex flex-1 justify-center xl:px-0 px-3 text-gray-500">
 
         <div v-if="this.getStepState('swap')">

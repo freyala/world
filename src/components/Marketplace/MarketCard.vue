@@ -52,7 +52,6 @@ export default {
         transform: translateZ(0);
         overflow: hidden;
         transition: .3s;
-        border-radius: 6px;
         cursor: pointer;
         box-shadow: 0px 0px 36px rgba(0, 0, 0, 0.5);
     }

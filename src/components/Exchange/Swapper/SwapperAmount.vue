@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col rounded-xl mt-3">
+  <div class="flex flex-col mt-3">
     <div class="flex items-center space-x-3">
-      <InputWithValidation :input="amount" :errors="errors" @catchInput="inputAmount" :rounded="'rounded-xl'"
+      <InputWithValidation :input="amount" :errors="errors" @catchInput="inputAmount" :rounded="'absolute bottom-0 left-4 text-white opacity-80 pb-2'"
                            :placeholder="'Amount...'" :errorTop="'pt-10'">
-        <p class="flex items-center justify-center text-xs z-30 right-0 absolute bg-gray-100 dark:bg-Dark-gray rounded-xl px-3 h-10">
+        <p class="flex items-center justify-center text-xs z-30 right-0 absolute bg-gray-100 dark:bg-Dark-gray px-3 h-10">
           {{ this.getToken()['token1'].Symbol }}</p>
       </InputWithValidation>
 
       <div class="flex flex-1 items-center justify-end group-scope">
         <div @click="setMax()"
-             class="flex h-10 items-center group-scope-hover:bg-yellow text-yellow-dark dark:text-yellow border border-yellow-dark dark:border-yellow cursor-pointer px-3 rounded-xl ss:space-x-0 xs:space-x-2">
+             class="flex h-10 items-center group-scope-hover:bg-primary-head text-primary-head-dark dark:text-primary-head border border-yellow-dark dark:border-yellow cursor-pointer px-3 ss:space-x-0 xs:space-x-2">
           <i class="las la-wallet ss:hidden xs:block text-xl dark:group-scope-hover:text-Dark-gray group-scope-hover:text-gray-100"></i>
           <p class="dark:group-scope-hover:text-Dark-gray group-scope-hover:text-gray-100">MAX</p>
         </div>
@@ -18,10 +18,10 @@
     <div class="flex space-x-2 items-center pt-2">
       <div class="flex items-center space-x-1 px-1">
         <p class="text-xs dark:text-gray-300">1</p>
-        <p class="text-xs text-yellow">{{ this.getToken()['token1'].Symbol }}</p>
+        <p class="text-xs text-primary-head">{{ this.getToken()['token1'].Symbol }}</p>
         <p class="text-xs dark:text-gray-300">=</p>
         <p class="text-xs dark:text-gray-300">{{ rate }}</p>
-        <p class="text-xs text-yellow">{{ this.getToken()['token2'].Symbol }}</p>
+        <p class="text-xs text-primary-head">{{ this.getToken()['token2'].Symbol }}</p>
       </div>
     </div>
   </div>

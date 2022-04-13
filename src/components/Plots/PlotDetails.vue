@@ -1,33 +1,33 @@
 <template>
-    <div class='h-full 2xl:w-4/5 xl:w-9/12 w-full bg-dark overflow-x-hidden overflow-y-auto pb-28'
-        style='background-color: #222222; right: 0'>
+    <div class='h-full 2xl:w-4/5 xl:w-9/12 w-full bg-primary-bg overflow-x-hidden overflow-y-auto pb-28'
+        style='right: 0'>
         <!--PLOT HEADER-->
         <div
             class='2xl:w-9/12 lg:w-11/12 w-full flex sm:flex-row flex-col 2xl:px-12 h-auto sm:px-14 px-6 mx-auto sm:mt-16 mt-12 panel-limiter'>
 
             <!--PLOT-->
             <div class='relative sm:w-6/12 w-full lg:mr-6 mr-4'>
-                <img class="w-full h-full rounded-xl" src="/images/plots/base/0.png" alt="Base land">
-                <img class="absolute top-0 left-0 w-full h-full rounded-xl"
+                <img class="w-full h-full absolute bottom-0 left-4 text-white opacity-80 pb-2" src="/images/plots/base/0.png" alt="Base land">
+                <img class="absolute top-0 left-0 w-full h-full absolute bottom-0 left-4 text-white opacity-80 pb-2"
                     :src="`/images/plots/soil_type/${plot.soilType}.png`" alt="Soil Type">
-                <img class="absolute top-0 left-0 w-full h-full rounded-xl"
+                <img class="absolute top-0 left-0 w-full h-full absolute bottom-0 left-4 text-white opacity-80 pb-2"
                     :src="getPlotAttributeImage('Level', plot.neighbourhood, plot.level)" alt="Level">
-                <img class="absolute top-0 left-0 w-full h-full rounded-xl"
+                <img class="absolute top-0 left-0 w-full h-full absolute bottom-0 left-4 text-white opacity-80 pb-2"
                     :src="getPlotAttributeImage('Fertility', plot.neighbourhood, plot.fertility)" alt="Fertility">
-                <img class="absolute top-0 left-0 w-full h-full rounded-xl"
+                <img class="absolute top-0 left-0 w-full h-full absolute bottom-0 left-4 text-white opacity-80 pb-2"
                     :src="getPlotAttributeImage('Crime', plot.neighbourhood, plot.crimeRate)" alt="Crime">
             </div>
 
             <!--PLOT ATTRIBUTES-->
             <div
-                class='sm:w-7/12 w-full lg:ml-6 sm:ml-4 ml-0 sm:mt-0 mt-12 rounded-xl xl:py-6 py-3 xl:px-10 px-5 dark-panel flex flex-col items-center'>
+                class='sm:w-7/12 w-full lg:ml-6 sm:ml-4 ml-0 sm:mt-0 mt-12 xl:py-6 py-3 xl:px-10 px-5 dark-panel flex flex-col items-center'>
                 <h2 class='xl:text-3xl sm:text-2xl text-xl w-full mb-2'>Plot #{{ plot.token_id }}</h2>
-                <p class='text-white w-full xl:text-sm text-xs opacity-30'>
+                <p class='text-primary-head w-full xl:text-sm text-xs opacity-30'>
                     Owned by {{ getPlotOwner(plot.plotOwner)}}
                 </p>
                 <div class='w-full flex flex-row xl:mb-4 lg:mb-3 mb-2'
                     v-bind:class='{"mt-auto": !plot.ownerOf, "mt-2": plot.ownerOf}'>
-                    <p class='text-white sm:w-8/10 w-6/10 xl:text-lg text-small text-sm opacity-80'>
+                    <p class='text-primary-head sm:w-8/10 w-6/10 xl:text-lg text-small text-sm opacity-80'>
                         Soil
                     </p>
                     <p class='xl:text-lg lg:text-base text-sm sm:w-2/10 w-4/10 text-right'>
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class='w-full flex flex-row xl:mb-4 lg:mb-3 sm:mb-2 mb-2'>
-                    <p class='text-white sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
+                    <p class='text-primary-head sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
                         Fertility
                     </p>
                     <p class='xl:text-lg text-sm sm:w-2/10 w-4/10 text-right'>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class='w-full flex flex-row xl:mb-4 lg:mb-3 mb-2'>
-                    <p class='text-white sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
+                    <p class='text-primary-head sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
                         Defense
                     </p>
                     <p class='xl:text-lg lg:text-base text-sm sm:w-2/10 w-4/10 text-right'>
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class='w-full flex flex-row xl:mb-4 lg:mb-3 mb-2'>
-                    <p class='text-white sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
+                    <p class='text-primary-head sm:w-8/10 w-6/10 xl:text-lg lg:text-base text-sm opacity-80'>
                         CRIME
                     </p>
                     <p class='xl:text-lg lg:text-base text-sm text-sm sm:w-2/10 w-4/10 text-right'>
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class='w-full flex flex-row xl:mb-4 lg:mb-3 mb-2'>
-                    <p class='text-white sm:w-9/10 w-5/10 xl:text-lg lg:text-base text-sm opacity-80'>
+                    <p class='text-primary-head sm:w-9/10 w-5/10 xl:text-lg lg:text-base text-sm opacity-80'>
                         LEVEL
                     </p>
                     <p class='xl:text-lg lg:text-base text-sm sm:w-1/10 w-5/10 text-left text-right'>
@@ -86,7 +86,7 @@
                         Maximum Level Reached
                     </p>
                     <p v-if='plotData.level < 9' v-on:click='$modal.show("upgradeplot")'
-                        class='w-5/10 xya-btn2 text-center xl:text-lg sm:text-lg text-xs'>
+                        class='w-5/10 cursor-pointer text-center xl:text-lg sm:text-lg text-xs cursor-pointer'>
                         <span>Level Up</span>
                     </p>
                 </div>
@@ -98,31 +98,31 @@
         <!--PLOT EMITTER-->
         <div :key='keys.emitter' v-if='plot.ownerOf'
             class='2xl:w-9/12 lg:w-11/12 w-full 2xl:px-12 sm:px-14 px-6 flex flex-col mx-auto h-auto mt-12'>
-            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-4'>
+            <h2 class='w-full text-primary-head xl:text-3xl sm:text-2xl text-xl opacity-80 mb-4'>
                 XYA Emitter
             </h2>
-            <div class='w-full h-full rounded-xl sm:px-8 px-4 sm:py-6 py-6 dark-panel'>
+            <div class='w-full h-full sm:px-8 px-4 sm:py-6 py-6 dark-panel'>
                 <div v-if='!emitterStarted' class='w-full h-auto flex flex-row justify-start items-center mb-2'>
-                    <p class='text-white lg:text-2xl sm:text-lg text-base opacity-80 sm:w-5/10 w-8/10'>
+                    <p class='text-primary-head lg:text-2xl sm:text-lg text-base opacity-80 sm:w-5/10 w-8/10'>
                         Inactive
                     </p>
                     <p class='text-xl sm:w-3/10 w-1/10'>
 
                     </p>
                     <p v-if='plot.ownerOf' v-on:click='togglePlotEmitter(plot)'
-                        class='sm:w-2/10 w-3/10 xya-btn2 text-center xl:text-xl sm:text-lg text-sm'>
+                        class='sm:w-2/10 w-3/10 cursor-pointer text-center xl:text-xl sm:text-lg text-sm'>
                         Start
                     </p>
                 </div>
                 <div v-else class='w-full h-auto flex flex-row justify-start items-center mb-2'>
-                    <p class='text-white lg:text-2xl text-lg opacity-80  w-5/10'>
+                    <p class='text-primary-head lg:text-2xl text-lg opacity-80  w-5/10'>
                         Active
                     </p>
                     <p class='text-xl w-3/10'>
 
                     </p>
                     <p v-if='plot.ownerOf' v-on:click='togglePlotEmitter(plot)'
-                        class='sm:w-2/10 w-4/10 sm:ml-0 ml-10 xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
+                        class='sm:w-2/10 w-4/10 sm:ml-0 ml-10 cursor-pointer text-center xl:text-xl sm:text-lg text-xs'>
                         Stop
                     </p>
                 </div>
@@ -130,7 +130,7 @@
                 <hr class='lg:my-6 my-4' style='color: #00000055' />
 
                 <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
-                    <p class='text-white xl:text-xl lg:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
+                    <p class='text-primary-head xl:text-xl lg:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
                         Emission Rate
                     </p>
                     <p :key='emissionsPerDay'
@@ -139,12 +139,12 @@
                     </p>
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
                 </div>
-                <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
+                <p class='text-primary-head sm:text-sm text-xs opacity-40 mb-2'>
                     ~ {{ (emissionsPerDay / 24).toFixed(2) }} XYA / hour
                 </p>
 
                 <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
-                    <p class='text-white xl:text-xl lg:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
+                    <p class='text-primary-head xl:text-xl lg:text-lg text-sm opacity-80 sm:w-3/10 w-5/10'>
                         Treasury
                     </p>
                     <p class='xl:text-xl lg:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-3/10 w-5/10'>
@@ -157,23 +157,23 @@
                     </p>
                     <div class='w-2/10 mx-4 sm:block hidden'></div>
                 </div>
-                <p class='text-white sm:text-sm text-xs opacity-40 mb-2'>
+                <p class='text-primary-head sm:text-sm text-xs opacity-40 mb-2'>
                     ~ {{ ((emissionsPerDay * (1 - emissionUnlockRate))).toFixed(2) }} XYA / day
                 </p>
 
                 <div class='w-full h-auto flex flex-row justify-start items-center sm:mb-2 mb-0'>
-                    <p class='text-white xl:text-xl lg:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-3/10'>
+                    <p class='text-primary-head xl:text-xl lg:text-lg sm:text-sm text-xs opacity-80 sm:w-3/10 w-3/10'>
                         Emissions
                     </p>
                     <p class='xl:text-xl lg:text-lg sm:text-sm text-xs sm:text-left text-right sm:w-5/10 w-3/10'>
                         {{ emissions.toFixed(2) }} / {{ emissionMaxAllowed.toFixed(2) }} XYA
                     </p>
                     <p v-if='parseInt(emissions) > 0 && plot.ownerOf' v-on:click='collectPlotEmissions(plot)'
-                        class='sm:w-2/10 w-3/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg text-xs'>
+                        class='sm:w-2/10 w-3/10 ml-auto cursor-pointer text-center xl:text-xl sm:text-lg text-xs'>
                         Collect
                     </p>
                 </div>
-                <p class='text-white sm:text-sm text-xs opacity-40 sm:mb-2 mb-0'>
+                <p class='text-primary-head sm:text-sm text-xs opacity-40 sm:mb-2 mb-0'>
                     ~ {{ ((emissionsPerDay * emissionUnlockRate)).toFixed(2) }} XYA / Day
                 </p>
                 <p v-if='emissions >= emissionMaxAllowed && emitterStarted' style='color: rgba(200,150,0,1)'
@@ -190,58 +190,58 @@
         <div :key='keys.inventorySlots'
             class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
             <div class="w-full h-auto flex items-center">
-                <h2 class='w-3/12 text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
+                <h2 class='w-3/12 text-primary-head xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
                     Plot Slots
                 </h2>
 
                 <p v-on:click='inventoryTab = "CURRENT"' v-bind:class='{"opacity-80": inventoryTab === "CURRENT"}'
-                    class="text ml-auto mr-4 xl:text-2xl sm:text-xl text-lg opacity-20 cursor-pointer">
+                    class="text ml-auto mr-4 xl:text-2xl sm:text-xl text-lg cursor-pointer">
                     Current
                 </p>
                 <p v-on:click='inventoryTab = "OLD"' v-bind:class='{"opacity-80": inventoryTab === "OLD"}'
-                    class="text xl:text-2xl sm:text-xl text-lg opacity-20 text-xl cursor-pointer">
+                    class="text xl:text-2xl sm:text-xl text-lg text-xl cursor-pointer">
                     Old
                 </p>
             </div>
 
             <template v-if='inventoryTab === "CURRENT"'>
                 <div v-for='(slot, index) in simpleInventorySlots' :key='index'
-                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    class='w-full h-full my-2 py-4 dark-panel sm:px-8 px-4 relative'>
                     <div class='w-full h-auto flex flex-row justify-start items-center'>
                         <template v-if='slot.token'>
                             <div v-on:click='prepareSlotPickerModal(index)'
                                 v-bind:class='{"dfk": slot.tokenId === "0x8Fbf172AF6ef78e00202AF56fa0De9A0C0ea4b80"}'
-                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
-                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-lazy='slot.image' />
+                                class='plot-slot w-1/10 empty mr-6 bg-contain relative'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full absolute bottom-0 left-0 text-white opacity-80' v-lazy='slot.image' />
                             </div>
                             <div class='sm:w-7/10 w-5/10 h-full flex-col'>
-                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-primary-head h-full sm:text-xl text-sm opacity-80'>
                                     Slot
                                     {{index + 1}}</h2>
-                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                <h2 v-else class='text-primary-head h-full sm:text-xl text-xs opacity-80'>
                                     {{ getTokenName(slot) }}
                                     #{{ slot.tokenId }}</h2>
-                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                <p v-if='slot.token * 1 === 0' class='text-primary-head h-full opacity-30 sm:text-sm text-xs'>
                                     Empty
                                 </p>
                                 <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
                                 </p>
                             </div>
                             <div v-if='slot.token * 1 === 0 && plot.ownerOf' v-on:click='prepareSlotPickerModal(index)'
-                                class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
+                                class='sm:w-2/10 w-4/10 ml-auto cursor-pointer text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
                                 Add NFT
                             </div>
                             <div v-on:click='withdrawNFTFromSlot(plot, index)' v-else-if='plot.ownerOf'
-                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-primary-head'>
                                 Remove NFT
                             </div>
                         </template>
                         <template v-else>
                             <div
-                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                class='plot-slot w-1/10 empty mr-6 bg-contain flex items-center justify-center text-2xl'>
                                 <i class='fa fa-gear fa-spin'></i>
                             </div>
-                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                            <div class='w-9/10 text-center h-full empty mr-6 bg-contain'>
                                 Loading...
                             </div>
                         </template>
@@ -250,42 +250,42 @@
             </template>
 
             <template v-if='inventoryTab === "OLD"'>
-                <p class="text-white opacity-80 lg:text-xl sm:text-lg text-sm" v-if='oldEmitterStarted'>The old emitter
-                    is still active. Click <a v-on:click='deactivateOldEmitter(plot)' class="text-yellow"
+                <p class="text-primary-head opacity-80 lg:text-xl sm:text-lg text-sm" v-if='oldEmitterStarted'>The old emitter
+                    is still active. Click <a v-on:click='deactivateOldEmitter(plot)' class="text-primary-head"
                         href='javascript:;'>here</a> to
-                    deactive it!</p>
+                    deactivate it!</p>
                 <div v-for='(slot, index) in simpleOldInventorySlots' :key='index'
-                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    class='w-full h-full my-2 py-4 dark-panel sm:px-8 px-4 relative'>
                     <div class='w-full h-auto flex flex-row justify-start items-center'>
                         <template v-if='slot.token'>
                             <div v-bind:class='{"dfk": slot.tokenId === "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C"}'
-                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
-                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl' v-lazy='slot.image' />
+                                class='plot-slot w-1/10 empty mr-6 bg-contain relative'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full absolute bottom-0 left-0 text-white opacity-80' v-lazy='slot.image' />
                             </div>
                             <div class='sm:w-7/10 w-5/10 h-full flex-col'>
-                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-primary-head h-full sm:text-xl text-sm opacity-80'>
                                     Slot
                                     {{index + 1}}</h2>
-                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                <h2 v-else class='text-primary-head h-full sm:text-xl text-xs opacity-80'>
                                     {{ getTokenName(slot) }}
                                     #{{ slot.tokenId }}</h2>
-                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                <p v-if='slot.token * 1 === 0' class='text-primary-head h-full opacity-30 sm:text-sm text-xs'>
                                     Empty
                                 </p>
                                 <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
                                 </p>
                             </div>
                             <div v-on:click='withdrawNFTFromSlot(plot, index, true)' v-if='plot.ownerOf'
-                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-primary-head'>
                                 Remove NFT
                             </div>
                         </template>
                         <template v-else>
                             <div
-                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                class='plot-slot w-1/10 empty mr-6 bg-contain flex items-center justify-center text-2xl'>
                                 <i class='fa fa-gear fa-spin'></i>
                             </div>
-                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                            <div class='w-9/10 text-center h-full empty mr-6 bg-contain'>
                                 Loading...
                             </div>
                         </template>
@@ -296,28 +296,28 @@
         </div>
 
         <div class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
-            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
+            <h2 class='w-full text-primary-head xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
                 Special Slot
             </h2>
             <template v-if='inventoryTab === "CURRENT"'>
                 <div v-for='(slot, index) in specialInventorySlots' :key='index'
-                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    class='w-full h-full my-2 py-4 dark-panel sm:px-8 px-4 relative'>
                     <div v-on:click='prepareSlotPickerModal(index + 3)'
                         class='w-full h-auto flex flex-row justify-start items-center relative'>
                         <template v-if='slot.token'>
                             <div class='absolute plot-slot dfk z-50' style='left: -3px;'></div>
-                            <div class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
-                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl'
+                            <div class='plot-slot w-1/10 empty mr-6 bg-contain relative'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full absolute bottom-0 left-0 text-white opacity-80'
                                     v-bind:src='slot.image' />
                             </div>
                             <div class='sm:w-7/10 w-5/10 h-full flex-col'>
-                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-primary-head h-full sm:text-xl text-sm opacity-80'>
                                     Slot
                                     {{index + 4}}</h2>
-                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                <h2 v-else class='text-primary-head h-full sm:text-xl text-xs opacity-80'>
                                     {{ getTokenName(slot) }}
                                     #{{ slot.tokenId }}</h2>
-                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                <p v-if='slot.token * 1 === 0' class='text-primary-head h-full opacity-30 sm:text-sm text-xs'>
                                     Empty
                                 </p>
                                 <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
@@ -325,20 +325,20 @@
                             </div>
                             <div v-if='slot.token * 1 === 0 && plot.ownerOf'
                                 v-on:click='prepareSlotPickerModal(index + 3)'
-                                class='sm:w-2/10 w-4/10 ml-auto xya-btn2 text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
+                                class='sm:w-2/10 w-4/10 ml-auto cursor-pointer text-center xl:text-xl sm:text-lg sm:text-sm text-xs'>
                                 Add NFT
                             </div>
                             <div v-on:click='withdrawNFTFromSlot(plot, index + 3)' v-else-if='plot.ownerOf'
-                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-primary-head'>
                                 Remove NFT
                             </div>
                         </template>
                         <template v-else>
                             <div
-                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                class='plot-slot w-1/10 empty mr-6 bg-contain flex items-center justify-center text-2xl'>
                                 <i class='fa fa-gear fa-spin'></i>
                             </div>
-                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                            <div class='w-9/10 text-center h-full empty mr-6 bg-contain'>
                                 Loading...
                             </div>
                         </template>
@@ -348,38 +348,38 @@
 
             <template v-if='inventoryTab === "OLD"'>
                 <div v-for='(slot, index) in specialOldInventorySlots' :key='index'
-                    class='w-full h-full rounded-xl my-2 py-4 dark-panel sm:px-8 px-4 relative'>
+                    class='w-full h-full my-2 py-4 dark-panel sm:px-8 px-4 relative'>
                     <div class='w-full h-auto flex flex-row justify-start items-center relative'>
                         <template v-if='slot.token'>
                             <div class='absolute plot-slot dfk z-50' style='left: -3px;'></div>
-                            <div class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain'>
-                                <img v-if='slot.token * 1 !== 0' class='w-full h-full rounded-xl'
+                            <div class='plot-slot w-1/10 empty mr-6 bg-contain relative'>
+                                <img v-if='slot.token * 1 !== 0' class='w-full h-full absolute bottom-0 left-0 text-white opacity-80'
                                     v-bind:src='slot.image' />
                             </div>
                             <div class='sm:w-7/10 w-5/10 h-full flex-col'>
-                                <h2 v-if='slot.token * 1 === 0' class='text-white h-full sm:text-xl text-sm opacity-80'>
+                                <h2 v-if='slot.token * 1 === 0' class='text-primary-head h-full sm:text-xl text-sm opacity-80'>
                                     Slot
                                     {{index + 4}}</h2>
-                                <h2 v-else class='text-white h-full sm:text-xl text-xs opacity-80'>
+                                <h2 v-else class='text-primary-head h-full sm:text-xl text-xs opacity-80'>
                                     {{ getTokenName(slot) }}
                                     #{{ slot.tokenId }}</h2>
-                                <p v-if='slot.token * 1 === 0' class='text-white h-full opacity-30 sm:text-sm text-xs'>
+                                <p v-if='slot.token * 1 === 0' class='text-primary-head h-full opacity-30 sm:text-sm text-xs'>
                                     Empty
                                 </p>
                                 <p v-else class='h-full sm:text-sm text-xs'> {{slot.attributeBonusString}}
                                 </p>
                             </div>
                             <div v-on:click='withdrawNFTFromSlot(plot, index + 3, true)' v-if='plot.ownerOf'
-                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-white'>
+                                class='sm:w-2/10 w-4/10 ml-auto text-center xl:text-xl sm:text-lg sm:text-sm text-xs cursor-pointer text-red hover:text-primary-head'>
                                 Remove NFT
                             </div>
                         </template>
                         <template v-else>
                             <div
-                                class='plot-slot w-1/10 empty rounded-xl mr-6 bg-contain flex items-center justify-center text-2xl'>
+                                class='plot-slot w-1/10 empty mr-6 bg-contain flex items-center justify-center text-2xl'>
                                 <i class='fa fa-gear fa-spin'></i>
                             </div>
-                            <div class='w-9/10 text-center h-full empty rounded-xl mr-6 bg-contain'>
+                            <div class='w-9/10 text-center h-full empty mr-6 bg-contain'>
                                 Loading...
                             </div>
                         </template>
@@ -393,32 +393,32 @@
         <!--PLOT RAIDS-->
         <div v-show='false'
             class='2xl:w-9/12 lg:w-11/12 w-full flex flex-col 2xl:px-12 sm:px-14 px-6 mx-auto h-auto mt-12'>
-            <h2 class='w-full text-white xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
+            <h2 class='w-full text-primary-head xl:text-3xl sm:text-2xl text-xl opacity-80 mb-2'>
                 Plot Raids
             </h2>
-            <div class='w-full h-full rounded-xl my-2 py-4 dark-panel'>
-                <p class='text-white opacity-80 w-full text-center sm:text-xl text-sm'>Coming soon...</p>
+            <div class='w-full h-full my-2 py-4 dark-panel'>
+                <p class='text-primary-head opacity-80 w-full text-center sm:text-xl text-sm'>Coming soon...</p>
                 <div v-if='false' class='w-full h-auto flex flex-col justify-start items-center'>
                     <div class='w-full h-1/10 flex flex-row justify-center text-center items-center'>
-                        <p class='text-2xl text-white opacity-80 w-2/10'>
+                        <p class='text-2xl text-primary-head opacity-80 w-2/10'>
                             Attacker
                         </p>
-                        <p class='text-2xl text-white opacity-80 w-6/10'>
+                        <p class='text-2xl text-primary-head opacity-80 w-6/10'>
                             Result
                         </p>
-                        <p class='text-2xl text-white opacity-80 w-2/10'>
+                        <p class='text-2xl text-primary-head opacity-80 w-2/10'>
                             Profit
                         </p>
                     </div>
                     <hr class='my-6 w-9/10' style='color: #00000077' />
                     <div class='w-full h-1/10 flex flex-row justify-center text-center items-center'>
-                        <p class='text-xl text-white opacity-80 w-2/10'>
+                        <p class='text-xl text-primary-head opacity-80 w-2/10'>
                             0xs...124s
                         </p>
                         <p class='text-xl w-6/10'>
                             DEFENDED
                         </p>
-                        <p class='text-xl text-white opacity-80 w-2/10'>
+                        <p class='text-xl text-primary-head opacity-80 w-2/10'>
                             No Xya Lost
                         </p>
                     </div>
@@ -434,7 +434,7 @@
 
 
         <window height='10%' width='80%' name='upgradeplot'>
-            <div class="flex flex-wrap p-6 bg-dark h-full">
+            <div class="flex flex-wrap p-6 bg-detail-bg h-full">
                 <div class="w-full text-center">
                     <div class="sm:text-3xl text-2xl">Upgrade Plot - Level</div>
                 </div>
@@ -443,10 +443,10 @@
                 </div>
                 <hr class='w-full my-4' />
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
-                    <span class='text-white opacity-80 mr-1'>Pay -</span> {{plotData.levelUpCost}} XYA
+                    <span class='text-primary-head opacity-80 mr-1'>Pay -</span> {{plotData.levelUpCost}} XYA
 
                     <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, false)'
-                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='w-2/10 cursor-pointer text-center xl:text-lg text-sm ml-auto'>
                         <span class='sm:block hidden'>Level Up</span>
                         <span class='sm:hidden block'>Up</span>
                     </p>
@@ -455,12 +455,12 @@
                     or
                 </p>
                 <div class='mt-4 flex flex-row w-full items-start justify-start'>
-                    <span class='text-white opacity-80 mr-1 sm:text-lg text-sm'>Pay -</span>
+                    <span class='text-primary-head opacity-80 mr-1 sm:text-lg text-sm'>Pay -</span>
                     <span class=' sm:text-lg text-sm'>
                         {{plotData.levelUpCost * 3}} XYA from Treasury
                     </span>
                     <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, true)'
-                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='w-2/10 cursor-pointer text-center xl:text-lg text-sm ml-auto'>
                         <span class='sm:block hidden'>Level Up</span>
                         <span class='sm:hidden block'>Up</span>
                     </p>
@@ -472,7 +472,7 @@
         </window>
 
         <window height='10%' width='80%' name='upgradeplot'>
-            <div class="flex flex-wrap p-6 bg-dark h-full">
+            <div class="flex flex-wrap p-6 bg-detail-bg h-full">
                 <div class="w-full text-center">
                     <div class="sm:text-3xl text-2xl">Upgrade Plot - Level</div>
                 </div>
@@ -481,10 +481,10 @@
                 </div>
                 <hr class='w-full my-4' />
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
-                    <span class='text-white opacity-80 mr-1'>Pay -</span> {{plotData.levelUpCost}} XYA
+                    <span class='text-primary-head opacity-80 mr-1'>Pay -</span> {{plotData.levelUpCost}} XYA
 
                     <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, false)'
-                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='w-2/10 cursor-pointer text-center xl:text-lg text-sm ml-auto'>
                         <span class='sm:block hidden'>Level Up</span>
                         <span class='sm:hidden block'>Up</span>
                     </p>
@@ -493,12 +493,12 @@
                     or
                 </p>
                 <div class='mt-4 flex flex-row w-full items-start justify-start'>
-                    <span class='text-white opacity-80 mr-1 sm:text-lg text-sm'>Pay -</span>
+                    <span class='text-primary-head opacity-80 mr-1 sm:text-lg text-sm'>Pay -</span>
                     <span class=' sm:text-lg text-sm'>
                         {{plotData.levelUpCost * 3}} XYA from Treasury
                     </span>
                     <p v-if='plotData.level < 9' v-on:click='levelUpPlot(plot, true)'
-                        class='w-2/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>
+                        class='w-2/10 cursor-pointer text-center xl:text-lg text-sm ml-auto'>
                         <span class='sm:block hidden'>Level Up</span>
                         <span class='sm:hidden block'>Up</span>
                     </p>
@@ -510,7 +510,7 @@
         </window>
 
         <window height='10%' width='80%' name='startemitter'>
-            <div class="flex flex-wrap p-6 bg-dark h-full">
+            <div class="flex flex-wrap p-6 bg-detail-bg h-full">
                 <div class="w-full text-center">
                     <div class="sm:text-3xl text-2xl">Start Emitter</div>
                 </div>
@@ -518,15 +518,15 @@
                     <i @click="$modal.hide('startemitter')" class="fas fa-times cursor-pointer text-xl"></i>
                 </div>
                 <hr class='w-full my-4' />
-                <div class="mt-4 flex flex-row w-full items-start justify-start items-center text-white opacity-60">
+                <div class="mt-4 flex flex-row w-full items-start justify-start items-center text-primary-head opacity-60">
                     ’’Starting the emitter for the first time requires an 100 XYA-ONE LP Token fee. <br /> Once paid,
                     you can start/stop the emitter whenever you want.’’
                 </div>
                 <div class="mt-4 flex flex-row w-full items-start justify-start items-center">
-                    <span class='text-white opacity-80 mr-1'>Pay -</span> {{ emitterStartFee }} XYA-ONE LP
+                    <span class='text-primary-head opacity-80 mr-1'>Pay -</span> {{ emitterStartFee }} XYA-ONE LP
 
                     <p v-on:click='togglePlotEmitter(plot, true)'
-                        class='w-3/10 xya-btn2 text-center xl:text-lg text-sm ml-auto'>Start Emitter
+                        class='w-3/10 cursor-pointer text-center xl:text-lg text-sm ml-auto'>Start Emitter
                     </p>
                 </div>
                 <a class='mt-2'

@@ -1,5 +1,5 @@
 <template>
-  <transition tag="div" name="warning-body" class="flex overflow-hidden mt-3 items-start w-full px-3 bg-red-50 dark:bg-gray-600 space-x-3 rounded-xl ring-1 ring-red-300">
+  <transition tag="div" name="warning-body" class="flex overflow-hidden mt-3 items-start w-full px-3 bg-red-50 dark:bg-gray-600 space-x-3 ring-1 ring-red-300">
     <div v-if="this.haveWarnings">
       <div class="flex justify-start my-3">
         <i class="las la-exclamation-triangle text-xl text-red-300"></i>
