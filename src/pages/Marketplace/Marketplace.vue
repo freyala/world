@@ -15,7 +15,7 @@
 
     </div>
 
-    <div class="w-full flex flex-wrap">
+    <div class="w-full flex flex-wrap overflow-y-auto">
       <section id="section-i-1" v-bind:class='{"h-auto w-full mt-16": isMarketOpen, "h-auto py-4 w-full mt-16": !isMarketOpen}'
                class="border-b flex items-center border-detail-bg">
 
@@ -115,7 +115,7 @@
       </section>
 
       <div v-if='!isMarketOpen'
-           class='lg:px-8 lg:py-4 md:px-8 md:py-0 px-4 py-4 w-full h-full flex items-start justify-center'>
+           class='lg:px-8 lg:py-4 md:px-8 md:py-0 px-4 py-4 w-full h-full flex items-start'>
 
         <div class='w-4/5 flex justify-center flex-wrap'>
           <!-- Open Markets -->
