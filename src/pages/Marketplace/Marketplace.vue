@@ -115,7 +115,7 @@
       </section>
 
       <div v-if='!isMarketOpen'
-           class='lg:px-8 lg:py-4 md:px-8 md:py-0 px-4 py-4 w-full h-full flex items-start'>
+           class='lg:px-8 lg:py-4 md:px-8 md:py-0 px-4 py-4 w-full h-full flex items-start justify-center'>
 
         <div class='w-4/5 flex justify-center flex-wrap'>
           <!-- Open Markets -->
