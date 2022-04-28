@@ -1220,7 +1220,7 @@ export default {
           .signer);
       this.freyRegistryContract = await new ethers.Contract(FreyRegistry.address, FreyRegistry.abi, this
           .metaMaskWallet.signer);
-      this.isFreyMarket = this.market.tokenName === "The Barracks";
+      this.isFreyMarket = this.market.tokenName === "The Frey";
 
       let showNFTCard = false;
 
