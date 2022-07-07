@@ -1,0 +1,30 @@
+<svg id="NameBar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1009" height="183" viewBox="0 0 1009 183">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        filter: url(#filter);
+      }
+
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #dbe3e5;
+      }
+    </style>
+    <filter id="filter" x="36" y="319" width="1009" height="183" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="7" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="4.899"/>
+      <feFlood result="flood" flood-color="#3c2f35" flood-opacity="0.2"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+      <feImage preserveAspectRatio="none" x="59.0938" y="335.344" width="961.786" height="135.312" result="image" xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iOTYxLjc4NiIgaGVpZ2h0PSIxMzUuMzEyIiB2aWV3Qm94PSIwIDAgOTYxLjc4NiAxMzUuMzEyIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBvcGFjaXR5OiAwLjM1OwogICAgICAgIGZpbGw6IHVybCgjbGluZWFyLWdyYWRpZW50KTsKICAgICAgfQogICAgPC9zdHlsZT4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ibGluZWFyLWdyYWRpZW50IiB4MT0iNDgwLjg5MyIgeDI9IjQ4MC44OTMiIHkyPSIxMzUuMzEyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZWVlZjIiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IGNsYXNzPSJjbHMtMSIgd2lkdGg9Ijk2MS43ODYiIGhlaWdodD0iMTM1LjMxMiIvPgo8L3N2Zz4K"/>
+      <feComposite result="composite-2" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend-2" mode="multiply" in2="blend"/>
+    </filter>
+  </defs>
+  <path class="cls-1" d="M79.1,335.336H1000.88a20,20,0,0,1,20,20v95.326a20,20,0,0,1-20,20H79.1a20,20,0,0,1-20-20V355.336A20,20,0,0,1,79.1,335.336Z" transform="translate(-36 -319)"/>
+  <path id="PigSnout" class="cls-2" d="M137.366,380.516c19.3,0,34.94,10.417,34.94,23.267s-15.642,23.266-34.94,23.266-34.939-10.417-34.939-23.266S118.07,380.516,137.366,380.516ZM125.01,391.81c3.688,0,6.679,5.36,6.679,11.973s-2.991,11.972-6.679,11.972-6.678-5.36-6.678-11.972S121.322,391.81,125.01,391.81Zm24.374,0c3.688,0,6.678,5.36,6.678,11.973s-2.99,11.972-6.678,11.972-6.678-5.36-6.678-11.972S145.7,391.81,149.384,391.81Z" transform="translate(-36 -319)"/>
+</svg>

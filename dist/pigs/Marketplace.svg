@@ -1,0 +1,22 @@
+<svg id="Marketplace" xmlns="http://www.w3.org/2000/svg" width="98" height="155" viewBox="0 0 98 155">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 30px;
+        text-anchor: middle;
+        font-family: "Maven Pro";
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #3c2f35;
+      }
+
+      .cls-2 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <text id="Market_place" data-name="Market place" class="cls-1" x="48.392" y="113.241">Market<tspan x="48.392" dy="36">place</tspan></text>
+  <path id="MP_Vector" class="cls-2" d="M811.6,96.709a3.962,3.962,0,0,1-1.04,1.867l-13.789,13.789a4,4,0,0,1-5.657-5.657L798.826,99H744a4,4,0,1,1,0-8h54.514l-7.4-7.4a4,4,0,0,1,5.656-5.656l13.788,13.788A4.235,4.235,0,0,1,811.6,96.709ZM740.4,128.954a3.987,3.987,0,0,1,1.04-1.878L755.226,113.2a3.984,3.984,0,0,1,5.657,0,4.042,4.042,0,0,1,0,5.691l-7.709,7.754H808a4.024,4.024,0,0,1,0,8.048H753.486l7.4,7.439a4.04,4.04,0,0,1,0,5.69,3.983,3.983,0,0,1-5.656,0l-13.788-13.87A4.279,4.279,0,0,1,740.4,128.954Z" transform="translate(-729 -70.891)"/>
+</svg>
