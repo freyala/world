@@ -1913,7 +1913,7 @@ export default {
         if (!acceptedCurrency.approved) throw `${acceptedCurrency.key} is not approved.`;
 
         const tx = await this.contract.bid(tokenAddress, tokenId, "" + price, {
-          gasPrice: 30000000000,
+          gasPrice: 100000000000,
           gasLimit: 2000000,
           value: priceValue
         });
@@ -2024,7 +2024,7 @@ export default {
     async withdrawNFT(tokenId) {
       try {
         const tx = await this.contract.withdrawNft(this.market.token, tokenId, {
-          gasPrice: 30000000000,
+          gasPrice: 100000000000,
           gasLimit: 2000000,
         });
 

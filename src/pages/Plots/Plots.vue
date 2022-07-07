@@ -910,8 +910,8 @@
                     }
                     const tx = await this.plotInventoryContract.withdrawLimboAssetsForUser(this.metaMaskAccount,
                         tokenAddresses, tokenIds, {
-                            gasPrice: 30000000000,
-                            gasLimit: 3000000,
+                            gasPrice: 100000000000,
+                            gasLimit: 10000000,
                         });
                     await tx.wait(1);
                     toast = this.createLoaderToast("Pending - Withdraw NFT's");
@@ -1125,7 +1125,7 @@
                     }
 
                     const tx = await this.plotEmitterContract.claimAll(plotTypes, plotIds, {
-                        gasPrice: 30000000000,
+                        gasPrice: 100000000000,
                         gasLimit: 10000000,
                     });
 

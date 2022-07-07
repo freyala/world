@@ -861,8 +861,8 @@
                     const tx = await this.plotInventoryContract.addAssetToPlotInventory(this.plot.plot_type, this
                         .plot.token_id * 1, slotData.address,
                         slotData.tokenId, slotData.slotNumber, {
-                            gasPrice: 30000000000,
-                            gasLimit: 3000000,
+                            gasPrice: 100000000000,
+                            gasLimit: 10000000,
                         });
                     toast = this.createLoaderToast("Pending - Add NFT");
                     this.showSlotPickerModal = false;
@@ -1018,8 +1018,8 @@
                     const isEmitting = await this.plotEmitterContract.isEmitting(plot.plot_type, plot.token_id * 1);
                     if (isEmitting) throw 'Emitter is running!';
                     const tx = await this.contract.levelUpPlot(plot.plot_type, plot.token_id * 1, fromTreasury, {
-                        gasPrice: 30000000000,
-                        gasLimit: 3000000,
+                        gasPrice: 100000000000,
+                        gasLimit: 10000000,
                     });
                     toast = this.createLoaderToast("Pending - Level Up");
                     this.$modal.hide('upgradeplot');
@@ -1035,8 +1035,8 @@
                 let toast = undefined;
                 try {
                     const tx = await this.oldPlotEmitterContract.stopEmissions(plot.plot_type, plot.token_id * 1, {
-                        gasPrice: 30000000000,
-                        gasLimit: 3000000,
+                        gasPrice: 100000000000,
+                        gasLimit: 10000000,
                     });
                     toast = this.createLoaderToast("Pending - Stop Emitter");
                     await tx.wait(1);
@@ -1075,12 +1075,12 @@
 
                     const tx = !isEmitting ?
                         await this.plotEmitterContract.startEmissions(plot.plot_type, plot.token_id * 1, {
-                            gasPrice: 30000000000,
-                            gasLimit: 3000000,
+                            gasPrice: 100000000000,
+                            gasLimit: 10000000,
                         }) :
                         await this.plotEmitterContract.stopEmissions(plot.plot_type, plot.token_id * 1, {
-                            gasPrice: 30000000000,
-                            gasLimit: 3000000,
+                            gasPrice: 100000000000,
+                            gasLimit: 10000000,
                         });
                     toast = this.createLoaderToast("Pending - " + (!isEmitting ? "Start Emitter" : "Stop Emitter"));
                     this.$modal.hide('startemitter');
@@ -1097,8 +1097,8 @@
                 try {
                     const tx =
                         await this.plotEmitterContract.startEmissions(plot.plot_type, plot.token_id * 1, {
-                            gasPrice: 30000000000,
-                            gasLimit: 3000000,
+                            gasPrice: 100000000000,
+                            gasLimit: 10000000,
                         });
                     await tx.wait(1);
                     await this.getPlotData();
@@ -1112,8 +1112,8 @@
                 try {
                     const tx =
                         await this.plotEmitterContract.withdrawUnlockedEmitted({
-                            gasPrice: 30000000000,
-                            gasLimit: 3000000,
+                            gasPrice: 100000000000,
+                            gasLimit: 10000000,
                         });
                     toast = this.createLoaderToast("Pending - Collect Unlocked XYA");
                     await tx.wait(1);
@@ -1129,8 +1129,8 @@
                 try {
                     const tx =
                         await this.plotEmitterContract.claimEmissions(plot.plot_type, plot.token_id * 1, {
-                            gasPrice: 30000000000,
-                            gasLimit: 3000000,
+                            gasPrice: 100000000000,
+                            gasLimit: 10000000,
                         });
                     toast = this.createLoaderToast("Pending - Collect Emissions");
                     await tx.wait(1);
